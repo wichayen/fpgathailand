@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aries Board - Episode 1</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding-top: 56px; }
+        .article-header {
+            background-color: #f8f9fa;
+            padding: 2rem 1rem;
+            margin-bottom: 2rem;
+        }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">FPGATHAILAND</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">AriesBoard_ep1</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="AriesBoard_ep2.html">AriesBoard_ep2</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="article-header">
+            <h1>โปรเจค PCI card ตอนที่ 1: การออกแบบโปรเจค ARIES Board</h1>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8 mx-auto article-content">
+                <h2>1. เกริ่นนำ</h2>
+                <p>เนื่องจากมีความคิดที่จะทำ peripheral มาต่อกับ FPGA อยู่หลายอย่าง แต่การที่จะต้องมานั่งทำบอร์ด FPGA ใหม่ทุกครั้งก็ดูจะเป็นการเสียเวลาโดยใช่เหตุ ดังนั้นโปรเจคนี้จึงเกิดขึ้นมา</p>
+                <ul>
+                    <li>ต่อกับ FPGA ภายนอก</li>
+                    <li>เชื่อมต่อ CPU, microcontroller เพื่อขยาย port</li>
+                </ul>
+                <p>แต่สุดท้ายแล้วก็มาลงเอยที่การใช้ FPGA เป็น microcontroller ซะเอง</p>
+                <p>ส่วนของ CPU ที่จะเอามาต่อนั้น ตอนแรกก็คิดว่าจะใช้ OMAP ของ TI แต่เนื่องจากว่ามันยุ่งยากเกินไปในการที่จะต้องมานั่งทำ BGA routing, high speed signal routing, etc. ก็เลยมาจบที่การใช้ soft core CPU ใน FPGA แทน</p>
+
+                <h2>2. ที่มาของชื่อ ARIES Board</h2>
+                <p>บอร์ดนี้ออกแบบมาเพื่อรองรับการทำงาน 2 รูปแบบคือ:</p>
+                <ul>
+                    <li>PCI card</li>
+                    <li>Stand alone (ไม่ใช้ PCI card) โดยใช้ soft core NIOS2</li>
+                </ul>
+                <p>และในอนาคตอาจจะมีการพัฒนาไปสู่ PCI express</p>
+
+                <img src="AriesBoard_ep1_files/image001.jpg" class="img-fluid rounded">
+
+                <h2>3. Specification ของ ARIES Board</h2>
+                <ul>
+                    <li>Analog input output</li>
+                    <li>Digital input output</li>
+                    <li>Switch input</li>
+                    <li>VGA (แชร์กับ LED)</li>
+                    <li>RS232</li>
+                </ul>
+                <p>ส่วนของ Analog I/O, Digital I/O นั้นจะต่อกับ FPGA โดยตรงเพื่อความเร็วในการทำงาน</p>
+                <p>FPGA: Altera Cyclone II 5000LE</p>
+                <ul>
+                    <li>DIO 16Channel</li>
+                    <li>ADC 12bit</li>
+                    <li>DAC 12bit</li>
+                    <li>SDRAM 256MBit</li>
+                    <li>Serial flash 4MBit</li>
+                </ul>
+
+                <h2>4. สรุป</h2>
+                <p>โปรเจคนี้จะเน้นไปที่การออกแบบตัวบอร์ดเป็นหลัก ส่วนของการเขียน VHDL/Verilog นั้นจะยังไม่ลงรายละเอียดมากนัก</p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="py-4 bg-dark text-white-50 mt-5">
+        <div class="container text-center">
+            <small>Copyright &copy; FPGATHAILAND</small>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
