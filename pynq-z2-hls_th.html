@@ -1,127 +1,93 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="th">
 <head>
-<meta http-equiv=Content-Type content="text/html; charset=utf-8">
-<meta name=Generator content="Microsoft Word 15 (filtered)">
-<style>
-<!--
- /* Font Definitions */
- @font-face
-	{font-family:Wingdings;
-	panose-1:5 0 0 0 0 0 0 0 0 0;}
-@font-face
-	{font-family:"ＭＳ 明朝";
-	panose-1:2 2 6 9 4 2 5 8 3 4;}
-@font-face
-	{font-family:"Angsana New";
-	panose-1:2 2 6 3 5 4 5 2 3 4;}
-@font-face
-	{font-family:"Cordia New";
-	panose-1:2 11 3 4 2 2 2 2 2 4;}
-@font-face
-	{font-family:"Cambria Math";
-	panose-1:2 4 5 3 5 4 6 3 2 4;}
-@font-face
-	{font-family:Calibri;
-	panose-1:2 15 5 2 2 2 4 3 2 4;}
-@font-face
-	{font-family:游明朝;
-	panose-1:2 2 4 0 0 0 0 0 0 0;}
-@font-face
-	{font-family:"ＭＳ Ｐゴシック";
-	panose-1:2 11 6 0 7 2 5 8 2 4;}
-@font-face
-	{font-family:"\@ＭＳ 明朝";
-	panose-1:2 2 6 9 4 2 5 8 3 4;}
-@font-face
-	{font-family:"\@游明朝";}
-@font-face
-	{font-family:"\@ＭＳ Ｐゴシック";}
- /* Style Definitions */
- p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0in;
-	text-align:justify;
-	text-justify:inter-ideograph;
-	font-size:10.5pt;
-	font-family:"Calibri",sans-serif;}
-h1
-	{mso-style-link:"Heading 1 Char";
-	margin:0in;
-	text-align:justify;
-	text-justify:inter-ideograph;
-	page-break-after:avoid;
-	font-size:12.0pt;
-	font-family:"Calibri Light",sans-serif;
-	font-weight:normal;}
-h2
-	{mso-style-link:"Heading 2 Char";
-	margin:0in;
-	text-align:justify;
-	text-justify:inter-ideograph;
-	page-break-after:avoid;
-	font-size:10.5pt;
-	font-family:"Calibri Light",sans-serif;
-	font-weight:normal;}
-h3
-	{mso-style-link:"Heading 3 Char";
-	margin-top:0in;
-	margin-right:0in;
-	margin-bottom:0in;
-	margin-left:20.0pt;
-	text-align:justify;
-	text-justify:inter-ideograph;
-	page-break-after:avoid;
-	font-size:10.5pt;
-	font-family:"Calibri Light",sans-serif;
-	font-weight:normal;}
-p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
-	{margin-top:0in;
-	margin-right:0in;
-	margin-bottom:0in;
-	margin-left:42.0pt;
-	text-align:justify;
-	text-justify:inter-ideograph;
-	font-size:10.5pt;
-	font-family:"Calibri",sans-serif;}
-span.Heading1Char
-	{mso-style-name:"Heading 1 Char";
-	mso-style-link:"Heading 1";
-	font-family:"Calibri Light",sans-serif;}
-span.Heading2Char
-	{mso-style-name:"Heading 2 Char";
-	mso-style-link:"Heading 2";
-	font-family:"Calibri Light",sans-serif;}
-span.Heading3Char
-	{mso-style-name:"Heading 3 Char";
-	mso-style-link:"Heading 3";
-	font-family:"Calibri Light",sans-serif;}
-.MsoChpDefault
-	{font-size:10.5pt;
-	font-family:"Calibri",sans-serif;}
-.MsoPapDefault
-	{text-align:justify;
-	text-justify:inter-ideograph;}
- /* Page Definitions */
- @page WordSection1
-	{size:8.5in 11.0in;
-	margin:1.0in 1.0in 1.0in 1.0in;
-	layout-grid:18.0pt;}
-div.WordSection1
-	{page:WordSection1;}
- /* List Definitions */
- ol
-	{margin-bottom:0in;}
-ul
-	{margin-bottom:0in;}
--->
-</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HLS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding-top: 56px; }
+        .article-header {
+            background-color: #f8f9fa;
+            padding: 2rem 1rem;
+            margin-bottom: 2rem;
+        }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 1rem;
+        }
+        /* Styles for code blocks from MS Word */
+        p.MsoNormal, li.MsoNormal, div.MsoNormal {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+        p.MsoNormal[align=left] {
+            background-color: #272822;
+            color: #f8f8f2;
+            border: 1px solid #ddd;
+            border-left: 3px solid #f36d33;
+            page-break-inside: avoid;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.6em;
+            max-width: 100%;
+            overflow: auto;
+            padding: 1em 1.5em;
+            display: block;
+            word-wrap: break-word;
+        }
+    </style>
 </head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">FPGATHAILAND</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAries" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Aries Board
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAries">
+                            <li><a class="dropdown-item" href="AriesBoard_ep1.html">ตอนที่ 1: การออกแบบโปรเจค</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep2.html">ตอนที่ 2: Version A.1</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep3.html">ตอนที่ 3: ออกแบบ FPGA</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep4.html">ตอนที่ 4: PCI driver for linux</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep5.html">ตอนที่ 5: PCI driver for windows</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownPynq" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            PYNQ-Z2
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownPynq">
+                            <li><a class="dropdown-item" href="pynq-z2-ai_th.html">AI (DPU)</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-hls_th.html">HLS</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-modelsim_th.html">Modelsim</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-vivado_th.html">Vivado</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-<body lang=EN-US link="#0563C1" vlink="#954F72" style='word-wrap:break-word;
-text-justify-trim:punctuation'>
-
-<div class=WordSection1 style='layout-grid:18.0pt'>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-10 mx-auto article-content">
+                <div class="article-header rounded">
+                    <h1>HLS</h1>
+                </div>
+                <div class=WordSection1 style='layout-grid:18.0pt'>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -145,9 +111,8 @@ style='font-family:"ＭＳ 明朝",serif'>ภาพรวม</span></a></h2>
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>นี่คือวิธีการพัฒนาลอจิก FPGA ด้วยภาษา C สิ่งที่ออกแบบด้วย HLS สามารถส่งออกเป็น IP และนำไปใช้ใน Vivado ได้</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img width=624 height=254 src="pynq-z2-hls_th_files/image001.png"
-alt="A computer screen shot of a computer&#10;&#10;Description automatically generated"></span></p>
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" width=624 height=254 src="pynq-z2-hls_th_files/image001.png"
+alt="A computer screen shot of a computer&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -173,23 +138,23 @@ style='page-break-before:always'>
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>ตัวอย่างเช่น มีการคำนวณแบบวนซ้ำ (ภาษา C) ดังต่อไปนี้</span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img width=253
+<p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" width=253
 height=197 src="pynq-z2-hls_th_files/image002.png"
-alt="A computer screen shot of a program code&#10;&#10;Description automatically generated"></span></p>
+alt="A computer screen shot of a program code&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>เมื่อพิจารณาการคำนวณ Loop ในโค้ด C เป็นแผนภาพบล็อก จะมีลักษณะดังนี้</span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img width=442
-height=192 src="pynq-z2-hls_th_files/image003.png"></span></p>
+<p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" width=442
+height=192 src="pynq-z2-hls_th_files/image003.png"></p>
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>โดยปกติ เพื่อลดการใช้ลอจิกของ FPGA จะใช้วงจรคูณเพียง 1 ตัวแล้วใช้ซ้ำ</span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img width=422
-height=231 src="pynq-z2-hls_th_files/image004.png"></span></p>
+<p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" width=422
+height=231 src="pynq-z2-hls_th_files/image004.png"></p>
 
 <span style='font-size:10.5pt;font-family:"ＭＳ 明朝",serif'><br clear=all
 style='page-break-before:always'>
@@ -201,27 +166,27 @@ style='page-break-before:always'>
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>เมื่อแปลงภาษา C เป็น HDL ด้วย HLS โค้ด VHDL ที่ได้จะมีลักษณะดังนี้</span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img width=280
+<p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" width=280
 height=166 src="pynq-z2-hls_th_files/image005.png"
-alt="A screenshot of a computer code&#10;&#10;Description automatically generated"></span></p>
+alt="A screenshot of a computer code&#10;&#10;Description automatically generated"></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img width=286
+<p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" width=286
 height=76 src="pynq-z2-hls_th_files/image006.png"
-alt="A text on a white background&#10;&#10;Description automatically generated"></span></p>
+alt="A text on a white background&#10;&#10;Description automatically generated"></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img width=361
-height=21 src="pynq-z2-hls_th_files/image007.png"></span></p>
+<p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" width=361
+height=21 src="pynq-z2-hls_th_files/image007.png"></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img width=433
+<p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" width=433
 height=150 src="pynq-z2-hls_th_files/image008.png"
-alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></span></p>
+alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>และยังสามารถตรวจสอบอัตราการใช้ลอจิกของ FPGA ได้อีกด้วย</span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img width=624
-height=47 src="pynq-z2-hls_th_files/image009.png"></span></p>
+<p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" width=624
+height=47 src="pynq-z2-hls_th_files/image009.png"></p>
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>Latency หมายถึง หลังจากเริ่มการคำนวณ ผลลัพธ์จะถูกส่งออกหลังจากผ่านไป xxx ไซเคิล</span></p>
 
@@ -273,9 +238,8 @@ style='page-break-before:always'>
 <p class=MsoNormal align=left style='text-align:left'><span
 style='font-family:"ＭＳ 明朝",serif'>‐ ก่อนอื่น ในการสร้างโปรเจกต์ HLS ให้คลิกที่ File → New Project</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img width=356 height=213 src="pynq-z2-hls_th_files/image010.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" width=356 height=213 src="pynq-z2-hls_th_files/image010.png"
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -283,13 +247,11 @@ alt="A screenshot of a computer&#10;&#10;Description automatically generated"></
 <p class=MsoNormal align=left style='text-align:left'><span
 style='font-family:"ＭＳ 明朝",serif'>ตั้งค่าตำแหน่งของโปรเจกต์และรุ่นของ FPGA</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img width=343 height=164 src="pynq-z2-hls_th_files/image011.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" width=343 height=164 src="pynq-z2-hls_th_files/image011.png"
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img width=502 height=367 src="pynq-z2-hls_th_files/image012.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" width=502 height=367 src="pynq-z2-hls_th_files/image012.png"
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -297,13 +259,11 @@ alt="A screenshot of a computer&#10;&#10;Description automatically generated"></
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>คลิกขวาที่ Source เพื่อ Add Source File สำหรับ C Source (ไฟล์ที่ต้องการแปลงเป็น HDL) ในครั้งนี้จะเพิ่มไฟล์ SWtoLED.cpp การทดสอบนี้เป็นการคูณอย่างง่าย โดยจะเตรียมสวิตช์ 2 ตัว (2 บิต) ทำการคูณ แล้วแสดงผลลัพธ์บน LED</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img width=264 height=183 src="pynq-z2-hls_th_files/image013.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" width=264 height=183 src="pynq-z2-hls_th_files/image013.png"
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img width=484 height=110 src="pynq-z2-hls_th_files/image014.png"
-alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></span></p>
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" width=484 height=110 src="pynq-z2-hls_th_files/image014.png"
+alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -311,9 +271,8 @@ alt="A screenshot of a computer program&#10;&#10;Description automatically gener
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>คลิกขวาที่ Test Bench เพื่อ Add Source File สำหรับ Test Bench (C testbench ที่ใช้ในการตรวจสอบ) ในครั้งนี้จะเพิ่มไฟล์ SWtoLED_tb.cpp</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img width=264 height=196 src="pynq-z2-hls_th_files/image015.png"
-alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></span></p>
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" width=264 height=196 src="pynq-z2-hls_th_files/image015.png"
+alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></p>
 
 <span style='font-size:10.5pt;font-family:"ＭＳ 明朝",serif'><br clear=all
 style='page-break-before:always'>
@@ -327,9 +286,8 @@ style='page-break-before:always'>
 <p class=MsoNormal align=left style='text-align:left'><span
 style='font-family:"ＭＳ 明朝",serif'>ตอนนี้เนื้อหาภายในโปรเจกต์มีลักษณะดังนี้</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img width=379 height=230 src="pynq-z2-hls_th_files/image016.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" width=379 height=230 src="pynq-z2-hls_th_files/image016.png"
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <span style='font-size:10.5pt;font-family:"ＭＳ 明朝",serif'><br clear=all
 style='page-break-before:always'>
@@ -343,16 +301,14 @@ style='page-break-before:always'>
 <p class=MsoNormal align=left style='text-align:left'><span
 style='font-family:"ＭＳ 明朝",serif'>จากนั้น คลิกที่ Project → Project Settings → Synthesis แล้วเลือก C Source (ไฟล์ที่ต้องการแปลงเป็น HDL) ในครั้งนี้จะเลือก swtoled</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img width=237 height=71 src="pynq-z2-hls_th_files/image017.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" width=237 height=71 src="pynq-z2-hls_th_files/image017.png"
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img width=476 height=377 src="pynq-z2-hls_th_files/image018.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" width=476 height=377 src="pynq-z2-hls_th_files/image018.png"
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -378,9 +334,8 @@ style='page-break-before:always'>
 <p class=MsoNormal align=left style='text-align:left'><span
 style='font-family:"ＭＳ 明朝",serif'>‐ ใน Flow Navigator มี 4 เมนู</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img width=261 height=231 src="pynq-z2-hls_th_files/image019.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" width=261 height=231 src="pynq-z2-hls_th_files/image019.png"
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -404,10 +359,9 @@ style='position:absolute;z-index:251679744;margin-left:147px;margin-top:141px;
 width:60px;height:47px'><img width=60 height=47
 src="pynq-z2-hls_th_files/image021.png"></span><span style='position:absolute;
 z-index:251677696;margin-left:42px;margin-top:185px;width:108px;height:15px'><img
-width=108 height=15 src="pynq-z2-hls_th_files/image024.png"></span><span
-style='font-family:"ＭＳ 明朝",serif'><img width=624 height=466
+width=108 height=15 src="pynq-z2-hls_th_files/image024.png"></span><img class="img-fluid rounded mx-auto d-block" width=624 height=466
 src="pynq-z2-hls_th_files/image025.png"
-alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></span></p>
+alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></p>
 
 <span style='font-size:10.5pt;font-family:"ＭＳ 明朝",serif'><br clear=all
 style='page-break-before:always'>
@@ -423,10 +377,9 @@ style='font-family:"ＭＳ 明朝",serif'>‐ คลิกที่ C SYNTHESIS 
 
 <p class=MsoNormal align=left style='text-align:left'><span style='position:
 absolute;z-index:251692032;margin-left:3px;margin-top:62px;width:119px;
-height:36px'><img width=119 height=36 src="pynq-z2-hls_th_files/image026.png"></span><span
-style='font-family:"ＭＳ 明朝",serif'><img width=282 height=202
+height:36px'><img width=119 height=36 src="pynq-z2-hls_th_files/image026.png"></span><img class="img-fluid rounded mx-auto d-block" width=282 height=202
 src="pynq-z2-hls_th_files/image027.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -439,9 +392,9 @@ absolute;z-index:251687936;margin-left:6px;margin-top:151px;width:132px;
 height:47px'><img width=132 height=47 src="pynq-z2-hls_th_files/image028.png"></span><span
 style='position:absolute;z-index:251689984;margin-left:6px;margin-top:239px;
 width:586px;height:45px'><img width=586 height=45
-src="pynq-z2-hls_th_files/image029.png"></span><span style='font-family:"ＭＳ 明朝",serif'><img
-width=624 height=279 src="pynq-z2-hls_th_files/image030.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+src="pynq-z2-hls_th_files/image029.png"></span><img class="img-fluid rounded mx-auto d-block" width=624 height=279
+src="pynq-z2-hls_th_files/image030.png"
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -449,9 +402,8 @@ alt="A screenshot of a computer&#10;&#10;Description automatically generated"></
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>เวลา Uncertainty ดูเหมือนจะเป็นเวลาสำรอง</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img width=345 height=124 src="pynq-z2-hls_th_files/image031.png"
-alt="A diagram of a period&#10;&#10;Description automatically generated"></span></p>
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" width=345 height=124 src="pynq-z2-hls_th_files/image031.png"
+alt="A diagram of a period&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -479,16 +431,15 @@ absolute;z-index:251696128;margin-left:10px;margin-top:285px;width:274px;
 height:27px'><img width=274 height=27 src="pynq-z2-hls_th_files/image032.png"></span><span
 style='position:absolute;z-index:251694080;margin-left:13px;margin-top:194px;
 width:119px;height:27px'><img width=119 height=27
-src="pynq-z2-hls_th_files/image033.png"></span><span style='font-family:"ＭＳ 明朝",serif'><img
-width=339 height=446 src="pynq-z2-hls_th_files/image034.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+src="pynq-z2-hls_th_files/image033.png"></span><img class="img-fluid rounded mx-auto d-block" width=339 height=446
+src="pynq-z2-hls_th_files/image034.png"
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
 style='font-family:"ＭＳ 明朝",serif'>จากนั้น Vivado จะเปิดขึ้นมาและแสดงรูปคลื่นสัญญาณของการจำลอง</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img width=624 height=237 src="pynq-z2-hls_th_files/image035.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" width=624 height=237 src="pynq-z2-hls_th_files/image035.png"
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <span style='font-size:10.5pt;font-family:"ＭＳ 明朝",serif'><br clear=all
 style='page-break-before:always'>
@@ -505,9 +456,8 @@ style='font-family:"ＭＳ 明朝",serif'>‐ คลิกที่ IMPLEMENTATI
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>เลือก Export Format เป็น "Vivado IP"</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img width=323 height=384 src="pynq-z2-hls_th_files/image036.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" width=323 height=384 src="pynq-z2-hls_th_files/image036.png"
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -515,9 +465,8 @@ alt="A screenshot of a computer&#10;&#10;Description automatically generated"></
 <p class=MsoNormal align=left style='text-align:left'><span
 style='font-family:"ＭＳ 明朝",serif'>เมื่อเสร็จสิ้น จะได้ไฟล์ export.zip ซึ่งสามารถนำเข้าไปใน Vivado ในฐานะ IP ได้</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img width=414 height=178 src="pynq-z2-hls_th_files/image037.png"
-alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></span></p>
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" width=414 height=178 src="pynq-z2-hls_th_files/image037.png"
+alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></p>
 
 <span style='font-size:10.5pt;font-family:"ＭＳ 明朝",serif'><br clear=all
 style='page-break-before:always'>
@@ -529,9 +478,9 @@ style='page-break-before:always'>
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>※ ดูเหมือนว่าจะสามารถอ้างอิงโฟลเดอร์ ip ได้โดยตรงโดยไม่จำเป็นต้องใช้ export.zip</span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img width=399
+<p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" width=399
 height=344 src="pynq-z2-hls_th_files/image038.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <span style='font-size:10.5pt;font-family:"ＭＳ 明朝",serif'><br clear=all
 style='page-break-before:always'>
@@ -555,9 +504,8 @@ text-indent:-.25in'><span style='font-family:"ＭＳ 明朝",serif'>-<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp; </span></span><span
 style='font-family:"ＭＳ 明朝",serif'>แตกไฟล์ที่ได้จาก HLS (Export.zip) ไปไว้ที่ตำแหน่งที่ต้องการ</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img width=392 height=196 src="pynq-z2-hls_th_files/image039.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" width=392 height=196 src="pynq-z2-hls_th_files/image039.png"
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -565,9 +513,8 @@ alt="A screenshot of a computer&#10;&#10;Description automatically generated"></
 <p class=MsoNormal align=left style='text-align:left'><span
 style='font-family:"ＭＳ 明朝",serif'>‐ ใน IP Catalog ของ Vivado คลิกที่ Add Repository แล้วเพิ่ม IP ที่สร้างจาก HLS</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img width=392 height=266 src="pynq-z2-hls_th_files/image040.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" width=392 height=266 src="pynq-z2-hls_th_files/image040.png"
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <span style='font-size:10.5pt;font-family:"ＭＳ 明朝",serif'><br clear=all
 style='page-break-before:always'>
@@ -583,10 +530,9 @@ style='font-family:"ＭＳ 明朝",serif'>‐ IP ที่เพิ่มเข�
 
 <p class=MsoNormal align=left style='text-align:left'><span style='position:
 absolute;z-index:251697152;margin-left:4px;margin-top:136px;width:373px;
-height:33px'><img width=373 height=33 src="pynq-z2-hls_th_files/image041.png"></span><span
-style='font-family:"ＭＳ 明朝",serif'><img width=397 height=250
+height:33px'><img width=373 height=33 src="pynq-z2-hls_th_files/image041.png"></span><img class="img-fluid rounded mx-auto d-block" width=397 height=250
 src="pynq-z2-hls_th_files/image042.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -594,12 +540,10 @@ alt="A screenshot of a computer&#10;&#10;Description automatically generated"></
 <p class=MsoNormal align=left style='text-align:left'><span
 style='font-family:"ＭＳ 明朝",serif'>‐ เพิ่ม IP ไปยัง Block design ของ Vivado แล้วเชื่อมต่อกับสวิตช์และ LED ภายนอก จากนั้นคอมไพล์ใน Vivado เพื่อสร้าง bitstream</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img width=624 height=53 src="pynq-z2-hls_th_files/image043.png"></span></p>
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" width=624 height=53 src="pynq-z2-hls_th_files/image043.png"></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img width=361 height=212 src="pynq-z2-hls_th_files/image044.png"
-alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></span></p>
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" width=361 height=212 src="pynq-z2-hls_th_files/image044.png"
+alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -628,9 +572,8 @@ style='page-break-before:always'>
 <p class=MsoNormal align=left style='text-align:left'><span
 style='font-family:"ＭＳ 明朝",serif'>‐ ทดสอบบนอุปกรณ์จริง</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img width=484 height=110 src="pynq-z2-hls_th_files/image045.png"
-alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></span></p>
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" width=484 height=110 src="pynq-z2-hls_th_files/image045.png"
+alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal align=center style='text-align:center'><span
 style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -652,18 +595,16 @@ style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
  <tr>
   <td width=312 valign=top style='width:233.75pt;border:solid windowtext 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='font-family:"ＭＳ 明朝",serif'><img width=271 height=203 id="Picture 27"
+  <p class=MsoNormal align=center style='text-align:center'><img class="img-fluid rounded mx-auto d-block" width=271 height=203 id="Picture 27"
   src="pynq-z2-hls_th_files/image046.jpg"
-  alt="A hand holding a red circuit board&#10;&#10;Description automatically generated"></span></p>
+  alt="A hand holding a red circuit board&#10;&#10;Description automatically generated"></p>
   </td>
   <td width=312 valign=top style='width:233.75pt;border-top:none;border-left:
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
   padding:0in 5.4pt 0in 5.4pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='font-family:"ＭＳ 明朝",serif'><img width=262 height=196 id="Picture 26"
+  <p class=MsoNormal align=center style='text-align:center'><img class="img-fluid rounded mx-auto d-block" width=262 height=196 id="Picture 26"
   src="pynq-z2-hls_th_files/image047.jpg"
-  alt="A hand holding a circuit board&#10;&#10;Description automatically generated"></span></p>
+  alt="A hand holding a circuit board&#10;&#10;Description automatically generated"></p>
   </td>
  </tr>
  <tr>
@@ -682,18 +623,16 @@ style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
  <tr>
   <td width=312 valign=top style='width:233.75pt;border:solid windowtext 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='font-family:"ＭＳ 明朝",serif'><img width=268 height=201 id="Picture 28"
+  <p class=MsoNormal align=center style='text-align:center'><img class="img-fluid rounded mx-auto d-block" width=268 height=201 id="Picture 28"
   src="pynq-z2-hls_th_files/image048.jpg"
-  alt="A hand holding a red circuit board&#10;&#10;Description automatically generated"></span></p>
+  alt="A hand holding a red circuit board&#10;&#10;Description automatically generated"></p>
   </td>
   <td width=312 valign=top style='width:233.75pt;border-top:none;border-left:
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
   padding:0in 5.4pt 0in 5.4pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='font-family:"ＭＳ 明朝",serif'><img width=267 height=200 id="Picture 25"
+  <p class=MsoNormal align=center style='text-align:center'><img class="img-fluid rounded mx-auto d-block" width=267 height=200 id="Picture 25"
   src="pynq-z2-hls_th_files/image049.jpg"
-  alt="A hand holding a circuit board&#10;&#10;Description automatically generated"></span></p>
+  alt="A hand holding a circuit board&#10;&#10;Description automatically generated"></p>
   </td>
  </tr>
 </table>
@@ -743,17 +682,16 @@ style='page-break-before:always'>
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>มีวิธีการเขียน Interface ได้หลายแบบ ตัวอย่างเช่น หากเพิ่ม Interface เข้าไปใน C Source ที่ใช้ในหัวข้อ "1.2. การสร้าง IP ด้วย HLS" ดังภาพด้านล่าง IP ที่ส่งออกจะมีลักษณะดังนี้ ตำแหน่งแอดเดรสจะถูกกำหนดโดยอัตโนมัติ</span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img width=398
+<p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" width=398
 height=99 src="pynq-z2-hls_th_files/image050.png"
-alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></span></p>
+alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='position:
 absolute;z-index:251698176;margin-left:337px;margin-top:202px;width:141px;
 height:58px'><img width=141 height=58 src="pynq-z2-hls_th_files/image051.png"
-alt="xswtoled_hw.hは自動で&#13;&#10;作ってくれます&#13;&#10;"></span><span
-style='font-family:"ＭＳ 明朝",serif'><img width=488 height=424
+alt="xswtoled_hw.hは自動で&#13;&#10;作ってくれます&#13;&#10;"></span><img class="img-fluid rounded mx-auto d-block" width=488 height=424
 src="pynq-z2-hls_th_files/image052.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <span style='font-size:10.5pt;font-family:"ＭＳ 明朝",serif'><br clear=all
 style='page-break-before:always'>
@@ -765,9 +703,9 @@ style='page-break-before:always'>
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>ในกรณีที่ไม่ต้องการให้กำหนดตำแหน่งแอดเดรสโดยอัตโนมัติ สามารถเพิ่ม offset ได้</span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img width=454
+<p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" width=454
 height=173 src="pynq-z2-hls_th_files/image053.png"
-alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></span></p>
+alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></p>
 
 <span style='font-size:10.5pt;font-family:"ＭＳ 明朝",serif'><br clear=all
 style='page-break-before:always'>
@@ -784,10 +722,9 @@ style='page-break-before:always'>
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>※ โดยปกติแล้ว HLS น่าจะเลือกใช้ pipeline เป็นค่าเริ่มต้น</span></p>
 
-<p class=MsoNormal align=center style='text-align:center'><span
-style='font-family:"ＭＳ 明朝",serif'><img width=384 height=224
+<p class=MsoNormal align=center style='text-align:center'><img class="img-fluid rounded mx-auto d-block" width=384 height=224
 src="pynq-z2-hls_th_files/image054.png"
-alt="A diagram of a diagram&#10;&#10;Description automatically generated"></span></p>
+alt="A diagram of a diagram&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>ตัวอย่าง:</span></p>
 
@@ -806,16 +743,16 @@ alt="A diagram of a diagram&#10;&#10;Description automatically generated"></span
  <tr>
   <td width=312 valign=top style='width:233.75pt;border:solid windowtext 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt'>
-  <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img width=268
+  <p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" width=268
   height=208 src="pynq-z2-hls_th_files/image055.png"
-  alt="A computer screen shot of a program code&#10;&#10;Description automatically generated"></span></p>
+  alt="A computer screen shot of a program code&#10;&#10;Description automatically generated"></p>
   </td>
   <td width=312 valign=top style='width:233.75pt;border-top:none;border-left:
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
   padding:0in 5.4pt 0in 5.4pt'>
-  <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img width=247
+  <p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" width=247
   height=134 src="pynq-z2-hls_th_files/image056.png"
-  alt="A computer screen shot of a program code&#10;&#10;Description automatically generated"></span></p>
+  alt="A computer screen shot of a program code&#10;&#10;Description automatically generated"></p>
   </td>
  </tr>
 </table>
@@ -851,7 +788,7 @@ alt="A diagram of a diagram&#10;&#10;Description automatically generated"></span
   style='position:absolute;z-index:251668480;left:0px;margin-left:206px;
   margin-top:6px;width:48px;height:84px'><img width=48 height=84
   src="pynq-z2-hls_th_files/image057.png"></span><span style='font-size:8.0pt;
-  font-family:"ＭＳ 明朝",serif'><img width=540 height=43
+  font-family:"ＭＳ 明朝",serif'><img class="img-fluid rounded mx-auto d-block" width=540 height=43
   src="pynq-z2-hls_th_files/image058.png"></span></p>
   </td>
  </tr>
@@ -865,7 +802,7 @@ alt="A diagram of a diagram&#10;&#10;Description automatically generated"></span
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
   padding:0in 5.4pt 0in 5.4pt'>
   <p class=MsoNormal><span style='font-size:8.0pt;font-family:"ＭＳ 明朝",serif'><img
-  width=540 height=43 src="pynq-z2-hls_th_files/image059.png"></span></p>
+  class="img-fluid rounded mx-auto d-block" width=540 height=43 src="pynq-z2-hls_th_files/image059.png"></span></p>
   </td>
  </tr>
 </table>
@@ -881,10 +818,9 @@ alt="A diagram of a diagram&#10;&#10;Description automatically generated"></span
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>นี่คือข้อจำกัดในการทำให้วงจรคำนวณทำงานแบบขนาน (Parallel) เมื่อแปลงวงจร Loop เป็น HDL</span></p>
 
-<p class=MsoNormal align=center style='text-align:center'><span
-style='font-family:"ＭＳ 明朝",serif'><img width=278 height=156
+<p class=MsoNormal align=center style='text-align:center'><img class="img-fluid rounded mx-auto d-block" width=278 height=156
 src="pynq-z2-hls_th_files/image060.png"
-alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></span></p>
+alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>ตัวอย่าง:</span></p>
 
@@ -903,18 +839,18 @@ alt="A screenshot of a computer program&#10;&#10;Description automatically gener
  <tr>
   <td width=312 valign=top style='width:233.75pt;border:solid windowtext 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt'>
-  <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img width=232
+  <p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" width=232
   height=36 src="pynq-z2-hls_th_files/image061.png"
   alt="A computer screen shot of a program code&#10;&#10;Description automatically generated"></span></p>
-  <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img width=219
+  <p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" width=219
   height=118 src="pynq-z2-hls_th_files/image062.png"
-  alt="A computer screen shot of a program code&#10;&#10;Description automatically generated"></span></p>
+  alt="A computer screen shot of a program code&#10;&#10;Description automatically generated"></p>
   </td>
   <td width=312 valign=top style='width:233.75pt;border-top:none;border-left:
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
   padding:0in 5.4pt 0in 5.4pt'>
-  <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img width=229
-  height=140 src="pynq-z2-hls_th_files/image063.png"></span></p>
+  <p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" width=229
+  height=140 src="pynq-z2-hls_th_files/image063.png"></p>
   </td>
  </tr>
 </table>
@@ -950,7 +886,7 @@ alt="A screenshot of a computer program&#10;&#10;Description automatically gener
   style='position:absolute;z-index:251673600;left:0px;margin-left:459px;
   margin-top:6px;width:55px;height:229px'><img width=55 height=229
   src="pynq-z2-hls_th_files/image065.png"></span><span style='font-size:8.0pt;
-  font-family:"ＭＳ 明朝",serif'><img width=540 height=43
+  font-family:"ＭＳ 明朝",serif'><img class="img-fluid rounded mx-auto d-block" width=540 height=43
   src="pynq-z2-hls_th_files/image066.png"></span></p>
   </td>
  </tr>
@@ -964,7 +900,7 @@ alt="A screenshot of a computer program&#10;&#10;Description automatically gener
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
   padding:0in 5.4pt 0in 5.4pt'>
   <p class=MsoNormal><span style='font-size:8.0pt;font-family:"ＭＳ 明朝",serif'><img
-  width=540 height=42 src="pynq-z2-hls_th_files/image067.png"></span></p>
+  class="img-fluid rounded mx-auto d-block" width=540 height=42 src="pynq-z2-hls_th_files/image067.png"></span></p>
   </td>
  </tr>
  <tr>
@@ -977,7 +913,7 @@ alt="A screenshot of a computer program&#10;&#10;Description automatically gener
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
   padding:0in 5.4pt 0in 5.4pt'>
   <p class=MsoNormal><span style='font-size:8.0pt;font-family:"ＭＳ 明朝",serif'><img
-  width=543 height=42 src="pynq-z2-hls_th_files/image068.png"></span></p>
+  class="img-fluid rounded mx-auto d-block" width=543 height=42 src="pynq-z2-hls_th_files/image068.png"></span></p>
   </td>
  </tr>
  <tr>
@@ -990,7 +926,7 @@ alt="A screenshot of a computer program&#10;&#10;Description automatically gener
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
   padding:0in 5.4pt 0in 5.4pt'>
   <p class=MsoNormal><span style='font-size:8.0pt;font-family:"ＭＳ 明朝",serif'><img
-  width=543 height=42 src="pynq-z2-hls_th_files/image069.png"></span></p>
+  class="img-fluid rounded mx-auto d-block" width=543 height=42 src="pynq-z2-hls_th_files/image069.png"></span></p>
   </td>
  </tr>
  <tr>
@@ -1003,7 +939,7 @@ alt="A screenshot of a computer program&#10;&#10;Description automatically gener
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
   padding:0in 5.4pt 0in 5.4pt'>
   <p class=MsoNormal><span style='font-size:8.0pt;font-family:"ＭＳ 明朝",serif'><img
-  width=543 height=36 src="pynq-z2-hls_th_files/image070.png"></span></p>
+  class="img-fluid rounded mx-auto d-block" width=543 height=36 src="pynq-z2-hls_th_files/image070.png"></span></p>
   </td>
  </tr>
 </table>
@@ -1021,15 +957,13 @@ alt="A screenshot of a computer program&#10;&#10;Description automatically gener
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
 
-<p class=MsoNormal align=center style='text-align:center'><span
-style='font-family:"ＭＳ 明朝",serif'><img width=364 height=92
+<p class=MsoNormal align=center style='text-align:center'><img class="img-fluid rounded mx-auto d-block" width=364 height=92
 src="pynq-z2-hls_th_files/image071.png"
-alt="A diagram of a function&#10;&#10;Description automatically generated"></span></p>
+alt="A diagram of a function&#10;&#10;Description automatically generated"></p>
 
-<p class=MsoNormal align=center style='text-align:center'><span
-style='font-family:"ＭＳ 明朝",serif'><img width=385 height=228
+<p class=MsoNormal align=center style='text-align:center'><img class="img-fluid rounded mx-auto d-block" width=385 height=228
 src="pynq-z2-hls_th_files/image072.png"
-alt="A diagram of a function&#10;&#10;Description automatically generated with medium confidence"></span></p>
+alt="A diagram of a function&#10;&#10;Description automatically generated with medium confidence"></p>
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>ตัวอย่าง:</span></p>
 
@@ -1048,15 +982,15 @@ alt="A diagram of a function&#10;&#10;Description automatically generated with m
  <tr>
   <td width=312 valign=top style='width:233.75pt;border:solid windowtext 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt'>
-  <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img width=267
+  <p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" width=267
   height=220 src="pynq-z2-hls_th_files/image073.png"
-  alt="A computer screen shot of text&#10;&#10;Description automatically generated"></span></p>
+  alt="A computer screen shot of text&#10;&#10;Description automatically generated"></p>
   </td>
   <td width=312 valign=top style='width:233.75pt;border-top:none;border-left:
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
   padding:0in 5.4pt 0in 5.4pt'>
-  <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img width=232
-  height=140 src="pynq-z2-hls_th_files/image074.png"></span></p>
+  <p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" width=232
+  height=140 src="pynq-z2-hls_th_files/image074.png"></p>
   </td>
  </tr>
 </table>
@@ -1104,7 +1038,7 @@ style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
   style='position:absolute;z-index:251675648;left:0px;margin-left:192px;
   margin-top:6px;width:62px;height:129px'><img width=62 height=129
   src="pynq-z2-hls_th_files/image076.png"></span><span style='font-size:8.0pt;
-  font-family:"ＭＳ 明朝",serif'><img width=543 height=60
+  font-family:"ＭＳ 明朝",serif'><img class="img-fluid rounded mx-auto d-block" width=543 height=60
   src="pynq-z2-hls_th_files/image077.png"></span></p>
   </td>
  </tr>
@@ -1118,7 +1052,7 @@ style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
   padding:0in 5.4pt 0in 5.4pt'>
   <p class=MsoNormal><span style='font-size:8.0pt;font-family:"ＭＳ 明朝",serif'><img
-  width=543 height=62 src="pynq-z2-hls_th_files/image078.png"></span></p>
+  class="img-fluid rounded mx-auto d-block" width=543 height=62 src="pynq-z2-hls_th_files/image078.png"></span></p>
   </td>
  </tr>
 </table>
@@ -1146,14 +1080,23 @@ style='font-family:"ＭＳ 明朝",serif'>เงื่อนไขการใ�
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>ใน Vitis High-Level Synthesis User Guide มีหัวข้อ Unsupported C/C++ Constructs อยู่ โดยมีรายละเอียดโดยสรุปดังนี้</span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img width=624
+<p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" width=624
 height=354 id="Picture 1" src="pynq-z2-hls_th_files/image079.png"
-alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></span></p>
+alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
 
 </div>
+            </div>
+        </div>
+    </div>
 
+    <footer class="py-4 bg-dark text-white-50 mt-5">
+        <div class="container text-center">
+            <small>Copyright &copy; FPGATHAILAND</small>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

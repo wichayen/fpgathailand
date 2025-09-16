@@ -1,121 +1,93 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="th">
 <head>
-<meta http-equiv=Content-Type content="text/html; charset=utf-8">
-<meta name=Generator content="Microsoft Word 15 (filtered)">
-<style>
-<!--
- /* Font Definitions */
- @font-face
-	{font-family:Wingdings;
-	panose-1:5 0 0 0 0 0 0 0 0 0;}
-@font-face
-	{font-family:"ＭＳ 明朝";
-	panose-1:2 2 6 9 4 2 5 8 3 4;}
-@font-face
-	{font-family:"Angsana New";
-	panose-1:2 2 6 3 5 4 5 2 3 4;}
-@font-face
-	{font-family:"Cordia New";
-	panose-1:2 11 3 4 2 2 2 2 2 4;}
-@font-face
-	{font-family:"Cambria Math";
-	panose-1:2 4 5 3 5 4 6 3 2 4;}
-@font-face
-	{font-family:Calibri;
-	panose-1:2 15 5 2 2 2 4 3 2 4;}
-@font-face
-	{font-family:游明朝;
-	panose-1:2 2 4 0 0 0 0 0 0 0;}
-@font-face
-	{font-family:"ＭＳ Ｐゴシック";
-	panose-1:2 11 6 0 7 2 5 8 2 4;}
-@font-face
-	{font-family:"\@ＭＳ 明朝";
-	panose-1:2 2 6 9 4 2 5 8 3 4;}
-@font-face
-	{font-family:"\@游明朝";}
-@font-face
-	{font-family:"\@ＭＳ Ｐゴシック";}
- /* Style Definitions */
- p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0in;
-	text-align:justify;
-	text-justify:inter-ideograph;
-	font-size:10.5pt;
-	font-family:"Calibri",sans-serif;}
-h1
-	{mso-style-link:"Heading 1 Char";
-	margin:0in;
-	text-align:justify;
-	text-justify:inter-ideograph;
-	page-break-after:avoid;
-	font-size:12.0pt;
-	font-family:"Calibri Light",sans-serif;
-	font-weight:normal;}
-h2
-	{mso-style-link:"Heading 2 Char";
-	margin:0in;
-	text-align:justify;
-	text-justify:inter-ideograph;
-	page-break-after:avoid;
-	font-size:10.5pt;
-	font-family:"Calibri Light",sans-serif;
-	font-weight:normal;}
-h3
-	{mso-style-link:"Heading 3 Char";
-	margin-top:0in;
-	margin-right:0in;
-	margin-bottom:0in;
-	margin-left:20.0pt;
-	text-align:justify;
-	text-justify:inter-ideograph;
-	page-break-after:avoid;
-	font-size:10.5pt;
-	font-family:"Calibri Light",sans-serif;
-	font-weight:normal;}
-a:link, span.MsoHyperlink
-	{color:#0563C1;
-	text-decoration:underline;}
-span.Heading1Char
-	{mso-style-name:"Heading 1 Char";
-	mso-style-link:"Heading 1";
-	font-family:"Calibri Light",sans-serif;}
-span.Heading2Char
-	{mso-style-name:"Heading 2 Char";
-	mso-style-link:"Heading 2";
-	font-family:"Calibri Light",sans-serif;}
-span.Heading3Char
-	{mso-style-name:"Heading 3 Char";
-	mso-style-link:"Heading 3";
-	font-family:"Calibri Light",sans-serif;}
-.MsoChpDefault
-	{font-size:10.5pt;
-	font-family:"Calibri",sans-serif;}
-.MsoPapDefault
-	{text-align:justify;
-	text-justify:inter-ideograph;}
- /* Page Definitions */
- @page WordSection1
-	{size:8.5in 11.0in;
-	margin:1.0in 1.0in 1.0in 1.0in;
-	layout-grid:18.0pt;}
-div.WordSection1
-	{page:WordSection1;}
- /* List Definitions */
- ol
-	{margin-bottom:0in;}
-ul
-	{margin-bottom:0in;}
--->
-</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI (การตรวจจับวัตถุด้วย DPU IP ของ Xilinx)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding-top: 56px; }
+        .article-header {
+            background-color: #f8f9fa;
+            padding: 2rem 1rem;
+            margin-bottom: 2rem;
+        }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 1rem;
+        }
+        /* Styles for code blocks from MS Word */
+        p.MsoNormal, li.MsoNormal, div.MsoNormal {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+        p.MsoNormal[align=left] {
+            background-color: #272822;
+            color: #f8f8f2;
+            border: 1px solid #ddd;
+            border-left: 3px solid #f36d33;
+            page-break-inside: avoid;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.6em;
+            max-width: 100%;
+            overflow: auto;
+            padding: 1em 1.5em;
+            display: block;
+            word-wrap: break-word;
+        }
+    </style>
 </head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">FPGATHAILAND</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAries" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Aries Board
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAries">
+                            <li><a class="dropdown-item" href="AriesBoard_ep1.html">ตอนที่ 1: การออกแบบโปรเจค</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep2.html">ตอนที่ 2: Version A.1</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep3.html">ตอนที่ 3: ออกแบบ FPGA</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep4.html">ตอนที่ 4: PCI driver for linux</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep5.html">ตอนที่ 5: PCI driver for windows</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownPynq" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            PYNQ-Z2
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownPynq">
+                            <li><a class="dropdown-item" href="pynq-z2-ai_th.html">AI (DPU)</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-hls_th.html">HLS</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-modelsim_th.html">Modelsim</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-vivado_th.html">Vivado</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-<body lang=EN-US link="#0563C1" vlink="#954F72" style='word-wrap:break-word;
-text-justify-trim:punctuation'>
-
-<div class=WordSection1 style='layout-grid:18.0pt'>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-10 mx-auto article-content">
+                <div class="article-header rounded">
+                    <h1>AI (การตรวจจับวัตถุด้วย DPU IP ของ Xilinx)</h1>
+                </div>
+                <div class=WordSection1 style='layout-grid:18.0pt'>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -169,9 +141,9 @@ style='font-family:"ＭＳ 明朝",serif'>หลังจากแตกไฟ�
 style='font-family:"ＭＳ 明朝",serif'>D:\xilinx\pynq_z2\AI\DPU\Pynq-Z2_2020_1\pynqz2_dpu.xpr<span
 lang=JA>）</span></span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img border=0
+<p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" border=0
 width=562 height=153 src="pynq-z2-ai_th_files/image001.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <span style='font-size:10.5pt;font-family:"ＭＳ 明朝",serif'><br clear=all
 style='page-break-before:always'>
@@ -187,21 +159,21 @@ style='font-family:"ＭＳ 明朝",serif'>1.1.2.<span style='font:7.0pt "Times N
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>ใน IP Catalog คลิกที่ Add Repository และเพิ่ม dpu_ip</span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img border=0
+<p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" border=0
 width=394 height=174 src="pynq-z2-ai_th_files/image002.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img border=0
+<p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" border=0
 width=518 height=125 src="pynq-z2-ai_th_files/image003.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img border=0
+<p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" border=0
 width=498 height=155 src="pynq-z2-ai_th_files/image004.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <span style='font-size:10.5pt;font-family:"ＭＳ 明朝",serif'><br clear=all
 style='page-break-before:always'>
@@ -221,10 +193,9 @@ style='font-family:"ＭＳ 明朝",serif'>1.1.3.<span style='font:7.0pt "Times N
 <p class=MsoNormal align=left style='text-align:left'><span
 style='font-family:"ＭＳ 明朝",serif'>‐ เปิด Block design แล้วใส่ DPU IP จากนั้นเชื่อมต่อกับ Zynq ดังภาพด้านล่าง</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img border=0 width=624 height=243
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" border=0 width=624 height=243
 src="pynq-z2-ai_th_files/image005.png"
-alt="A diagram of a computer&#10;&#10;Description automatically generated"></span></p>
+alt="A diagram of a computer&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -285,10 +256,9 @@ style='font-family:"ＭＳ 明朝",serif'>‐ บอร์ด pynq-z2 มีจ�
 
 <p class=MsoNormal align=left style='text-align:left'><span style='position:
 absolute;z-index:251666432;margin-left:135px;margin-top:138px;width:142px;
-height:24px'><img width=142 height=24 src="pynq-z2-ai_th_files/image006.png"></span><span
-style='font-family:"ＭＳ 明朝",serif'><img border=0 width=410 height=336
+height:24px'><img width=142 height=24 src="pynq-z2-ai_th_files/image006.png"></span><img class="img-fluid rounded mx-auto d-block" border=0 width=410 height=336
 src="pynq-z2-ai_th_files/image007.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
 
@@ -310,27 +280,26 @@ style='font-family:"ＭＳ 明朝",serif'>1.1.4.<span style='font:7.0pt "Times N
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img border=0
+<p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" border=0
 width=355 height=279 src="pynq-z2-ai_th_files/image008.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img border=0
+<p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" border=0
 width=624 height=278 src="pynq-z2-ai_th_files/image009.png"
-alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></span></p>
+alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'><img border=0
-width=624 height=215 src="pynq-z2-ai_th_files/image010.png"></span></p>
+<p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" border=0
+width=624 height=215 src="pynq-z2-ai_th_files/image010.png"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img border=0 width=624 height=198
-src="pynq-z2-ai_th_files/image011.png"></span></p>
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" border=0 width=624 height=198
+src="pynq-z2-ai_th_files/image011.png"></p>
 
 <span style='font-size:10.5pt;font-family:"ＭＳ 明朝",serif'><br clear=all
 style='page-break-before:always'>
@@ -646,10 +615,9 @@ ACCORDING TO YOUR DESIGN</span></p>
 <p class=MsoNormal align=left style='text-align:left'><span
 style='font-family:"ＭＳ 明朝",serif'>※ interrupts = &lt;0 29 4&gt;; คือ IRQF2P หมายเลข 61 (61-32 = 29) จำเป็นต้องตั้งค่าให้ตรงกับช่องสัญญาณ IRQ ที่ใช้ตอนออกแบบฮาร์ดแวร์ DPU</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img border=0 width=624 height=171
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" border=0 width=624 height=171
 src="pynq-z2-ai_th_files/image012.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -873,9 +841,8 @@ style='font-family:"ＭＳ 明朝",serif'>※ หาก BOOT.BIN ไม่ได
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>สถานะที่ BOOT.BIN ยังไม่ได้รวม bitstream</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img border=0 width=569 height=39
-src="pynq-z2-ai_th_files/image013.png"></span></p>
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" border=0 width=569 height=39
+src="pynq-z2-ai_th_files/image013.png"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -883,9 +850,8 @@ src="pynq-z2-ai_th_files/image013.png"></span></p>
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>สถานะที่ BOOT.BIN รวม bitstream แล้ว (ขนาดจะประมาณ system.bit + u-boot.bin)</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img border=0 width=569 height=40
-src="pynq-z2-ai_th_files/image014.png"></span></p>
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" border=0 width=569 height=40
+src="pynq-z2-ai_th_files/image014.png"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -981,10 +947,9 @@ style='font-family:"ＭＳ 明朝",serif'>‐ ติดตั้ง DNNDK</span>
 <p class=MsoNormal align=left style='text-align:left'><span
 style='font-family:"ＭＳ 明朝",serif'>‐ แปลงไฟล์รันของ YOLO ให้อยู่ในรูปแบบที่ FPGA ของ Xilinx สามารถรันได้</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img border=0 width=624 height=237 id="Picture 6"
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" border=0 width=624 height=237 id="Picture 6"
 src="pynq-z2-ai_th_files/image015.jpg"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -1244,10 +1209,9 @@ style='font-family:"ＭＳ 明朝",serif'>‐ การสร้าง SD Card</
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>Partition2<span lang=JA>：</span>ext4<span lang=JA>ファイルフォーマット</span></span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img border=0 width=624 height=221
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" border=0 width=624 height=221
 src="pynq-z2-ai_th_files/image016.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>คัดลอก Uboot, linux และอื่นๆ ไปยัง SD Card</span></p>
@@ -1327,9 +1291,8 @@ style='font-family:"ＭＳ 明朝",serif'>‐ สิ่งที่เตรี�
 <p class=MsoNormal align=left style='text-align:left'><span
 style='font-family:"ＭＳ 明朝",serif'>‐ เสียบ SD Card เข้าไปใน Pynq-Z2 แล้วเปิดเครื่อง รอจนกว่า Linux จะบูตเสร็จ ตรวจสอบให้แน่ใจว่า DPU ถูกรวมเข้าไปอย่างถูกต้อง โดยใช้คำสั่ง devmem เพื่ออ่านค่าบางอย่าง (รันบนบอร์ด Pynq-Z2)</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img border=0 width=348 height=35
-src="pynq-z2-ai_th_files/image017.png"></span></p>
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" border=0 width=348 height=35
+src="pynq-z2-ai_th_files/image017.png"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -1337,10 +1300,9 @@ src="pynq-z2-ai_th_files/image017.png"></span></p>
 <p class=MsoNormal align=left style='text-align:left'><span
 style='font-family:"ＭＳ 明朝",serif'>‐ ล็อกอินด้วย MobaXterm โดย user คือ "root" และ pass คือ "root"</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img border=0 width=624 height=250
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" border=0 width=624 height=250
 src="pynq-z2-ai_th_files/image018.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -1365,10 +1327,9 @@ style='font-family:"ＭＳ 明朝",serif'>‐ คัดลอกไฟล์ cpp
 
 <p class=MsoNormal align=left style='text-align:left'><span style='position:
 absolute;z-index:251667456;margin-left:117px;margin-top:168px;width:309px;
-height:83px'><img width=309 height=83 src="pynq-z2-ai_th_files/image019.png"></span><span
-style='font-family:"ＭＳ 明朝",serif'><img border=0 width=624 height=355
+height:83px'><img width=309 height=83 src="pynq-z2-ai_th_files/image019.png"></span><img class="img-fluid rounded mx-auto d-block" border=0 width=624 height=355
 src="pynq-z2-ai_th_files/image020.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -1385,10 +1346,9 @@ style='font-family:"ＭＳ 明朝",serif'>‐ บิวด์และรัน�
 <p class=MsoNormal align=left style='text-align:left'><span
 style='font-family:"ＭＳ 明朝",serif'>เมื่อรันสำเร็จ จะแสดงวัตถุที่ตรวจจับได้ดังภาพด้านล่าง</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'><img border=0 width=624 height=356 id="Picture 1"
+<p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" border=0 width=624 height=356 id="Picture 1"
 src="pynq-z2-ai_th_files/image021.png"
-alt="A screenshot of a computer&#10;&#10;Description automatically generated"></span></p>
+alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='font-family:
 "ＭＳ 明朝",serif'>&nbsp;</span></p>
@@ -1426,7 +1386,16 @@ style='page-break-before:always'>
 <p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
 
 </div>
+            </div>
+        </div>
+    </div>
 
+    <footer class="py-4 bg-dark text-white-50 mt-5">
+        <div class="container text-center">
+            <small>Copyright &copy; FPGATHAILAND</small>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>
