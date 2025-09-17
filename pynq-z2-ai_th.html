@@ -74,170 +74,158 @@
                 </div>
                 <div class=WordSection1 style='layout-grid:18.0pt'>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <h1 style='margin-left:21.25pt;text-indent:-21.25pt'><a name="_Toc208827153"><span
-style='font-family:"ＭＳ 明朝",serif'>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><span style='font-family:"ＭＳ 明朝",serif'>AI (การตรวจจับวัตถุด้วย DPU IP ของ Xilinx)</span></a></h1>
+style=''>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><span style=''>AI (การตรวจจับวัตถุด้วย DPU IP ของ Xilinx)</span></a></h1>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
-
-<p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>สิ่งที่ระบุในบทนี้จะดำเนินการในสภาพแวดล้อมต่อไปนี้</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>ฮาร์ดแวร์: </span><span style='font-family:"ＭＳ 明朝",serif'>Windows
+style=''>สิ่งที่ระบุในบทนี้จะดำเนินการในสภาพแวดล้อมต่อไปนี้</span></p>
+
+<p class=MsoNormal align=left style='text-align:left'><span
+style=''>ฮาร์ดแวร์: </span><span style=''>Windows
 OS<span lang=JA>上で</span>Vivado 2020.1</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>ซอฟต์แวร์: </span><span style='font-family:"ＭＳ 明朝",serif'>Ubuntu
+style=''>ซอฟต์แวร์: </span><span style=''>Ubuntu
 18.04<span lang=JA>上（</span>VMware 17.5.2<span lang=JA>）で</span>Petalinux
 2019.2</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>แอปพลิเคชัน: การตรวจจับวัตถุด้วย </span><span style='font-family:"ＭＳ 明朝",serif'>YOLO<span
+style=''>แอปพลิเคชัน: การตรวจจับวัตถุด้วย </span><span style=''>YOLO<span
 lang=JA>で</span>Pynq-Z2<span lang=JA>で動かす</span></span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><a
 href="https://xilinx.github.io/Vitis-AI/3.0/html/docs/reference/release_documentation.html"><span
-style='font-family:"ＭＳ 明朝",serif'>https://xilinx.github.io/Vitis-AI/3.0/html/docs/reference/release_documentation.html</span></a></p>
+style=''>https://xilinx.github.io/Vitis-AI/3.0/html/docs/reference/release_documentation.html</span></a></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <h2 style='margin-left:28.35pt;text-indent:-28.35pt'><a name="_Toc208827154"><span
-style='font-family:"ＭＳ 明朝",serif'>1.1.<span style='font:7.0pt "Times New Roman"'>&nbsp;
-</span></span><span style='font-family:"ＭＳ 明朝",serif'>DPU ของ Xilinx (ฮาร์ดแวร์)</span></a></h2>
+style=''>1.1.<span style='font:7.0pt "Times New Roman"'>&nbsp;
+</span></span><span style=''>DPU ของ Xilinx (ฮาร์ดแวร์)</span></a></h2>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal><span style=''>&nbsp;</span></p>
 
 <h3 style='margin-left:35.45pt;text-indent:-35.45pt'><a name="_Toc208827155"><span
-style='font-family:"ＭＳ 明朝",serif'>1.1.1.<span style='font:7.0pt "Times New Roman"'>
-</span></span><span style='font-family:"ＭＳ 明朝",serif'>การรับ DPU IP ของ Xilinx</span></a></h3>
+style=''>1.1.1.<span style='font:7.0pt "Times New Roman"'>
+</span></span><span style=''>การรับ DPU IP ของ Xilinx</span></a></h3>
 
-<p class=MsoNormal style='text-indent:35.45pt'><span style='font-family:"ＭＳ 明朝",serif'>DPU IP เวอร์ชันล่าสุดไม่รองรับ Zynq-7000 อีกต่อไป แต่ยังรองรับจนถึงเวอร์ชัน 3.3 ในครั้งนี้เราจะใช้เวอร์ชัน 3.0 เพื่อติดตั้งบน Zynq-7000 DPU IP ที่รองรับ Zynq-7000 นั้นไม่ค่อยมีการเปิดเผยต่อสาธารณะ แต่มีอยู่ในไฟล์ zcu102-dpu-trd-2019-1-190809.zip</span></p>
+<p class=MsoNormal style='text-indent:35.45pt'><span style=''>DPU IP เวอร์ชันล่าสุดไม่รองรับ Zynq-7000 อีกต่อไป แต่ยังรองรับจนถึงเวอร์ชัน 3.3 ในครั้งนี้เราจะใช้เวอร์ชัน 3.0 เพื่อติดตั้งบน Zynq-7000 DPU IP ที่รองรับ Zynq-7000 นั้นไม่ค่อยมีการเปิดเผยต่อสาธารณะ แต่มีอยู่ในไฟล์ zcu102-dpu-trd-2019-1-190809.zip</span></p>
 
 <p class=MsoNormal align=left style='text-align:left;text-indent:35.45pt'><span
-style='font-family:"ＭＳ 明朝",serif'>หลังจากแตกไฟล์ zcu102-dpu-trd-2019-1-190809.zip จะมีโฟลเดอร์ชื่อ dpu_ip อยู่ใน zcu102-dpu-trd-2019-1-timer\pl\srcs ให้คัดลอกทั้งโฟลเดอร์ dpu_ip ไปไว้ที่ตำแหน่งที่ต้องการ ในครั้งนี้จะวางไว้ที่ D:\xilinx\pynq_z2\AI\DPU\ip_repo</span></p>
+style=''>หลังจากแตกไฟล์ zcu102-dpu-trd-2019-1-190809.zip จะมีโฟลเดอร์ชื่อ dpu_ip อยู่ใน zcu102-dpu-trd-2019-1-timer\pl\srcs ให้คัดลอกทั้งโฟลเดอร์ dpu_ip ไปไว้ที่ตำแหน่งที่ต้องการ ในครั้งนี้จะวางไว้ที่ D:\xilinx\pynq_z2\AI\DPU\ip_repo</span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>(โปรเจกต์ Vivado คือ </span><span
-style='font-family:"ＭＳ 明朝",serif'>D:\xilinx\pynq_z2\AI\DPU\Pynq-Z2_2020_1\pynqz2_dpu.xpr<span
+<p class=MsoNormal><span style=''>(โปรเจกต์ Vivado คือ </span><span
+style=''>D:\xilinx\pynq_z2\AI\DPU\Pynq-Z2_2020_1\pynqz2_dpu.xpr<span
 lang=JA>）</span></span></p>
 
 <p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" border=0
 width=562 height=153 src="pynq-z2-ai_th_files/image001.png"
 alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
-<span style='font-size:10.5pt;font-family:"ＭＳ 明朝",serif'><br clear=all
+<span style='font-size:10.5pt;'><br clear=all
 style='page-break-before:always'>
 </span>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal><span style=''>&nbsp;</span></p>
 
 <h3 style='margin-left:35.45pt;text-indent:-35.45pt'><a name="_Toc208827156"><span
-style='font-family:"ＭＳ 明朝",serif'>1.1.2.<span style='font:7.0pt "Times New Roman"'>
-</span></span><span style='font-family:"ＭＳ 明朝",serif'>การเพิ่ม DPU IP ไปยัง IP Catalog</span></a></h3>
+style=''>1.1.2.<span style='font:7.0pt "Times New Roman"'>
+</span></span><span style=''>การเพิ่ม DPU IP ไปยัง IP Catalog</span></a></h3>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>ใน IP Catalog คลิกที่ Add Repository และเพิ่ม dpu_ip</span></p>
+<p class=MsoNormal><span style=''>ใน IP Catalog คลิกที่ Add Repository และเพิ่ม dpu_ip</span></p>
 
 <p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" border=0
 width=394 height=174 src="pynq-z2-ai_th_files/image002.png"
 alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" border=0
 width=518 height=125 src="pynq-z2-ai_th_files/image003.png"
 alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" border=0
 width=498 height=155 src="pynq-z2-ai_th_files/image004.png"
 alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
-<span style='font-size:10.5pt;font-family:"ＭＳ 明朝",serif'><br clear=all
+<span style='font-size:10.5pt;'><br clear=all
 style='page-break-before:always'>
 </span>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal><span style=''>&nbsp;</span></p>
 
 <h3 style='margin-left:35.45pt;text-indent:-35.45pt'><a name="_Toc208827157"><span
-style='font-family:"ＭＳ 明朝",serif'>1.1.3.<span style='font:7.0pt "Times New Roman"'>
-</span></span><span style='font-family:"ＭＳ 明朝",serif'>การติดตั้ง DPU IP</span></a></h3>
+style=''>1.1.3.<span style='font:7.0pt "Times New Roman"'>
+</span></span><span style=''>การติดตั้ง DPU IP</span></a></h3>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ เปิด Block design แล้วใส่ DPU IP จากนั้นเชื่อมต่อกับ Zynq ดังภาพด้านล่าง</span></p>
+style=''>‐ เปิด Block design แล้วใส่ DPU IP จากนั้นเชื่อมต่อกับ Zynq ดังภาพด้านล่าง</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" border=0 width=624 height=243
 src="pynq-z2-ai_th_files/image005.png"
 alt="A diagram of a computer&#10;&#10;Description automatically generated"></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>อินเทอร์เฟซของ DPU มีพอร์ตอยู่หลายพอร์ต</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>อินเทอร์เฟซของ DPU มีพอร์ตอยู่หลายพอร์ต</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>1<span lang=JA>．</span>S_AXI<span lang=JA>、</span>s_axi_aclk</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>1<span lang=JA>．</span>S_AXI<span lang=JA>、</span>s_axi_aclk</span></p>
 
 <p class=MsoNormal align=left style='text-align:left;text-indent:42.0pt'><span
-style='font-family:"ＭＳ 明朝",serif'>ใช้สำหรับการตั้งค่าการทำงานของ DPU และอื่นๆ โดยจะเชื่อมต่อกับ AXI Master (M_AXI_GP) ของ Zynq</span></p>
+style=''>ใช้สำหรับการตั้งค่าการทำงานของ DPU และอื่นๆ โดยจะเชื่อมต่อกับ AXI Master (M_AXI_GP) ของ Zynq</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>2<span lang=JA>．</span>M_AXI_DATA0<span lang=JA>、</span>M_AXI_DATA1<span
+<p class=MsoNormal align=left style='text-align:left'><span style=''>2<span lang=JA>．</span>M_AXI_DATA0<span lang=JA>、</span>M_AXI_DATA1<span
 lang=JA>、</span>M_AXI_INSTR<span lang=JA>、</span>m_axi_dpu_aclk</span></p>
 
 <p class=MsoNormal align=left style='text-align:left;text-indent:42.0pt'><span
-style='font-family:"ＭＳ 明朝",serif'>ใช้สำหรับส่งออกผลลัพธ์การคำนวณของ DPU โดยจะเชื่อมต่อกับ AXI Slave (S_AXI_HP0～2) ของ Zynq</span></p>
+style=''>ใช้สำหรับส่งออกผลลัพธ์การคำนวณของ DPU โดยจะเชื่อมต่อกับ AXI Slave (S_AXI_HP0～2) ของ Zynq</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>3<span lang=JA>．</span>dpu_2x_clk</span></p>
-
-<p class=MsoNormal align=left style='text-align:left;text-indent:42.0pt'><span
-style='font-family:"ＭＳ 明朝",serif'>จะรับสัญญาณนาฬิกา (clock) ที่มีความถี่เป็นสองเท่าของ m_axi_dpu_aclk</span></p>
-
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>4<span lang=JA>．</span>dup_interrupt</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>3<span lang=JA>．</span>dpu_2x_clk</span></p>
 
 <p class=MsoNormal align=left style='text-align:left;text-indent:42.0pt'><span
-style='font-family:"ＭＳ 明朝",serif'>คือสัญญาณขัดจังหวะ (interrupt) ของ DPU</span></p>
+style=''>จะรับสัญญาณนาฬิกา (clock) ที่มีความถี่เป็นสองเท่าของ m_axi_dpu_aclk</span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>4<span lang=JA>．</span>dup_interrupt</span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>※ สัญญาณนาฬิกาที่ป้อนเข้า DPU IP มี 3 สัญญาณ</span></p>
+<p class=MsoNormal align=left style='text-align:left;text-indent:42.0pt'><span
+style=''>คือสัญญาณขัดจังหวะ (interrupt) ของ DPU</span></p>
 
-<p class=MsoNormal style='text-indent:42.0pt'><span style='font-family:"ＭＳ 明朝",serif'>s_axi_aclk<span
+<p class=MsoNormal><span style=''>&nbsp;</span></p>
+
+<p class=MsoNormal><span style=''>※ สัญญาณนาฬิกาที่ป้อนเข้า DPU IP มี 3 สัญญาณ</span></p>
+
+<p class=MsoNormal style='text-indent:42.0pt'><span style=''>s_axi_aclk<span
 lang=JA>：</span>Zynq<span lang=JA>→</span>DPU<span lang=JA>の通信用、</span>100MHz<span
 lang=JA>で設定します。</span></span></p>
 
 <p class=MsoNormal align=left style='text-align:left;text-indent:42.0pt'><span
-style='font-family:"ＭＳ 明朝",serif'>m_axi_dpu_aclk<span lang=JA>：</span>DPU<span
+style=''>m_axi_dpu_aclk<span lang=JA>：</span>DPU<span
 lang=JA>の演算用と</span>DPU<span lang=JA>→</span>Zynq<span lang=JA>の通信用、</span>150MHz<span
 lang=JA>で設定します。</span></span></p>
 
 <p class=MsoNormal align=left style='text-align:left;text-indent:42.0pt'><span
-style='font-family:"ＭＳ 明朝",serif'>dpu_2x_clk<span lang=JA>：</span>DPU<span
+style=''>dpu_2x_clk<span lang=JA>：</span>DPU<span
 lang=JA>の演算用、</span>300MHz<span lang=JA>で設定します。</span></span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>สัญญาณ 150MHz และ 300MHz จะถูกสร้างขึ้นโดย PLL และป้อนเข้าสู่ m_axi_dpu_aclk และ dpu_2x_clk</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>สัญญาณ 150MHz และ 300MHz จะถูกสร้างขึ้นโดย PLL และป้อนเข้าสู่ m_axi_dpu_aclk และ dpu_2x_clk</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ บอร์ด pynq-z2 มีจำนวนลอจิกใน FPGA น้อย เพื่อลดการใช้ลอจิกของ DPU ให้เปลี่ยน Arch of DPU ของ DPU เป็น B1152</span></p>
+style=''>‐ บอร์ด pynq-z2 มีจำนวนลอจิกใน FPGA น้อย เพื่อลดการใช้ลอจิกของ DPU ให้เปลี่ยน Arch of DPU ของ DPU เป็น B1152</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='position:
 absolute;z-index:251666432;margin-left:135px;margin-top:138px;width:142px;
@@ -245,1070 +233,803 @@ height:24px'><img width=142 height=24 src="pynq-z2-ai_th_files/image006.png"></s
 src="pynq-z2-ai_th_files/image007.png"
 alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal><span style=''>&nbsp;</span></p>
 
-<span style='font-size:10.5pt;font-family:"ＭＳ 明朝",serif'><br clear=all
+<span style='font-size:10.5pt;'><br clear=all
 style='page-break-before:always'>
 </span>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal><span style=''>&nbsp;</span></p>
 
 <h3 style='margin-left:35.45pt;text-indent:-35.45pt'><a name="_Toc208827158"><span
-style='font-family:"ＭＳ 明朝",serif'>1.1.4.<span style='font:7.0pt "Times New Roman"'>
-</span></span><span style='font-family:"ＭＳ 明朝",serif'>การสร้างข้อมูลฮาร์ดแวร์ (.XSA)</span></a></h3>
+style=''>1.1.4.<span style='font:7.0pt "Times New Roman"'>
+</span></span><span style=''>การสร้างข้อมูลฮาร์ดแวร์ (.XSA)</span></a></h3>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>หลังจากคอมไพล์โปรเจกต์ใน Vivado เสร็จแล้ว ให้ส่งออกข้อมูลฮาร์ดแวร์ (.xsa) โดยไปที่ File　→　Export　→　Export Hardware</span></p>
+<p class=MsoNormal><span style=''>หลังจากคอมไพล์โปรเจกต์ใน Vivado เสร็จแล้ว ให้ส่งออกข้อมูลฮาร์ดแวร์ (.xsa) โดยไปที่ File　→　Export　→　Export Hardware</span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" border=0
 width=355 height=279 src="pynq-z2-ai_th_files/image008.png"
 alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" border=0
 width=624 height=278 src="pynq-z2-ai_th_files/image009.png"
 alt="A screenshot of a computer program&#10;&#10;Description automatically generated"></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal><img class="img-fluid rounded mx-auto d-block" border=0
 width=624 height=215 src="pynq-z2-ai_th_files/image010.png"></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" border=0 width=624 height=198
 src="pynq-z2-ai_th_files/image011.png"></p>
 
-<span style='font-size:10.5pt;font-family:"ＭＳ 明朝",serif'><br clear=all
+<span style='font-size:10.5pt;'><br clear=all
 style='page-break-before:always'>
 </span>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <h2 style='margin-left:28.35pt;text-indent:-28.35pt'><a name="_Toc208827159"><span
-style='font-family:"ＭＳ 明朝",serif'>1.2.<span style='font:7.0pt "Times New Roman"'>&nbsp;
-</span></span><span style='font-family:"ＭＳ 明朝",serif'>DPU ของ Xilinx (ซอฟต์แวร์)</span></a></h2>
+style=''>1.2.<span style='font:7.0pt "Times New Roman"'>&nbsp;
+</span></span><span style=''>DPU ของ Xilinx (ซอฟต์แวร์)</span></a></h2>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <h3 align=left style='margin-left:35.45pt;text-align:left;text-indent:-35.45pt'><a
-name="_Toc208827160"><span style='font-family:"ＭＳ 明朝",serif'>1.2.1.<span
+name="_Toc208827160"><span style=''>1.2.1.<span
 style='font:7.0pt "Times New Roman"'> </span></span><span
-style='font-family:"ＭＳ 明朝",serif'>การเตรียมสภาพแวดล้อม</span></a></h3>
+style=''>การเตรียมสภาพแวดล้อม</span></a></h3>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ ติดตั้ง Petalinux 2019.2 บนเครื่อง Linux (Ubuntu) ในครั้งนี้จะใช้ Ubuntu 18.04</span></p>
+style=''>‐ ติดตั้ง Petalinux 2019.2 บนเครื่อง Linux (Ubuntu) ในครั้งนี้จะใช้ Ubuntu 18.04</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ sudo apt update</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ sudo apt update</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ sudo apt upgrade</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ sudo apt upgrade</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ sudo apt install htop vim openssh-server iproute2 gcc g++
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ sudo apt install htop vim openssh-server iproute2 gcc g++
 net-tools libncurses5-dev zlib1g:i386 libssl-dev flex bison libselinux1 xterm
 autoconf libtool texinfo zlib1g-dev gcc-multilib build-essential screen pax
 gawk python3 python3-pexpect python3-pip python3-git python3-jinja2 xz-utils
 debianutils iputils-ping libegl1-mesa libsdl1.2-dev pylint3 cpio chrpath socat
 python</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ pip3 install --upgrade pip</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ pip3 install --upgrade pip</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ sudo apt-get install tftp</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ sudo apt-get install tftp</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ sudo apt-get install tftpd-hpa</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ sudo apt-get install tftpd-hpa</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ sudo apt-get install gparted</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ sudo apt-get install gparted</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ ติดตั้งแพ็คเกจที่จำเป็น</span></p>
+style=''>‐ ติดตั้งแพ็คเกจที่จำเป็น</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'># petalinux install</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''># petalinux install</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ mkdir ~/petalinux_2019</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ mkdir ~/petalinux_2019</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ mv ~/Downloads/petalinux-v2019.2-final-installer.run
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ mv ~/Downloads/petalinux-v2019.2-final-installer.run
 ~/petalinux_2019/.</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ cd ~/petalinux_2019</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ cd ~/petalinux_2019</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ chmod +x petalinux-v2019.2-final-installer.run</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ chmod +x petalinux-v2019.2-final-installer.run</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ ./petalinux-v2019.2-final-installer.run</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ ./petalinux-v2019.2-final-installer.run</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>([q] to close message)</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>([q] to close message)</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ ใน Ubuntu ให้เปลี่ยนเชลล์เริ่มต้นของระบบ โดยเปลี่ยนเชลล์ที่ใช้รันสคริปต์จาก dash เป็น bash</span></p>
+style=''>‐ ใน Ubuntu ให้เปลี่ยนเชลล์เริ่มต้นของระบบ โดยเปลี่ยนเชลล์ที่ใช้รันสคริปต์จาก dash เป็น bash</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ chsh -s /bin/bash</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ chsh -s /bin/bash</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>then reboot</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>then reboot</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ sudo dpkg-reconfigure dash</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ sudo dpkg-reconfigure dash</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>        -&gt;      select no</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>        -&gt;      select no</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <h3 style='margin-left:35.45pt;text-indent:-35.45pt'><a name="_Toc208827161"><span
-style='font-family:"ＭＳ 明朝",serif'>1.2.2.<span style='font:7.0pt "Times New Roman"'>
-</span></span><span style='font-family:"ＭＳ 明朝",serif'>การบิวด์ Linux</span></a></h3>
+style=''>1.2.2.<span style='font:7.0pt "Times New Roman"'>
+</span></span><span style=''>การบิวด์ Linux</span></a></h3>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
-
-<p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ เตรียม Petalinux</span></p>
-
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ source ~/petalinux_2019/settings.sh</span></p>
-
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ สร้างโปรเจกต์ Petalinux โดยรวมข้อมูลฮาร์ดแวร์เข้าไปด้วย</span></p>
+style=''>‐ เตรียม Petalinux</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ cd ~/</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ source ~/petalinux_2019/settings.sh</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ petalinux-create --type project --template zynq --name
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left'><span
+style=''>‐ สร้างโปรเจกต์ Petalinux โดยรวมข้อมูลฮาร์ดแวร์เข้าไปด้วย</span></p>
+
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ cd ~/</span></p>
+
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ petalinux-create --type project --template zynq --name
 pynqz2_dpu</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ cd pynqz2_dpu/</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ cd pynqz2_dpu/</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ petalinux-config --get-hw-description=~/Desktop/Pynq-Z2_2020_1</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ petalinux-config --get-hw-description=~/Desktop/Pynq-Z2_2020_1</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>จากนั้น ทำการตั้งค่าต่อไปนี้</span></p>
+style=''>จากนั้น ทำการตั้งค่าต่อไปนี้</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>1.</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>1.</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>DTG Settings-&gt;Kernel Bootargs-&gt;disable generate boot args
+<p class=MsoNormal align=left style='text-align:left'><span style=''>DTG Settings-&gt;Kernel Bootargs-&gt;disable generate boot args
 automatically</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>On &quot;user set kernel bootargs&quot;, paste the following:</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>On &quot;user set kernel bootargs&quot;, paste the following:</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>console=ttyPS0,115200 root=/dev/mmcblk0p2 rw earlyprintk quiet
+<p class=MsoNormal align=left style='text-align:left'><span style=''>console=ttyPS0,115200 root=/dev/mmcblk0p2 rw earlyprintk quiet
 rootfstype=ext4 rootwait cma=256M</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>2.</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>2.</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>Image Packaging Configuration --&gt; Root filesystem type (SD
+<p class=MsoNormal align=left style='text-align:left'><span style=''>Image Packaging Configuration --&gt; Root filesystem type (SD
 card) --&gt; EXT4 (SD/eMMC/SATA/USB) -&gt; enable</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ เพิ่มการตั้งค่าที่จำเป็นเกี่ยวกับ DPU</span></p>
+style=''>‐ เพิ่มการตั้งค่าที่จำเป็นเกี่ยวกับ DPU</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ cp -rp
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ cp -rp
 ~/Downloads/zcu102-dpu-trd-2019-1-190809/zcu102-dpu-trd-2019-1-timer/apu/dpu_petalinux_bsp/xilinx-dpu-trd-zcu102-v2019.1/zcu102-dpu-trd-2019-1/project-spec/meta-user/recipes-modules
 project-spec/meta-user</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ gedit project-spec/meta-user/conf/user-rootfsconfig</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ gedit project-spec/meta-user/conf/user-rootfsconfig</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_dpu</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_dpu</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ gedit project-spec/meta-user/conf/petalinuxbsp.conf</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ gedit project-spec/meta-user/conf/petalinuxbsp.conf</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>IMAGE_INSTALL_append = &quot;dpu&quot;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>IMAGE_INSTALL_append = &quot;dpu&quot;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ gedit
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ gedit
 project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>/include/ &quot;system-conf.dtsi&quot; </span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>/include/ &quot;system-conf.dtsi&quot; </span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&amp;amba {</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&amp;amba {</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>        xlnk {</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>        xlnk {</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>                compatible = &quot;xlnx,xlnk-1.0&quot;;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>                compatible = &quot;xlnx,xlnk-1.0&quot;;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>        };</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>        };</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>};</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>};</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&amp;amba{</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&amp;amba{</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>        dpu{</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>        dpu{</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>                #address-cells = &lt;1&gt;;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>                #address-cells = &lt;1&gt;;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>                #size-cells = &lt;1&gt;;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>                #size-cells = &lt;1&gt;;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>                compatible = &quot;xilinx,dpu&quot;;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>                compatible = &quot;xilinx,dpu&quot;;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>                base-addr = &lt;0x4f000000&gt;;     //CHANGE
+<p class=MsoNormal align=left style='text-align:left'><span style=''>                base-addr = &lt;0x4f000000&gt;;     //CHANGE
 THIS ACCORDING TO YOUR DESIGN</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>                dpucore {</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>                dpucore {</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>                        compatible = &quot;xilinx,dpucore&quot;;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>                        compatible = &quot;xilinx,dpucore&quot;;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>                        interrupt-parent = &lt;&amp;intc&gt;;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>                        interrupt-parent = &lt;&amp;intc&gt;;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>                        <span style='background:yellow'>interrupts
+<p class=MsoNormal align=left style='text-align:left'><span style=''>                        <span style='background:yellow'>interrupts
 = &lt;0 29 4&gt;; //CHANGE THIS ACCORDING TO YOUR DESIGN</span> </span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>                        core-num = &lt;0x1&gt;; //CHANGE THIS
+<p class=MsoNormal align=left style='text-align:left'><span style=''>                        core-num = &lt;0x1&gt;; //CHANGE THIS
 ACCORDING TO YOUR DESIGN</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>                };</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>                };</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>        };</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>        };</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>};</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>};</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>//usb device tree</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>//usb device tree</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>/{ </span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>/{ </span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>        usb_phy0: usb_phy@0 { </span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>        usb_phy0: usb_phy@0 { </span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>                compatible = &quot;ulpi-phy&quot;;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>                compatible = &quot;ulpi-phy&quot;;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>                #phy-cells = &lt;0&gt;;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>                #phy-cells = &lt;0&gt;;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>                reg = &lt;0xe0002000 0x1000&gt;; </span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>                reg = &lt;0xe0002000 0x1000&gt;; </span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>                view-port = &lt;0x0170&gt;; </span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>                view-port = &lt;0x0170&gt;; </span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>                drv-vbus;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>                drv-vbus;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>        };</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>        };</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>};</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>};</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&amp;usb0 {</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&amp;usb0 {</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>        dr_mode = &quot;host&quot;;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>        dr_mode = &quot;host&quot;;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>        usb-phy = &lt;&amp;usb_phy0&gt;;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>        usb-phy = &lt;&amp;usb_phy0&gt;;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>};</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>};</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>※ interrupts = &lt;0 29 4&gt;; คือ IRQF2P หมายเลข 61 (61-32 = 29) จำเป็นต้องตั้งค่าให้ตรงกับช่องสัญญาณ IRQ ที่ใช้ตอนออกแบบฮาร์ดแวร์ DPU</span></p>
+style=''>※ interrupts = &lt;0 29 4&gt;; คือ IRQF2P หมายเลข 61 (61-32 = 29) จำเป็นต้องตั้งค่าให้ตรงกับช่องสัญญาณ IRQ ที่ใช้ตอนออกแบบฮาร์ดแวร์ DPU</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" border=0 width=624 height=171
 src="pynq-z2-ai_th_files/image012.png"
 alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ petalinux-config -c rootfs</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ petalinux-config -c rootfs</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>modules -&gt; dpu</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>modules -&gt; dpu</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>Filesystem Packages -&gt; admin -&gt; sudo, sudo-dev</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>Filesystem Packages -&gt; admin -&gt; sudo, sudo-dev</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>Filesystem Packages -&gt; misc -&gt;
+<p class=MsoNormal align=left style='text-align:left'><span style=''>Filesystem Packages -&gt; misc -&gt;
 packagegroup-petalinux-self-hosted</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>Petalinux Package Groups <span lang=JA>→</span>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>Petalinux Package Groups <span lang=JA>→</span>
 packagegroup-petalinux-python-modules, -dev</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>Petalinux Package Groups <span lang=JA>→</span>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>Petalinux Package Groups <span lang=JA>→</span>
 packagegroup-petalinux-x11, -dev</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>Filesystem Packages -&gt; console -&gt; utils -&gt; pkgconfig
+<p class=MsoNormal align=left style='text-align:left'><span style=''>Filesystem Packages -&gt; console -&gt; utils -&gt; pkgconfig
 -&gt; pkgconfig, pkgconfig dev</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>Filesystem Packages -&gt; libs -&gt; gtk+3 -&gt; gtk+3,
+<p class=MsoNormal align=left style='text-align:left'><span style=''>Filesystem Packages -&gt; libs -&gt; gtk+3 -&gt; gtk+3,
 gtk+3-demo, gtk+3-dev, gtk+3-dbg</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>Petalinux Package Groups -&gt; petalinuxgroup-petalinux-opencv
+<p class=MsoNormal align=left style='text-align:left'><span style=''>Petalinux Package Groups -&gt; petalinuxgroup-petalinux-opencv
 -&gt; opencv, opencv-dev</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ petalinux-config -c kernel</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ petalinux-config -c kernel</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>Device Drivers -&gt; USB support -&gt; [*]USB announce new
+<p class=MsoNormal align=left style='text-align:left'><span style=''>Device Drivers -&gt; USB support -&gt; [*]USB announce new
 devices</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ petalinux-build -c kernel -x finish</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ petalinux-build -c kernel -x finish</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>(To finish kernel configuration)</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>(To finish kernel configuration)</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ gedit
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ gedit
 project-spec/meta-user/recipes-kernel/linux/linux-xlnx/devtool-fragment.cfg</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>※ จากนั้นลบข้อความเดิมและวางข้อความนี้ลงไป:</span></p>
+style=''>※ จากนั้นลบข้อความเดิมและวางข้อความนี้ลงไป:</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_OTG=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_OTG=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'># CONFIG_USB_OTG_FSM is not set</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''># CONFIG_USB_OTG_FSM is not set</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'># CONFIG_USB_ZERO_HNPTEST is not set</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''># CONFIG_USB_ZERO_HNPTEST is not set</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_MEDIA_USB_SUPPORT=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_MEDIA_USB_SUPPORT=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_VIDEO_CLASS=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_VIDEO_CLASS=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_VIDEO_CLASS_INPUT_EVDEV=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_VIDEO_CLASS_INPUT_EVDEV=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_GSPCA=m</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_GSPCA=m</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_V4L_PLATFORM_DRIVERS=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_V4L_PLATFORM_DRIVERS=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_VIDEO_ADV7604=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_VIDEO_ADV7604=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_HID=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_HID=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_OHCI_LITTLE_ENDIAN=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_OHCI_LITTLE_ENDIAN=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_SUPPORT=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_SUPPORT=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_COMMON=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_COMMON=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_ARCH_HAS_HCD=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_ARCH_HAS_HCD=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_ANNOUNCE_NEW_DEVICES=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_ANNOUNCE_NEW_DEVICES=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_DEFAULT_PERSIST=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_DEFAULT_PERSIST=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_EHCI_HCD=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_EHCI_HCD=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_EHCI_ROOT_HUB_TT=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_EHCI_ROOT_HUB_TT=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_EHCI_PCI=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_EHCI_PCI=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_EHCI_HCD_PLATFORM=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_EHCI_HCD_PLATFORM=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_ACM=m</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_ACM=m</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_PRINTER=m</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_PRINTER=m</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_WDM=m</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_WDM=m</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_TMC=m</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_TMC=m</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_STORAGE=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_STORAGE=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_CHIPIDEA=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_CHIPIDEA=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_CHIPIDEA_OF=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_CHIPIDEA_OF=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_CHIPIDEA_PCI=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_CHIPIDEA_PCI=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_CHIPIDEA_HOST=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_CHIPIDEA_HOST=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_PHY=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_PHY=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_NOP_USB_XCEIV=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_NOP_USB_XCEIV=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_AM335X_CONTROL_USB=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_AM335X_CONTROL_USB=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_AM335X_PHY_USB=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_AM335X_PHY_USB=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_GPIO_VBUS=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_GPIO_VBUS=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_ULPI=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_ULPI=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>CONFIG_USB_ULPI_VIEWPORT=y</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>CONFIG_USB_ULPI_VIEWPORT=y</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ บิวด์ Petalinux</span></p>
+style=''>‐ บิวด์ Petalinux</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ petalinux-build</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ petalinux-build</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ petalinux-package --boot --force --fsbl
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ petalinux-package --boot --force --fsbl
 images/linux/zynq_fsbl.elf --fpga images/linux/*.bit --u-boot</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ petalinux-package --bsp -p ./ -o pynq-z2-dpu.bsp</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ petalinux-package --bsp -p ./ -o pynq-z2-dpu.bsp</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>ไฟล์ที่ได้จากการบิวด์จะถูกสร้างไว้ที่</span></p>
+style=''>ไฟล์ที่ได้จากการบิวด์จะถูกสร้างไว้ที่</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>./images/linux/BOOT.BIN</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>./images/linux/BOOT.BIN</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>./images/linux/image.ub</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>./images/linux/image.ub</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>./images/linux/rootfs.tar.gz</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>./images/linux/rootfs.tar.gz</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'></span></p>
+style=''></span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>※ หาก BOOT.BIN ไม่ได้รวม bitstream เข้าไปด้วย ให้สร้าง BOOT.BIN อีกครั้งด้วยวิธีต่อไปนี้</span></p>
+style=''>※ หาก BOOT.BIN ไม่ได้รวม bitstream เข้าไปด้วย ให้สร้าง BOOT.BIN อีกครั้งด้วยวิธีต่อไปนี้</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>รัน petalinux-config แล้วไปที่ FPGA Manager -&gt; FPGA Manager ตั้งค่าเป็น Disable จากนั้นบิวด์ Petalinux อีกครั้ง แล้วรัน petalinux-package --boot --force --fsbl images/linux/zynq_fsbl.elf --fpga images/linux/*.bit --u-boot (อาจมีข้อผิดพลาดเกิดขึ้นระหว่างการบิวด์ แต่สามารถข้ามไปได้)</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>รัน petalinux-config แล้วไปที่ FPGA Manager -&gt; FPGA Manager ตั้งค่าเป็น Disable จากนั้นบิวด์ Petalinux อีกครั้ง แล้วรัน petalinux-package --boot --force --fsbl images/linux/zynq_fsbl.elf --fpga images/linux/*.bit --u-boot (อาจมีข้อผิดพลาดเกิดขึ้นระหว่างการบิวด์ แต่สามารถข้ามไปได้)</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>สถานะที่ BOOT.BIN ยังไม่ได้รวม bitstream</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>สถานะที่ BOOT.BIN ยังไม่ได้รวม bitstream</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" border=0 width=569 height=39
 src="pynq-z2-ai_th_files/image013.png"></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>สถานะที่ BOOT.BIN รวม bitstream แล้ว (ขนาดจะประมาณ system.bit + u-boot.bin)</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>สถานะที่ BOOT.BIN รวม bitstream แล้ว (ขนาดจะประมาณ system.bit + u-boot.bin)</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" border=0 width=569 height=40
 src="pynq-z2-ai_th_files/image014.png"></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <h3 style='margin-left:35.45pt;text-indent:-35.45pt'><a name="_Toc208827162"><span
-style='font-family:"ＭＳ 明朝",serif'>1.2.3.<span style='font:7.0pt "Times New Roman"'>
-</span></span><span style='font-family:"ＭＳ 明朝",serif'>การสร้าง YOLO เพื่อรันบน DPU ของ Xilinx</span></a></h3>
+style=''>1.2.3.<span style='font:7.0pt "Times New Roman"'>
+</span></span><span style=''>การสร้าง YOLO เพื่อรันบน DPU ของ Xilinx</span></a></h3>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ เตรียมสภาพแวดล้อม</span></p>
+style=''>‐ เตรียมสภาพแวดล้อม</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>ติดตั้ง Anaconda</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>ติดตั้ง Anaconda</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ cd ~/</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ cd ~/</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ wget
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ wget
 https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_64.sh</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ bash Anaconda3-2020.02-Linux-x86_64.sh</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ bash Anaconda3-2020.02-Linux-x86_64.sh</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>จากนั้น รีสตาร์ท PC</span></p>
+style=''>จากนั้น รีสตาร์ท PC</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ conda create -n decent pip python=3.6</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ conda create -n decent pip python=3.6</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ source activate decent</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ source activate decent</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ cd
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ cd
 ~/Downloads/xilinx_dnndk_v3.1/host_x86/decent-tf/ubuntu18.04/</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ pip install ./tensorflow-1.12.0-cp36-cp36m-linux_x86_64.whl</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ pip install ./tensorflow-1.12.0-cp36-cp36m-linux_x86_64.whl</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ pip install numpy opencv-python==4.6.0.66 scikit-learn==0.24.2
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ pip install numpy opencv-python==4.6.0.66 scikit-learn==0.24.2
 scipy progressbar2 keras==2.2.4</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ pip install pillow</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ pip install pillow</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ pip install 'h5py==2.10.0' --force-reinstall</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ pip install 'h5py==2.10.0' --force-reinstall</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ sudo apt install libgoogle-glog-dev</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ sudo apt install libgoogle-glog-dev</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ sudo apt-get install graphviz</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ sudo apt-get install graphviz</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ ติดตั้ง DNNDK</span></p>
+style=''>‐ ติดตั้ง DNNDK</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ cd Downloads/xilinx_dnndk_v3.1/host_x86</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ cd Downloads/xilinx_dnndk_v3.1/host_x86</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ gedit install.sh</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ gedit install.sh</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>เพิ่ม PynqZ2</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>เพิ่ม PynqZ2</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>support_board=(ZCU102 ZCU104 ZedBoard Ultra96 PynqZ2)</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>support_board=(ZCU102 ZCU104 ZedBoard Ultra96 PynqZ2)</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ chmod +x install.sh</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ chmod +x install.sh</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ sudo ./install.sh PynqZ2</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ sudo ./install.sh PynqZ2</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ แปลงไฟล์รันของ YOLO ให้อยู่ในรูปแบบที่ FPGA ของ Xilinx สามารถรันได้</span></p>
+style=''>‐ แปลงไฟล์รันของ YOLO ให้อยู่ในรูปแบบที่ FPGA ของ Xilinx สามารถรันได้</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" border=0 width=624 height=237 id="Picture 6"
 src="pynq-z2-ai_th_files/image015.jpg"
 alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ แปลงจาก Darknet เป็น Keras</span></p>
+style=''>‐ แปลงจาก Darknet เป็น Keras</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><a
-href="https://pjreddie.com/darknet/yolo/"><span style='font-family:"ＭＳ 明朝",serif'>https://pjreddie.com/darknet/yolo/</span></a><span
-style='font-family:"ＭＳ 明朝",serif'>にアクセスして、</span><span
-style='font-family:"ＭＳ 明朝",serif'>yolov3.weights<span lang=JA>をダウンロードします。</span></span></p>
+href="https://pjreddie.com/darknet/yolo/"><span style=''>https://pjreddie.com/darknet/yolo/</span></a><span
+style=''>にアクセスして、</span><span
+style=''>yolov3.weights<span lang=JA>をダウンロードします。</span></span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>copy to ~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/model_conversion </span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>copy to ~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/model_conversion </span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ cd ~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/model_conversion</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ cd ~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/model_conversion</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ python convert.py yolov3.cfg yolov3.weights
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ python convert.py yolov3.cfg yolov3.weights
 ~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/model_conversion/model_data/yolo.h5</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ แปลงจาก Keras เป็น Tensorflow</span></p>
+style=''>‐ แปลงจาก Keras เป็น Tensorflow</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ python keras_to_tensorflow.py
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ python keras_to_tensorflow.py
 --input_model=/home/hong/Desktop/YOLO-on-PYNQ-Z2/DNNDK/model_conversion/model_data/yolo.h5
 --output_model=/home/hong/Desktop/YOLO-on-PYNQ-Z2/DNNDK/model_conversion/model_data/yolo.pb</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ ทำ Quantization</span></p>
+style=''>‐ ทำ Quantization</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ cp ./model_data/yolo.pb
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ cp ./model_data/yolo.pb
 /home/hong/Desktop/YOLO-on-PYNQ-Z2/DNNDK/quantization</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'># check the input and output names on this network</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''># check the input and output names on this network</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ cd /home/hong/Desktop/YOLO-on-PYNQ-Z2/DNNDK/model_conversion</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ cd /home/hong/Desktop/YOLO-on-PYNQ-Z2/DNNDK/model_conversion</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ decent_q inspect --input_frozen_graph=model_data/yolo.pb</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ decent_q inspect --input_frozen_graph=model_data/yolo.pb</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>จดบันทึกเนื้อหาต่อไปนี้ (จะใช้ในภายหลัง)</span></p>
+style=''>จดบันทึกเนื้อหาต่อไปนี้ (จะใช้ในภายหลัง)</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif;background:yellow'>Found 1 possible inputs: (name=input_1,
+<p class=MsoNormal align=left style='text-align:left'><span style=';background:yellow'>Found 1 possible inputs: (name=input_1,
 type=float(1), shape=[?,?,?,3]) </span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif;background:yellow'>Found 3 possible outputs:
+<p class=MsoNormal align=left style='text-align:left'><span style=';background:yellow'>Found 3 possible outputs:
 (name=conv2d_59/BiasAdd, op=BiasAdd) (name=conv2d_67/BiasAdd, op=BiasAdd)
-(name=conv2d_75/BiasAdd, op=BiasAdd)</span><span style='font-family:"ＭＳ 明朝",serif'>
+(name=conv2d_75/BiasAdd, op=BiasAdd)</span><span style=''>
 </span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ เตรียม COCO dataset</span></p>
+style=''>‐ เตรียม COCO dataset</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>ดาวน์โหลด COCO dataset จากเว็บไซต์ต่อไปนี้</span></p>
+style=''>ดาวน์โหลด COCO dataset จากเว็บไซต์ต่อไปนี้</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>http://images.cocodataset.org/zips/train2017.zip</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>http://images.cocodataset.org/zips/train2017.zip</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>http://images.cocodataset.org/annotations/annotations_trainval2017.zip</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>http://images.cocodataset.org/annotations/annotations_trainval2017.zip</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>สร้างไดเรกทอรีต่อไปนี้ และแตกไฟล์ COCO dataset ที่ดาวน์โหลดมา</span></p>
+style=''>สร้างไดเรกทอรีต่อไปนี้ และแตกไฟล์ COCO dataset ที่ดาวน์โหลดมา</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ mkdir
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ mkdir
 /home/hong/Desktop/YOLO-on-PYNQ-Z2/DNNDK/quantization/yolo_dataset</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>จากนั้น เปลี่ยนชื่อโฟลเดอร์ดังนี้</span></p>
+style=''>จากนั้น เปลี่ยนชื่อโฟลเดอร์ดังนี้</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>train2017 -&gt; images</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>train2017 -&gt; images</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>annotations_trainval2017 -&gt; labels</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>annotations_trainval2017 -&gt; labels</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ แก้ไขสคริปต์การแปลง</span></p>
+style=''>‐ แก้ไขสคริปต์การแปลง</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ gedit
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ gedit
 /home/hong/Desktop/YOLO-on-PYNQ-Z2/DNNDK/quantization/graph_input_fn.py</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>แก้ไข path</span></p>
+style=''>แก้ไข path</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>path =
+<p class=MsoNormal align=left style='text-align:left'><span style=''>path =
 &quot;/home/hong/Desktop/YOLO-on-PYNQ-Z2/DNNDK/quantization/yolo_dataset/images/&quot;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ ทำ Quantization</span></p>
+style=''>‐ ทำ Quantization</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ cd /home/hong/Desktop/YOLO-on-PYNQ-Z2/DNNDK/quantization</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ cd /home/hong/Desktop/YOLO-on-PYNQ-Z2/DNNDK/quantization</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ gedit quant.sh</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ gedit quant.sh</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>ในส่วนของ --output_nodes ให้ระบุเนื้อหาที่ได้จากการตรวจสอบด้วย "decent_q inspect"</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>ในส่วนของ --output_nodes ให้ระบุเนื้อหาที่ได้จากการตรวจสอบด้วย "decent_q inspect"</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>echo &quot;#####################################&quot;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>echo &quot;#####################################&quot;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>echo &quot;QUANTIZE&quot;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>echo &quot;QUANTIZE&quot;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>echo &quot;#####################################&quot;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>echo &quot;#####################################&quot;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>decent_q quantize \</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>decent_q quantize \</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>  --input_frozen_graph ./yolo.pb \</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>  --input_frozen_graph ./yolo.pb \</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>  --input_nodes input_1 \</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>  --input_nodes input_1 \</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>  --input_shapes ?,416,416,3 \</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>  --input_shapes ?,416,416,3 \</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>  <span style='background:yellow'>--output_nodes
+<p class=MsoNormal align=left style='text-align:left'><span style=''>  <span style='background:yellow'>--output_nodes
 &quot;conv2d_59/BiasAdd,conv2d_67/BiasAdd,conv2d_75/BiasAdd&quot; \</span></span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>  --method 1 \</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>  --method 1 \</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>  --input_fn graph_input_fn.calib_input \</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>  --input_fn graph_input_fn.calib_input \</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>  --gpu 0 \</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>  --gpu 0 \</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>  --calib_iter 100</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>  --calib_iter 100</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ chmod +x quant.sh</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ chmod +x quant.sh</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ ./quant.sh</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ ./quant.sh</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>ไฟล์ที่ผ่านการทำ Quantization แล้วจะถูกสร้างไว้ที่</span></p>
+style=''>ไฟล์ที่ผ่านการทำ Quantization แล้วจะถูกสร้างไว้ที่</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/quantization/quantize_results/quantize_eval_model.pb</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/quantization/quantize_results/quantize_eval_model.pb</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ คอมไพล์สำหรับ DPU</span></p>
+style=''>‐ คอมไพล์สำหรับ DPU</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ cd ~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/quantization</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ cd ~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/quantization</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ cp ./quantize_results/deploy_model.pb
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ cp ./quantize_results/deploy_model.pb
 /home/hong/Desktop/YOLO-on-PYNQ-Z2/DNNDK/compilation</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ cd /home/hong/Desktop/YOLO-on-PYNQ-Z2/DNNDK/compilation</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ cd /home/hong/Desktop/YOLO-on-PYNQ-Z2/DNNDK/compilation</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ dlet -f
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ dlet -f
 ~/Desktop/Pynq-Z2_2020_1/pynqz2_dpu.srcs/sources_1/bd/base/hw_handoff/base.hwh</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ dlet -f
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ dlet -f
 ~/Desktop/Pynq-Z2_2020_1/pynqz2_dpu.srcs/sources_1/bd/base/hw_handoff/base.hwh
 /home/hong/Desktop/YOLO-on-PYNQ-Z2/DNNDK/compilation/pynq-z2.dcf -o</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ mv dpu-12181630-181630-202412181630-1630-30.dcf pynqz2_dpu.dcf</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ mv dpu-12181630-181630-202412181630-1630-30.dcf pynqz2_dpu.dcf</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ chmod 777
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ chmod 777
 ~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/compilation/pynqz2_dpu.dcf</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ sh compile.sh</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ sh compile.sh</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>ไฟล์ที่คอมไพล์แล้วจะถูกสร้างไว้ที่นี่ (การคอมไพล์ใช้เวลานาน จากการทดลองบน PC Core i5-13500 ใช้เวลาประมาณ 12 ชั่วโมง)</span></p>
+style=''>ไฟล์ที่คอมไพล์แล้วจะถูกสร้างไว้ที่นี่ (การคอมไพล์ใช้เวลานาน จากการทดลองบน PC Core i5-13500 ใช้เวลาประมาณ 12 ชั่วโมง)</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>(decent)
+<p class=MsoNormal align=left style='text-align:left'><span style=''>(decent)
 hong@ubuntu:~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/compilation/compile$ ls</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>dpu_yolo.elf  yolo_kernel_graph.jpg  yolo_kernel.info</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>dpu_yolo.elf  yolo_kernel_graph.jpg  yolo_kernel.info</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
-<span style='font-size:10.5pt;font-family:"ＭＳ 明朝",serif'><br clear=all
+<span style='font-size:10.5pt;'><br clear=all
 style='page-break-before:always'>
 </span>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <h3 style='margin-left:35.45pt;text-indent:-35.45pt'><a name="_Toc208827163"><span
-style='font-family:"ＭＳ 明朝",serif'>1.2.4.<span style='font:7.0pt "Times New Roman"'>
-</span></span><span style='font-family:"ＭＳ 明朝",serif'>ทดสอบบนอุปกรณ์จริง</span></a></h3>
+style=''>1.2.4.<span style='font:7.0pt "Times New Roman"'>
+</span></span><span style=''>ทดสอบบนอุปกรณ์จริง</span></a></h3>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>การทดสอบบนอุปกรณ์จริงจำเป็นต้องสร้างโปรแกรม แต่ครั้งนี้จะใช้โปรแกรมที่เตรียมไว้ในเอกสารอ้างอิง</span></p>
+style=''>การทดสอบบนอุปกรณ์จริงจำเป็นต้องสร้างโปรแกรม แต่ครั้งนี้จะใช้โปรแกรมที่เตรียมไว้ในเอกสารอ้างอิง</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ การสร้าง SD Card</span></p>
+style=''>‐ การสร้าง SD Card</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>สร้างพาร์ติชันต่อไปนี้ด้วย gparted</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>สร้างพาร์ติชันต่อไปนี้ด้วย gparted</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>Partition1<span lang=JA>：</span>fat32<span lang=JA>ファイルフォーマット</span></span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>Partition1<span lang=JA>：</span>fat32<span lang=JA>ファイルフォーマット</span></span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>Partition2<span lang=JA>：</span>ext4<span lang=JA>ファイルフォーマット</span></span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>Partition2<span lang=JA>：</span>ext4<span lang=JA>ファイルフォーマット</span></span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" border=0 width=624 height=221
 src="pynq-z2-ai_th_files/image016.png"
 alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>คัดลอก Uboot, linux และอื่นๆ ไปยัง SD Card</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>คัดลอก Uboot, linux และอื่นๆ ไปยัง SD Card</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ sudo mkdir /mnt/sdb1</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ sudo mkdir /mnt/sdb1</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ sudo mkdir /mnt/sdb2</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ sudo mkdir /mnt/sdb2</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ sudo mount /dev/sdb1 /mnt/sdb1</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ sudo mount /dev/sdb1 /mnt/sdb1</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ cd ~/pynqz2_dpu/images/linux/</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ cd ~/pynqz2_dpu/images/linux/</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ sudo cp BOOT.BIN image.ub /mnt/sdb1/.</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ sudo cp BOOT.BIN image.ub /mnt/sdb1/.</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ sudo umount /mnt/sdb1</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ sudo umount /mnt/sdb1</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ sudo mount /dev/sdb2 /mnt/sdb2</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ sudo mount /dev/sdb2 /mnt/sdb2</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ sudo tar xzf rootfs.tar.gz -C /mnt/sdb2/</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ sudo tar xzf rootfs.tar.gz -C /mnt/sdb2/</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ sync</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ sync</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ cd ~/Desktop/YOLO-on-PYNQ-Z2/DPU\ implementation/Petalinux/</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ cd ~/Desktop/YOLO-on-PYNQ-Z2/DPU\ implementation/Petalinux/</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ sudo cp -vr ./zynq7020_dnndk_v3.1/* /mnt/sdb2/home/root/</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ sudo cp -vr ./zynq7020_dnndk_v3.1/* /mnt/sdb2/home/root/</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ sudo cp -vr ./zynq7020_dnndk_v3.1 /mnt/sdb2/home/root/</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ sudo cp -vr ./zynq7020_dnndk_v3.1 /mnt/sdb2/home/root/</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ sync</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ sync</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ sudo umount /mnt/sdb2</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ sudo umount /mnt/sdb2</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ สิ่งที่เตรียมไว้ในเอกสารอ้างอิงมีไฟล์ .cpp, makefile และอื่นๆ เราจะใช้ไฟล์เหล่านั้นตามเดิม แต่จะแทนที่เฉพาะไฟล์ YOLO ที่คอมไพล์แล้ว</span></p>
+style=''>‐ สิ่งที่เตรียมไว้ในเอกสารอ้างอิงมีไฟล์ .cpp, makefile และอื่นๆ เราจะใช้ไฟล์เหล่านั้นตามเดิม แต่จะแทนที่เฉพาะไฟล์ YOLO ที่คอมไพล์แล้ว</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ cd ~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/compilation/compile</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ cd ~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/compilation/compile</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ cp dpu_yolo.elf
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ cp dpu_yolo.elf
 ~/Desktop/YOLO-on-PYNQ-Z2/Deployment/yolo_pynqz2/model/.</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ cp yolo_kernel_graph.jpg
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ cp yolo_kernel_graph.jpg
 ~/Desktop/YOLO-on-PYNQ-Z2/Deployment/yolo_pynqz2/info/.</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>$ cp yolo_kernel.info
+<p class=MsoNormal align=left style='text-align:left'><span style=''>$ cp yolo_kernel.info
 ~/Desktop/YOLO-on-PYNQ-Z2/Deployment/yolo_pynqz2/info/.</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ เสียบ SD Card เข้าไปใน Pynq-Z2 แล้วเปิดเครื่อง รอจนกว่า Linux จะบูตเสร็จ ตรวจสอบให้แน่ใจว่า DPU ถูกรวมเข้าไปอย่างถูกต้อง โดยใช้คำสั่ง devmem เพื่ออ่านค่าบางอย่าง (รันบนบอร์ด Pynq-Z2)</span></p>
+style=''>‐ เสียบ SD Card เข้าไปใน Pynq-Z2 แล้วเปิดเครื่อง รอจนกว่า Linux จะบูตเสร็จ ตรวจสอบให้แน่ใจว่า DPU ถูกรวมเข้าไปอย่างถูกต้อง โดยใช้คำสั่ง devmem เพื่ออ่านค่าบางอย่าง (รันบนบอร์ด Pynq-Z2)</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" border=0 width=348 height=35
 src="pynq-z2-ai_th_files/image017.png"></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ ล็อกอินด้วย MobaXterm โดย user คือ "root" และ pass คือ "root"</span></p>
+style=''>‐ ล็อกอินด้วย MobaXterm โดย user คือ "root" และ pass คือ "root"</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" border=0 width=624 height=250
 src="pynq-z2-ai_th_files/image018.png"
 alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ ติดตั้ง DNNDK (รันบนบอร์ด Pynq-Z2)</span></p>
+style=''>‐ ติดตั้ง DNNDK (รันบนบอร์ด Pynq-Z2)</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>root@pynqz2_dpu:~# cd zynq7020_dnndk_v3.1/</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>root@pynqz2_dpu:~# cd zynq7020_dnndk_v3.1/</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>root@pynqz2_dpu:~/zynq7020_dnndk_v3.1# sh install.sh</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>root@pynqz2_dpu:~/zynq7020_dnndk_v3.1# sh install.sh</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ คัดลอกไฟล์ cpp, makefile และอื่นๆ (ทั้งโฟลเดอร์ yolo_pynqz2) ไปยังบอร์ด Pynq-Z2 (สามารถลากและวางใน MobaXterm ได้)</span></p>
+style=''>‐ คัดลอกไฟล์ cpp, makefile และอื่นๆ (ทั้งโฟลเดอร์ yolo_pynqz2) ไปยังบอร์ด Pynq-Z2 (สามารถลากและวางใน MobaXterm ได้)</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span style='position:
 absolute;z-index:251667456;margin-left:117px;margin-top:168px;width:309px;
@@ -1316,59 +1037,53 @@ height:83px'><img width=309 height=83 src="pynq-z2-ai_th_files/image019.png"></s
 src="pynq-z2-ai_th_files/image020.png"
 alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>‐ บิวด์และรันแอปพลิเคชัน (รันบนบอร์ด Pynq-Z2)</span></p>
+style=''>‐ บิวด์และรันแอปพลิเคชัน (รันบนบอร์ด Pynq-Z2)</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>root@pynqz2_dpu:~/yolo_pynqz2# make</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>root@pynqz2_dpu:~/yolo_pynqz2# make</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>root@pynqz2_dpu:~/yolo_pynqz2# ./yolo_image dog.jpg</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>root@pynqz2_dpu:~/yolo_pynqz2# ./yolo_image dog.jpg</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>เมื่อรันสำเร็จ จะแสดงวัตถุที่ตรวจจับได้ดังภาพด้านล่าง</span></p>
+style=''>เมื่อรันสำเร็จ จะแสดงวัตถุที่ตรวจจับได้ดังภาพด้านล่าง</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><img class="img-fluid rounded mx-auto d-block" border=0 width=624 height=356 id="Picture 1"
 src="pynq-z2-ai_th_files/image021.png"
 alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <h2 style='margin-left:28.35pt;text-indent:-28.35pt'><a name="_Toc208827164"><span
-style='font-family:"ＭＳ 明朝",serif'>1.3.<span style='font:7.0pt "Times New Roman"'>&nbsp;
-</span></span><span style='font-family:"ＭＳ 明朝",serif'>อ้างอิง</span></a></h2>
+style=''>1.3.<span style='font:7.0pt "Times New Roman"'>&nbsp;
+</span></span><span style=''>อ้างอิง</span></a></h2>
 
-<p class=MsoNormal align=left style='text-align:left'><span style='font-family:
-"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal align=left style='text-align:left'><span style=''>&nbsp;</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>เอกสารอ้างอิง:</span></p>
+style=''>เอกสารอ้างอิง:</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><a
 href="https://andre-araujo.gitbook.io/yolo-on-pynq-z2/deployment-on-pynq-z2/execute-yolov3"><span
-style='font-family:"ＭＳ 明朝",serif'>https://andre-araujo.gitbook.io/yolo-on-pynq-z2/deployment-on-pynq-z2/execute-yolov3</span></a></p>
+style=''>https://andre-araujo.gitbook.io/yolo-on-pynq-z2/deployment-on-pynq-z2/execute-yolov3</span></a></p>
 
 <p class=MsoNormal align=left style='text-align:left'><span
-style='font-family:"ＭＳ 明朝",serif'>เนื่องจาก DPU IP เวอร์ชันล่าสุดไม่รองรับ Zynq-7000 แล้ว จึงไม่สามารถดาวน์โหลดจากเว็บไซต์ของ Xilinx ได้ แต่สามารถดาวน์โหลดได้จากลิงก์ด้านล่าง</span></p>
+style=''>เนื่องจาก DPU IP เวอร์ชันล่าสุดไม่รองรับ Zynq-7000 แล้ว จึงไม่สามารถดาวน์โหลดจากเว็บไซต์ของ Xilinx ได้ แต่สามารถดาวน์โหลดได้จากลิงก์ด้านล่าง</span></p>
 
 <p class=MsoNormal align=left style='text-align:left'><a
 href="https://drive.google.com/file/d/1-Ajpk6HIDHIkwDHdUJaB92HN5g_S0Bam/view"><span
-style='font-family:"ＭＳ 明朝",serif'>https://drive.google.com/file/d/1-Ajpk6HIDHIkwDHdUJaB92HN5g_S0Bam/view</span></a></p>
+style=''>https://drive.google.com/file/d/1-Ajpk6HIDHIkwDHdUJaB92HN5g_S0Bam/view</span></a></p>
 
-<span style='font-size:10.5pt;font-family:"ＭＳ 明朝",serif'><br clear=all
+<span style='font-size:10.5pt;'><br clear=all
 style='page-break-before:always'>
 </span>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal><span style=''>&nbsp;</span></p>
 
-<p class=MsoNormal><span style='font-family:"ＭＳ 明朝",serif'>&nbsp;</span></p>
+<p class=MsoNormal><span style=''>&nbsp;</span></p>
 
 </div>
             </div>
