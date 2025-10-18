@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Hardware Control with MCP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            line-height: 1.6;
+            color: #e0e0e0;
+            background-color: #1a1a1a;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #2c2c2c;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        h1, h2, h3 {
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+            color: #ffffff;
+        }
+        h1 { font-size: 2.2em; }
+        h2 { font-size: 1.8em; }
+        h3 { font-size: 1.4em; }
+        a {
+            color: #58a6ff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            font-size: 0.9em;
+        }
+        pre {
+            padding: 16px;
+            overflow: auto;
+            font-size: 85%;
+            line-height: 1.45;
+            background-color: #1d1f21;
+            border-radius: 6px;
+        }
+        pre code {
+            padding: 0;
+            font-size: 100%;
+            color: #c5c8c6;
+        }
+        strong {
+            color: #f0c674;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background-color: #444;
+            margin: 2em 0;
+        }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .mermaid {
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <hr>
+        <h1>Overview</h1>
+        <p>มี MCP (Model Context Protocol) ออกมาได้ซักระยะนึงแล้ว เห็นว่าน่าจะเอามาเชื่อมต่อกับฮาร์ดแวร์ได้ เลยลองมาทดลองทำดู โดยจะทำง่ายๆ แค่ให้ AI สามารถสั่งงานเปิด/ปิดไฟได้</p>
+        <p>ตัวอย่างเช่น พิมพ์คำสั่งด้านล่างให้ AI:<br><strong>Prompt:</strong></p>
+        <pre><code>ให้เปิดไฟ ฟ้า แดง เขียว เหลือง วน 3 รอบ</code></pre>
+        <p>ผลลัพธ์ที่ได้จะเป็นเหมือนในวิดีโอ YouTube ด้านล่าง:</p>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/pnmmWHnXl_I" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <h3>โครงสร้างการทำงาน</h3>
+        <div class="mermaid">
+graph TD
+    C1[Claude]
+    subgraph "Windows PC"
+        W1[Claude desktop app]
+        W2[MCP server]
+        W3[USB host]
+    end
+    subgraph "USB device"
+        subgraph "ESP32"
+            E1[CPU]
+            E2[USB device]
+            E3[SPI]
+        end
+        U2[LCD]
+    end
+    C1 &lt;--&gt; W1
+    W2 &lt;--&gt; W3
+    W3 &lt;--&gt; E2
+    E1 &lt;--&gt; E2
+    E1 &lt;--&gt; E3
+    E3 --&gt; U2
+        </div>
+        <hr>
+        <h1>ขั้นตอน</h1>
+        <h2>1. สร้าง esp32 usb device ด้วย Arduino</h2>
+        <p>ขั้นแรก เราจะโปรแกรม ESP32-S3 ให้ทำหน้าที่เป็น USB Device แบบ Vendor-Specific โดยใช้ TinyUSB library ซึ่งจะทำให้คอมพิวเตอร์มองเห็น ESP32 เป็นอุปกรณ์ USB ที่เรากำหนดเองได้ โค้ดนี้จะจัดการการรับคำสั่งผ่าน USB เพื่อควบคุมการแสดงผลบนหน้าจอ TFT ILI9488 ที่เชื่อมต่ออยู่</p>
+        <p><strong>ข้อควรระวัง:</strong> ใน Arduino IDE ต้องตั้งค่า <code>Tools &gt; USB CDC On Boot</code> เป็น <code>"Disabled"</code> และ <code>Tools &gt; USB Mode</code> เป็น <code>"USB-OTG (TinyUSB)"</code></p>
+        <h3>โค้ด: vendor_generic_inout_ili9488.ino</h3>
+        <pre><code class="language-cpp">// vendor_generic_inout_ili9488.ino (แสดงเฉพาะส่วนสำคัญ)
+
+// =============================================================================
+// LIBRARIES & GLOBAL OBJECTS
+// =============================================================================
+#include &lt;TFT_eSPI.h&gt;
+#include "USB.h"
+#include "tusb.h"
+
+TFT_eSPI tft = TFT_eSPI();
+
+// =============================================================================
+// USB DEVICE CONFIGURATION
+// =============================================================================
+// --- Custom VID/PID ---
+#define MY_VID 0xCAFE
+#define MY_PID 0x0300
+
+// --- USB Command Protocol ---
+#define CMD_UPDATE_STATUS 0x31 // Command to update the LED/color status
+
+// ... (ส่วนของ USB Descriptors และ Callbacks ถูกย่อไว้) ...
+
+// =============================================================================
+// APPLICATION LOGIC & COMMAND HANDLING
+// =============================================================================
+
+// ฟังก์ชันนี้จะถูกเรียกเมื่อมีข้อมูลส่งมาจากคอมพิวเตอร์ผ่าน USB
+void handleUsbCommand(uint8_t* buf, uint32_t count) {
+  // ... (ส่วน Echo ข้อมูลกลับไปเพื่อ Debug) ...
+
+  // แยกแยะคำสั่งและข้อมูลที่ส่งมา
+  uint8_t command = buf[0];
+
+  switch (command) {
+    case CMD_UPDATE_STATUS:
+      // buf[10] เป็นต้นไปคือข้อมูลสถานะของไฟแต่ละสี (0 หรือ 1)
+      updateStatusRects(&buf[10]);
+      break;
+
+    // ... (คำสั่งอื่นๆ) ...
+  }
+}
+
+// ฟังก์ชันสำหรับวาดสี่เหลี่ยมสีบนหน้าจอ TFT ตามข้อมูลที่ได้รับ
+void updateStatusRects(const uint8_t* status_bytes) {
+    const int RECT_X = 160 - 50;
+    const int RECT_W = 100;
+    const int RECT_H = 100;
+
+    // วาดสี่เหลี่ยมตามสถานะที่ได้รับ: ถ้าเป็น 1 ให้แสดงสี, ถ้าเป็น 0 ให้เป็นสีดำ
+    tft.fillRect(RECT_X, 50,  RECT_W, RECT_H, status_bytes[0] ? TFT_BLUE   : TFT_BLACK);
+    tft.fillRect(RECT_X, 150, RECT_W, RECT_H, status_bytes[1] ? TFT_RED    : TFT_BLACK);
+    tft.fillRect(RECT_X, 250, RECT_W, RECT_H, status_bytes[2] ? TFT_GREEN  : TFT_BLACK);
+    tft.fillRect(RECT_X, 350, RECT_W, RECT_H, status_bytes[3] ? TFT_YELLOW : TFT_BLACK);
+}
+
+// =============================================================================
+// MAIN SETUP & LOOP
+// =============================================================================
+
+void setup() {
+  // ... (ตั้งค่า Serial, TFT) ...
+
+  // --- สำคัญ: ตั้งค่า USB Mode ใน Arduino IDE ---
+  // Tools -> USB CDC On Boot: "Disabled"
+  // Tools -> USB Mode: "USB-OTG (TinyUSB)"
+
+  // เริ่มการทำงานของ USB Stack
+  USB.begin();
+
+  // ... (แสดงผลเริ่มต้นบนจอ) ...
+}
+
+void loop() {
+  // การสื่อสาร USB ทั้งหมดจัดการผ่าน Callbacks (Event-driven)
+  // Loop หลักจึงไม่ต้องทำอะไรมาก
+  delay(10);
+}
+</code></pre>
+        <h2>2. ทดสอบ usb interface บน windows PC</h2>
+        <p>หลังจากอัปโหลดโค้ดลง ESP32 แล้ว เราต้องทำให้ Windows รู้จักกับอุปกรณ์ USB ของเราก่อน</p>
+        <ul>
+            <li><strong>libusb:</strong> เป็นไลบรารีที่ช่วยให้โปรแกรมบน PC สามารถสื่อสารกับอุปกรณ์ USB ได้โดยตรง</li>
+            <li><strong>Zadig (&lt;a href="https://zadig.akeo.ie/">https://zadig.akeo.ie/</a>):</strong> เนื่องจาก USB device ของเราไม่ได้ผ่านการรับรอง (certify) เราจึงต้องใช้ Zadig เพื่อติดตั้งไดรเวอร์ <code>libusb</code> ให้กับอุปกรณ์ของเรา (ที่มี VID/PID เป็น <code>CAFE:0300</code>) เพื่อให้ Windows สามารถสื่อสารกับมันได้</li>
+            <li><strong>simpleio.py:</strong> เป็น Python script ที่ใช้ <code>pyusb</code> (ซึ่งทำงานบน <code>libusb</code>) เพื่อทดสอบส่งข้อมูลไปยัง ESP32 ของเราโดยตรง เป็นการยืนยันว่าการเชื่อมต่อ USB ทำงานได้ถูกต้องก่อนที่จะไปยังขั้นตอนถัดไป</li>
+        </ul>
+        <h3>โค้ด: simpleio.py</h3>
+        <p>สคริปต์นี้จะส่งข้อมูล byte ไปยัง ESP32 เพื่อควบคุมสีของไฟ LED ที่แสดงบนจอ TFT<br><strong>หมายเหตุ:</strong> ในโค้ดมีการระบุ path ของ <code>libusb-1.0.dll</code> แบบ hardcode หากคุณติดตั้งไว้ที่อื่น อย่าลืมแก้ไข path ให้ถูกต้อง</p>
+        <pre><code class="language-python">import usb.core
+import usb.backend.libusb1
+import usb.util
+import binascii
+import time
+
+def usb_led(b, r, g, y):
+    b = 0x1 if b != 0 else 0x0
+    r = 0x1 if r != 0 else 0x0
+    g = 0x1 if g != 0 else 0x0
+    y = 0x1 if y != 0 else 0x0    
+    
+    # Specify the path to the libusb-1.0.dll
+    # *** แก้ไข path ตรงนี้ให้ตรงกับที่ที่คุณติดตั้ง libusb ไว้ ***
+    usb.core.find(backend=usb.backend.libusb1.get_backend(find_library=lambda x: "D:/hong/github/AI_experimental/usb_driver/libusb-1.0.26-binaries/libusb-1.0.26-binaries/VS2015-x64/dll/libusb-1.0.dll"))
+
+    # Find the USB device based on its vendor and product IDs
+    vendor_id = 0xCAFE  # Device's vendor ID
+    product_id = 0x0300  # Device's product ID
+
+    # Find the device
+    device = usb.core.find(idVendor=vendor_id, idProduct=product_id)
+    if device is None:
+        raise ValueError('Device not found')
+
+    # set the active configuration. With no arguments, the first
+    # configuration will be the active one
+    device.set_configuration()
+
+    # Find the bulk endpoints for data in and data out
+    endpoint_out = 0x01  # Endpoint address for data out
+    endpoint_in = 0x81   # Endpoint address for data in
+
+    # [Command ID, x, y, ..., payload]
+    data_to_send = bytes([0x31, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, b, r, g, y])
+    device.write(endpoint_out, data_to_send)
+    
+    # Clean up
+    device.reset()
+</code></pre>
+        <h2>3. mcp server</h2>
+        <p>ขั้นตอนนี้เราจะสร้าง Server ที่ทำหน้าที่เป็น "เครื่องมือ" ให้กับ AI (Claude) โดยใช้ <code>FastMCP</code></p>
+        <ul>
+            <li><strong>uv:</strong> เป็น Python package manager ที่รวดเร็ว เราจะใช้ <code>uv</code> เพื่อสร้าง virtual environment และติดตั้ง library ที่จำเป็น
+                <ul>
+                    <li><code>uv init mcp_server</code>: สร้างโปรเจกต์ <code>uv</code> ใหม่</li>
+                    <li><code>uv add "mcp[cli]"</code>: ติดตั้ง <code>mcp</code> library</li>
+                    <li><code>uv add pyusb</code>: ติดตั้ง <code>pyusb</code> เพื่อให้ Python คุยกับ USB device ได้</li>
+                </ul>
+            </li>
+            <li><strong>server.py:</strong> คือหัวใจหลักของขั้นตอนนี้ สคริปต์นี้จะสร้าง MCP server ขึ้นมา และนิยาม "tool" ที่ชื่อว่า <code>led_control</code> ซึ่ง AI สามารถเรียกใช้ได้ เมื่อ tool นี้ถูกเรียก มันจะไปเรียกใช้ฟังก์ชัน <code>usb_led</code> ใน <code>simpleio.py</code> อีกทีเพื่อส่งคำสั่งไปยัง ESP32</li>
+        </ul>
+        <h3>โค้ด: server.py</h3>
+        <pre><code class="language-python">"""
+MCP server version of agent.py
+Implements the same tools (calculator, LED control, time, multiply)
+"""
+import json
+import datetime
+from typing import Optional
+from mcp.server.fastmcp import FastMCP
+
+import os
+from simpleio import usb_led
+    
+# --- Initialize MCP server ---
+mcp = FastMCP("general-assistant-mcp")
+
+# --- Tool: LED control ---
+@mcp.tool()
+def led_control(
+    blue: Optional[int] = None,
+    red: Optional[int] = None,
+    green: Optional[int] = None,
+    yellow: Optional[int] = None,
+) -> str:
+    """
+    Turn LEDs on/off. Provide 1 for ON, 0 for OFF.
+    Example: led_control(red=1, blue=0)
+    """
+    print(f"\nuser control led -> blue:{blue}, red:{red}, green:{green}, yellow:{yellow}")
+    # Call the usb_led function, defaulting to 0 if a color is not specified
+    usb_led(blue or 0, red or 0, green or 0, yellow or 0)
+    led = {"blue": blue, "red": red, "green": green, "yellow": yellow}
+    return json.dumps(led)
+
+# --- Resource: Info ---
+@mcp.resource("info://agent")
+def agent_info() -> str:
+    """Provide general information about this agent MCP server."""
+    return (
+        "General Assistant MCP Server — can calculate, control LEDs, "
+        "get current time, and multiply numbers."
+    )
+
+# --- Main entry ---
+if __name__ == "__main__":
+    mcp.run()
+</code></pre>
+        <h2>4. Claude desktop setting</h2>
+        <p>สุดท้าย เราต้องตั้งค่าให้ Claude desktop app รู้จักกับ MCP server ที่เราสร้างขึ้น โดยการแก้ไขไฟล์ <code>claude_desktop_config.json</code> ซึ่งอยู่ที่ <code>%APPDATA%\Claude</code> (หรือ <code>...\AppData\Roaming\Claude</code>)</p>
+        <p>เราจะเพิ่ม object ใหม่เข้าไปใน <code>mcpServers</code> โดยตั้งชื่อว่า <code>usb_device_bot</code> และระบุคำสั่งสำหรับรัน server ของเรา</p>
+        <h3>claude_desktop_config.json</h3>
+        <pre><code class="language-json">{
+    "mcpServers": {
+        "usb_device_bot": {
+            "command": "uv",
+            "args": [
+                "--directory",
+                "D:/hong/mcp_server/usb_device_bot",
+                "run",
+                "server.py"
+            ]
+        }
+    }
+}
+</code></pre>
+        <ul>
+            <li><strong><code>command</code></strong>: คำสั่งหลักที่จะรัน ในที่นี้คือ <code>uv</code></li>
+            <li><strong><code>args</code></strong>: arguments ที่จะส่งให้ <code>command</code>
+                <ul>
+                    <li><code>"--directory", "D:/hong/mcp_server/usb_device_bot"</code>: บอกให้ <code>uv</code> ไปทำงานใน directory ที่มี <code>server.py</code> และ <code>simpleio.py</code> อยู่</li>
+                    <li><code>"run", "server.py"</code>: สั่งให้ <code>uv</code> รันไฟล์ <code>server.py</code></li>
+                </ul>
+            </li>
+        </ul>
+        <p>เมื่อตั้งค่าทั้งหมดนี้แล้ว เวลาเราเปิดใช้ tool <code>usb_device_bot</code> ใน Claude มันก็จะไปรัน MCP server ของเรา และทำให้ Claude สามารถเรียกใช้ฟังก์ชัน <code>led_control</code> ที่เราสร้างไว้ได้</p>
+        <p>note : สามาถรเช็คได้ว่า claude รู้จัก MCP แล้วหรือยังจาก setting menu ได้ครับ</p>
+        <hr>
+        <h1>เพิ่มเติม</h1>
+        <p>นอกจากจะสั่งแบบคำพูดแล้ว ถ้าเราพิมพิ์คำสั่งที่ชัดเจน เช่น เขียนเป็น mermaid flowchart ดูเหมือนยิ่งทำให้ AI เค้าคิดได้ง่ายขึ้นด้วย</p>
+        <p><strong>Prompt:</strong></p>
+        <pre><code>please do below flowchart
+<div class="mermaid">
+flowchart TD
+    A[Start, n = 0] --&gt; B[Turn ON red LED]
+    B --&gt; C[Turn OFF red LED]
+    C --&gt; C1[n = n + 1]
+    C1 --&gt; D{n == 3?}
+    D -- No --&gt; B
+    D -- Yes --&gt; E[End]
+</div></code></pre>
+        <p>ด้านล่างคือ flowchart</p>
+        <div class="mermaid">
+flowchart TD
+    A[Start, n = 0] --&gt; B[Turn ON red LED]
+    B --&gt; C[Turn OFF red LED]
+    C --&gt; C1[n = n + 1]
+    C1 --&gt; D{n == 3?}
+    D -- No --&gt; B
+    D -- Yes --&gt; E[End]
+        </div>
+        <p>ผลลัพธ์:</p>
+        <div class="video-container">
+            <iframe src="https://youtu.be/IZkFcYTdxvw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <hr>
+        <p>ตัวอย่าง code ทั้งหมดสามารถดาวน์โหลดได้ที่:<br><a href="https://github.com/wichayen/AI_experimental">https://github.com/wichayen/AI_experimental</a></p>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true, theme: 'dark'});</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>
