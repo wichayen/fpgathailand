@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>การใช้งาน EZUSB (CY7C68013) interfacing กับ FPGA</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { font-family: 'Sarabun', sans-serif; }
+        img { max-width: 100%; height: auto; }
+        pre { background-color: #f4f4f4; padding: 1em; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
+        code { font-family: monospace; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+    <h1>การใช้งาน EZUSB (CY7C68013) interfacing กับ FPGA</h1>
+
+    <h2>Overview</h2>
+
+    <p>บทความนี้จะอธิบายการเชื่อมต่อระหว่างคอมพิวเตอร์กับ FPGA ผ่านชิป EZUSB FX2LP (CY7C68013A) ซึ่งทำหน้าที่เป็นตัวกลางแปลง USB protocol ไปเป็น Parallel bus (Slave FIFO) ที่ FPGA สามารถคุยด้วยได้ง่าย</p>
+
+    <p>สถาปัตยกรรมโดยรวมของโปรเจคตัวอย่างนี้เป็นดังนี้:</p>
+
+        <div class="mermaid">
+graph LR
+        subgraph "Windows PC"
+            W1["Python (Jupyter) / C#"]
+            W2[USB Host Controller]
+        end
+        
+        subgraph "Hardware"
+            subgraph "FX2LP (CY7C68013A)"
+                E1[USB Device Core]
+                E2["Slave FIFO Interface (16-bit)"]
+            end
+            subgraph "FPGA"
+                F1["Slave FIFO Interface (16-bit)"]
+                F2[Loopback Logic]
+            end
+        end
+        
+        W1 &lt;--&gt; W2
+        W2 &lt;== USB ==&gt; E1
+        E1 &lt;--&gt; E2
+        E2 &lt;== Parallel Bus ==&gt; F1
+        F1 &lt;--&gt; F2	
+    </div>
+
+    <ul>
+        <li><strong>Windows PC</strong>: ทำหน้าที่ส่งและรับข้อมูลผ่าน USB โดยอาจจะใช้โปรแกรมเช่น Python, C# หรือโปรแกรมทดสอบอย่าง Cypress Streamer</li>
+        <li><strong>FX2LP (CY7C68013A)</strong>: ทำหน้าที่เป็น USB device controller แปลงข้อมูลจาก USB ไปเป็น parallel data bus ในโหมด Slave FIFO</li>
+        <li><strong>FPGA</strong>: ทำหน้าที่อ่านข้อมูลจาก FX2LP และเขียนข้อมูลกลับไป ในตัวอย่างนี้จะเป็นการทำ Loopback คืออ่านข้อมูลที่ได้รับมาแล้วส่งกลับไปทันที</li>
+    </ul>
+
+    <h2>USB Endpoint Configuration</h2>
+
+    <p>หัวใจสำคัญที่สุดของการทำงานในโหมด Slave FIFO คือการตั้งค่า Endpoint และ Flag ภายในตัว FX2LP ให้ถูกต้อง เพื่อให้ FPGA สามารถรับรู้สถานะของ FIFO (First-In, First-Out) buffer ได้</p>
+
+    <p>ในตัวอย่างนี้ เราจะตั้งค่า Endpoint ดังนี้:</p>
+    <ul>
+        <li><strong><code>EP2</code></strong>: เป็น <strong>OUT</strong> Endpoint ขนาด 512 bytes, 4x buffered ใช้สำหรับรับข้อมูลจาก PC (<code>PC -&gt; Device</code>)
+            <ul>
+                <li><strong><code>FLAGA</code></strong> จะถูกตั้งค่าให้เป็น <strong>Empty Flag</strong> ของ EP2 หมายความว่า <code>FLAGA</code> จะ Active (เป็น '1') เมื่อ EP2 <strong>มีข้อมูล</strong>ให้ FPGA อ่านออกไป</li>
+            </ul>
+        </li>
+        <li><strong><code>EP6</code></strong>: เป็น <strong>IN</strong> Endpoint ขนาด 512 bytes, 4x buffered ใช้สำหรับส่งข้อมูลกลับไปยัง PC (<code>Device -&gt; PC</code>)
+            <ul>
+                <li><strong><code>FLAGD</code></strong> จะถูกตั้งค่าให้เป็น <strong>Full Flag</strong> ของ EP6 หมายความว่า <code>FLAGD</code> จะ Active (เป็น '1') เมื่อ EP6 <strong>ยังไม่เต็ม</strong> และพร้อมให้ FPGA เขียนข้อมูลเข้ามาได้</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>ขั้นตอนการพัฒนา</h2>
+
+    <h3>1. Compile FX2LP (CY7C68013) Firmware</h3>
+
+    <p>ส่วนที่สำคัญที่สุดของเฟิร์มแวร์คือการตั้งค่า Register ต่างๆ ในฟังก์ชัน <code>TD_Init()</code> ซึ่งอยู่ในไฟล์ <code>slave.c</code> เพื่อกำหนดค่าการทำงานของ Slave FIFO interface, Endpoints, และ Flags ให้ตรงกับที่เราออกแบบไว้</p>
+
+    <p>สามารถใช้ Keil C51 IDE (เวอร์ชันทดลองก็เพียงพอ เพราะโค้ดมีขนาดเล็ก) ในการคอมไพล์ไฟล์ <code>slave.c</code> ให้เป็น <code>.hex</code> ไฟล์สำหรับดาวน์โหลดลงใน FX2LP</p>
+
+    <h4>โค้ดส่วนสำคัญใน <code>slave.c</code></h4>
+
+    <pre><code>// slave.c
+
+void TD_Init( void )
+{
+  // ตั้งค่า Clock ของ CPU และเปิดการใช้งาน CLKOUT
+  CPUCS = 0x12; // CLKSPD[1:0]=10, for 48MHz operation, output CLKOUT
+
+  // ตั้งค่า FLAG A ให้เป็น Empty flag ของ EP2 (EP2EF)
+  // Active High หมายถึงเมื่อมีข้อมูลใน EP2, FLAGA จะเป็น High
+  PINFLAGSAB = 0x08;			// FLAGA - EP2EF
+  SYNCDELAY;
+
+  // ตั้งค่า FLAG D ให้เป็น Full flag ของ EP6 (EP6FF)
+  // Active High หมายถึงเมื่อ EP6 ยังไม่เต็ม, FLAGD จะเป็น High
+  PINFLAGSCD = 0xE0;			// FLAGD - EP6FF
+  SYNCDELAY;
+  
+  PORTACFG = 0x80; // เปิดใช้งาน FLAGD
+  SYNCDELAY;
+
+  // ตั้งค่า Interface เป็น Slave FIFO mode และรับ Clock จากภายนอก (FPGA)
+  IFCONFIG = 0x03;  // external clock input, Slave FIFO interface
+  SYNCDELAY;
+
+  // --- Endpoint Configuration ---
+  // EP2: OUT, 512 bytes, bulk, 4x buffered
+  EP2CFG = 0xA0;
+  SYNCDELAY;                    
+  // EP6: IN, 512 bytes, bulk, 4x buffered
+  EP6CFG = 0xE0;
+  SYNCDELAY;              
+  
+  // --- FIFO Reset ---
+  FIFORESET = 0x80; // Activate NAK-ALL
+  SYNCDELAY;                    
+  FIFORESET = 0x02; // Reset FIFO 2
+  SYNCDELAY;                    
+  FIFORESET = 0x06; // Reset FIFO 6
+  SYNCDELAY;                    
+  FIFORESET = 0x00; // Deactivate NAK-ALL
+  SYNCDELAY;
+
+  // --- FIFO Configuration ---
+  // EP2: AUTOOUT=1 (ส่งข้อมูลให้ master อัตโนมัติ), WORDWIDE=1 (16-bit)
+  EP2FIFOCFG = 0x11;
+  SYNCDELAY;                    
+  // EP6: AUTOIN=1 (รับข้อมูลจาก master อัตโนมัติ), WORDWIDE=1 (16-bit)
+  EP6FIFOCFG = 0x0D;
+  SYNCDELAY;
+}
+    </code></pre>
+
+    <h3>2. FPGA Design</h3>
+
+    <p>ฝั่ง FPGA จะมีหน้าที่คอยเช็คสถานะของ <code>FLAGA</code> และ <code>FLAGD</code> เพื่อทำการอ่านและเขียนข้อมูลกับ FX2LP ผ่าน Parallel bus ขนาด 16-bit</p>
+
+        <div class="mermaid">
+graph LR
+        U[CY7C58013]
+        RAM[2-port RAM]
+        CTRL[Slave FIFO Control Logic]
+        
+        U &lt;-- 16bit Data & Flags --&gt; CTRL	
+        CTRL -- "Write data from EP2" --&gt; RAM
+        RAM -- "Read data for EP6" --&gt; CTRL
+    </div>
+
+    <ul>
+        <li>เมื่อ <code>FLAGA</code> เป็น '1', Control Logic จะรู้ว่ามีข้อมูลมาจาก PC ใน EP2 FIFO มันจะทำการ assert สัญญาณ <code>SLRD_L</code> (Slave Read) เพื่ออ่านข้อมูลมาเก็บไว้ใน RAM</li>
+        <li>เมื่อ FPGA ต้องการส่งข้อมูลกลับ, Control Logic จะอ่านข้อมูลจาก RAM แล้วเช็ค <code>FLAGD</code> ถ้าเป็น '1' (EP6 FIFO ยังไม่เต็ม) ก็จะ assert สัญญาณ <code>SLWR_L</code> (Slave Write) เพื่อเขียนข้อมูลเข้าไปใน EP6 FIFO</li>
+    </ul>
+
+    <h4>โค้ดส่วนสำคัญใน <code>PRJ_TOP.vhd</code></h4>
+
+    <pre><code>-- PRJ_TOP.vhd
+
+-- ... (entity declaration) ...
+
+architecture RTL of PRJ_TOP is
+	
+	-- ... (signal declarations) ...
+	
+	-- สัญญาณควบคุมการอ่าน/เขียน จะถูกสร้างตามสถานะของ FLAGA และ FLAGD
+	process( CLK_48M , RST_L )
+	begin
+		if ( RST_L = '0' ) then
+			wSLRD_L	&lt;=	'1'	; -- Active Low, '1' = inactive
+			wSLOE_L	&lt;=	'1'	; -- Active Low, '1' = inactive
+			wSLWR_L	&lt;=	'1'	; -- Active Low, '1' = inactive
+		elsif ( CLK_48M'event and CLK_48M = '1' ) then
+			if(wFLAGA = '1')then -- ถ้า FLAGA Active (มีข้อมูลให้อ่าน)
+				wSLRD_L	&lt;=	'0'	; -- ทำการ Read
+				wSLOE_L	&lt;=	'0'	; -- เปิด Output Enable
+				wSLWR_L	&lt;=	'1'	;
+			elsif(wFLAGD = '1')then -- ถ้า FLAGD Active (เขียนข้อมูลได้)
+				wSLRD_L	&lt;=	'1'	;
+				wSLOE_L	&lt;=	'1'	;
+				wSLWR_L	&lt;=	'0'	; -- ทำการ Write
+			else
+				if(wFLAGA = '0' and wFLAGD = '0')then
+					wSLRD_L	&lt;=	'1'	;
+					wSLOE_L	&lt;=	'1'	;
+					wSLWR_L	&lt;=	'1'	;
+				end if;
+			end if;
+		end if;
+	end process;
+	
+	--&gt;&gt;	EP2 : PC-&gt;device (Logic การอ่านข้อมูลจาก FX2LP)
+	process( CLK_48M , RST_L )
+	begin
+		if ( RST_L = '0' ) then
+			wPC2DevReq	&lt;=	'0'	;
+		elsif ( CLK_48M'event and CLK_48M = '1' ) then
+			if(wFLAGA = '1')then -- เริ่ม Request เมื่อ FLAGA Active
+				wPC2DevReq	&lt;=	'1'	;
+			else
+				if(wSLRD_L = '1')then -- หยุด Request เมื่อการอ่านสิ้นสุด
+					wPC2DevReq	&lt;=	'0'	;
+				end if;
+			end if;
+		end if;
+	end process;
+	
+	-- เขียนข้อมูลที่อ่านได้จาก FD bus ลง RAM
+	wWr		&lt;=	wPC2DevReq	; -- Write Enable
+	wWrData	&lt;=	wFD			; -- Data to Write
+	
+	
+	--&gt;&gt;	EP6 : device-&gt;PC (Logic การเขียนข้อมูลไปยัง FX2LP)
+	process( CLK_48M , RST_L )
+	begin
+		if ( RST_L = '0' ) then
+			wDev2PCReq	&lt;=	'0'	;
+		elsif ( CLK_48M'event and CLK_48M = '1' ) then
+			if(wFLAGD = '1')then -- เริ่ม Request เมื่อ FLAGD Active
+				wDev2PCReq	&lt;=	'1'	;
+			else
+				if(wSLWR_L = '1')then -- หยุด Request เมื่อการเขียนสิ้นสุด
+					wDev2PCReq	&lt;=	'0'	;
+				end if;
+			end if;
+		end if;
+	end process;
+	
+	-- นำข้อมูลจาก RAM (wRdData) ไปเขียนลง FD bus เมื่อ wSLWR_L Active
+	FD		&lt;=	wRdData	when (wSLWR_L = '0')	else	(others =&gt; 'Z')	;
+	
+	-- เลือก Endpoint Address ตาม Flag ที่ Active
+	process( CLK_48M , RST_L )
+	begin
+		if ( RST_L = '0' ) then
+			ADR1		&lt;=	'0'	;
+			ADR0		&lt;=	'0'	;
+		elsif ( CLK_48M'event and CLK_48M = '1' ) then
+			if (FLAGA = '1')then      -- FLAGA active, select EP2
+				ADR1		&lt;=	'0'	;
+				ADR0		&lt;=	'0'	;
+			elsif(FLAGD = '1')then    -- FLAGD active, select EP6
+				ADR1		&lt;=	'1'	;
+				ADR0		&lt;=	'0'	;
+			end if;
+		end if;
+	end process;
+
+end RTL;
+    </code></pre>
+
+    <h3>3. Test with Cypress Software</h3>
+
+    <p>หลังจากโปรแกรมเฟิร์มแวร์ลง FX2LP และโปรแกรม FPGA แล้ว สามารถใช้โปรแกรม <code>Streamer.exe</code> (ที่มากับ EZ-USB FX3 SDK) ในการทดสอบส่งและรับข้อมูลได้ โดยโปรแกรมจะแสดงข้อมูลที่ส่งไป (OUT transfers) และข้อมูลที่ได้รับกลับมา (IN transfers) ซึ่งถ้าทุกอย่างถูกต้อง ข้อมูลที่ได้รับกลับมาควรจะเป็นข้อมูลเดียวกับที่ส่งออกไป (Loopback)</p>
+
+    <hr>
+    <h2>ผลทดสอบ</h2>
+
+    <p><img src="EZUSB_FPGA_files/ezusb1.jpg" alt="ezusb1.jpg"></p>
+    <p><img src="EZUSB_FPGA_files/ezsub2.jpg" alt="ezsub2.jpg"></p>
+    <p><img src="EZUSB_FPGA_files/ezusb3.jpg" alt="ezusb3.jpg"></p>
+
+    <hr>
+    <h2>Note</h2>
+
+    <p>ตัวอย่าง code ทั้งหมดสามารถดาวน์โหลดได้ที่<br><a href="https://github.com/wichayen/ezusb_experimental">https://github.com/wichayen/ezusb_experimental</a></p>
+
+    <script>
+        mermaid.initialize({startOnLoad:true});
+    </script>
+</body>
+</html>
