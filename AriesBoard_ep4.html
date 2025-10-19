@@ -18,6 +18,15 @@
             height: auto;
             margin-bottom: 1rem;
         }
+        .table {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 0.25rem;
+        }
     </style>
 </head>
 <body>
@@ -62,19 +71,252 @@
 
     <div class="container mt-5">
         <div class="article-header">
-            <h1>โปรเจค PCI card ตอนที่ 4 PCI driver for linux</h1>
+            <h1>โปรเจค PCI card ตอนที่ 4 เขียน Driver และ Application</h1>
         </div>
 
         <div class="row">
             <div class="col-lg-8 mx-auto article-content">
-                <p>ในตอนนี้จะเป็นการเขียน driver สำหรับ PCI card บน Linux โดยจะใช้ NIOS2(Soft core CPU) ในการติดต่อกับส่วนต่างๆ</p>
-                <img src="AriesBoard_ep4_files/image001.png" class="img-fluid rounded">
-                <p>การเขียน driver บน Linux นั้นจะต้องมีการกำหนด Vendor ID, Device ID และ Memory map ของ PCI card</p>
-                <img src="AriesBoard_ep4_files/image002.png" class="img-fluid rounded">
-                <p>เมื่อเขียน driver เสร็จแล้ว เราสามารถใช้คำสั่ง insmod เพื่อโหลด driver เข้าสู่ระบบ</p>
-                <img src="AriesBoard_ep4_files/image003.png" class="img-fluid rounded">
-                <p>driver จะช่วยให้เราสามารถ access memory map ของ ADC, DAC, DIO และอื่นๆ ได้</p>
-                <img src="AriesBoard_ep4_files/image004.png" class="img-fluid rounded">
+                <hr>
+                <h1><strong>โปรเจค PCI card ตอนที่ 4 เขียน Driver และ Application</strong></h1>
+                <hr>
+                <h2>Overview</h2>
+                <p>หลังจากที่เราออกแบบฝั่ง FPGA เสร็จสิ้นแล้วในตอนที่ 3 ในตอนนี้เราจะมาพัฒนาฝั่ง Software กันบ้าง ซึ่งจะประกอบไปด้วย 2 ส่วนหลักๆ คือ Driver สำหรับติดต่อกับ Hardware และ Application สำหรับให้ผู้ใช้งานสามารถควบคุม Card ของเราได้</p>
+                <p>การจะให้ PC คุยกับ PCI card ให้รู้เรื่องนั้น มีสิ่งสำคัญแค่ 2 อย่างเท่านั้นคือ</p>
+                <ol>
+                <li><strong>Vendor ID, Device ID</strong>: ตัวนี้จะเป็นตัวบอกให้ระบบปฏิบัติการรู้ว่า จะต้องใช้ Driver ตัวไหนสำหรับ Hardware ชิ้นนี้ สำหรับ Card ของเราได้กำหนดค่าเป็น <code>Vendor ID = 0x1172</code> และ <code>Device ID = 0x0004</code></li>
+                <li><strong>Memory map</strong>: เป็นข้อกำหนดที่เราสร้างขึ้นเองเพื่อบอกว่าถ้าจะสั่งงานอะไร ต้องส่ง data ไปที่ address ไหน ซึ่งเป็น Memory map เดียวกันกับที่เราออกแบบไว้ในฝั่ง FPGA</li>
+                </ol>
+                <table class="table table-bordered">
+                <thead>
+                <tr>
+                <th>Offset address</th>
+                <th>Function</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                <td>0x0000_0000</td>
+                <td>Digital I/O CH1 ~ Digital I/O CH16</td>
+                </tr>
+                <tr>
+                <td>0x0000_0004</td>
+                <td>Digital I/O CH1 ~ Digital I/O CH16 Mode setting (0: Input, 1: Output)</td>
+                </tr>
+                <tr>
+                <td>0x0000_0100 ~ 0x0000_011C</td>
+                <td>ADC CH1 ~ ADC CH8</td>
+                </tr>
+                <tr>
+                <td>0x0000_0200 ~ 0x0000_020C</td>
+                <td>DAC CH1 ~ DAC CH4</td>
+                </tr>
+                <tr>
+                <td>0x0000_0210</td>
+                <td>DAC Output enable</td>
+                </tr>
+                <tr>
+                <td>0x0000_0300</td>
+                <td>LED</td>
+                </tr>
+                <tr>
+                <td>0x0000_0400</td>
+                <td>FPGA version</td>
+                </tr>
+                </tbody>
+                </table>
+                <hr>
+                <h2>ขั้นตอน</h2>
+                <h3>1. Driver Development</h3>
+                <p>เราจะพัฒนา Driver ของเราในรูปแบบของ Linux Kernel Module (<code>.ko</code>) ซึ่งเป็น Character Device Driver โดยมีไฟล์หลักๆ คือ <code>AriesPCI.c</code> และ <code>AriesPCI.h</code></p>
+                <h4>การลงทะเบียน Driver</h4>
+                <p>สิ่งแรกที่ Driver ต้องทำคือการบอกให้ Kernel รู้จักตัวเอง และระบุว่าจะจัดการกับ Hardware ตัวไหนผ่าน <code>pci_get_device</code> โดยใช้ Vendor ID และ Device ID ที่เรากำหนดไว้</p>
+                <pre><code class="language-c">// AriesPCI.c
+
+static int pci_init(void)
+{
+    // ...
+    device = pci_get_device( 0x1172, 0x0004, device );
+    if ( device == NULL ){
+        printk("AriesPCI device == NULL");
+        return -1;
+    }
+    // ...
+}
+</code></pre>
+                <p>จากนั้นเราจะทำการจองพื้นที่หน่วยความจำของ PCI Card (Memory-Mapped I/O) เข้ามาใน Address Space ของ Kernel ด้วย <code>pci_iomap</code> เพื่อให้ Kernel สามารถเขียนหรืออ่านข้อมูลไปยัง Card ของเราได้โดยตรง</p>
+                <pre><code class="language-c">// AriesPCI.c
+
+ioaddr = pci_iomap(device, 0, pci_resource_len(device,0));
+if (!ioaddr) {
+    dev_err(&device->dev, "cannot map MMIO, aborting\n");
+    return -EIO;
+}
+</code></pre>
+                <h4>File Operations</h4>
+                <p>หัวใจสำคัญของ Character Driver คือ <code>file_operations</code> struct ซึ่งเป็นการกำหนดว่าเมื่อ Application ทำการ <code>open</code>, <code>read</code>, <code>write</code> หรือ <code>ioctl</code> บน device file (<code>/dev/AriesPCI0</code>) จะให้ไปเรียกฟังก์ชันไหนใน Driver ของเรา</p>
+                <pre><code class="language-c">// AriesPCI.c
+
+struct file_operations AriesPCI_fops = {
+	.owner = THIS_MODULE,
+	.open = AriesPCI_open,
+	.release = AriesPCI_close,
+	.read = AriesPCI_read,
+	.write = AriesPCI_write,
+	.llseek = AriesPCI_llseek,
+	.unlocked_ioctl = AriesPCI_ioctl,
+};
+</code></pre>
+                <ul>
+                <li><code>AriesPCI_read</code> / <code>AriesPCI_write</code>: ทำหน้าที่อ่านและเขียนข้อมูลขนาด 32-bit ไปยัง address ที่กำหนดผ่าน <code>llseek</code></li>
+                <li><code>AriesPCI_llseek</code>: ทำหน้าที่ตั้งค่า offset address ที่ต้องการจะอ่านหรือเขียน</li>
+                <li><code>AriesPCI_ioctl</code>: เป็นช่องทางพิเศษที่เราสร้างขึ้นมาเองเพื่อส่งคำสั่งเฉพาะต่างๆ ไปยัง Driver ทำให้ฝั่ง Application เขียนโค้ดได้ง่ายขึ้น ไม่ต้องจัดการเรื่อง address เองทั้งหมด</li>
+                </ul>
+                <h4>IOCTL Commands</h4>
+                <p>เราได้กำหนดคำสั่ง <code>ioctl</code> ต่างๆ ไว้ใน <code>AriesPCI.h</code> เพื่อให้ Application เรียกใช้งานได้สะดวก</p>
+                <pre><code class="language-c">// AriesPCI.h
+
+#define		IOCTL_READ_LED_BY_MEM			0x0
+#define		IOCTL_WRITE_LED_BY_MEM			0x1
+#define		IOCTL_DAC1_WRITE				0x20
+// ... (DAC, ADC commands)
+#define		IOCTL_FPGA_VER_READ				0x10
+#define		IOCTL_DIO_MODE_WRITE				0x11
+#define		IOCTL_DIO_WRITE					0x12
+#define		IOCTL_DIO_READ					0x13
+</code></pre>
+                <p>และใน <code>AriesPCI.c</code> จะมี <code>switch</code> statement เพื่อจัดการกับ command เหล่านี้</p>
+                <pre><code class="language-c">// AriesPCI.c
+
+long AriesPCI_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+{
+	unsigned int data32 = 0;
+	
+	switch(cmd){
+		case	IOCTL_FPGA_VER_READ			:
+			data32 = ioread32(ioaddr + FPGA_VER_BASE);
+			if (copy_to_user((int __user *)arg, &data32, sizeof(data32)) ) {
+				return -EFAULT;
+			}
+			return	0;
+		case	IOCTL_DIO_WRITE				:
+			if (copy_from_user(&data32,(int __user *)arg,sizeof(data32))) {
+				return -EFAULT;
+			}
+			iowrite32(data32, ioaddr + DIO_BASE);
+			return	0;
+		// ... other cases
+	}
+	return 0;
+}
+</code></pre>
+                <h4>การคอมไพล์และติดตั้ง Driver</h4>
+                <p>เมื่อเขียนโค้ดเสร็จแล้ว เราจะต้องคอมไพล์ Driver ซึ่งจะได้ไฟล์ <code>AriesPCI.ko</code> ออกมา จากนั้นใช้คำสั่ง <code>insmod</code> เพื่อติดตั้ง Driver เข้าไปใน Kernel และ <code>chmod</code> เพื่อให้ Application ทั่วไปสามารถเข้าถึงได้</p>
+                <pre><code class="language-bash">sudo insmod AriesPCI.ko
+sudo chmod 666 /dev/AriesPCI0
+</code></pre>
+                <hr>
+                <h3>2. Userspace Application</h3>
+                <p>เมื่อ Driver พร้อมใช้งานแล้ว เราสามารถพัฒนา Application ในฝั่ง Userspace เพื่อติดต่อกับ PCI Card ของเราได้ โดยการทำงานทั้งหมดจะผ่าน Device file ที่ชื่อว่า <code>/dev/AriesPCI0</code></p>
+                <h4>Library สำหรับ Debug</h4>
+                <p>เพื่อความสะดวกในการทดสอบและ Debug เราได้สร้าง Library ง่ายๆ (<code>myLib.c</code>) ที่ห่อหุ้มการเรียกใช้ system call <code>open</code>, <code>lseek</code>, <code>read</code>, <code>write</code> ไว้ ทำให้เราสามารถอ่านเขียน Register บน Card ได้ง่ายๆ</p>
+                <pre><code class="language-c">// myLib.c
+
+int reg_write(unsigned int addr, int data)
+{
+  int fh = open("/dev/AriesPCI0", O_RDWR);
+  if(fh < 0){
+   printf("Cannot open \n");
+   return 1;
+  }
+  char buffer[4];
+  // ... pack data into buffer ...
+  lseek(fh, addr, SEEK_SET);
+  write(fh, buffer, 4);
+  close(fh);
+  return 0;
+}
+
+int reg_read(unsigned int addr)
+{
+  int fh = open("/dev/AriesPCI0", O_RDONLY);
+  if(fh < 0){
+   printf("Cannot open \n");
+   return 1;
+  }
+  char buffer[4];
+  lseek(fh, addr, SEEK_SET);
+  read(fh, buffer, 4);
+  close(fh);
+  // ... unpack data from buffer ...
+  return (data);
+}
+</code></pre>
+                <h3>3. Sample GUI Application</h3>
+                <p>เราสามารถสร้าง Application แบบ GUI ด้วย Qt (<code>mainwindow.cpp</code>) ซึ่งเบื้องหลังก็คือการเรียกใช้ <code>open</code>, <code>read</code>, <code>write</code> ไปยัง <code>/dev/AriesPCI0</code> เหมือนเดิม</p>
+                <p><strong>ตัวอย่าง: การอ่าน FPGA Version</strong></p>
+                <pre><code class="language-cpp">// mainwindow.cpp
+
+void MainWindow::on_PCIEable_clicked()
+{
+    fh = open("/dev/AriesPCI0",O_RDWR);
+    // ... error handling ...
+
+    char buffer[4];
+    lseek(fh, FPGA_VER_BASE, SEEK_SET);
+    read(fh, buffer, 4);
+    
+    // ... unpack data and display ...
+    unsigned int data = ...;
+    QString tempText = QString::number(data, 16);
+    ui->FPGA_Ver->setText(tempText);
+}
+</code></pre>
+                <p><strong>ตัวอย่าง: การตั้งค่า DAC</strong></p>
+                <p>เมื่อผู้ใช้กรอกค่าแรงดันไฟฟ้าที่ต้องการและกดปุ่ม <code>DACSet</code> โปรแกรมจะแปลงค่า float เป็น integer 12-bit แล้วเขียนไปยัง Address ของ DAC แต่ละ Channel</p>
+                <pre><code class="language-cpp">// mainwindow.cpp
+
+void MainWindow::on_DACSet_clicked()
+{
+    float val;
+    unsigned int data;
+    char buffer[4];
+
+    // DAC Channel 1
+    val = ui->DAC1->text().toFloat();
+    data = (unsigned int)((val/3.3)*4095);
+    // ... pack data to buffer ...
+    lseek(fh, DAC1_BASE, SEEK_SET);
+    write(fh, buffer, 4);
+
+    // ... (repeat for DAC2, DAC3, DAC4)
+}
+</code></pre>
+                <p><strong>ตัวอย่าง: การอ่านค่า ADC</strong></p>
+                <p>เมื่อกดปุ่ม <code>ADCGet</code> โปรแกรมจะอ่านค่าจาก Register ของ ADC แต่ละ Channel แล้วแปลงค่ากลับเป็นแรงดันไฟฟ้าเพื่อแสดงผล</p>
+                <pre><code class="language-cpp">// mainwindow.cpp
+
+void MainWindow::on_ADCGet_clicked()
+{
+    unsigned int data;
+    char buffer[4];
+    float val;
+
+    // ADC Channel 1
+    lseek(fh, ADC1_BASE, SEEK_SET);
+    read(fh, buffer, 4);
+    // ... unpack data from buffer ...
+    data = ...;
+    val = (((float)data/4095))*3.3;
+    ui->ADC1->setText(QString::number(val));
+
+    // ... (repeat for other ADC channels)
+}
+</code></pre>
+                <hr>
+                <h2>note</h2>
+                <p>ตัวอย่าง code ทั้งหมดสามารถดาวน์โหลดได้ที่
+                <a href="https://github.com/wichayen/ariesboard">https://github.com/wichayen/ariesboard</a></p>
+                <hr>
             </div>
         </div>
     </div>

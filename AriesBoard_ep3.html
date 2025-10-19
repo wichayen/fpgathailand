@@ -18,7 +18,17 @@
             height: auto;
             margin-bottom: 1rem;
         }
+        .table {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 0.25rem;
+        }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -67,37 +77,201 @@
 
         <div class="row">
             <div class="col-lg-8 mx-auto article-content">
-                <p>ในตอนนี้จะเป็นการออกแบบ FPGA สำหรับ PCI card โดยจะใช้ NIOS2(Soft core CPU) ในการติดต่อกับส่วนต่างๆ</p>
-
-                <h2>1. PCI interface</h2>
-                <p>มีทางเลือกอยู่ 2 ทางคือ:</p>
+                <hr>
+                <h1><strong>โปรเจค PCI card ตอนที่ 3 ออกแบบ FPGA</strong></h1>
+                <hr>
+                <h2>Overview</h2>
+                <p>เริ่มแรกสุดเลยเราต้องมากำหนดการกันก่อนว่าจะควบคุม IO ต่างๆ ยังไง เช่น PC จะมาcontrol GPIO จะต้องทำยังไง จะต้องเข้ามาที่ address ไหน เราเลยต้องมากำหนด memory map กันก่อน ด้านล่างคือที่ผมกำหนดมาเอง</p>
+                <table class="table table-bordered">
+                <thead>
+                <tr>
+                <th>Offset address</th>
+                <th>Function</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                <td>0x0000_0000</td>
+                <td>Digital I/O CH1 ~ Digital I/O CH16</td>
+                </tr>
+                <tr>
+                <td>0x0000_0004</td>
+                <td>Digital I/O CH1 ~ Digital I/O CH16 Mode setting (0: Input, 1: Output)</td>
+                </tr>
+                <tr>
+                <td>0x0000_0100 ~ 0x0000_011C</td>
+                <td>ADC CH1(ADC enable, 1: 1 time, 2: continuous) ~ ADC CH8</td>
+                </tr>
+                <tr>
+                <td>0x0000_0200 ~ 0x0000_020C</td>
+                <td>DAC CH1 ~ DAC CH4</td>
+                </tr>
+                <tr>
+                <td>0x0000_0210</td>
+                <td>DAC Output enable</td>
+                </tr>
+                <tr>
+                <td>0x0000_0300</td>
+                <td>LED</td>
+                </tr>
+                <tr>
+                <td>0x0000_0400</td>
+                <td>FPGA version</td>
+                </tr>
+                </tbody>
+                </table>
+                <p>ต่อจากนั้นจะต่อกับ PC ได้ ก็ต้องมีการสื่อสารผ่าน PCI bus ซึ่งสามารถออกแบบได้ 2 วิธี</p>
+                <ol>
+                <li>ใช้ IP core ที่ Altera มีมาให้</li>
+                <li>เขียน PCI interface ด้วย VHDL หรือ Verilog ด้วยตัวเอง</li>
+                </ol>
+                <p>ผมเลือกแบบที่ 2 ครับ ที่เลือกแบบที่ 2 นั้นก็เพราะท้ายสุดจะเอาบอร์ดนี้ให้ไปอ้างอิงจะได้ไม่มีปัญหาเรื่อง license แต่ที่บอกว่า เขียน PCI interface ด้วย VHDL code เองนั้น ผมก็ไม่ได้เขียนเองทั้งหมด ผมเผอิญเจอหนังสือเล่มนึงสอนเขียน VHDL code แล้วเค้าก็มีตัวอย่าง code มาให้ด้วย มาลิงค์นี้เลยครับ <a href="http://www.cqpub.co.jp/hanbai/books/33/33361.htm">http://www.cqpub.co.jp/hanbai/books/33/33361.htm</a> อาจจะลำบากหน่อยเพราะเป็นภาษาญี่ปุ่น แต่ไม่เป็นไร เราแค่เอาโค้ดส่วนที่เป็น PCI interface มาใช้</p>
+                <hr>
+                <h2>Design</h2>
+                <p>concept การออกแบบก็แบ่งง่ายๆ ได้ 4 ส่วน</p>
                 <ul>
-                    <li>ใช้ IP core ของ Altera</li>
-                    <li>เขียน PCI interface เองด้วย VHDL หรือ Verilog</li>
+                <li>PCI interface : ไว้ค่อย interface PCI bus</li>
+                <li>DAC controller : ควบคุม MCP4922</li>
+                <li>ADC controller : ควบคุม MCP3208</li>
+                <li>DIO controller : ควบคุม GPIO</li>
                 </ul>
-                <p>ผมเลือกที่จะเขียนเอง เพราะว่าการใช้ IP core ของ Altera นั้นมีค่าใช้จ่าย และผมต้องการเรียนรู้การทำงานของ PCI bus ด้วยตัวเอง</p>
-                <p>ผมได้ VHDL code สำหรับ PCI interface มาจากหนังสือ <a href="http://www.cqpub.co.jp/hanbai/books/33/33361.htm">http://www.cqpub.co.jp/hanbai/books/33/33361.htm</a></p>
-
-                <h2>2. Peripheral interface</h2>
-                <h3>DAC</h3>
-                <p>MCP4922 4 channel</p>
-                <img src="AriesBoard_ep3_files/image001.jpg" class="img-fluid rounded">
-
-                <h3>ADC</h3>
-                <p>MCP3208 8 channel</p>
-                <img src="AriesBoard_ep3_files/image002.jpg" class="img-fluid rounded">
-
-                <h3>DIO</h3>
-                <p>ออกแบบ output High/Low</p>
-
-                <h2>3. Simulation</h2>
-                <p>ทำการ simulation เพื่อทดสอบการทำงานของ PCI interface และ peripheral interface</p>
-                <img src="AriesBoard_ep3_files/image003.png" class="img-fluid rounded">
-                <img src="AriesBoard_ep3_files/image004.png" class="img-fluid rounded">
-
-                <h2>4. Memory map</h2>
-                <p>เพื่อให้ NIOS2 สามารถติดต่อกับ peripheral ต่างๆได้ จะต้องมีการกำหนด memory map ขึ้นมา</p>
-                <img src="AriesBoard_ep3_files/image005.png" class="img-fluid rounded">
+                <div class="mermaid">graph TD
+                	PC_PCI_BUS &lt;--&gt; PCI_IP
+                	subgraph "FPGA"	
+                		PCI_IP &lt;--&gt; DAC_IP
+                		PCI_IP &lt;--&gt; ADC_IP
+                		PCI_IP &lt;--&gt; DIO_IP
+                	end
+                </div>
+                <h3>1. PCI bus interface</h3>
+                <p>ส่วนนี้สำคัญที่สุดและก็ซับซ้อนที่สุด แต่เราโชคดีที่ได้โค้ดตัวอย่างมาจากหนังสือ <code>PCI_TGT8.VHD</code> ซึ่งทำหน้าที่เป็น PCI Target device ที่แปลงการสื่อสารบน PCI bus ไปเป็น Local bus ที่ง่ายต่อการนำไปใช้งาน</p>
+                <p>โค้ดตัวนี้จะจัดการกับการทำ Configuration Read/Write, Memory Read/Write และ I/O Read/Write บน PCI bus ให้เราทั้งหมด และแปลงออกมาเป็นสัญญาณบน Local bus เพื่อให้เรานำไปต่อกับโมดูลอื่นๆ ที่เราออกแบบเองได้ง่ายขึ้น</p>
+                <p>ด้านล่างคือส่วนหนึ่งของ <code>PCI_TGT8.VHD</code> ที่ประกาศ port สำหรับ Local bus</p>
+                <pre><code class="language-vhdl">-- [JoXMs (Local Bus Signal Pins)
+                		MEM_ADRS	: out	std_logic_vector(23 downto 0);	-- AhXoX (Memory address bus)
+                		MEM_DATA	: inout	std_logic_vector(31 downto 0);	-- f[^oX (Memory data bus)
+                		MEM_CEn		: out	std_logic;			-- SRAM0`3 /CE (Chip Enable)
+                		MEM_OEn		: out	std_logic;			-- SRAM0`3 /OE (Output Enable)
+                		MEM_WE0n	: out	std_logic;			-- SRAM0 /WE (Write Enable)
+                		MEM_WE1n	: out	std_logic;			-- SRAM1 /WE
+                		MEM_WE2n	: out	std_logic;			-- SRAM2 /WE
+                		MEM_WE3n	: out	std_logic;			-- SRAM3 /WE
+                </code></pre>
+                <p>จากโค้ดจะเห็นว่าเราจะได้ Address bus (<code>MEM_ADRS</code>), Data bus (<code>MEM_DATA</code>) และสัญญาณควบคุม (<code>MEM_CEn</code>, <code>MEM_OEn</code>, <code>MEM_WEn</code>) ซึ่งเราจะนำสัญญาณเหล่านี้ไปถอดรหัส Address เพื่อเลือกว่าจะทำงานกับ IP ตัวไหน (DAC, ADC, หรือ DIO)</p>
+                <h3>2. DAC_IP</h3>
+                <p>โมดูลนี้มีหน้าที่รับค่าที่ส่งมาจาก Local bus แล้วนำไปควบคุม DAC Chip เบอร์ MCP4922 ซึ่งเป็น SPI interface ครับ ไฟล์ที่ใช้คือ <code>DAC_CTRL.vhd</code></p>
+                <pre><code class="language-vhdl">entity	DAC_CTRL	is
+                	port	(
+                			CLK							:	in	std_logic							;
+                			RST_L						:	in	std_logic							;
+                			
+                			-- system interface
+                			iDACData					:	in	ODAC_DATA							;
+                			iWriteREQ					:	in	std_logic							;
+                			ipWriteFinish				:	out	std_logic							;
+                			
+                			-- DAC interface
+                			MOSI						:	out	std_logic							;
+                			SCLK						:	out	std_logic							;
+                			CS_L1						:	out	std_logic							;
+                			CS_L2						:	out	std_logic							;
+                			LOADDACS_L					:	out	std_logic							
+                			
+                			);
+                end	DAC_CTRL;
+                </code></pre>
+                <p>เมื่อมีสัญญาณ <code>iWriteREQ</code> เข้ามา โมดูลจะนำข้อมูลจาก <code>iDACData</code> ไปสร้างเป็นสัญญาณ SPI (<code>MOSI</code>, <code>SCLK</code>, <code>CS_L1</code>, <code>CS_L2</code>) เพื่อส่งให้ DAC chip ต่อไป</p>
+                <h3>3. ADC_IP</h3>
+                <p>โมดูลนี้ทำหน้าที่ควบคุม ADC Chip เบอร์ MCP3208 ซึ่งเป็น SPI interface เช่นกัน ไฟล์ที่ใช้คือ <code>ADC_CTRL.vhd</code></p>
+                <pre><code class="language-vhdl">entity	ADC_CTRL	is
+                	port	(
+                			CLK							:	in	std_logic							;
+                			RST_L						:	in	std_logic							;
+                			
+                			-- system interface
+                			iADCData					:	out	ADC_DATA							;
+                			iReadREQ					:	in	std_logic							;
+                			ipReadFinish				:	out	std_logic							;
+                			
+                			-- ADC interface
+                			MISO						:	in	std_logic							;
+                			MOSI						:	out	std_logic							;
+                			SCLK						:	out	std_logic							;
+                			CS_L						:	out	std_logic							
+                			
+                			
+                			);
+                end	ADC_CTRL;
+                </code></pre>
+                <p>เมื่อมีสัญญาณ <code>iReadREQ</code> เข้ามา โมดูลจะสั่งงาน ADC chip ผ่าน SPI (<code>MOSI</code>, <code>SCLK</code>, <code>CS_L</code>) เพื่อเริ่มการแปลงสัญญาณ และเมื่อแปลงเสร็จข้อมูลจะถูกอ่านกลับมาทาง <code>MISO</code> และส่งออกไปที่ <code>iADCData</code></p>
+                <h3>4. DIO_IP</h3>
+                <p>เป็นโมดูลที่ง่ายที่สุด ทำหน้าที่ควบคุม General Purpose I/O โดยตรง ไฟล์ที่ใช้คือ <code>PIO_CTRL.vhd</code></p>
+                <pre><code class="language-vhdl">entity	PIO_CTRL	is
+                	port	(
+                			CLK							:	in	std_logic							;
+                			RST_L						:	in	std_logic							;
+                			
+                			-- system interface
+                			iPIOCtrl					:	in	std_logic_vector(15 downto 0)		;
+                			iPIOBufferIn				:	out	std_logic_vector(15 downto 0)		;
+                			iPIOBufferOut				:	in	std_logic_vector(15 downto 0)		;
+                			
+                			-- PIO interface
+                			PIO							:	inout	std_logic_vector(15 downto 0)	
+                			
+                			);
+                end	PIO_CTRL;
+                </code></pre>
+                <ul>
+                <li><code>iPIOCtrl</code>: ใช้สำหรับกำหนดทิศทางของแต่ละ Pin ว่าจะเป็น Input หรือ Output</li>
+                <li><code>iPIOBufferOut</code>: คือข้อมูลที่ต้องการจะเขียนออกไปยัง Pin ที่เป็น Output</li>
+                <li><code>iPIOBufferIn</code>: คือข้อมูลที่อ่านได้จาก Pin ที่เป็น Input</li>
+                <li><code>PIO</code>: คือ port ที่ต่อกับขา Pin ของ FPGA จริงๆ</li>
+                </ul>
+                <hr>
+                <h2>Simulation</h2>
+                <p>ในส่วนของการจำลองการทำงาน เราไม่ได้เขียน testbench ขึ้นมาเองทั้งหมด แต่ได้นำ testbench ของ Altera มาดัดแปลง ไฟล์หลักที่เราแก้ไขคือ <code>mstr_tranx.vhd</code> ซึ่งทำหน้าที่เป็น PCI Master เพื่อสร้าง transaction ต่างๆ มาทดสอบ PCI Target ของเรา</p>
+                <p>เราสามารถสั่งเขียนหรืออ่าน Memory ตาม Address ที่เราได้กำหนดไว้ใน Memory map ได้โดยใช้ procedure <code>mem_wr_32</code> และ <code>mem_rd_32</code> ที่มีอยู่ใน testbench</p>
+                <p>ตัวอย่างการเขียนข้อมูลไปยัง Address ต่างๆ:</p>
+                <pre><code class="language-vhdl">---------------------------------------------------      
+                -- 32 bit memory write(Address, Data, Number of Dwords)   
+                -- mem_wr_32(x"10000000",x"00000001",1);
+                ---------------------------------------------------
+                  
+                      -- เขียนค่า 0x12345678 ไปยัง address ของ Digital I/O
+                      mem_wr_32(bar0_data,x"12345678",1);
+                      
+                      -- เขียนค่า 0x22222222 ไปยัง address ของ Mode setting
+                	  mem_wr_32(bar0_data+4,x"22222222",1);
+                      
+                      -- เขียนค่าไปยัง DAC channel 1
+                	  mem_wr_32(bar0_data+x"200",x"ffffffff",1);
+                      
+                      -- สั่งให้อ่านค่าจาก ADC channel 1
+                	  mem_wr_32(bar0_data+x"100",x"00000000",1);
+                </code></pre>
+                <table class="table table-bordered">
+                <thead>
+                <tr>
+                <th>bar0_data</th>
+                <th>0x0000_0000</th>
+                <th>Digital I/O CH1 ~ Digital I/O CH16</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                <td>bar0_data+4</td>
+                <td>0x0000_0004</td>
+                <td>Digital I/O CH1 ~ Digital I/O CH16 Mode setting (0: Input, 1: Output)</td>
+                </tr>
+                </tbody>
+                </table>
+                <p>เราสามารถดูผลการจำลองการทำงานได้จาก Waveform ใน Simulator เพื่อตรวจสอบว่า IP แต่ละตัวของเราทำงานได้ถูกต้องตามที่คาดหวังหรือไม่</p>
+                <hr>
+                <h2>note</h2>
+                <p>ตัวอย่าง code ทั้งหมดสามารถดาวน์โหลดได้ที่
+                <a href="https://github.com/wichayen/ariesboard">https://github.com/wichayen/ariesboard</a></p>
+                <hr>
             </div>
         </div>
     </div>
@@ -109,5 +283,6 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
 </body>
 </html>
