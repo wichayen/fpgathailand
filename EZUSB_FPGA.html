@@ -42,7 +42,7 @@
                 <p>สถาปัตยกรรมโดยรวมของโปรเจคตัวอย่างนี้เป็นดังนี้:</p>
 
                 <div class="mermaid">
-graph LR
+graph TD
         subgraph "Windows PC"
             W1["Python (Jupyter) / C#"]
             W2[USB Host Controller]
@@ -157,7 +157,7 @@ void TD_Init( void )
                 <p>ฝั่ง FPGA จะมีหน้าที่คอยเช็คสถานะของ <code>FLAGA</code> และ <code>FLAGD</code> เพื่อทำการอ่านและเขียนข้อมูลกับ FX2LP ผ่าน Parallel bus ขนาด 16-bit</p>
 
                 <div class="mermaid">
-graph LR
+graph TD
         U[CY7C58013]
         RAM[2-port RAM]
         CTRL[Slave FIFO Control Logic]
