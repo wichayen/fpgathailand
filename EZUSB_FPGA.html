@@ -4,25 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>การใช้งาน EZUSB (CY7C68013) interfacing กับ FPGA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
-        body { font-family: 'Sarabun', sans-serif; }
-        img { max-width: 100%; height: auto; }
-        pre { background-color: #f4f4f4; padding: 1em; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
-        code { font-family: monospace; }
+        body { padding-top: 56px; }
+        .article-content img { max-width: 100%; height: auto; margin-bottom: 1rem; }
+        pre { background-color: #f8f9fa; padding: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
 </head>
 <body>
-    <h1>การใช้งาน EZUSB (CY7C68013) interfacing กับ FPGA</h1>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">FPGATHAILAND</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-    <h2>Overview</h2>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto article-content">
+                <h1>การใช้งาน EZUSB (CY7C68013) interfacing กับ FPGA</h1>
 
-    <p>บทความนี้จะอธิบายการเชื่อมต่อระหว่างคอมพิวเตอร์กับ FPGA ผ่านชิป EZUSB FX2LP (CY7C68013A) ซึ่งทำหน้าที่เป็นตัวกลางแปลง USB protocol ไปเป็น Parallel bus (Slave FIFO) ที่ FPGA สามารถคุยด้วยได้ง่าย</p>
+                <h2>Overview</h2>
 
-    <p>สถาปัตยกรรมโดยรวมของโปรเจคตัวอย่างนี้เป็นดังนี้:</p>
+                <p>บทความนี้จะอธิบายการเชื่อมต่อระหว่างคอมพิวเตอร์กับ FPGA ผ่านชิป EZUSB FX2LP (CY7C68013A) ซึ่งทำหน้าที่เป็นตัวกลางแปลง USB protocol ไปเป็น Parallel bus (Slave FIFO) ที่ FPGA สามารถคุยด้วยได้ง่าย</p>
 
-        <div class="mermaid">
+                <p>สถาปัตยกรรมโดยรวมของโปรเจคตัวอย่างนี้เป็นดังนี้:</p>
+
+                <div class="mermaid">
 graph LR
         subgraph "Windows PC"
             W1["Python (Jupyter) / C#"]
@@ -47,41 +66,41 @@ graph LR
         F1 &lt;--&gt; F2	
     </div>
 
-    <ul>
-        <li><strong>Windows PC</strong>: ทำหน้าที่ส่งและรับข้อมูลผ่าน USB โดยอาจจะใช้โปรแกรมเช่น Python, C# หรือโปรแกรมทดสอบอย่าง Cypress Streamer</li>
-        <li><strong>FX2LP (CY7C68013A)</strong>: ทำหน้าที่เป็น USB device controller แปลงข้อมูลจาก USB ไปเป็น parallel data bus ในโหมด Slave FIFO</li>
-        <li><strong>FPGA</strong>: ทำหน้าที่อ่านข้อมูลจาก FX2LP และเขียนข้อมูลกลับไป ในตัวอย่างนี้จะเป็นการทำ Loopback คืออ่านข้อมูลที่ได้รับมาแล้วส่งกลับไปทันที</li>
-    </ul>
+                <ul>
+                    <li><strong>Windows PC</strong>: ทำหน้าที่ส่งและรับข้อมูลผ่าน USB โดยอาจจะใช้โปรแกรมเช่น Python, C#, หรือโปรแกรมทดสอบอย่าง Cypress Streamer</li>
+                    <li><strong>FX2LP (CY7C68013A)</strong>: ทำหน้าที่เป็น USB device controller แปลงข้อมูลจาก USB ไปเป็น parallel data bus ในโหมด Slave FIFO</li>
+                    <li><strong>FPGA</strong>: ทำหน้าที่อ่านข้อมูลจาก FX2LP และเขียนข้อมูลกลับไป ในตัวอย่างนี้จะเป็นการทำ Loopback คืออ่านข้อมูลที่ได้รับมาแล้วส่งกลับไปทันที</li>
+                </ul>
 
-    <h2>USB Endpoint Configuration</h2>
+                <h2>USB Endpoint Configuration</h2>
 
-    <p>หัวใจสำคัญที่สุดของการทำงานในโหมด Slave FIFO คือการตั้งค่า Endpoint และ Flag ภายในตัว FX2LP ให้ถูกต้อง เพื่อให้ FPGA สามารถรับรู้สถานะของ FIFO (First-In, First-Out) buffer ได้</p>
+                <p>หัวใจสำคัญที่สุดของการทำงานในโหมด Slave FIFO คือการตั้งค่า Endpoint และ Flag ภายในตัว FX2LP ให้ถูกต้อง เพื่อให้ FPGA สามารถรับรู้สถานะของ FIFO (First-In, First-Out) buffer ได้</p>
 
-    <p>ในตัวอย่างนี้ เราจะตั้งค่า Endpoint ดังนี้:</p>
-    <ul>
-        <li><strong><code>EP2</code></strong>: เป็น <strong>OUT</strong> Endpoint ขนาด 512 bytes, 4x buffered ใช้สำหรับรับข้อมูลจาก PC (<code>PC -&gt; Device</code>)
-            <ul>
-                <li><strong><code>FLAGA</code></strong> จะถูกตั้งค่าให้เป็น <strong>Empty Flag</strong> ของ EP2 หมายความว่า <code>FLAGA</code> จะ Active (เป็น '1') เมื่อ EP2 <strong>มีข้อมูล</strong>ให้ FPGA อ่านออกไป</li>
-            </ul>
-        </li>
-        <li><strong><code>EP6</code></strong>: เป็น <strong>IN</strong> Endpoint ขนาด 512 bytes, 4x buffered ใช้สำหรับส่งข้อมูลกลับไปยัง PC (<code>Device -&gt; PC</code>)
-            <ul>
-                <li><strong><code>FLAGD</code></strong> จะถูกตั้งค่าให้เป็น <strong>Full Flag</strong> ของ EP6 หมายความว่า <code>FLAGD</code> จะ Active (เป็น '1') เมื่อ EP6 <strong>ยังไม่เต็ม</strong> และพร้อมให้ FPGA เขียนข้อมูลเข้ามาได้</li>
-            </ul>
-        </li>
-    </ul>
+                <p>ในตัวอย่างนี้ เราจะตั้งค่า Endpoint ดังนี้:</p>
+                <ul>
+                    <li><strong><code>EP2</code></strong>: เป็น <strong>OUT</strong> Endpoint ขนาด 512 bytes, 4x buffered ใช้สำหรับรับข้อมูลจาก PC (<code>PC -&gt; Device</code>)
+                        <ul>
+                            <li><strong><code>FLAGA</code></strong> จะถูกตั้งค่าให้เป็น <strong>Empty Flag</strong> ของ EP2 หมายความว่า <code>FLAGA</code> จะ Active (เป็น '1') เมื่อ EP2 <strong>มีข้อมูล</strong>ให้ FPGA อ่านออกไป</li>
+                        </ul>
+                    </li>
+                    <li><strong><code>EP6</code></strong>: เป็น <strong>IN</strong> Endpoint ขนาด 512 bytes, 4x buffered ใช้สำหรับส่งข้อมูลกลับไปยัง PC (<code>Device -&gt; PC</code>)
+                        <ul>
+                            <li><strong><code>FLAGD</code></strong> จะถูกตั้งค่าให้เป็น <strong>Full Flag</strong> ของ EP6 หมายความว่า <code>FLAGD</code> จะ Active (เป็น '1') เมื่อ EP6 <strong>ยังไม่เต็ม</strong> และพร้อมให้ FPGA เขียนข้อมูลเข้ามาได้</li>
+                        </ul>
+                    </li>
+                </ul>
 
-    <h2>ขั้นตอนการพัฒนา</h2>
+                <h2>ขั้นตอนการพัฒนา</h2>
 
-    <h3>1. Compile FX2LP (CY7C68013) Firmware</h3>
+                <h3>1. Compile FX2LP (CY7C68013) Firmware</h3>
 
-    <p>ส่วนที่สำคัญที่สุดของเฟิร์มแวร์คือการตั้งค่า Register ต่างๆ ในฟังก์ชัน <code>TD_Init()</code> ซึ่งอยู่ในไฟล์ <code>slave.c</code> เพื่อกำหนดค่าการทำงานของ Slave FIFO interface, Endpoints, และ Flags ให้ตรงกับที่เราออกแบบไว้</p>
+                <p>ส่วนที่สำคัญที่สุดของเฟิร์มแวร์คือการตั้งค่า Register ต่างๆ ในฟังก์ชัน <code>TD_Init()</code> ซึ่งอยู่ในไฟล์ <code>slave.c</code> เพื่อกำหนดค่าการทำงานของ Slave FIFO interface, Endpoints, และ Flags ให้ตรงกับที่เราออกแบบไว้</p>
 
-    <p>สามารถใช้ Keil C51 IDE (เวอร์ชันทดลองก็เพียงพอ เพราะโค้ดมีขนาดเล็ก) ในการคอมไพล์ไฟล์ <code>slave.c</code> ให้เป็น <code>.hex</code> ไฟล์สำหรับดาวน์โหลดลงใน FX2LP</p>
+                <p>สามารถใช้ Keil C51 IDE (เวอร์ชันทดลองก็เพียงพอ เพราะโค้ดมีขนาดเล็ก) ในการคอมไพล์ไฟล์ <code>slave.c</code> ให้เป็น <code>.hex</code> ไฟล์สำหรับดาวน์โหลดลงใน FX2LP</p>
 
-    <h4>โค้ดส่วนสำคัญใน <code>slave.c</code></h4>
+                <h4>โค้ดส่วนสำคัญใน <code>slave.c</code></h4>
 
-    <pre><code>// slave.c
+                <pre><code>// slave.c
 
 void TD_Init( void )
 {
@@ -133,11 +152,11 @@ void TD_Init( void )
 }
     </code></pre>
 
-    <h3>2. FPGA Design</h3>
+                <h3>2. FPGA Design</h3>
 
-    <p>ฝั่ง FPGA จะมีหน้าที่คอยเช็คสถานะของ <code>FLAGA</code> และ <code>FLAGD</code> เพื่อทำการอ่านและเขียนข้อมูลกับ FX2LP ผ่าน Parallel bus ขนาด 16-bit</p>
+                <p>ฝั่ง FPGA จะมีหน้าที่คอยเช็คสถานะของ <code>FLAGA</code> และ <code>FLAGD</code> เพื่อทำการอ่านและเขียนข้อมูลกับ FX2LP ผ่าน Parallel bus ขนาด 16-bit</p>
 
-        <div class="mermaid">
+                <div class="mermaid">
 graph LR
         U[CY7C58013]
         RAM[2-port RAM]
@@ -148,14 +167,14 @@ graph LR
         RAM -- "Read data for EP6" --&gt; CTRL
     </div>
 
-    <ul>
-        <li>เมื่อ <code>FLAGA</code> เป็น '1', Control Logic จะรู้ว่ามีข้อมูลมาจาก PC ใน EP2 FIFO มันจะทำการ assert สัญญาณ <code>SLRD_L</code> (Slave Read) เพื่ออ่านข้อมูลมาเก็บไว้ใน RAM</li>
-        <li>เมื่อ FPGA ต้องการส่งข้อมูลกลับ, Control Logic จะอ่านข้อมูลจาก RAM แล้วเช็ค <code>FLAGD</code> ถ้าเป็น '1' (EP6 FIFO ยังไม่เต็ม) ก็จะ assert สัญญาณ <code>SLWR_L</code> (Slave Write) เพื่อเขียนข้อมูลเข้าไปใน EP6 FIFO</li>
-    </ul>
+                <ul>
+                    <li>เมื่อ <code>FLAGA</code> เป็น '1', Control Logic จะรู้ว่ามีข้อมูลมาจาก PC ใน EP2 FIFO มันจะทำการ assert สัญญาณ <code>SLRD_L</code> (Slave Read) เพื่ออ่านข้อมูลมาเก็บไว้ใน RAM</li>
+                    <li>เมื่อ FPGA ต้องการส่งข้อมูลกลับ, Control Logic จะอ่านข้อมูลจาก RAM แล้วเช็ค <code>FLAGD</code> ถ้าเป็น '1' (EP6 FIFO ยังไม่เต็ม) ก็จะ assert สัญญาณ <code>SLWR_L</code> (Slave Write) เพื่อเขียนข้อมูลเข้าไปใน EP6 FIFO</li>
+                </ul>
 
-    <h4>โค้ดส่วนสำคัญใน <code>PRJ_TOP.vhd</code></h4>
+                <h4>โค้ดส่วนสำคัญใน <code>PRJ_TOP.vhd</code></h4>
 
-    <pre><code>-- PRJ_TOP.vhd
+                <pre><code>-- PRJ_TOP.vhd
 
 -- ... (entity declaration) ...
 
@@ -249,22 +268,32 @@ architecture RTL of PRJ_TOP is
 end RTL;
     </code></pre>
 
-    <h3>3. Test with Cypress Software</h3>
+                <h3>3. Test with Cypress Software</h3>
 
-    <p>หลังจากโปรแกรมเฟิร์มแวร์ลง FX2LP และโปรแกรม FPGA แล้ว สามารถใช้โปรแกรม <code>Streamer.exe</code> (ที่มากับ EZ-USB FX3 SDK) ในการทดสอบส่งและรับข้อมูลได้ โดยโปรแกรมจะแสดงข้อมูลที่ส่งไป (OUT transfers) และข้อมูลที่ได้รับกลับมา (IN transfers) ซึ่งถ้าทุกอย่างถูกต้อง ข้อมูลที่ได้รับกลับมาควรจะเป็นข้อมูลเดียวกับที่ส่งออกไป (Loopback)</p>
+                <p>หลังจากโปรแกรมเฟิร์มแวร์ลง FX2LP และโปรแกรม FPGA แล้ว สามารถใช้โปรแกรม <code>Streamer.exe</code> (ที่มากับ EZ-USB FX3 SDK) ในการทดสอบส่งและรับข้อมูลได้ โดยโปรแกรมจะแสดงข้อมูลที่ส่งไป (OUT transfers) และข้อมูลที่ได้รับกลับมา (IN transfers) ซึ่งถ้าทุกอย่างถูกต้อง ข้อมูลที่ได้รับกลับมาควรจะเป็นข้อมูลเดียวกับที่ส่งออกไป (Loopback)</p>
 
-    <hr>
-    <h2>ผลทดสอบ</h2>
+                <hr>
+                <h2>ผลทดสอบ</h2>
 
-    <p><img src="EZUSB_FPGA_files/ezusb1.jpg" alt="ezusb1.jpg"></p>
-    <p><img src="EZUSB_FPGA_files/ezsub2.jpg" alt="ezsub2.jpg"></p>
-    <p><img src="EZUSB_FPGA_files/ezusb3.jpg" alt="ezusb3.jpg"></p>
+                <p><img src="EZUSB_FPGA_files/ezusb1.jpg" alt="ezusb1.jpg"></p>
+                <p><img src="EZUSB_FPGA_files/ezsub2.jpg" alt="ezsub2.jpg"></p>
+                <p><img src="EZUSB_FPGA_files/ezusb3.jpg" alt="ezusb3.jpg"></p>
 
-    <hr>
-    <h2>Note</h2>
+                <hr>
+                <h2>Note</h2>
 
-    <p>ตัวอย่าง code ทั้งหมดสามารถดาวน์โหลดได้ที่<br><a href="https://github.com/wichayen/ezusb_experimental">https://github.com/wichayen/ezusb_experimental</a></p>
+                <p>ตัวอย่าง code ทั้งหมดสามารถดาวน์โหลดได้ที่<br><a href="https://github.com/wichayen/ezusb_experimental">https://github.com/wichayen/ezusb_experimental</a></p>
+            </div>
+        </div>
+    </div>
 
+    <footer class="py-4 bg-dark text-white-50 mt-5">
+        <div class="container text-center">
+            <small>Copyright &copy; FPGATHAILAND</small>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         mermaid.initialize({startOnLoad:true});
     </script>
