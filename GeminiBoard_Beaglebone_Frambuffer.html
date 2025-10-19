@@ -37,7 +37,7 @@
                 <h2>ภาพรวม (Overview)</h2>
                 <p>โครงงานนี้เป็นการสร้าง Framebuffer บนบอร์ด FPGA (GeminiBoard) ที่เชื่อมต่อกับ Beaglebone ผ่าน GPMC (General-Purpose Memory Controller) โดย Beaglebone จะทำหน้าที่ส่งข้อมูลภาพ (pixel data) ไปให้ FPGA ซึ่งจะนำไปเก็บไว้ใน SDRAM บนบอร์ดของตัวเอง จากนั้น FPGA จะสร้างสัญญาณ HDMI เพื่อไปแสดงผลบนจอภาพ</p>
                 <div class="mermaid">
-graph LR
+graph TD
 	subgraph "Beaglebone"
 		B1[GPMC]
 	end
