@@ -215,6 +215,7 @@ long AriesPCI_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 sudo chmod 666 /dev/AriesPCI0
 </code></pre>
                 <hr>
+                <img src="AriesBoard_ep4_files/image003.png" class="img-fluid rounded">
                 <h3>2. Userspace Application</h3>
                 <p>เมื่อ Driver พร้อมใช้งานแล้ว เราสามารถพัฒนา Application ในฝั่ง Userspace เพื่อติดต่อกับ PCI Card ของเราได้ โดยการทำงานทั้งหมดจะผ่าน Device file ที่ชื่อว่า <code>/dev/AriesPCI0</code></p>
                 <h4>Library สำหรับ Debug</h4>
@@ -252,6 +253,7 @@ int reg_read(unsigned int addr)
 }
 </code></pre>
                 <h3>3. Sample GUI Application</h3>
+                <img src="AriesBoard_ep4_files/image004.png" class="img-fluid rounded">
                 <p>เราสามารถสร้าง Application แบบ GUI ด้วย Qt (<code>mainwindow.cpp</code>) ซึ่งเบื้องหลังก็คือการเรียกใช้ <code>open</code>, <code>read</code>, <code>write</code> ไปยัง <code>/dev/AriesPCI0</code> เหมือนเดิม</p>
                 <p><strong>ตัวอย่าง: การอ่าน FPGA Version</strong></p>
                 <pre><code class="language-cpp">// mainwindow.cpp

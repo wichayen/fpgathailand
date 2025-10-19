@@ -181,6 +181,7 @@
                 end	DAC_CTRL;
                 </code></pre>
                 <p>เมื่อมีสัญญาณ <code>iWriteREQ</code> เข้ามา โมดูลจะนำข้อมูลจาก <code>iDACData</code> ไปสร้างเป็นสัญญาณ SPI (<code>MOSI</code>, <code>SCLK</code>, <code>CS_L1</code>, <code>CS_L2</code>) เพื่อส่งให้ DAC chip ต่อไป</p>
+                <img src="AriesBoard_ep3_files/image001.jpg" class="img-fluid rounded">
                 <h3>3. ADC_IP</h3>
                 <p>โมดูลนี้ทำหน้าที่ควบคุม ADC Chip เบอร์ MCP3208 ซึ่งเป็น SPI interface เช่นกัน ไฟล์ที่ใช้คือ <code>ADC_CTRL.vhd</code></p>
                 <pre><code class="language-vhdl">entity	ADC_CTRL	is
@@ -204,6 +205,7 @@
                 end	ADC_CTRL;
                 </code></pre>
                 <p>เมื่อมีสัญญาณ <code>iReadREQ</code> เข้ามา โมดูลจะสั่งงาน ADC chip ผ่าน SPI (<code>MOSI</code>, <code>SCLK</code>, <code>CS_L</code>) เพื่อเริ่มการแปลงสัญญาณ และเมื่อแปลงเสร็จข้อมูลจะถูกอ่านกลับมาทาง <code>MISO</code> และส่งออกไปที่ <code>iADCData</code></p>
+                <img src="AriesBoard_ep3_files/image002.jpg" class="img-fluid rounded">
                 <h3>4. DIO_IP</h3>
                 <p>เป็นโมดูลที่ง่ายที่สุด ทำหน้าที่ควบคุม General Purpose I/O โดยตรง ไฟล์ที่ใช้คือ <code>PIO_CTRL.vhd</code></p>
                 <pre><code class="language-vhdl">entity	PIO_CTRL	is
@@ -267,6 +269,8 @@
                 </tbody>
                 </table>
                 <p>เราสามารถดูผลการจำลองการทำงานได้จาก Waveform ใน Simulator เพื่อตรวจสอบว่า IP แต่ละตัวของเราทำงานได้ถูกต้องตามที่คาดหวังหรือไม่</p>
+                <img src="AriesBoard_ep3_files/image003.png" class="img-fluid rounded">
+                <img src="AriesBoard_ep3_files/image004.png" class="img-fluid rounded">
                 <hr>
                 <h2>note</h2>
                 <p>ตัวอย่าง code ทั้งหมดสามารถดาวน์โหลดได้ที่
