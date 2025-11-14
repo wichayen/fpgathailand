@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sigasi: VS Code Extension สุดเทพสำหรับคนเขียน VHDL/Verilog</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { padding-top: 56px; }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 1rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+        }
+        pre { background-color: #f8f9fa; padding: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        blockquote {
+            border-left: 4px solid #ccc;
+            padding-left: 1rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">FPGATHAILAND</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="Sigasi.html">Sigasi for VS Code</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAI" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            AI
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAI">
+                            <li><a class="dropdown-item" href="AI_hardware.html">AI Hardware Control with MCP</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto article-content">
+                <h1>Sigasi: VS Code Extension สุดเทพสำหรับคนเขียน VHDL/Verilog</h1>
+<p>สำหรับนักออกแบบฮาร์ดแวร์ที่ใช้ภาษา VHDL หรือ Verilog ในการทำงาน คงจะคุ้นเคยกับความท้าทายในการเขียนและตรวจสอบโค้ดที่ซับซ้อน วันนี้จะมาแนะนำเครื่องมือที่จะทำให้ชีวิตง่ายขึ้น นั่นคือ <strong>Sigasi</strong> ซึ่งเป็น Extension บน Visual Studio Code ครับ</p>
+<p>พูดง่ายๆ Sigasi คือเครื่องมือวิเคราะห์โค้ด (Static Analysis & Linting) ที่ช่วยตรวจสอบ, หาข้อผิดพลาดที่อาจเกิดขึ้น, และแสดงโครงสร้างของโค้ด VHDL/Verilog/SystemVerilog ได้แบบเรียลไทม์ ทำให้เราเห็นปัญหาและแก้ไขได้ทันทีตั้งแต่ตอนเขียนโค้ด โดยไม่ต้องรอไปถึงขั้นตอนการคอมไพล์</p>
+<hr>
+<h1>การติดตั้ง (Installation)</h1>
+<ol>
+<li>เปิด Visual Studio Code แล้วไปที่หน้า Extensions (Ctrl+Shift+X)</li>
+<li>ค้นหาคำว่า <code>sigasi</code> แล้วกด Install</li>
+</ol>
+<p><img src="Sigasi_files/1.png" alt="1.png" class="img-fluid mb-3"></p>
+<ol start="3">
+<li>หลังติดตั้งเสร็จ ให้เปิด Command Palette (Ctrl+Shift+P) แล้วพิมพ์ <code>Sigasi: Enable Talkback</code> และ <code>Sigasi: Use Community Edition</code> เพื่อเปิดใช้งานเวอร์ชันฟรี</li>
+</ol>
+<blockquote><p><strong>Note:</strong> Sigasi อนุญาตให้ใช้งานได้ฟรีสำหรับโปรเจกต์ที่ไม่ใช่เชิงพาณิชย์ (non-commercial use)</p></blockquote>
+<p><img src="Sigasi_files/2.png" alt="2.png" class="img-fluid mb-3"></p>
+<hr>
+<h1>การสร้างโปรเจกต์ (Create Project)</h1>
+<p>เพื่อให้ Sigasi รู้จักไฟล์ทั้งหมดในโปรเจกต์ของเรา เราต้องสร้าง Project ขึ้นมาก่อน</p>
+<ol>
+<li>เปิดโฟลเดอร์โปรเจกต์ของเราผ่าน <code>File -> Open Folder...</code></li>
+<li>คลิกที่ไอคอน Sigasi ด้านซ้ายมือ แล้วเลือก <strong>Create or Open Project</strong>.</li>
+</ol>
+<p><img src="Sigasi_files/3.png" alt="3.png" class="img-fluid mb-3"></p>
+<ol start="3">
+<li>จากนั้นคลิกขวาที่โฟลเดอร์หรือไฟล์ VHDL ของเรา แล้วเลือก <strong>Add to Library -> work</strong>  Sigasi จะเริ่มทำการวิเคราะห์ไฟล์ทั้งหมดที่อยู่ใน Library <code>work</code></li>
+</ol>
+<p><img src="Sigasi_files/4.png" alt="4.png" class="img-fluid mb-3"></p>
+<p><img src="Sigasi_files/5.png" alt="5.png" class="img-fluid mb-3"></p>
+<hr>
+<h1>ฟีเจอร์เด่นที่น่าสนใจ</h1>
+<h2>1. Design Hierarchy</h2>
+<p>เราสามารถดูโครงสร้างการออกแบบทั้งหมดได้ โดยไปที่ Top-level ของเรา แล้วเลือก <strong>Set as Design Hierarchy Top</strong>  Sigasi จะแสดง <code>Design Hierarchy</code> ขึ้นมา ทำให้เราเห็นภาพรวมและไล่ดูโค้ดในแต่ละลำดับชั้นได้สะดวกมาก</p>
+<p><img src="Sigasi_files/6.png" alt="6.png" class="img-fluid mb-3"></p>
+<h2>2. Block Diagram View</h2>
+<p>ฟีเจอร์นี้จะช่วยแปลงโค้ดของเราให้กลายเป็น Block Diagram ทำให้เห็นภาพการเชื่อมต่อ Port และ Signal ภายใน Entity นั้นๆ ได้ชัดเจนขึ้น สามารถเปิดดูได้โดยการคลิกที่ไอคอน <strong>Open Block Diagram</strong> ที่มุมบนขวาของหน้าต่างโค้ด</p>
+<p><img src="Sigasi_files/7.png" alt="7.png" class="img-fluid mb-3"></p>
+<p><img src="Sigasi_files/8.png" alt="8.png" class="img-fluid mb-3"></p>
+<h2>3. Dependency View</h2>
+<p>หากต้องการดูว่าไฟล์แต่ละไฟล์ในโปรเจกต์มีความเกี่ยวข้องกันอย่างไร ไฟล์ไหนเรียกใช้ไฟล์ไหนบ้าง สามารถเปิด <strong>Open Dependency Diagram</strong> เพื่อดูแผนภาพความสัมพันธ์ของไฟล์ทั้งหมดได้</p>
+<p><img src="Sigasi_files/9.png" alt="9.png" class="img-fluid mb-3"></p>
+<h2>4. State Machines View</h2>
+<p>สำหรับคนที่ออกแบบวงจรแบบ State Machine ฟีเจอร์นี้มีประโยชน์มาก Sigasi สามารถถอดโค้ด State Machine ของเราออกมาเป็นแผนภาพ (State Diagram) ให้ดูได้ ทำให้ตรวจสอบและดีบัก Logic ได้ง่ายขึ้น โดยคลิกที่ <strong>Open State Machines Diagram</strong></p>
+<p><img src="Sigasi_files/10.png" alt="10.png" class="img-fluid mb-3"></p>
+<h2>5. Code Check (VHDL Linting)</h2>
+<p>นี่คือ Highlight ที่อยากจะแนะนำเลยครับ เราสามารถเปิดหน้าต่าง <strong>Problems</strong> (ใช้คีย์ลัด <code>Ctrl+Shift+M</code>) เพื่อดูรายการแจ้งเตือนทั้งหมดที่ Sigasi ตรวจพบในโค้ดของเรา</p>
+<p><img src="Sigasi_files/11.png" alt="11.png" class="img-fluid mb-3"></p>
+<p>Sigasi จะแบ่งระดับความรุนแรงของปัญหา (Severity) ออกเป็น 4 ประเภท คือ <code>Error</code>, <code>Warning</code>, <code>Info</code>, และ <code>Ignore</code> ซึ่งเราสามารถปรับแต่งเองได้อีกที</p>
+<p><strong>ตัวอย่างที่ 1: Unused Declaration</strong>
+หากเราประกาศ constant, signal หรือ variable ไว้แต่ไม่ได้เรียกใช้ Sigasi จะแจ้งเตือนเป็น <code>Warning</code> ขึ้นมา</p>
+<p><img src="Sigasi_files/12.png" alt="12.png" class="img-fluid mb-3"></p>
+<p>เราสามารถปรับเปลี่ยนระดับความรุนแรงของ Rule นี้ได้ เช่น ถ้าเรามองว่าการมีโค้ดที่ไม่ได้ใช้เป็นเรื่องร้ายแรง ก็สามารถปรับให้แจ้งเป็น <code>Error</code> แทนได้</p>
+<p><img src="Sigasi_files/13.png" alt="13.png" class="img-fluid mb-3"></p>
+<p><img src="Sigasi_files/14.png" alt="14.png" class="img-fluid mb-3"></p>
+<p>นอกจากนี้ เมื่อคลิกที่ปัญหา จะมีตัวเลือก <strong>Quick Fix</strong> ให้ใช้งาน:</p>
+<ul>
+<li><strong>Remove:</strong> ลบโค้ดส่วนนั้นทิ้งไป</li>
+<li><strong>Suppress:</strong> เก็บโค้ดไว้ แต่เพิ่ม Comment <code>-- @suppress</code> เพื่อบอกให้ Sigasi ไม่ต้องแจ้งเตือนปัญหานี้อีก</li>
+<li><strong>Configure rule:</strong> ไปยังหน้า Settings เพื่อตั้งค่า Rule นั้นๆ</li>
+</ul>
+<p><img src="Sigasi_files/15.png" alt="15.png" class="img-fluid mb-3"></p>
+<p>ภาพด้านล่างคือตัวอย่างหลังจากการใช้ <code>Suppress</code> เพื่อแก้ปัญหา</p>
+<p><img src="Sigasi_files/16.png" alt="16.png" class="img-fluid mb-3"></p>
+<p><strong>ตัวอย่างที่ 2: Incomplete Sensitivity List (Rule 72)</strong>
+นี่เป็นข้อผิดพลาดสุดคลาสสิกที่เจอบ่อยมาก คือการลืมใส่ Signal ที่มีผลต่อ Process ไว้ใน Sensitivity List ซึ่งอาจทำให้ผลการสังเคราะห์วงจรผิดพลาดได้ Sigasi จะช่วยแจ้งเตือนปัญหานี้ให้ทันที
+ในตัวอย่างด้านล่าง โค้ดมีการใช้ <code>RST_L</code> ใน process แต่ไม่ได้ใส่ไว้ใน sensitivity list Sigasi จึงแจ้งเตือนขึ้นมา</p>
+<p><img src="Sigasi_files/17.png" alt="17.png" class="img-fluid mb-3"></p>
+<p><strong>ตัวอย่างที่ 3: Deep Nesting (Rule 239)</strong>
+การเขียน <code>if-else</code> หรือ <code>case</code> ซ้อนกันลึกเกินไป จะส่งผลให้ Logic ที่สังเคราะห์ออกมามี Path Delay สูงและอาจทำงานได้ช้า โดยปกติ Sigasi จะตั้งค่า Default ไว้ที่ 5 ชั้น หากมีการเขียนซ้อนกันลึกกว่านั้น ก็จะแสดงคำเตือนขึ้นมา</p>
+<p><img src="Sigasi_files/18.png" alt="18.png" class="img-fluid mb-3"></p>
+<p>เราสามารถดูรายการ Rules ทั้งหมดที่ Sigasi ใช้ตรวจสอบได้ที่นี่: <a href="https://www.sigasi.com/legacy/eclipse/linting-vhdl/" target="_blank">Sigasi VHDL Linting Rules</a></p>
+<hr>
+<h1>Note</h1>
+<p>ย้ำอีกครั้งว่า Extension ตัวนี้เป็น <strong>Community Edition</strong> ซึ่งอนุญาตให้ใช้ได้ฟรีสำหรับงานส่วนตัวและการศึกษาเท่านั้น (non-commercial use) หากต้องการนำไปใช้ในที่ทำงาน ให้เช็คกับทางบริษัทด้วยนะครับ</p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="py-4 bg-dark text-white-50 mt-5">
+        <div class="container text-center">
+            <small>Copyright &copy; FPGATHAILAND</small>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true, theme: 'default'});</script>
+</body>
+</html>
