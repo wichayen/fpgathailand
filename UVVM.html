@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +8,38 @@
     <link rel="stylesheet" href="styles.css">
     <style>
         body { padding-top: 56px; }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 1rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+        }
+        pre { background-color: #f8f9fa; padding: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        blockquote {
+            border-left: 4px solid #ccc;
+            padding-left: 1rem;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -72,165 +104,175 @@
             </div>
         </div>
     </nav>
+
     <div class="container mt-5">
         <div class="row">
             <div class="col-lg-8 mx-auto article-content">
                 <h1>การจำลอง UVVM ด้วย Modelsim</h1>
-    <p>บทความนี้จะแนะนำวิธีการใช้งาน UVVM บน Modelsim โดยจะลองมาให้ simulate IP ใน zynq</p>
-    <h2>1. การจำลองด้วย Modelsim</h2>
-    <p>Vivado โดยทั่วไปใช้ XSim เป็นเครื่องมือจำสำหรับ simulate แต่คราวนี้เราจะลองเอา Modelsim เป็น tools ในการ simulate แทน ขั้นตอนหลักในการรันการจำลองด้วย Modelsim มีดังนี้:</p>
-    <ol>
-        <li><strong>คอมไพล์ไลบรารีของ Xilinx ใน Modelsim:</strong> เพื่อให้ Modelsim สามารถเข้าใจและใช้งาน IP (Intellectual Property) ของ Xilinx ได้</li>
-        <li><strong>สร้างสคริปต์การจำลองใน Vivado:</strong> Vivado สามารถ Export สคริปต์ที่จำเป็นสำหรับการจำลองใน Modelsim ได้</li>
-        <li><strong>เปิด Modelsim และรันการจำลอง:</strong> ใช้สคริปต์ที่สร้างขึ้นเพื่อเริ่มต้นการจำลอง</li>
-        <li><strong>แก้ไข/สร้าง Testbench:</strong> ปรับปรุงหรือสร้าง Testbench เพิ่มเติมเพื่อทดสอบการทำงานของดีไซน์ได้อย่างละเอียด</li>
-    </ol>
-    <p><strong>ข้อควรทราบ:</strong> AXI Verification IP จำเป็นต้องมี license เฉพาะ ถ้าไม่มี license Modelsim อาจไม่สามารถจำลอง AXI Verification IP ได้</p>
-    <h3>1.1 การคอมไพล์ไลบรารีของ Xilinx ใน Vivado</h3>
-    <p>ก่อนที่จะใช้ Modelsim จำเป็นต้องคอมไพล์ไลบรารีจำลองของ Xilinx เพื่อให้ Modelsim รู้จัก IP ต่างๆ ของ Xilinx ทำได้โดย</p>
-    <ol>
-        <li>เปิด Vivado</li>
-        <li>ไปที่เมนู <strong>Tools → Compile Simulation Libraries</strong></li>
-        <li>ระบุ <strong>Compiled library location</strong> (ตำแหน่งที่จะบันทึกไลบรารีที่คอมไพล์แล้ว) และ <strong>Simulator executable path</strong> (Path ไปยังไฟล์ Modelsim executable)</li>
-        <li>คลิก <strong>"Compile"</strong></li>
-    </ol>
-    <p><img src="UVVM_files/image001.png" alt="image001.png"></p>
-    <p><img src="UVVM_files/image002.png" alt="image002.png"></p>
-    <p>เมื่อการคอมไพล์เสร็จสิ้น ไฟล์ <code>modelsim.ini</code> จะถูกสร้างขึ้นด้วย ไฟล์นี้คือสคริปต์การเริ่มต้นที่ Modelsim ใช้ในการโหลดไลบรารี Xilinx เมื่อ Modelsim เริ่มทำงาน</p>
-    <p><img src="UVVM_files/image003.png" alt="image003.png"></p>
-    <p><strong>ข้อควรพิจารณา:</strong></p>
-    <ul>
-        <li><strong>เวลาในการคอมไพล์:</strong> การคอมไพล์ IP ทั้งหมดของ Xilinx อาจใช้เวลานาน (ขอผมประมาณ 1 ชั่วโมง)</li>
-        <li><strong>ข้อผิดพลาดในการคอมไพล์:</strong> จากการทดลองด้วย Modelsim 10.5b (Quartus 17.1) และ Vivado 2022.1 พบว่ามีบางโมดูล (ประมาณ 4 โมดูล) ที่อาจคอมไพล์error แต่ว่าการออกแบบ Vivado ของไม่ได้ใช้โมดูลเหล่านี้ ก็น่าจะไม่มีปัญหา</li>
-    </ul>
-    <p><img src="UVVM_files/image004.png" alt="image004.png"></p>
-    <p><img src="UVVM_files/image005.png" alt="image005.png"></p>
-    <ul>
-        <li><strong>การตั้งค่า Path ของ GCC:</strong> หากจำเป็นต้องระบุ Path ของ GCC จะมีหน้าจอสำหรับการตั้งค่านี้ในขั้นตอนการคอมไพล์</li>
-    </ul>
-    <p><img src="UVVM_files/image006.png" alt="image006.png"></p>
-    <h3>1.2 การจำลองด้วย Modelsim (สำหรับดีไซน์ที่ไม่มี Xilinx VIP)</h3>
-    <p>สำหรับดีไซน์ที่ไม่ใช้ Xilinx VIP การจำลองด้วย Modelsim จะง่ายกว่า:</p>
-    <ol>
-        <li><strong>Export Simulation บน Vivado:</strong>
-            <ul>
-                <li>สร้าง Filter ชื่อ "sim" ในโปรเจกต์ของคุณ (ถ้ายังไม่มี)</li>
-                <li>ใน Vivado คลิก <strong>"Export Simulation"</strong></li>
-            </ul>
-        </li>
-    </ol>
-    <p><img src="UVVM_files/image008.png" alt="image008.png"></p>
-    <p><img src="UVVM_files/image009.png" alt="image009.png"></p>
-    <ol start="2">
-        <li><strong>การใช้งานการจำลอง:</strong>
-            <ul>
-                <li>หลังจาก Export แล้ว จะมีสคริปต์ <code>compile.do</code> และ <code>simulate.do</code> อยู่ใต้ Folder "sim" ในโปรเจกต์ของคุณ</li>
-                <li><strong>ข้อแนะนำ:</strong> เพื่อป้องกันไม่ให้ Modelsim ปิดลงโดยอัตโนมัติเมื่อการจำลองเสร็จสิ้น ให้คอมเมนต์บรรทัด <code>quit -force</code> ในสคริปต์ <code>simulate.do</code></li>
-            </ul>
-        </li>
-    </ol>
-    <p><img src="UVVM_files/image010.png" alt="image010.png"></p>
-    <ul>
-        <li><strong>ข้อควรทราบ:</strong> หากเป็นการออกแบบที่มี Xilinx VIP อาจพบข้อ error และไม่สามารถ simulate ได้ เนื่องจากเราไม่มี license</li>
-    </ul>
-    <p><img src="UVVM_files/image0011.png" alt="image0011.png"></p>
-    <h3>1.3 การรันการจำลองด้วย UVVM + Modelsim</h3>
-    <p>ตัวอย่างคำสั่งสำหรับการรันการจำลองที่ใช้ UVVM ร่วมกับ Modelsim:</p>
-    <pre><code>cd d:/xilinx/modelsim/AXI_Basics_3/UVVM_Light-master/sim/    do ./compile_and_run_demo_tb.do
+                <p>บทความนี้จะแนะนำวิธีการใช้งาน UVVM บน Modelsim โดยจะลองมาให้ simulate IP ใน zynq</p>
+                <h2>1. การจำลองด้วย Modelsim</h2>
+                <p>Vivado โดยทั่วไปใช้ XSim เป็นเครื่องมือจำสำหรับ simulate แต่คราวนี้เราจะลองเอา Modelsim เป็น tools ในการ simulate แทน ขั้นตอนหลักในการรันการจำลองด้วย Modelsim มีดังนี้:</p>
+                <ol>
+                    <li><strong>คอมไพล์ไลบรารีของ Xilinx ใน Modelsim:</strong> เพื่อให้ Modelsim สามารถเข้าใจและใช้งาน IP (Intellectual Property) ของ Xilinx ได้</li>
+                    <li><strong>สร้างสคริปต์การจำลองใน Vivado:</strong> Vivado สามารถ Export สคริปต์ที่จำเป็นสำหรับการจำลองใน Modelsim ได้</li>
+                    <li><strong>เปิด Modelsim และรันการจำลอง:</strong> ใช้สคริปต์ที่สร้างขึ้นเพื่อเริ่มต้นการจำลอง</li>
+                    <li><strong>แก้ไข/สร้าง Testbench:</strong> ปรับปรุงหรือสร้าง Testbench เพิ่มเติมเพื่อทดสอบการทำงานของดีไซน์ได้อย่างละเอียด</li>
+                </ol>
+                <p><strong>ข้อควรทราบ:</strong> AXI Verification IP จำเป็นต้องมี license เฉพาะ ถ้าไม่มี license Modelsim อาจไม่สามารถจำลอง AXI Verification IP ได้</p>
+                <h3>1.1 การคอมไพล์ไลบรารีของ Xilinx ใน Vivado</h3>
+                <p>ก่อนที่จะใช้ Modelsim จำเป็นต้องคอมไพล์ไลบรารีจำลองของ Xilinx เพื่อให้ Modelsim รู้จัก IP ต่างๆ ของ Xilinx ทำได้โดย</p>
+                <ol>
+                    <li>เปิด Vivado</li>
+                    <li>ไปที่เมนู <strong>Tools → Compile Simulation Libraries</strong></li>
+                    <li>ระบุ <strong>Compiled library location</strong> (ตำแหน่งที่จะบันทึกไลบรารีที่คอมไพล์แล้ว) และ <strong>Simulator executable path</strong> (Path ไปยังไฟล์ Modelsim executable)</li>
+                    <li>คลิก <strong>"Compile"</strong></li>
+                </ol>
+                <p><img src="UVVM_files/image001.png" alt="image001.png"></p>
+                <p><img src="UVVM_files/image002.png" alt="image002.png"></p>
+                <p>เมื่อการคอมไพล์เสร็จสิ้น ไฟล์ <code>modelsim.ini</code> จะถูกสร้างขึ้นด้วย ไฟล์นี้คือสคริปต์การเริ่มต้นที่ Modelsim ใช้ในการโหลดไลบรารี Xilinx เมื่อ Modelsim เริ่มทำงาน</p>
+                <p><img src="UVVM_files/image003.png" alt="image003.png"></p>
+                <p><strong>ข้อควรพิจารณา:</strong></p>
+                <ul>
+                    <li><strong>เวลาในการคอมไพล์:</strong> การคอมไพล์ IP ทั้งหมดของ Xilinx อาจใช้เวลานาน (ขอผมประมาณ 1 ชั่วโมง)</li>
+                    <li><strong>ข้อผิดพลาดในการคอมไพล์:</strong> จากการทดลองด้วย Modelsim 10.5b (Quartus 17.1) และ Vivado 2022.1 พบว่ามีบางโมดูล (ประมาณ 4 โมดูล) ที่อาจคอมไพล์error แต่ว่าการออกแบบ Vivado ของไม่ได้ใช้โมดูลเหล่านี้ ก็น่าจะไม่มีปัญหา</li>
+                </ul>
+                <p><img src="UVVM_files/image004.png" alt="image004.png"></p>
+                <p><img src="UVVM_files/image005.png" alt="image005.png"></p>
+                <ul>
+                    <li><strong>การตั้งค่า Path ของ GCC:</strong> หากจำเป็นต้องระบุ Path ของ GCC จะมีหน้าจอสำหรับการตั้งค่านี้ในขั้นตอนการคอมไพล์</li>
+                </ul>
+                <p><img src="UVVM_files/image006.png" alt="image006.png"></p>
+                <h3>1.2 การจำลองด้วย Modelsim (สำหรับดีไซน์ที่ไม่มี Xilinx VIP)</h3>
+                <p>สำหรับดีไซน์ที่ไม่ใช้ Xilinx VIP การจำลองด้วย Modelsim จะง่ายกว่า:</p>
+                <ol>
+                    <li><strong>Export Simulation บน Vivado:</strong>
+                        <ul>
+                            <li>สร้าง Filter ชื่อ "sim" ในโปรเจกต์ของคุณ (ถ้ายังไม่มี)</li>
+                            <li>ใน Vivado คลิก <strong>"Export Simulation"</strong></li>
+                        </ul>
+                    </li>
+                </ol>
+                <p><img src="UVVM_files/image008.png" alt="image008.png"></p>
+                <p><img src="UVVM_files/image009.png" alt="image009.png"></p>
+                <ol start="2">
+                    <li><strong>การใช้งานการจำลอง:</strong>
+                        <ul>
+                            <li>หลังจาก Export แล้ว จะมีสคริปต์ <code>compile.do</code> และ <code>simulate.do</code> อยู่ใต้ Folder "sim" ในโปรเจกต์ของคุณ</li>
+                            <li><strong>ข้อแนะนำ:</strong> เพื่อป้องกันไม่ให้ Modelsim ปิดลงโดยอัตโนมัติเมื่อการจำลองเสร็จสิ้น ให้คอมเมนต์บรรทัด <code>quit -force</code> ในสคริปต์ <code>simulate.do</code></li>
+                        </ul>
+                    </li>
+                </ol>
+                <p><img src="UVVM_files/image010.png" alt="image010.png"></p>
+                <ul>
+                    <li><strong>ข้อควรทราบ:</strong> หากเป็นการออกแบบที่มี Xilinx VIP อาจพบข้อ error และไม่สามารถ simulate ได้ เนื่องจากเราไม่มี license</li>
+                </ul>
+                <p><img src="UVVM_files/image0011.png" alt="image0011.png"></p>
+                <h3>1.3 การรันการจำลองด้วย UVVM + Modelsim</h3>
+                <p>ตัวอย่างคำสั่งสำหรับการรันการจำลองที่ใช้ UVVM ร่วมกับ Modelsim:</p>
+                <pre><code>cd d:/xilinx/modelsim/AXI_Basics_3/UVVM_Light-master/sim/    do ./compile_and_run_demo_tb.do
 do ./sim.do
 </code></pre>
-    <p>สำหรับ <code>xil_defaultlib uvvm_util.tb_axs_iomap xil_defaultlib.glbl</code> นี้มักจะเป็นส่วนหนึ่งของคำสั่ง <code>vsim</code> เพื่อระบุไลบรารีและเอนทิตี้ที่จะจำลอง</p>
-    <p><img src="UVVM_files/image012.png" alt="image012.png"></p>
-    <p><img src="UVVM_files/image013.png" alt="image013.png"></p>
-    <p><img src="UVVM_files/image014.png" alt="image014.png"></p>
-    <p><img src="UVVM_files/image015.png" alt="image015.png"></p>
-    <p><img src="UVVM_files/image016.png" alt="image016.png"></p>
-    <h3>1.4 วิธีการจำลองดีไซน์ Zynq ด้วย UVVM + Modelsim</h3>
-    <p>สำหรับ simulate ดีไซน์ Zynq ที่ซับซ้อนขึ้นด้วย UVVM และ Modelsim ต้องมีการปรับแต่งไฟล์สคริปต์บางส่วน:</p>
-    <ol>
-        <li><strong>copy ซอร์สโค้ด UVVM:</strong>
-            <ul>
-                <li>คัดลอกไฟล์ <code>modelsim.ini</code> (ที่ใช้สำหรับโหลดไลบรารี Xilinx) ไปยังไดเรกทอรี <code>UVVM_Light-master\sim</code></li>
-            </ul>
-        </li>
-    </ol>
-    <p><img src="UVVM_files/image0017.png" alt="image0017.png"></p>
-    <p><img src="UVVM_files/image018.png" alt="image018.png"></p>
-    <ol start="2">
-        <li><strong>Export Simulation บน Vivado:</strong>
-            <ul>
-                <li>สร้าง Folder ชื่อ "sim" ในโปรเจกต์ Vivado</li>
-                <li>ใน Vivado คลิก <strong>"Export Simulation"</strong></li>
-            </ul>
-        </li>
-    </ol>
-    <p><img src="UVVM_files/image019.png" alt="image019.png"></p>
-    <p><img src="UVVM_files/image020.png" alt="image020.png"></p>
-    <ol start="3">
-        <li><strong>แก้ไขซอร์สโค้ดและสคริปต์:</strong>
-            <ul>
-                <li><strong>แก้ไขไฟล์ <code>Pynq-Z2\sim\compile.do</code>:</strong>
-                    <ul>
-                        <li>เพิ่มบรรทัด <code>vlib modelsim_lib</code> เพื่อสร้างไลบรารีสำหรับ Modelsim</li>
-                        <li>ลบส่วนที่ <code>include vip</code> (หากมี) เพื่อหลีกเลี่ยงปัญหาเกี่ยวกับ Xilinx VIP</li>
-                        <li>ลบส่วนการคอมไพล์ของ <code>base_ps7_0_0</code> (เราจะใช้ UVVM แทน)</li>
-                        <li>แก้ไข Path ของ <code>tb_prj_top.v</code> และ <code>glbl.v</code> ดังนี้:
-                            <pre><code>"../../UVVM_Light-master/tb/tb_prj_top.v" \
+                <p>สำหรับ <code>xil_defaultlib uvvm_util.tb_axs_iomap xil_defaultlib.glbl</code> นี้มักจะเป็นส่วนหนึ่งของคำสั่ง <code>vsim</code> เพื่อระบุไลบรารีและเอนทิตี้ที่จะจำลอง</p>
+                <p><img src="UVVM_files/image012.png" alt="image012.png"></p>
+                <p><img src="UVVM_files/image013.png" alt="image013.png"></p>
+                <p><img src="UVVM_files/image014.png" alt="image014.png"></p>
+                <p><img src="UVVM_files/image015.png" alt="image015.png"></p>
+                <p><img src="UVVM_files/image016.png" alt="image016.png"></p>
+                <h3>1.4 วิธีการจำลองดีไซน์ Zynq ด้วย UVVM + Modelsim</h3>
+                <p>สำหรับ simulate ดีไซน์ Zynq ที่ซับซ้อนขึ้นด้วย UVVM และ Modelsim ต้องมีการปรับแต่งไฟล์สคริปต์บางส่วน:</p>
+                <ol>
+                    <li><strong>copy ซอร์สโค้ด UVVM:</strong>
+                        <ul>
+                            <li>คัดลอกไฟล์ <code>modelsim.ini</code> (ที่ใช้สำหรับโหลดไลบรารี Xilinx) ไปยังไดเรกทอรี <code>UVVM_Light-master\sim</code></li>
+                        </ul>
+                    </li>
+                </ol>
+                <p><img src="UVVM_files/image0017.png" alt="image0017.png"></p>
+                <p><img src="UVVM_files/image018.png" alt="image018.png"></p>
+                <ol start="2">
+                    <li><strong>Export Simulation บน Vivado:</strong>
+                        <ul>
+                            <li>สร้าง Folder ชื่อ "sim" ในโปรเจกต์ Vivado</li>
+                            <li>ใน Vivado คลิก <strong>"Export Simulation"</strong></li>
+                        </ul>
+                    </li>
+                </ol>
+                <p><img src="UVVM_files/image019.png" alt="image019.png"></p>
+                <p><img src="UVVM_files/image020.png" alt="image020.png"></p>
+                <ol start="3">
+                    <li><strong>แก้ไขซอร์สโค้ดและสคริปต์:</strong>
+                        <ul>
+                            <li><strong>แก้ไขไฟล์ <code>Pynq-Z2\sim\compile.do</code>:</strong>
+                                <ul>
+                                    <li>เพิ่มบรรทัด <code>vlib modelsim_lib</code> เพื่อสร้างไลบรารีสำหรับ Modelsim</li>
+                                    <li>ลบส่วนที่ <code>include vip</code> (หากมี) เพื่อหลีกเลี่ยงปัญหาเกี่ยวกับ Xilinx VIP</li>
+                                    <li>ลบส่วนการคอมไพล์ของ <code>base_ps7_0_0</code> (เราจะใช้ UVVM แทน)</li>
+                                    <li>แก้ไข Path ของ <code>tb_prj_top.v</code> และ <code>glbl.v</code> ดังนี้:
+                                        <pre><code>"../../UVVM_Light-master/tb/tb_prj_top.v" \
 "../../sim/modelsim/glbl.v"
 </code></pre>
-                        </li>
-                        <li><strong>หมายเหตุเกี่ยวกับ <code>tb_prj_top.v</code>:</strong> ในกรณีของ Vivado (XSim) ไฟล์ <code>tb_prj_top.v</code> อาจใช้ Xilinx VIP เพื่อควบคุม AXI bus แต่หากต้องการควบคุมด้วย UVVM ให้คอมเมนต์ออกส่วนที่เกี่ยวข้องกับ Xilinx VIP ทั้งหมดในไฟล์นี้</li>
-                    </ul>
-                </li>
-            </ul>
-        </li>
-    </ol>
-    <p><img src="UVVM_files/image021.png" alt="image021.png"></p>
-    <ul>
-        <li><strong>แก้ไขไฟล์ <code>Pynq-Z2\UVVM_Light-master\sim\compile_and_run_demo_tb.do</code>:</strong>
-            <ul>
-                <li>เพิ่มโค้ดต่อไปนี้:
-                    <pre><code>do ../../sim/modelsim/compile.do
+                                    </li>
+                                    <li><strong>หมายเหตุเกี่ยวกับ <code>tb_prj_top.v</code>:</strong> ในกรณีของ Vivado (XSim) ไฟล์ <code>tb_prj_top.v</code> อาจใช้ Xilinx VIP เพื่อควบคุม AXI bus แต่หากต้องการควบคุมด้วย UVVM ให้คอมเมนต์ออกส่วนที่เกี่ยวข้องกับ Xilinx VIP ทั้งหมดในไฟล์นี้</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ol>
+                <p><img src="UVVM_files/image021.png" alt="image021.png"></p>
+                <ul>
+                    <li><strong>แก้ไขไฟล์ <code>Pynq-Z2\UVVM_Light-master\sim\compile_and_run_demo_tb.do</code>:</strong>
+                        <ul>
+                            <li>เพิ่มโค้ดต่อไปนี้:
+                                <pre><code>do ../../sim/modelsim/compile.do
 vlib uvvm_util
 eval vcom $compdirectives -work xil_defaultlib ../tb/base_ps7_0_0.vhd
 </code></pre>
-                </li>
-            </ul>
-        </li>
-    </ul>
-    <p><img src="UVVM_files/image022.png" alt="image022.png"></p>
-    <ul>
-        <li><strong>หมายเหตุ:</strong> ไฟล์ <code>base_ps7_0_0.vhd</code> ควรมีลอจิกการควบคุม UVVM สำหรับ PS (Processing System) ของ Zynq</li>
-        <li><strong>ตำแหน่งไฟล์:</strong> ควรวางไฟล์ <code>base_ps7_0_0.vhd</code> และ <code>tb_prj_top.v</code> ไว้ใน <code>Pynq-Z2\UVVM_Light-master\tb\</code></li>
-    </ul>
-    <p><img src="UVVM_files/image023.png" alt="image023.png"></p>
-    <ul>
-        <li><strong>สร้างไฟล์ <code>sim.do</code> ใน <code>Pynq-Z2\UVVM_Light-master\sim</code>:</strong>
-            <ul>
-                <li>คัดลอกคำสั่ง <code>vsim</code> จาก <code>Pynq-Z2\sim\simulate.do</code></li>
-                <li>ลบไลบรารีที่เกี่ยวข้องกับ VIP ออกจากคำสั่ง <code>vsim</code> (ถ้ามีการใช้ library VIP จะ error เพราะเราไม่มี license)</li>
-                <li>บันทึกคำสั่งที่แก้ไขแล้วไว้ใน <code>Pynq-Z2\UVVM_Light-master\sim\sim.do</code></li>
-            </ul>
-        </li>
-    </ul>
-    <p><img src="UVVM_files/image024.png" alt="image024.png"></p>
-    <p><img src="UVVM_files/image025.png" alt="image025.png"></p>
-    <ol start="4">
-        <li><strong>การจำลองด้วย Modelsim:</strong>
-            <ul>
-                <li>เปิด Modelsim
-                    <pre><code>cd d:/xilinx/modelsim/Pynq-Z2/UVVM_Light-master/sim/
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <p><img src="UVVM_files/image022.png" alt="image022.png"></p>
+                <ul>
+                    <li><strong>หมายเหตุ:</strong> ไฟล์ <code>base_ps7_0_0.vhd</code> ควรมีลอจิกการควบคุม UVVM สำหรับ PS (Processing System) ของ Zynq</li>
+                    <li><strong>ตำแหน่งไฟล์:</strong> ควรวางไฟล์ <code>base_ps7_0_0.vhd</code> และ <code>tb_prj_top.v</code> ไว้ใน <code>Pynq-Z2\UVVM_Light-master\tb\</code></li>
+                </ul>
+                <p><img src="UVVM_files/image023.png" alt="image023.png"></p>
+                <ul>
+                    <li><strong>สร้างไฟล์ <code>sim.do</code> ใน <code>Pynq-Z2\UVVM_Light-master\sim</code>:</strong>
+                        <ul>
+                            <li>คัดลอกคำสั่ง <code>vsim</code> จาก <code>Pynq-Z2\sim\simulate.do</code></li>
+                            <li>ลบไลบรารีที่เกี่ยวข้องกับ VIP ออกจากคำสั่ง <code>vsim</code> (ถ้ามีการใช้ library VIP จะ error เพราะเราไม่มี license)</li>
+                            <li>บันทึกคำสั่งที่แก้ไขแล้วไว้ใน <code>Pynq-Z2\UVVM_Light-master\sim\sim.do</code></li>
+                        </ul>
+                    </li>
+                </ul>
+                <p><img src="UVVM_files/image024.png" alt="image024.png"></p>
+                <p><img src="UVVM_files/image025.png" alt="image025.png"></p>
+                <ol start="4">
+                    <li><strong>การจำลองด้วย Modelsim:</strong>
+                        <ul>
+                            <li>เปิด Modelsim
+                                <pre><code>cd d:/xilinx/modelsim/Pynq-Z2/UVVM_Light-master/sim/
 do ./compile_and_run_demo_tb.do
 do ./sim.do
 </code></pre>
-                </li>
-            </ul>
-        </li>
-    </ol>
-    <p><img src="UVVM_files/image026.png" alt="image026.png"></p>
+                            </li>
+                        </ul>
+                    </li>
+                </ol>
+                <p><img src="UVVM_files/image026.png" alt="image026.png"></p>
             </div>
         </div>
     </div>
+
+    <footer class="text-center p-4 mt-5" style="background-color: #f8f9fa;">
+        <div class="container">
+            <p class="mb-0">Contact: <a href="https://www.facebook.com/wichayen.hong" target="_blank">Wichayen Hong on Facebook</a> | <a href="https://github.com/wichayen" target="_blank">GitHub</a> | <a href="https://www.linkedin.com/in/wichayen-luangsopapan-404133202/" target="_blank">LinkedIn</a></p>
+        </div>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true, theme: 'default'});</script>
 </body>
 </html>
