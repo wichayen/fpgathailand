@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LVGL บน PYNQ-Z2 ตอนที่ 2: การคอมไพล์และรัน LVGL Application</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { padding-top: 56px; }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 1rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+        }
+        pre { background-color: #f8f9fa; padding: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        blockquote {
+            border-left: 4px solid #ccc;
+            padding-left: 1rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">FPGATHAILAND</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAries" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Aries Board
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAries">
+                            <li><a class="dropdown-item" href="AriesBoard_ep1.html">ตอนที่ 1: การออกแบบโปรเจค</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep2.html">ตอนที่ 2: Version A.1</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep3.html">ตอนที่ 3: ออกแบบ FPGA</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep4.html">ตอนที่ 4: PCI driver for linux</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep5.html">ตอนที่ 5: PCI driver for windows</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPynq" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            PYNQ-Z2
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownPynq">
+                            <li><a class="dropdown-item" href="pynq-z2-ai_th.html">AI (DPU)</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-hls_th.html">HLS</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-modelsim_th.html">Modelsim</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-vivado_th.html">Vivado</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1.html">LVGL ตอนที่ 1</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2.html">LVGL ตอนที่ 2</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAI" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            AI
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAI">
+                            <li><a class="dropdown-item" href="AI_hardware.html">AI Hardware Control with MCP</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownTools" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Tools
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownTools">
+                            <li><a class="dropdown-item" href="Sigasi.html">Sigasi for VS Code</a></li>
+                            <li><a class="dropdown-item" href="UVVM.html">UVVM</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="EZUSB_FPGA.html">USB</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="GeminiBoard_Beaglebone_Frambuffer.html">GeminiBoard</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto article-content">
+                <h1>LVGL บน PYNQ-Z2 ตอนที่ 2: การคอมไพล์และรัน LVGL Application</h1>
+                <p>สวัสดีครับ! กลับมาพบกันในตอนที่ 2 ของซีรีส์ "LVGL บน PYNQ-Z2"</p>
+                <p>ในตอนที่ 1 เราได้เตรียม SD Card Image ที่มี Petalinux และไดรเวอร์ Framebuffer สำหรับจอ SPI LCD (ILI9486) ของเราเรียบร้อยแล้ว ในตอนนี้ เราจะมาถึงขั้นตอนที่สนุกที่สุด นั่นคือการนำไลบรารีกราฟิก LVGL มาคอมไพล์และรันบนบอร์ด PYNQ-Z2 ของเรา เพื่อสร้าง UI สวยๆ ให้ปรากฏบนหน้าจอ!</p>
+                <p>เราจะใช้ SDK ที่ได้จาก Petalinux เพื่อ Cross-compile ไลบรารี LVGL และแอปพลิเคชันตัวอย่าง จากนั้นจะนำไปทดสอบบนบอร์ด PYNQ-Z2 ที่ได้เตรียมไว้ครับ</p>
+                
+                <h2>1. การเตรียมสภาพแวดล้อมสำหรับ Cross-Compile</h2>
+                <p>ก่อนอื่น เราต้องติดตั้งเครื่องมือที่จะใช้คอมไพล์โปรแกรมสำหรับบอร์ด PYNQ-Z2 บนคอมพิวเตอร์ของเราเสียก่อน</p>
+                
+                <h3>1.1 ติดตั้ง Petalinux SDK</h3>
+                <p>SDK (Software Development Kit) คือชุดเครื่องมือที่รวมเอา Cross-compiler และไลบรารีที่จำเป็นทั้งหมดไว้ ทำให้เราสามารถคอมไพล์โปรแกรมบนคอมพิวเตอร์ของเรา (Host) แล้วได้ไฟล์ Binary ที่สามารถนำไปรันบนบอร์ด PYNQ-Z2 (Target) ซึ่งใช้สถาปัตยกรรม ARM ได้</p>
+                <p>SDK นี้ถูกสร้างขึ้นมาจากโปรเจกต์ Petalinux ในตอนที่ 1 ด้วยคำสั่ง <code>petalinux-build --sdk</code> ให้เรานำไฟล์ <code>sdk.sh</code> ที่ได้ มาติดตั้งลงบนเครื่อง Host ของเรา:</p>
+                <pre><code>hong@ubuntu:~/pynq_z2/images/linux$ ./sdk.sh</code></pre>
+                <p>ระหว่างการติดตั้ง ตัว installer จะถามตำแหน่งที่จะติดตั้ง SDK:</p>
+                <pre><code>PetaLinux SDK installer version 2019.2
+======================================
+Enter target directory for SDK (default: /opt/petalinux/2019.2): /opt/petalinux/2019.2
+You are about to install the SDK to "/opt/petalinux/2019.2". Proceed[Y/n]? y
+[sudo] password for hong: 
+Extracting SDK................................................done
+Setting it up...done
+SDK has been successfully set up and is ready to be used.
+Each time you wish to use the SDK in a new shell session, you need to source the environment setup script e.g.
+ $ . /opt/petalinux/2019.2/environment-setup-cortexa9t2hf-neon-xilinx-linux-gnueabi</code></pre>
+                
+                <h3>1.2 ตั้งค่า Environment ของ SDK</h3>
+                <p>ทุกครั้งที่เปิด Terminal ใหม่เพื่อจะทำการ Cross-compile เราจำเป็นต้องรันสคริปต์เพื่อตั้งค่า Environment variables ต่างๆ (เช่น <code>PATH</code>, <code>CC</code>, <code>SYSROOT</code>) ให้ชี้ไปยัง toolchain ที่ถูกต้องเสียก่อน</p>
+                <pre><code>$ source /opt/petalinux/2019.2/environment-setup-cortexa9t2hf-neon-xilinx-linux-gnueabi</code></pre>
+                
+                <h3>1.3 ทดสอบ Cross-Compiler</h3>
+                <p>เพื่อให้แน่ใจว่า SDK ของเราทำงานถูกต้อง เราจะลองสร้างไฟล์ <code>test.c</code> ง่ายๆ แล้วลองคอมไพล์ดู</p>
+                <pre><code class="language-c">// test.c
+#include <stdio.h>
+
+int main() {
+    printf("Hello, ARM world!
+");
+    return 0;
+}</code></pre>
+                <p>จากนั้นใช้ Cross-compiler ที่มีอยู่ใน Environment (<code>$CC</code>) เพื่อคอมไพล์ และใช้คำสั่ง <code>file</code> เพื่อตรวจสอบชนิดของไฟล์ที่ได้:</p>
+                <pre><code>hong@ubuntu:~/Desktop$ $CC -O2 -o test_arm test.c
+hong@ubuntu:~/Desktop$ file test_arm
+test_arm: ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux-armhf.so.3, for GNU/Linux 3.2.0, ...</code></pre>
+                <p>ถ้าผลลัพธ์ขึ้นว่าเป็นไฟล์ <code>ARM</code> ก็หมายความว่า Cross-compiler ของเราพร้อมใช้งานแล้ว!</p>
+                
+                <h2>2. การคอมไพล์ LVGL</h2>
+                <p>ตอนนี้เรามีเครื่องมือพร้อมแล้ว ก็มาถึงขั้นตอนการคอมไพล์ LVGL กันครับ</p>
+                
+                <h3>2.1 ดาวน์โหลด Source Code</h3>
+                <p>เราจะใช้โปรเจกต์ <code>lv_port_linux</code> ซึ่งเป็น official port ของ LVGL สำหรับใช้งานบน Linux โดยเฉพาะ ในบทความนี้เราจะใช้เวอร์ชัน <code>release/v8.2</code></p>
+                <pre><code>$ git clone https://github.com/lvgl/lv_port_linux.git -b release/v8.2
+$ cd lv_port_linux-release-v8.2</code></pre>
+                
+                <h3>2.2 การ Porting LVGL สำหรับ Framebuffer ของเรา</h3>
+                <p>โค้ดที่ดาวน์โหลดมาเป็นเพียงโค้ดตั้งต้น เราต้องแก้ไขบางส่วนเพื่อให้ LVGL ทำงานร่วมกับ Framebuffer Driver (<code>/dev/fb0</code>) ที่เราสร้างขึ้นในตอนที่ 1 ได้อย่างถูกต้อง</p>
+                
+                <h4>2.2.1 <code>lv_conf.h</code> (ไฟล์ตั้งค่า LVGL)</h4>
+                <p>สร้างไฟล์ <code>lv_conf.h</code> ขึ้นมาใน root ของโปรเจกต์ เพื่อกำหนดค่าพื้นฐานของ LVGL ให้ตรงกับฮาร์ดแวร์ของเรา</p>
+                <pre><code class="language-c">#ifndef LV_CONF_H
+#define LV_CONF_H
+
+#include <stdint.h>
+
+/*====================
+   COLOR SETTINGS
+====================*/
+/*Color depth: 1, 8, 16, 24, 32*/
+#define LV_COLOR_DEPTH 16
+#define LV_COLOR_16_SWAP 0
+
+/*=========================
+   Memory manager
+ =========================*/
+#define LV_MEM_CUSTOM 0
+#if LV_MEM_CUSTOM == 0
+#  define LV_MEM_SIZE (32U * 1024U)
+#endif
+
+/*====================
+   DISPLAY SETTINGS
+====================*/
+#define LV_HOR_RES_MAX 320
+#define LV_VER_RES_MAX 480
+
+/*=======================
+ * FEATURE CONFIGURATION
+ *=======================*/
+#define LV_USE_LOG 1
+#if LV_USE_LOG
+#  define LV_LOG_LEVEL LV_LOG_LEVEL_INFO
+#endif
+
+#endif</code></pre>
+                <ul>
+                    <li><strong><code>LV_COLOR_DEPTH 16</code></strong>: ตั้งค่าสีเป็น 16-bit (RGB565) ให้ตรงกับที่ไดรเวอร์และจอของเรารองรับ</li>
+                    <li><strong><code>LV_HOR_RES_MAX 320</code></strong>, <strong><code>LV_VER_RES_MAX 480</code></strong>: ตั้งค่าความละเอียดให้ตรงกับจอ ILI9486 ของเรา</li>
+                </ul>
+
+                <h4>2.2.2 <code>lv_drivers/display/fbdev.c</code> (ไดรเวอร์ Framebuffer ของ LVGL)</h4>
+                <p>นี่คือหัวใจสำคัญของการ Porting เราต้องแก้ไขฟังก์ชัน <code>fbdev_flush</code> เพื่อให้ทำงานกับไดรเวอร์ที่เราเขียนขึ้นซึ่ง</p>
+                <p>แก้ไขไฟล์ <code>lv_drivers/display/fbdev.c</code> ดังนี้:</p>
+                <pre><code class="language-c">/**
+ * @file fbdev.c
+ */
+
+#include "fbdev.h"
+#if USE_FBDEV || USE_BSD_FBDEV
+
+#include <stdlib.h>
+#include <unistd.h>
+#include <stddef.h>
+#include <stdio.h>
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <sys/ioctl.h>
+#include <linux/fb.h>
+
+static struct fb_var_screeninfo vinfo;
+static struct fb_fix_screeninfo finfo;
+static char *fbp = 0;
+static long int screensize = 0;
+static int fbfd = 0;
+
+void fbdev_init(void)
+{
+    fbfd = open("/dev/fb0", O_RDWR);
+    if (fbfd < 0) {
+        perror("fbdev open failed");
+        return;
+    }
+
+    ioctl(fbfd, FBIOGET_FSCREENINFO, &finfo);
+    ioctl(fbfd, FBIOGET_VSCREENINFO, &vinfo);
+
+    screensize = vinfo.xres * vinfo.yres * vinfo.bits_per_pixel / 8;
+
+    fbp = mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fbfd, 0);
+
+    if (fbp == MAP_FAILED) {
+        perror("mmap failed");
+        fbp = NULL;
+        close(fbfd);
+        return;
+    }
+}
+
+void fbdev_exit(void)
+{
+    munmap(fbp, screensize);
+    close(fbfd);
+}
+
+void fbdev_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_p)
+{
+    if (!fbp) {
+        lv_disp_flush_ready(drv);
+        return;
+    }
+
+    int32_t x, y;
+    int32_t width  = lv_area_get_width(area);
+    int32_t height = lv_area_get_height(area);
+
+    uint32_t fb_line_bytes = finfo.line_length;
+    uint32_t src_line_bytes = width * (vinfo.bits_per_pixel / 8);
+
+    uint8_t *dst_ptr = (uint8_t *)fbp;
+    uint8_t *src_ptr = (uint8_t *)color_p;
+
+    for (y = 0; y < height; y++) {
+        // คำนวณตำแหน่ง Destination ใน Framebuffer
+        uint8_t *dst = dst_ptr + ((area->y1 + y) * fb_line_bytes) + (area->x1 * (vinfo.bits_per_pixel / 8));
+        // คัดลอกข้อมูล 1 บรรทัด
+        memcpy(dst, src_ptr, src_line_bytes);
+        // เลื่อน Source pointer ไปยังบรรทัดถัดไป
+        src_ptr += src_line_bytes;
+    }
+
+    /*
+     * เราไม่ต้องทำอะไรเพิ่มเติมตรงนี้!
+     * Kernel Deferred IO จะตรวจจับการเปลี่ยนแปลงใน memory (dirty page)
+     * แล้วเรียก ili9486_deferred_io() ที่อยู่ในไดรเวอร์ของเราให้เอง
+     * เพื่อทำการ flush ข้อมูลไปยังหน้าจอ
+     */
+
+    lv_disp_flush_ready(drv);
+}
+
+#endif</code></pre>
+
+                <h4>2.2.3 <code>Makefile</code></h4>
+                <p>สร้าง <code>Makefile</code> เพื่อกำหนดขั้นตอนการคอมไพล์โปรเจกต์ทั้งหมด โดยต้องแน่ใจว่าค่า <code>CC</code> และ <code>SYSROOT</code> ถูกต้องตามที่ได้จากการ <code>source</code> environment script</p>
+                <pre><code># Makefile
+TARGET = demo_lvgl
+
+# Cross-compiler toolchain settings, will be inherited from the environment
+# CC ?= gcc
+# SYSROOT ?=
+
+# Default CFLAGS for Zynq-7000 (Cortex-A9)
+CFLAGS += -march=armv7-a -mthumb -mfpu=neon -mfloat-abi=hard -mcpu=cortex-a9 
+          --sysroot=$(SYSROOT) 
+          -O3 -g -Wall -Wextra 
+          -I. 
+          -D LV_LVGL_H_INCLUDE_SIMPLE
+
+LDFLAGS += --sysroot=$(SYSROOT) -lpthread -lm
+
+# Collect source files
+LVGL_SRC_DIR = ./lvgl
+LV_DRIVERS_DIR = ./lv_drivers
+
+# Include all LVGL source files
+LVGL_SRCS = $(shell find $(LVGL_SRC_DIR)/src -name "*.c")
+
+# Include framebuffer and input device drivers for linux
+DRIVER_SRCS = $(LV_DRIVERS_DIR)/display/fbdev.c 
+              $(LV_DRIVERS_DIR)/indev/evdev.c
+
+# Main application source
+MAIN_SRC = main.c
+
+SRCS = $(LVGL_SRCS) $(DRIVER_SRCS) $(MAIN_SRC)
+OBJS = $(SRCS:.c=.o)
+
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+    $(CC) $(LDFLAGS) $(OBJS) -o $@
+
+%.o: %.c
+    $(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+    rm -f $(TARGET) $(OBJS)</code></pre>
+                
+                <h4>2.2.4 <code>main.c</code> (แอปพลิเคชันตัวอย่าง)</h4>
+                <p>สุดท้ายคือ <code>main.c</code> ซึ่งเป็นโปรแกรมหลักของเรา เราจะใช้โค้ดตัวอย่างที่สร้าง Animation ไล่เฉดสีรุ้งเต็มหน้าจอ เพื่อทดสอบว่าทุกอย่างทำงานถูกต้อง</p>
+                <pre><code class="language-c">// main.c
+#include "lvgl/lvgl.h"
+#include "lv_drivers/display/fbdev.h"
+#include <unistd.h>
+#include <stdio.h>
+
+#define SCR_W 320
+#define SCR_H 480
+
+static void anim_timer_cb(lv_timer_t *timer)
+{
+    static uint32_t hue = 0;
+    lv_obj_t *screen_obj = (lv_obj_t *)timer->user_data;
+
+    hue = (hue + 2) % 360;
+    lv_color_t c = lv_color_hsv_to_rgb(hue, 100, 100);
+
+    lv_obj_set_style_bg_color(screen_obj, c, LV_PART_MAIN);
+}
+
+int main(void)
+{
+    printf("[main] LVGL Full-screen Animation Demo
+");
+
+    lv_init();
+    fbdev_init();
+
+    static lv_color_t buf1[SCR_W * 100];
+    static lv_disp_draw_buf_t draw_buf;
+    lv_disp_draw_buf_init(&draw_buf, buf1, NULL, SCR_W * 100);
+
+    static lv_disp_drv_t disp_drv;
+    lv_disp_drv_init(&disp_drv);
+    disp_drv.draw_buf = &draw_buf;
+    disp_drv.flush_cb = fbdev_flush;
+    disp_drv.hor_res  = SCR_W;
+    disp_drv.ver_res  = SCR_H;
+    lv_disp_drv_register(&disp_drv);
+
+    lv_obj_t *screen_obj = lv_obj_create(lv_scr_act());
+    lv_obj_set_size(screen_obj, SCR_W, SCR_H);
+    lv_obj_center(screen_obj);
+    lv_obj_clear_flag(screen_obj, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_style_border_width(screen_obj, 0, 0);
+
+    lv_timer_create(anim_timer_cb, 20, screen_obj); /* ~50 FPS */
+
+    printf("[main] Animation running...
+");
+
+    while (1) {
+        lv_tick_inc(5);
+        lv_timer_handler();
+        usleep(5000);
+    }
+
+    return 0;
+}</code></pre>
+                
+                <h3>2.3 เริ่มการคอมไพล์</h3>
+                <p>เมื่อเตรียมไฟล์ทั้งหมดครบแล้ว ให้รันคำสั่ง <code>make</code> ใน Terminal ที่เราได้ <code>source</code> environment script ไว้</p>
+                <pre><code>$ source /opt/petalinux/2019.2/environment-setup-cortexa9t2hf-neon-xilinx-linux-gnueabi
+$ make</code></pre>
+                <p>หากไม่มีอะไรผิดพลาด เราจะได้ไฟล์ <code>demo_lvgl</code> ซึ่งเป็น ARM executable ออกมา</p>
+                <pre><code>$ file demo_lvgl 
+demo_lvgl: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.3, ...</code></pre>
+                
+                <h2>3. ทดสอบบนบอร์ด PYNQ-Z2</h2>
+                <h3>3.1 นำไฟล์ไปยังบอร์ด</h3>
+                <p>นำไฟล์ <code>demo_lvgl</code> ที่คอมไพล์เสร็จแล้วไปยังบอร์ด PYNQ-Z2 ซึ่งวิธีที่ง่ายที่สุดคือใช้ <code>scp</code> ผ่านระบบเครือข่าย (ต้องทราบ IP Address ของบอร์ด)</p>
+                <pre><code>$ scp demo_lvgl root@&lt;PYNQ-Z2_IP_ADDRESS&gt;:~/</code></pre>
+                
+                <h3>3.2 รันแอปพลิเคชัน</h3>
+                <p>เชื่อมต่อเข้าไปยังบอร์ด PYNQ-Z2 ผ่าน <code>ssh</code></p>
+                <pre><code>$ ssh root@&lt;PYNQ-Z2_IP_ADDRESS&gt;</code></pre>
+                <p>จากนั้น ทำตามขั้นตอนต่อไปนี้บนบอร์ด:</p>
+                <ol>
+                    <li><strong>โหลดไดรเวอร์:</strong> โหลด Kernel Module ที่เราสร้างไว้ในตอนที่ 1
+                        <pre><code>root@pynq_z2:~# cd /lib/modules/4.19.0-xilinx/extra/
+root@pynq_z2:/lib/modules/4.19.0-xilinx/extra# modprobe fb-ili9486.ko</code></pre>
+                    </li>
+                    <li><strong>ให้สิทธิ์และรันโปรแกรม:</strong>
+                        <pre><code>root@pynq_z2:~# chmod +x demo_lvgl
+root@pynq_z2:~# ./demo_lvgl
+[main] LVGL Full-screen Animation Demo
+[main] Animation running...</code></pre>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center p-4 mt-5" style="background-color: #f8f9fa;">
+        <div class="container">
+            <p class="mb-0">Contact: <a href="https://www.facebook.com/wichayen.hong" target="_blank">Wichayen Hong on Facebook</a> | <a href="https://github.com/wichayen" target="_blank">GitHub</a> | <a href="https://www.linkedin.com/in/wichayen-luangsopapan-404133202/" target="_blank">LinkedIn</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true, theme: 'default'});</script>
+</body>
+</html>
