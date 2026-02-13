@@ -4,7 +4,7 @@
     <meta content="text/html; charset=UTF-8" http-equiv="content-type">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI (การตรวจจับวัตถุด้วย DPU IP ของ Xilinx)</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
@@ -60,6 +60,8 @@
                             <li><a class="dropdown-item" href="pynq-z2-hls_th.html">HLS</a></li>
                             <li><a class="dropdown-item" href="pynq-z2-modelsim_th.html">Modelsim</a></li>
                             <li><a class="dropdown-item" href="pynq-z2-vivado_th.html">Vivado</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1.html">LVGL ตอนที่ 1</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2.html">LVGL ตอนที่ 2</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -96,7 +98,7 @@
             <h1>AI (การตรวจจับวัตถุด้วย DPU IP ของ Xilinx)</h1>
           </div>
           <div class="WordSection1" style="layout-grid:18.0pt">
-            <h1 style="margin-left:21.25pt;text-indent:-21.25pt"><a name="_Toc208827153"><span
+            <h1 style="margin-left:21.25pt;text-indent:-21.25pt"><a name="_Toc208827153"><span
                   style="">1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;
                   </span></span><span style="">AI (การตรวจจับวัตถุด้วย DPU IP
                   ของ Xilinx)</span></a></h1>
@@ -114,16 +116,16 @@
                 18.04<span lang="JA">上（</span>VMware 17.5.2<span lang="JA">）で</span>Petalinux
                 2019.2</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">แอ
-                ปพลิเคชัน: การตรวจจับวัตถุด้วย </span><span style="">YOLO<span
+                ปพลิเคชัน: การตรวจจับวัตถุด้วย </span><span style="">YOLO<span
                   lang="JA"> บนบอร์ด </span>Pynq-Z2<span lang="JA"></span></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><a href="https://xilinx.github.io/Vitis-AI/3.0/html/docs/reference/release_documentation.html"><span
+            <p class="MsoNormal" style="text-align:left" align="left"><a href="https://xilinx.github.io/Vitis-AI/3.0/html/docs/reference/release_documentation.html"><span
                   style="">https://xilinx.github.io/Vitis-AI/3.0/html/docs/reference/release_documentation.html</span></a></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <h2 style="margin-left:28.35pt;text-indent:-28.35pt"><a name="_Toc208827154"><span
+            <h2 style="margin-left:28.35pt;text-indent:-28.35pt"><a name="_Toc208827154"><span
                   style="">1.1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
                   </span></span><span style="">DPU ของ Xilinx (ฮาร์ดแวร์)</span></a></h2>
             <p class="MsoNormal"><span style="">&nbsp;</span></p>
-            <h3 style="margin-left:35.45pt;text-indent:-35.45pt"><a name="_Toc208827155"><span
+            <h3 style="margin-left:35.45pt;text-indent:-35.45pt"><a name="_Toc208827155"><span
                   style="">1.1.1.<span style="font:7.0pt &quot;Times New Roman&quot;">
                   </span></span><span style="">การรับ DPU IP ของ Xilinx</span></a></h3>
             <p class="MsoNormal" style="text-indent:35.45pt"><span style="">DPU
@@ -132,82 +134,82 @@
                 เพื่อติดตั้งบน Zynq-7000 DPU IP ที่รองรับ Zynq-7000
                 นั้นไม่ค่อยมีการเปิดเผยต่อสาธารณะ แต่มีอยู่ในไฟล์
                 zcu102-dpu-trd-2019-1-190809.zip</span></p>
-            <p class="MsoNormal" style="text-align:left;text-indent:35.45pt" align="left"><span
+            <p class="MsoNormal" style="text-align:left;text-indent:35.45pt" align="left"><span
                 style="">หลังจากแตกไฟล์ zcu102-dpu-trd-2019-1-190809.zip
                 จะมีโฟลเดอร์ชื่อ dpu_ip อยู่ใน
                 zcu102-dpu-trd-2019-1-timer\pl\srcs ให้คัดลอกทั้งโฟลเดอร์ dpu_ip
                 ไปไว้ที่ตำแหน่งที่ต้องการ ในครั้งนี้จะวางไว้ที่
                 D:\xilinx\pynq_z2\AI\DPU\ip_repo</span></p>
-            <p class="MsoNormal"><span style="">(โปรเจกต์ Vivado คือ </span><span
-                style="">D:\xilinx\pynq_z2\AI\DPU\Pynq-Z2_2020_1\pynqz2_dpu.xpr<span
+            <p class="MsoNormal"><span style="">(โปรเจกต์ Vivado คือ </span><span
+                style="">D:\xilinx\pynq_z2\AI\DPU\Pynq-Z2_2020_1\pynqz2_dpu.xpr<span
                   lang="JA">）</span></span></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image001.png" alt="A screenshot of a computer
 Description automatically generated" border="0" height="153" width="562"></p>
-            <span style="font-size:10.5pt;"><br style="page-break-before:always"
+            <span style="font-size:10.5pt;"><br style="page-break-before:always"
                 clear="all">
             </span>
-            <h3 style="margin-left:35.45pt;text-indent:-35.45pt"><a name="_Toc208827156"><span
+            <h3 style="margin-left:35.45pt;text-indent:-35.45pt"><a name="_Toc208827156"><span
                   style="">1.1.2.<span style="font:7.0pt &quot;Times New Roman&quot;">
                   </span></span><span style="">การเพิ่ม DPU IP ไปยัง IP Catalog</span></a></h3>
             <p class="MsoNormal"><span style="">ใน IP Catalog คลิกที่ Add
                 Repository และเพิ่ม dpu_ip</span></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image002.png" alt="A screenshot of a computer
 Description automatically generated" border="0" height="174" width="394"></p>
             <p class="MsoNormal"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image003.png" alt="A screenshot of a computer
 Description automatically generated" border="0" height="125" width="518"></p>
             <p class="MsoNormal"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image004.png" alt="A screenshot of a computer
 Description automatically generated" border="0" height="155" width="498"></p>
-            <span style="font-size:10.5pt;"><br style="page-break-before:always"
+            <span style="font-size:10.5pt;"><br style="page-break-before:always"
                 clear="all">
             </span>
-            <h3 style="margin-left:35.45pt;text-indent:-35.45pt"><a name="_Toc208827157"><span
+            <h3 style="margin-left:35.45pt;text-indent:-35.45pt"><a name="_Toc208827157"><span
                   style="">1.1.3.<span style="font:7.0pt &quot;Times New Roman&quot;">
                   </span></span><span style="">การติดตั้ง DPU IP</span></a></h3>
             <br>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
                 เปิด Block design แล้วใส่ DPU IP จากนั้นเชื่อมต่อกับ Zynq
                 ดังภาพด้านล่าง</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image005.png" alt="A diagram of a computer
 Description automatically generated" border="0" height="243" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">อิน
                 เทอร์เฟซของ DPU มีพอร์ตอยู่หลายพอร์ต</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">1<span
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">1<span
                   lang="JA">．</span>S_AXI<span lang="JA">、</span>s_axi_aclk</span></p>
-            <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
+            <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
                 style="">ใช้สำหรับการตั้งค่าการทำงานของ DPU และอื่นๆ
                 โดยจะเชื่อมต่อกับ AXI Master (M_AXI_GP) ของ Zynq</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">2<span
-                  lang="JA">．</span>M_AXI_DATA0<span lang="JA">、</span>M_AXI_DATA1<span
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">2<span
+                  lang="JA">．</span>M_AXI_DATA0<span lang="JA">、</span>M_AXI_DATA1<span
                   lang="JA">、</span>M_AXI_INSTR<span lang="JA">、</span>m_axi_dpu_aclk</span></p>
-            <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
+            <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
                 style="">ใช้สำหรับส่งออกผลลัพธ์การคำนวณของ DPU โดยจะเชื่อมต่อกับ
                 AXI Slave (S_AXI_HP0～2) ของ Zynq</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">3<span
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">3<span
                   lang="JA">．</span>dpu_2x_clk</span></p>
-            <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
+            <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
                 style="">จะรับสัญญาณนาฬิกา (clock) ที่มีความถี่เป็นสองเท่าของ
                 m_axi_dpu_aclk</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">4<span
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">4<span
                   lang="JA">．</span>dup_interrupt</span></p>
-            <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
+            <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
                 style="">คือสัญญาณขัดจังหวะ (interrupt) ของ DPU</span></p>
             <p class="MsoNormal"><span style="">※ สัญญาณนาฬิกาที่ป้อนเข้า DPU IP
                 มี 3 สัญญาณ</span></p>
-            <p class="MsoNormal" style="text-indent:42.0pt"><span style="">s_axi_aclk<span
+            <p class="MsoNormal" style="text-indent:42.0pt"><span style="">s_axi_aclk<span
                   lang="JA">：</span>Zynq<span lang="JA">→</span>DPU<span lang="JA">
                   เซ็ตเป็น </span>100MHz<span lang="JA"></span></span></p>
-            <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="">m_axi_dpu_aclk<span lang="JA">：</span><span lang="JA"></span>DPU<span
+            <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
+                style="">m_axi_dpu_aclk<span lang="JA">：</span><span lang="JA"></span>DPU<span
                   lang="JA">→</span>Zynq เซ็ตเป็น <span lang="JA"></span>150MHz</span></p>
-            <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
+            <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
                 style="">dpu_2x_clk<span lang="JA">：</span>DPU<span lang="JA">
                   เซ็ตเป็น </span>300MHz</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">สัญญาณ
@@ -217,11 +219,11 @@ Description automatically generated" border="0" height="243" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
                 บอร์ด pynq-z2 มีจำนวนลอจิกใน FPGA น้อย เพื่อลดการใช้ลอจิกของ DPU
                 ให้เปลี่ยน Arch of DPU ของ DPU เป็น B1152</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image007.png" alt="A screenshot of a computer
 Description automatically generated" border="0" height="336" width="410"></p>
             <br>
-            <h3 style="margin-left:35.45pt;text-indent:-35.45pt"><a name="_Toc208827158"><span
+            <h3 style="margin-left:35.45pt;text-indent:-35.45pt"><a name="_Toc208827158"><span
                   style="">1.1.4.<span style="font:7.0pt &quot;Times New Roman&quot;">
                   </span></span><span style="">การสร้างข้อมูลฮาร์ดแวร์ (.XSA)</span></a></h3>
             <br>
@@ -229,27 +231,27 @@ Description automatically generated" border="0" height="336" width="410"></p>
                 เสร็จแล้ว ให้ส่งออกข้อมูลฮาร์ดแวร์ (.xsa) โดยไปที่
                 File　→　Export　→　Export Hardware</span></p>
             <p class="MsoNormal"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image008.png" alt="A screenshot of a computer
 Description automatically generated" border="0" height="279" width="355"></p>
             <p class="MsoNormal"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image009.png" alt="A screenshot of a computer program
 Description automatically generated" border="0" height="278" width="624"></p>
             <p class="MsoNormal"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image010.png" border="0" height="215" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image011.png" border="0" height="198" width="624"></p>
             <span style="font-size:10.5pt;"><br>
               <br style="page-break-before:always" clear="all">
             </span>
-            <h2 style="margin-left:28.35pt;text-indent:-28.35pt"><a name="_Toc208827159"><span
+            <h2 style="margin-left:28.35pt;text-indent:-28.35pt"><a name="_Toc208827159"><span
                   style="">1.2.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
                   </span></span><span style="">DPU ของ Xilinx (ซอฟต์แวร์)</span></a></h2>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <h3 style="margin-left:35.45pt;text-align:left;text-indent:-35.45pt"
+            <h3 style="margin-left:35.45pt;text-align:left;text-indent:-35.45pt"
               align="left"><a name="_Toc208827160"><span style="">1.2.1.<span style="font:7.0pt &quot;Times New Roman&quot;">
                   </span></span><span style="">การเตรียมสภาพแวดล้อม</span></a></h3>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
@@ -310,7 +312,7 @@ Description automatically generated" border="0" height="278" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 -&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; select no</span></p>
             <br>
-            <h3 style="margin-left:35.45pt;text-indent:-35.45pt"><a name="_Toc208827161"><span
+            <h3 style="margin-left:35.45pt;text-indent:-35.45pt"><a name="_Toc208827161"><span
                   style="">1.2.2.<span style="font:7.0pt &quot;Times New Roman&quot;">
                   </span></span><span style="">การบิวด์ Linux</span></a></h3>
             <span style="">&nbsp;</span>
@@ -438,7 +440,7 @@ project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi</span></p>
                 interrupts = &lt;0 29 4&gt;; คือ IRQF2P หมายเลข 61 (61-32 = 29)
                 จำเป็นต้องตั้งค่าให้ตรงกับช่องสัญญาณ IRQ
                 ที่ใช้ตอนออกแบบฮาร์ดแวร์ DPU</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image012.png" alt="A screenshot of a computer
 Description automatically generated" border="0" height="171" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
@@ -552,16 +554,16 @@ project-spec/meta-user/recipes-kernel/linux/linux-xlnx/devtool-fragment.cfg</spa
               </span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">สถานะ
                 ที่ BOOT.BIN ยังไม่ได้รวม bitstream</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image013.png" border="0" height="39" width="569"></p>
             <span style="">&nbsp;</span>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">สถานะ
                 ที่ BOOT.BIN รวม bitstream แล้ว (ขนาดจะประมาณ system.bit +
                 u-boot.bin)</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image014.png" border="0" height="40" width="569"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <h3 style="margin-left:35.45pt;text-indent:-35.45pt"><a name="_Toc208827162"><span
+            <h3 style="margin-left:35.45pt;text-indent:-35.45pt"><a name="_Toc208827162"><span
                   style="">1.2.3.<span style="font:7.0pt &quot;Times New Roman&quot;">
                   </span></span><span style="">การสร้าง YOLO เพื่อรันบน DPU ของ
                   Xilinx</span></a></h3>
@@ -618,13 +620,13 @@ https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_64.sh</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
                 แปลงไฟล์รันของ YOLO ให้อยู่ในรูปแบบที่ FPGA ของ Xilinx
                 สามารถรันได้</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 6" src="pynq-z2-ai_th_files/image015.jpg" alt="A screenshot of a computer
 Description automatically generated" border="0" height="237" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
                 แปลงจาก Darknet เป็น Keras</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">เข้า
-                ไปที่เวป</span> <a href="https://pjreddie.com/darknet/yolo/"><span
+                ไปที่เวป</span> <a href="https://pjreddie.com/darknet/yolo/"><span
                   style="">https://pjreddie.com/darknet/yolo/</span></a><span style="">
                 แล้วดาว์นโหลด yolov3.weights<span lang="JA"></span></span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">copy
@@ -771,7 +773,7 @@ hong@ubuntu:~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/compilation/compile$
                 yolo_kernel_graph.jpg&nbsp; yolo_kernel.info</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style=""><br>
               </span></p>
-            <h3 style="margin-left:35.45pt;text-indent:-35.45pt"><a name="_Toc208827163"><span
+            <h3 style="margin-left:35.45pt;text-indent:-35.45pt"><a name="_Toc208827163"><span
                   style="">1.2.4.<span style="font:7.0pt &quot;Times New Roman&quot;">
                   </span></span><span style="">ทดสอบบนอุปกรณ์จริง</span></a></h3>
             <p class="MsoNormal" style="text-align:left" align="left"><span style=""><br>
@@ -783,11 +785,11 @@ hong@ubuntu:~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/compilation/compile$
                 การสร้าง SD Card</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">สร้าง
                 พาร์ติชันต่อไปนี้ด้วย gparted</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Partition1<span
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Partition1<span
                   lang="JA">：</span>fat32</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Partition2<span
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Partition2<span
                   lang="JA">：</span>ext4</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image016.png" alt="A screenshot of a computer
 Description automatically generated" border="0" height="221" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">คัด
@@ -843,12 +845,12 @@ Description automatically generated" border="0" height="221" width="624"></p>
                 เสียบ SD Card เข้าไปใน Pynq-Z2 แล้วเปิดเครื่อง รอจนกว่า Linux
                 จะบูตเสร็จ ตรวจสอบให้แน่ใจว่า DPU ถูกรวมเข้าไปอย่างถูกต้อง
                 โดยใช้คำสั่ง devmem เพื่ออ่านค่าบางอย่าง (รันบนบอร์ด Pynq-Z2)</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image017.png" border="0" height="35" width="348"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
                 ล็อกอินด้วย MobaXterm โดย user คือ "root" และ pass คือ "root"</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image018.png" alt="A screenshot of a computer
 Description automatically generated" border="0" height="250" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
@@ -864,9 +866,9 @@ Description automatically generated" border="0" height="250" width="624"></p>
                 ไปยังบอร์ด Pynq-Z2 (สามารถลากและวางใน MobaXterm ได้)</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="position:
-absolute;z-index:251667456;margin-left:117px;margin-top:168px;width:309px;height:83px"><img
-                  src="pynq-z2-ai_th_files/image019.png" height="83" width="309"></span><img
-                class="img-fluid rounded mx-auto d-block" src="pynq-z2-ai_th_files/image020.png"
+absolute;z-index:251667456;margin-left:117px;margin-top:168px;width:309px;height:83px"><img
+                  src="pynq-z2-ai_th_files/image019.png" height="83" width="309"></span><img
+                class="img-fluid rounded mx-auto d-block" src="pynq-z2-ai_th_files/image020.png"
                 alt="A screenshot of a computer
 Description automatically generated" border="0" height="355" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
@@ -878,25 +880,25 @@ Description automatically generated" border="0" height="355" width="624"></p>
                 ./yolo_image dog.jpg</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">เมื่อ
                 รันสำเร็จ จะแสดงวัตถุที่ตรวจจับได้ดังภาพด้านล่าง</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 1" src="pynq-z2-ai_th_files/image021.png" alt="A screenshot of a computer
 Description automatically generated" border="0" height="356" width="624"></p>
             <span style="">&nbsp;</span>
-            <h2 style="margin-left:28.35pt;text-indent:-28.35pt"><a name="_Toc208827164"><span
+            <h2 style="margin-left:28.35pt;text-indent:-28.35pt"><a name="_Toc208827164"><span
                   style="">1.3.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
                   </span></span><span style="">อ้างอิง</span></a></h2>
             <span style="">&nbsp;</span>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">เอกสาร
                 อ้างอิง:</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><a href="https://andre-araujo.gitbook.io/yolo-on-pynq-z2/deployment-on-pynq-z2/execute-yolov3"><span
+            <p class="MsoNormal" style="text-align:left" align="left"><a href="https://andre-araujo.gitbook.io/yolo-on-pynq-z2/deployment-on-pynq-z2/execute-yolov3"><span
                   style="">https://andre-araujo.gitbook.io/yolo-on-pynq-z2/deployment-on-pynq-z2/execute-yolov3</span></a></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">เนื่อง
                 จาก DPU IP เวอร์ชันล่าสุดไม่รองรับ Zynq-7000 แล้ว
                 จึงไม่สามารถดาวน์โหลดจากเว็บไซต์ของ Xilinx ได้
                 แต่สามารถดาวน์โหลดได้จากลิงก์ด้านล่าง</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><a href="https://drive.google.com/file/d/1-Ajpk6HIDHIkwDHdUJaB92HN5g_S0Bam/view"><span
+            <p class="MsoNormal" style="text-align:left" align="left"><a href="https://drive.google.com/file/d/1-Ajpk6HIDHIkwDHdUJaB92HN5g_S0Bam/view"><span
                   style="">https://drive.google.com/file/d/1-Ajpk6HIDHIkwDHdUJaB92HN5g_S0Bam/view</span></a></p>
-            <span style="font-size:10.5pt;"><br style="page-break-before:always"
+            <span style="font-size:10.5pt;"><br style="page-break-before:always"
                 clear="all">
             </span>
             <p class="MsoNormal"><span style="">&nbsp;</span></p>

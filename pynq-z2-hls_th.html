@@ -4,7 +4,7 @@
     <meta content="text/html; charset=UTF-8" http-equiv="content-type">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HLS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+
       rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
@@ -55,14 +55,15 @@
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPynq" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 PYNQ-Z2
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownPynq">
-                                <li><a class="dropdown-item" href="pynq-z2-ai_th.html">AI (DPU)</a></li>
-                                <li><a class="dropdown-item" href="pynq-z2-hls_th.html">HLS</a></li>
-                                <li><a class="dropdown-item" href="pynq-z2-modelsim_th.html">Modelsim</a></li>
-                                <li><a class="dropdown-item" href="pynq-z2-vivado_th.html">Vivado</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item dropdown">
+                                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownPynq">
+                                                        <li><a class="dropdown-item" href="pynq-z2-ai_th.html">AI (DPU)</a></li>
+                                                        <li><a class="dropdown-item" href="pynq-z2-hls_th.html">HLS</a></li>
+                                                        <li><a class="dropdown-item" href="pynq-z2-modelsim_th.html">Modelsim</a></li>
+                                                        <li><a class="dropdown-item" href="pynq-z2-vivado_th.html">Vivado</a></li>
+                                                        <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1.html">LVGL ตอนที่ 1</a></li>
+                                                        <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2.html">LVGL ตอนที่ 2</a></li>
+                                                    </ul>
+                                                </li>                        <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAI" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 AI
                             </a>
@@ -96,18 +97,18 @@
             <h1>HLS</h1>
           </div>
           <div class="WordSection1" style="layout-grid:18.0pt">
-            <h1 style="margin-left:21.25pt;text-align:left;text-indent:-21.25pt"
+
               align="left"><a name="_Toc208827142"><span style="">1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;
                     </span></span><span style="">HLS</span></a></h1>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <h2 style="margin-left:28.35pt;text-align:left;text-indent:-28.35pt"
+
               align="left"><a name="_Toc208827143"><span style="">1.1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
                     </span></span><span style="">ภาพรวม</span></a></h2>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">HLS
                 คือวิธีการพัฒนาลอจิก FPGA ด้วยภาษา C สิ่งที่ออกแบบด้วย HLS
                 สามารถส่งออกเป็น IP และนำไปใช้ใน Vivado ได้</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image001.png" alt="A computer screen shot of a computer
 Description automatically generated" height="254" width="624"></p>
             &nbsp;
@@ -115,77 +116,77 @@ Description automatically generated" height="254" width="624"></p>
             <p class="MsoNormal"><span style="">ตัวอย่าง:</span></p>
             <p class="MsoNormal"><span style="">ตัวอย่างเช่น มีการคำนวณแบบวนซ้ำ
                 (ภาษา C) ดังต่อไปนี้</span></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image002.png" alt="A computer screen shot of a program code
 Description automatically generated" height="197" width="253"></p>
             <p class="MsoNormal"><span style="">&nbsp;</span></p>
             <p class="MsoNormal"><span style="">เมื่อพิจารณาการคำนวณ Loop ในโค้ด
                 C เป็นแผนภาพบล็อก จะมีลักษณะดังนี้</span></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image003.png" height="192" width="442"></p>
             <p class="MsoNormal"><span style="">&nbsp;</span></p>
             <p class="MsoNormal"><span style="">โดยปกติ เพื่อลดการใช้ลอจิกของ
                 FPGA จะใช้วงจรคูณเพียง 1 ตัวแล้วใช้ซ้ำ</span></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image004.png" height="231" width="422"></p>
-            <span style="font-size:10.5pt;"><br style="page-break-before:always"
+
                 clear="all">
             </span>
             <p class="MsoNormal"><span style="">เมื่อแปลงภาษา C เป็น HDL ด้วย
                 HLS โค้ด VHDL ที่ได้จะมีลักษณะดังนี้</span></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image005.png" alt="A screenshot of a computer code
 Description automatically generated" height="166" width="280"></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image006.png" alt="A text on a white background
 Description automatically generated" height="76" width="286"></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image007.png" height="21" width="361"></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image008.png" alt="A screenshot of a computer program
 Description automatically generated" height="150" width="433"></p>
             <p class="MsoNormal"><span style="">&nbsp;</span></p>
             <p class="MsoNormal"><span style="">และยังสามารถตรวจสอบอัตราการใช้
                 ลอจิกของ FPGA ได้อีกด้วย</span></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image009.png" height="47" width="624"></p>
             <p class="MsoNormal"><span style="">Latency หมายถึง
                 หลังจากเริ่มการคำนวณ ผลลัพธ์จะถูกส่งออกหลังจากผ่านไป xxx ไซเคิล</span></p>
-            <p class="MsoNormal"><span style="">&nbsp;</span><span style="font-size:10.5pt;"></span><br
+
                 style="page-break-before:always" clear="all">
               <span style="font-size:10.5pt;">
               </span>
             </p>
-            <h2 style=" text-align: left; margin-left:42.0pt;text-align:left;text-indent:-21.0pt"><a
+
                 name="_Toc208827144"><span style="">1.2.</span><span style="">การส
                   ร้าง IP ด้วย HLS</span></a></h2>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">หลัง
                 จากสร้างโปรเจกต์ HLS แล้ว ลำดับการทำงานพื้นฐานจะเป็นดังนี้</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">1<span
+
                   lang="JA">．</span>C SIMULATION<span lang="JA">：</span>การจำลอง
                 ในระดับภาษา C ตรวจสอบด้วย testbench ของ C</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">2<span
+
                   lang="JA">．</span>C SYNTHESIS<span lang="JA">：</span>แปลงจาก
                 ภาษา C เป็น HDL</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">3<span
+
                   lang="JA">．</span>C/RTL COSIMULATOIN<span lang="JA">：</span>จำลอง
                 ในระดับ HDL (ตรวจสอบรูปคลื่นสัญญาณเอาต์พุตด้วย Vivado)</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">4<span
+
                   lang="JA">．</span>IMPLEMENTATION<span lang="JA">：</span>บีบอัด
                 สิ่งที่แปลงเป็น HDL แล้วให้เป็น IP ในรูปแบบไฟล์ zip</span></p>
             <br>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
                 ก่อนอื่น ในการสร้างโปรเจกต์ HLS ให้คลิกที่ File → New Project</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image010.png" alt="A screenshot of a computer
 Description automatically generated" height="213" width="356"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">ตั้ง
                 ค่าตำแหน่งของโปรเจกต์และรุ่นของ FPGA</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image011.png" alt="A screenshot of a computer
 Description automatically generated" height="164" width="343"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image012.png" alt="A screenshot of a computer
 Description automatically generated" height="367" width="502"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
@@ -194,10 +195,10 @@ Description automatically generated" height="367" width="502"></p>
                 (ไฟล์ที่ต้องการแปลงเป็น HDL) ในครั้งนี้จะเพิ่มไฟล์ SWtoLED.cpp
                 การทดสอบนี้เป็นการคูณอย่างง่าย โดยจะเตรียมสวิตช์ 2 ตัว (2 บิต)
                 ทำการคูณ แล้วแสดงผลลัพธ์บน LED</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image013.png" alt="A screenshot of a computer
 Description automatically generated" height="183" width="264"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image014.png" alt="A screenshot of a computer program
 Description automatically generated" height="110" width="484"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
@@ -205,34 +206,34 @@ Description automatically generated" height="110" width="484"></p>
                 กขวาที่ Test Bench เพื่อ Add Source File สำหรับ Test Bench (C
                 testbench ที่ใช้ในการตรวจสอบ) ในครั้งนี้จะเพิ่มไฟล์
                 SWtoLED_tb.cpp</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image015.png" alt="A screenshot of a computer program
 Description automatically generated" height="196" width="264"></p>
-            <span style="font-size:10.5pt;"><br style="page-break-before:always"
+
                 clear="all">
             </span>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;
                 ตอนนี้เนื้อหาภายในโปรเจกต์มีลักษณะดังนี้</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image016.png" alt="A screenshot of a computer
 Description automatically generated" height="230" width="379"></p>
-            <span style="font-size:10.5pt;"><br style="page-break-before:always"
+
                 clear="all">
             </span>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;
                 จากนั้น คลิกที่ Project → Project Settings → Synthesis แล้วเลือก
                 C Source (ไฟล์ที่ต้องการแปลงเป็น HDL) ในครั้งนี้จะเลือก swtoled</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image017.png" alt="A screenshot of a computer
 Description automatically generated" height="71" width="237"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image018.png" alt="A screenshot of a computer
 Description automatically generated" height="377" width="476"></p>
             <br>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;‐
                 ใน Flow Navigator มี 4 เมนู</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image019.png" alt="A screenshot of a computer
 Description automatically generated" height="231" width="261"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
@@ -240,27 +241,27 @@ Description automatically generated" height="231" width="261"></p>
                 คลิกที่ C SIMULATION → Run C Simulation เพื่อจำลองในระดับภาษา C
                 โดย Testbench ของ C (SWtoLED_tb.cpp) จะสร้างเงื่อนไขต่างๆ
                 ขึ้นมาเพื่อจำลองการทำงาน</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image025.png" alt="A screenshot of a computer program
 Description automatically generated" height="466" width="624"></p>
             <span style="font-size:10.5pt;"></span><br>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
                 คลิกที่ C SYNTHESIS → Run C Synthesis
                 แล้วกำหนดความถี่สัญญาณนาฬิกา (Period) ที่ต้องการให้ทำงาน</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image027.png" alt="A screenshot of a computer
 Description automatically generated" height="202" width="282"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
                 เมื่อเสร็จสิ้น ไฟล์ที่ถูกแปลงเป็น HDL จะแสดงรายงานการใช้ลอจิกของ
                 FPGA และรายงานเวลา (timing report)</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image030.png" alt="A screenshot of a computer
 Description automatically generated" height="279" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">เวลา
                 Uncertainty ดูเหมือนจะเป็นเวลาเผื่อ (margin)<br>
               </span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image031.png" alt="A diagram of a period
 Description automatically generated" height="124" width="345"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
@@ -270,41 +271,41 @@ Description automatically generated" height="124" width="345"></p>
                 Trace<span lang="JA">：</span>port</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">ตั้ง
                 ค่า Wave Debug: เปิดใช้งาน</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image034.png" alt="A screenshot of a computer
 Description automatically generated" height="446" width="339"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">จาก
                 นั้น Vivado จะเปิดขึ้นมาและแสดงรูปคลื่นสัญญาณของการจำลอง</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image035.png" alt="A screenshot of a computer
 Description automatically generated" height="237" width="624"></p>
-            <span style="font-size:10.5pt;"><br style="page-break-before:always"
+
                 clear="all">
             </span>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
                 คลิกที่ IMPLEMENTATION → Export RTL</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">เลือก
                 Export Format เป็น "Vivado IP"</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image036.png" alt="A screenshot of a computer
 Description automatically generated" height="384" width="323"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">เมื่อ
                 เสร็จสิ้น จะได้ไฟล์ export.zip ซึ่งสามารถนำเข้าไปใน Vivado
                 ในฐานะ IP ได้</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image037.png" alt="A screenshot of a computer program
 Description automatically generated" height="178" width="414"></p>
-            <span style="font-size:10.5pt;"><br style="page-break-before:always"
+
                 clear="all">
             </span>
             <p class="MsoNormal"><span style="">※ จริงๆสามารถอ้างอิงโฟลเดอร์ ip
                 ได้โดยตรงโดยไม่จำเป็นต้องใช้ export.zip</span></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image038.png" alt="A screenshot of a computer
 Description automatically generated" height="344" width="399"><span style="font-size:10.5pt;"></span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <h2 style="margin-left:28.35pt;text-align:left;text-indent:-28.35pt"
+
               align="left"><a name="_Toc208827145"><span style="">1.3.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
                     </span></span><span style="">การทดสอบ IP ที่สร้างจาก HLS</span></a></h2>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
@@ -312,68 +313,68 @@ Description automatically generated" height="344" width="399"><span style="font-
 text-indent:-.25in" align="left"><span style="">-<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;
                   </span></span><span style="">แตกไฟล์ที่ได้จาก HLS (Export.zip)
                 ไปไว้ที่ตำแหน่งที่ต้องการ</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image039.png" alt="A screenshot of a computer
 Description automatically generated" height="196" width="392"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
                 ใน IP Catalog ของ Vivado คลิกที่ Add Repository แล้วเพิ่ม IP
                 ที่สร้างจาก HLS</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image040.png" alt="A screenshot of a computer
 Description automatically generated" height="266" width="392"></p>
-            <span style="font-size:10.5pt;"><br style="page-break-before:always"
+
                 clear="all">
             </span>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
                 IP ที่เพิ่มเข้ามาจะแสดงที่นี่</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image042.png" alt="A screenshot of a computer
 Description automatically generated" height="250" width="397"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
                 เพิ่ม IP ไปยัง Block design ของ Vivado แล้วเชื่อมต่อกับสวิตช์และ
                 LED ภายนอก จากนั้นคอมไพล์ใน Vivado เพื่อสร้าง bitstream</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image043.png" height="53" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image044.png" alt="A screenshot of a computer program
 Description automatically generated" height="212" width="361"></p>
             <br>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
                 ทดสอบบนอุปกรณ์จริง</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image045.png" alt="A screenshot of a computer program
 Description automatically generated" height="110" width="484"></p>
-            <p class="MsoNormal" style="text-align:center" align="center"><span
+
                 style="">&nbsp;</span></p>
-            <table class="MsoTableGrid" style="border-collapse:collapse;border:none"
+
               border="1" cellpadding="0" cellspacing="0">
               <tbody>
                 <tr>
                   <td style="width:233.75pt;border:solid windowtext 1.0pt;
   padding:0in 5.4pt 0in 5.4pt" valign="top" width="312">
-                    <p class="MsoNormal" style="text-align:center" align="center"><span
+
                         style="">1*1 = 1</span></p>
                   </td>
                   <td style="width:233.75pt;border:solid windowtext 1.0pt;
   border-left:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="312">
-                    <p class="MsoNormal" style="text-align:center" align="center"><span
+
                         style="">1*2=2</span></p>
                   </td>
                 </tr>
                 <tr>
                   <td style="width:233.75pt;border:solid windowtext 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="312">
-                    <p class="MsoNormal" style="text-align:center" align="center"><img
-                        class="img-fluid rounded mx-auto d-block" id="Picture 27"
+
+
                         src="pynq-z2-hls_th_files/image046.jpg" alt="A hand holding a red circuit board
 Description automatically generated" height="203" width="271"></p>
                   </td>
                   <td style="width:233.75pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+
                     valign="top" width="312">
-                    <p class="MsoNormal" style="text-align:center" align="center"><img
-                        class="img-fluid rounded mx-auto d-block" id="Picture 26"
+
+
                         src="pynq-z2-hls_th_files/image047.jpg" alt="A hand holding a circuit board
 Description automatically generated" height="196" width="262"></p>
                   </td>
@@ -381,29 +382,29 @@ Description automatically generated" height="196" width="262"></p>
                 <tr>
                   <td style="width:233.75pt;border:solid windowtext 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="312">
-                    <p class="MsoNormal" style="text-align:center" align="center"><span
+
                         style="">2*2= 4</span></p>
                   </td>
                   <td style="width:233.75pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+
                     valign="top" width="312">
-                    <p class="MsoNormal" style="text-align:center" align="center"><span
+
                         style="">3*2 = 6</span></p>
                   </td>
                 </tr>
                 <tr>
                   <td style="width:233.75pt;border:solid windowtext 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="312">
-                    <p class="MsoNormal" style="text-align:center" align="center"><img
-                        class="img-fluid rounded mx-auto d-block" id="Picture 28"
+
+
                         src="pynq-z2-hls_th_files/image048.jpg" alt="A hand holding a red circuit board
 Description automatically generated" height="201" width="268"></p>
                   </td>
                   <td style="width:233.75pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+
                     valign="top" width="312">
-                    <p class="MsoNormal" style="text-align:center" align="center"><img
-                        class="img-fluid rounded mx-auto d-block" id="Picture 25"
+
+
                         src="pynq-z2-hls_th_files/image049.jpg" alt="A hand holding a circuit board
 Description automatically generated" height="200" width="267"></p>
                   </td>
@@ -412,7 +413,7 @@ Description automatically generated" height="200" width="267"></p>
             </table>
             <p class="MsoNormal"><span style="">&nbsp;</span></p>
             <span style="">&nbsp;</span>
-            <h2 style="margin-left:28.35pt;text-align:left;text-indent:-28.35pt"
+
               align="left"><a name="_Toc208827146"><span style="">1.4.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
                     </span></span><span style="">HLS Pragmas</span></a></h2>
             <p class="MsoNormal"><span style="">&nbsp;</span></p>
@@ -432,18 +433,18 @@ Description automatically generated" height="200" width="267"></p>
                 ได้หลายแบบ ตัวอย่างเช่น หากเพิ่ม Interface เข้าไปใน C Source
                 ที่ใช้ในหัวข้อ "1.2. การสร้าง IP ด้วย HLS" ดังภาพด้านล่าง IP
                 ที่ส่งออกจะมีลักษณะดังนี้ ตำแหน่งแอดเดรสจะถูกกำหนดโดยอัตโนมัติ</span></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image050.png" alt="A screenshot of a computer program
 Description automatically generated" height="99" width="398"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image052.png" alt="A screenshot of a computer
 Description automatically generated" height="424" width="488"></p>
-            <span style="font-size:10.5pt;"><br style="page-break-before:always"
+
                 clear="all">
             </span>
             <p class="MsoNormal"><span style="">ในกรณีที่ไม่ต้องการให้กำหนด
                 ตำแหน่งแอดเดรสโดยอัตโนมัติ สามารถเพิ่ม offset ได้</span></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image053.png" alt="A screenshot of a computer program
 Description automatically generated" height="173" width="454"></p>
             <span style="font-size:10.5pt;"></span><span style=""></span><span style="">&nbsp;</span>
@@ -453,11 +454,11 @@ Description automatically generated" height="173" width="454"></p>
                 จะต้องเลือกว่าจะใช้ pipeline หรือไม่</span></p>
             <p class="MsoNormal"><span style="">※ โดยปกติแล้ว HLS น่าจะเลือกใช้
                 pipeline เป็นค่าเริ่มต้น</span></p>
-            <p class="MsoNormal" style="text-align:center" align="center"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image054.png" alt="A diagram of a diagram
 Description automatically generated" height="224" width="384"></p>
             <p class="MsoNormal"><span style="">ตัวอย่าง:</span></p>
-            <table class="MsoTableGrid" style="border-collapse:collapse;border:none"
+
               border="1" cellpadding="0" cellspacing="0">
               <tbody>
                 <tr>
@@ -473,14 +474,14 @@ Description automatically generated" height="224" width="384"></p>
                 <tr>
                   <td style="width:233.75pt;border:solid windowtext 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="312">
-                    <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+
                         src="pynq-z2-hls_th_files/image055.png" alt="A computer screen shot of a program code
 Description automatically generated" height="208" width="268"></p>
                   </td>
                   <td style="width:233.75pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+
                     valign="top" width="312">
-                    <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+
                         src="pynq-z2-hls_th_files/image056.png" alt="A computer screen shot of a program code
 Description automatically generated" height="134" width="247"></p>
                   </td>
@@ -488,45 +489,45 @@ Description automatically generated" height="134" width="247"></p>
               </tbody>
             </table>
             <p class="MsoNormal"><span style="">&nbsp;</span></p>
-            <table class="MsoTableGrid" style="border-collapse:collapse;border:none"
+
               border="1" cellpadding="0" cellspacing="0">
               <tbody>
                 <tr>
                   <td style="width:49.4pt;border:solid windowtext 1.0pt;
   padding:0in 5.4pt 0in 5.4pt" valign="top" width="66">
-                    <p class="MsoNormal" style="text-align:center" align="center"><span
+
                         style="font-size:8.0pt;">pipeline</span></p>
                   </td>
                   <td style="width:418.1pt;border:solid windowtext 1.0pt;
   border-left:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="557">
-                    <p class="MsoNormal" style="text-align:center" align="center"><span
+
                         style="font-size:8.0pt;">อัตราการใช้ลอจิก FPGA</span></p>
                   </td>
                 </tr>
                 <tr>
                   <td style="width:49.4pt;border:solid windowtext 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="66">
-                    <p class="MsoNormal" style="text-align:center" align="center"><span
+
                         style="font-size:8.0pt;">มี</span></p>
                   </td>
                   <td style="width:418.1pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+
                     valign="top" width="557">
                     <p class="MsoNormal"><span style="font-size:8.0pt;
-  "><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-hls_th_files/image058.png"
+
                           height="43" width="540"></span></p>
                   </td>
                 </tr>
                 <tr>
                   <td style="width:49.4pt;border:solid windowtext 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="66">
-                    <p class="MsoNormal" style="text-align:center" align="center"><span
+
                         style="font-size:8.0pt;">ไม่มี</span></p>
                   </td>
                   <td style="width:418.1pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+
                     valign="top" width="557">
-                    <p class="MsoNormal"><span style="font-size:8.0pt;"><img class="img-fluid rounded mx-auto d-block"
+
                           src="pynq-z2-hls_th_files/image059.png" height="43" width="540"></span></p>
                   </td>
                 </tr>
@@ -542,11 +543,11 @@ Description automatically generated" height="134" width="247"></p>
             <h3 style="margin-left:0in"><a name="_Toc208827149"><span style="">Unroll</span></a></h3>
             <p class="MsoNormal"><span style="">นี่คือข้อจำกัดในการทำให้วงจร
                 คำนวณทำงานแบบขนาน (Parallel) เมื่อแปลงวงจร Loop เป็น HDL</span></p>
-            <p class="MsoNormal" style="text-align:center" align="center"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image060.png" alt="A screenshot of a computer program
 Description automatically generated" height="156" width="278"></p>
             <p class="MsoNormal"><span style="">ตัวอย่าง:</span></p>
-            <table class="MsoTableGrid" style="border-collapse:collapse;border:none"
+
               border="1" cellpadding="0" cellspacing="0">
               <tbody>
                 <tr>
@@ -562,101 +563,101 @@ Description automatically generated" height="156" width="278"></p>
                 <tr>
                   <td style="width:233.75pt;border:solid windowtext 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="312">
-                    <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+
                         src="pynq-z2-hls_th_files/image061.png" alt="A computer screen shot of a program code
 Description automatically generated" height="36" width="232"></p>
-                    <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+
                         src="pynq-z2-hls_th_files/image062.png" alt="A computer screen shot of a program code
 Description automatically generated" height="118" width="219"></p>
                   </td>
                   <td style="width:233.75pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+
                     valign="top" width="312">
-                    <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+
                         src="pynq-z2-hls_th_files/image063.png" height="140" width="229"></p>
                   </td>
                 </tr>
               </tbody>
             </table>
             <p class="MsoNormal"><span style="">&nbsp;</span></p>
-            <table class="MsoTableGrid" style="border-collapse:collapse;border:none"
+
               border="1" cellpadding="0" cellspacing="0">
               <tbody>
                 <tr>
                   <td style="width:49.4pt;border:solid windowtext 1.0pt;
   padding:0in 5.4pt 0in 5.4pt" valign="top" width="66">
-                    <p class="MsoNormal" style="text-align:center" align="center"><span
+
                         style="font-size:8.0pt;">Unroll</span></p>
                   </td>
                   <td style="width:418.1pt;border:solid windowtext 1.0pt;
   border-left:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="557">
-                    <p class="MsoNormal" style="text-align:center" align="center"><span
+
                         style="font-size:8.0pt;">อัตราการใช้ลอจิก FPGA</span></p>
                   </td>
                 </tr>
                 <tr>
                   <td style="width:49.4pt;border:solid windowtext 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="66">
-                    <p class="MsoNormal" style="text-align:center" align="center"><span
+
                         style="font-size:8.0pt;">ไม่มี</span></p>
                   </td>
                   <td style="width:418.1pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+
                     valign="top" width="557">
                     <p class="MsoNormal"><span style="font-size:8.0pt;
-  "><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-hls_th_files/image066.png"
+
                           height="43" width="540"></span></p>
                   </td>
                 </tr>
                 <tr>
                   <td style="width:49.4pt;border:solid windowtext 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="66">
-                    <p class="MsoNormal" style="text-align:center" align="center"><span
+
                         style="font-size:8.0pt;">Factor=2</span></p>
                   </td>
                   <td style="width:418.1pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+
                     valign="top" width="557">
-                    <p class="MsoNormal"><span style="font-size:8.0pt;"><img class="img-fluid rounded mx-auto d-block"
+
                           src="pynq-z2-hls_th_files/image067.png" height="42" width="540"></span></p>
                   </td>
                 </tr>
                 <tr>
                   <td style="width:49.4pt;border:solid windowtext 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="66">
-                    <p class="MsoNormal" style="text-align:center" align="center"><span
+
                         style="font-size:8.0pt;">Factor=4</span></p>
                   </td>
                   <td style="width:418.1pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+
                     valign="top" width="557">
-                    <p class="MsoNormal"><span style="font-size:8.0pt;"><img class="img-fluid rounded mx-auto d-block"
+
                           src="pynq-z2-hls_th_files/image068.png" height="42" width="543"></span></p>
                   </td>
                 </tr>
                 <tr>
                   <td style="width:49.4pt;border:solid windowtext 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="66">
-                    <p class="MsoNormal" style="text-align:center" align="center"><span
+
                         style="font-size:8.0pt;">Factor=8</span></p>
                   </td>
                   <td style="width:418.1pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+
                     valign="top" width="557">
-                    <p class="MsoNormal"><span style="font-size:8.0pt;"><img class="img-fluid rounded mx-auto d-block"
+
                           src="pynq-z2-hls_th_files/image069.png" height="42" width="543"></span></p>
                   </td>
                 </tr>
                 <tr>
                   <td style="width:49.4pt;border:solid windowtext 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="66">
-                    <p class="MsoNormal" style="text-align:center" align="center"><span
+
                         style="font-size:8.0pt;">อัตโนมัติ</span></p>
                   </td>
                   <td style="width:418.1pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+
                     valign="top" width="557">
-                    <p class="MsoNormal"><span style="font-size:8.0pt;"><img class="img-fluid rounded mx-auto d-block"
+
                           src="pynq-z2-hls_th_files/image070.png" height="36" width="543"></span></p>
                   </td>
                 </tr>
@@ -676,14 +677,14 @@ Description automatically generated" height="118" width="219"></p>
                 แต่ถ้าใช้ Dataflow
                 การคำนวณถัดไปจะเริ่มทันทีที่ผลลัพธ์บางส่วนของโมดูลแรกออกมา</span></p>
             <p class="MsoNormal"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:center" align="center"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image071.png" alt="A diagram of a function
 Description automatically generated" height="92" width="364"></p>
-            <p class="MsoNormal" style="text-align:center" align="center"><img class="img-fluid rounded mx-auto d-block"
+
                 src="pynq-z2-hls_th_files/image072.png" alt="A diagram of a function
 Description automatically generated with medium confidence" height="228" width="385"></p>
             <p class="MsoNormal"><span style="">ตัวอย่าง:</span></p>
-            <table class="MsoTableGrid" style="border-collapse:collapse;border:none"
+
               border="1" cellpadding="0" cellspacing="0">
               <tbody>
                 <tr>
@@ -699,22 +700,22 @@ Description automatically generated with medium confidence" height="228" width="
                 <tr>
                   <td style="width:233.75pt;border:solid windowtext 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="312">
-                    <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+
                         src="pynq-z2-hls_th_files/image073.png" alt="A computer screen shot of text
 Description automatically generated" height="220" width="267"></p>
                   </td>
                   <td style="width:233.75pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+
                     valign="top" width="312">
-                    <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+
                         src="pynq-z2-hls_th_files/image074.png" height="140" width="232"></p>
                   </td>
                 </tr>
               </tbody>
             </table>
-            <p class="MsoNormal" style="text-align:center" align="center"><span
+
                 style="">&nbsp;</span><span style="font-size:10.5pt;"></span></p>
-            <table class="MsoTableGrid" style="border-collapse:collapse;border:none"
+
               border="1" cellpadding="0" cellspacing="0">
               <tbody>
                 <tr>
@@ -724,34 +725,34 @@ Description automatically generated" height="220" width="267"></p>
                   </td>
                   <td style="width:418.1pt;border:solid windowtext 1.0pt;
   border-left:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="557">
-                    <p class="MsoNormal" style="text-align:center" align="center"><span
+
                         style="font-size:8.0pt;">อัตราการใช้ลอจิก FPGA</span></p>
                   </td>
                 </tr>
                 <tr>
                   <td style="width:49.4pt;border:solid windowtext 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="66">
-                    <p class="MsoNormal" style="text-align:center" align="center"><span
+
                         style="font-size:8.0pt;">ไม่มี</span></p>
                   </td>
                   <td style="width:418.1pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+
                     valign="top" width="557">
                     <p class="MsoNormal"><span style="font-size:8.0pt;
-  "><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-hls_th_files/image077.png"
+
                           height="60" width="543"></span></p>
                   </td>
                 </tr>
                 <tr>
                   <td style="width:49.4pt;border:solid windowtext 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="66">
-                    <p class="MsoNormal" style="text-align:center" align="center"><span
+
                         style="font-size:8.0pt;">มี</span></p>
                   </td>
                   <td style="width:418.1pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+
                     valign="top" width="557">
-                    <p class="MsoNormal"><span style="font-size:8.0pt;"><img class="img-fluid rounded mx-auto d-block"
+
                           src="pynq-z2-hls_th_files/image078.png" height="62" width="543"></span></p>
                   </td>
                 </tr>
@@ -761,17 +762,17 @@ Description automatically generated" height="220" width="267"></p>
             <p class="MsoNormal"><span style="">เมื่อใช้ Dataflow
                 เวลาในการคำนวณจะลดลงจาก 1539 CLK เป็น 513 CLK
                 (แน่นอนว่าอัตราการใช้ลอจิกของ FPGA จะเพิ่มขึ้น)</span></p>
-            <span style="font-size:10.5pt;"><br style="page-break-before:always"
+
                 clear="all">
             </span>
-            <h2 style="margin-left:28.35pt;text-align:left;text-indent:-28.35pt"
+
               align="left"><a name="_Toc208827151"><span style="">1.5.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
                     </span></span><span style="">เงื่อนไขการใช้งาน</span></a></h2>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">ใน
                 Vitis High-Level Synthesis User Guide มีหัวข้อ Unsupported C/C++
                 Constructs อยู่ โดยมีรายละเอียดโดยสรุปดังนี้</span></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+
                 id="Picture 1" src="pynq-z2-hls_th_files/image079.png" alt="A screenshot of a computer program
 Description automatically generated" height="354" width="624"></p>
             <p class="MsoNormal"><span style="">&nbsp;</span></p>
