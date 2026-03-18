@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PYNQ-Z2 Special Episode: ควบคุม Hardware ด้วย AI Agent (Nanobot)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { padding-top: 56px; }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 1rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+        }
+        pre { background-color: #f8f9fa; padding: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        blockquote {
+            border-left: 4px solid #ccc;
+            padding-left: 1rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">FPGATHAILAND</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAries" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Aries Board
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAries">
+                            <li><a class="dropdown-item" href="AriesBoard_ep1.html">ตอนที่ 1: การออกแบบโปรเจค</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep2.html">ตอนที่ 2: Version A.1</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep3.html">ตอนที่ 3: ออกแบบ FPGA</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep4.html">ตอนที่ 4: PCI driver for linux</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep5.html">ตอนที่ 5: PCI driver for windows</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPynq" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            PYNQ-Z2
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownPynq">
+                            <li><a class="dropdown-item" href="pynq-z2-ai_th.html">AI (DPU)</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-hls_th.html">HLS</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-modelsim_th.html">Modelsim</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-vivado_th.html">Vivado</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1.html">LVGL ตอนที่ 1</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2.html">LVGL ตอนที่ 2</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvlg_special_ep.html">Special Episode: AI Agent</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAI" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            AI
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAI">
+                            <li><a class="dropdown-item" href="AI_hardware.html">AI Hardware Control with MCP</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownTools" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Tools
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownTools">
+                            <li><a class="dropdown-item" href="Sigasi.html">Sigasi for VS Code</a></li>
+                            <li><a class="dropdown-item" href="UVVM.html">UVVM</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="EZUSB_FPGA.html">USB</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="GeminiBoard_Beaglebone_Frambuffer.html">GeminiBoard</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto article-content">
+<h1>PYNQ-Z2 Special Episode: ควบคุม Hardware ด้วย AI Agent (Nanobot)</h1>
+
+<p>ในตอนนี้เราจะมีเนื้อหาพิเศษ เนื่องจากช่วงนี้กระแส AI Agent กำลังมาแรง โดยเฉพาะโปรเจกต์อย่าง OpenClaw ที่ได้รับความสนใจอย่างมาก แต่สำหรับสาย Embedded เราต้องการตัวเลือกที่เบากว่าและใช้ทรัพยากรน้อยกว่า Nanobot เป็น AI Agent ที่ได้รับแรงบันดาลใจมาจาก OpenClaw แต่ถูกออกแบบมาให้ใช้ Memory น้อยกว่า เหมาะสำหรับการรันบนบอร์ดขนาดเล็ก ในบทความนี้เราจะลองนำ Nanobot มารันบนบอร์ด <strong>PYNQ-Z2</strong> เพื่อทดลองควบคุมหน้าจอ LCD (ผ่าน Framebuffer) ที่เราสร้างขึ้นในตอนก่อนๆ เพื่อเป็นแนวทางในการนำ AI มาประยุกต์ใช้ควบคุม Hardware ในระดับ Low-level ครับ</p>
+
+<hr>
+
+<h2>ขั้นตอนการดำเนินการ</h2>
+
+<h3>1. การติดตั้ง Debian Linux</h3>
+
+<p>เริ่มต้นด้วยการเตรียมระบบปฏิบัติการ Debian สำหรับ PYNQ-Z2</p>
+
+<ol>
+<li><p><strong>ดาวน์โหลด Debian Image:</strong><br>
+   ดาวน์โหลดจาก: <a href="https://rcn-ee.com/rootfs/eewiki/minfs/">rcn-ee.com (Minimal FS)</a><br>
+   ในบทความนี้ผมใช้เวอร์ชัน <strong>Debian 12.1 (Bookworm)</strong></p></li>
+
+<li><p><strong>เตรียม SD Card:</strong><br>
+   ใช้เครื่องมืออย่าง <code>gparted</code> เพื่อแบ่ง Partition ดังนี้:</p>
+   <ul>
+   <li><strong>Partition 1:</strong> FAT32 (สำหรับ Bootloader และ Kernel)</li>
+   <li><strong>Partition 2:</strong> EXT4 (สำหรับ Root Filesystem)</li>
+   </ul></li>
+
+<li><p><strong>copy ไฟล์ระบบ:</strong><br>
+   copy ไฟล์ที่ได้จากการ Build ด้วย PetaLinux ไปยัง Partition 1:</p>
+<pre><code class="language-bash">$ sudo mount /dev/sdb1 /mnt/sdb1
+$ cd ~/pynq_z2/images/linux/
+$ sudo cp BOOT.BIN image.ub /mnt/sdb1/
+$ sync
+$ sudo umount /mnt/sdb1
+</code></pre>
+
+<p>แตกไฟล์ Debian RootFS ลงใน Partition 2:</p>
+<pre><code class="language-bash">$ tar xJf debian-12.1-minimal-armhf-2023-08-22.tar.xz
+$ sudo mount /dev/sdb2 /mnt/sdb2
+$ sudo tar xfvp debian-12.1-minimal-armhf-2023-08-22/armhf-rootfs-debian-bookworm.tar -C /mnt/sdb2
+$ sync
+$ sudo umount /mnt/sdb2
+</code></pre></li>
+
+<li><p><strong>ตั้งค่า U-Boot Environment:</strong><br>
+   เสียบ SD Card เข้ากับ PYNQ-Z2 แล้วตั้งค่าผ่าน Serial Console:</p>
+<pre><code class="language-bash">setenv bootargs console=ttyPS0,115200 root=/dev/mmcblk0p2 rw rootwait
+saveenv
+</code></pre></li>
+</ol>
+
+<hr>
+
+<h3>2. การจัดการ Framebuffer</h3>
+
+<h4>2.1 ทดสอบการโหลด Driver</h4>
+<p>เราจะทำการโหลด Module ของหน้าจอ LCD (ILI9486) ที่เรา Build ไว้ก่อนหน้านี้:</p>
+
+<pre><code class="language-bash">debian@arm:~$ sudo insmod fb-ili9486.ko
+fb_ili9486: loading out-of-tree module taints kernel.
+fb_ili9486: V2-20251213
+Console: switching to mono frame buffer device 40x30
+
+# ทดสอบรัน Demo LVGL
+debian@arm:~$ chmod +x demo_lvgl
+debian@arm:~$ ./demo_lvgl
+[DEBUG] LVGL multi-box speed test start
+[DEBUG] Multi-box test running
+[LVGL] running... 1772452985
+</code></pre>
+
+<h4>2.2 ตั้งค่า Auto-load เมื่อ Startup</h4>
+<p>เพื่อให้ Driver โหลดโดยอัตโนมัติทุกครั้งที่เปิดเครื่อง ให้สร้าง Systemd Service:</p>
+
+<p><code>sudo nano /etc/systemd/system/fbvideo.service</code></p>
+
+<pre><code class="language-ini">[Unit]
+Description=Load fb_ili9486 Driver
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/sbin/insmod /home/debian/fb-ili9486.ko
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+
+<hr>
+
+<h3>3. การติดตั้ง Nanobot</h3>
+
+<p>เนื่องจากเราใช้ Debian 12 ทำให้การติดตั้ง Python และ Library ต่างๆ ทำได้ง่ายผ่าน <code>apt</code></p>
+
+<ol>
+<li><strong>ติดตั้ง Dependencies:</strong>
+<pre><code class="language-bash">sudo apt update
+sudo apt install python3-pip python3-venv python3-full -y
+</code></pre></li>
+
+<li><strong>Clone และติดตั้ง Nanobot:</strong>
+<pre><code class="language-bash">git clone https://github.com/HKUDS/nanobot.git
+cd nanobot
+python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install -e .
+</code></pre></li>
+
+<li><strong>ตั้งค่า AI Model:</strong><br>
+   ในตัวอย่างนี้เราจะใช้ Gemini เป็นสมองหลักของ Agent ให้แก้ไขไฟล์ Config (สมมติว่ารัน <code>nanobot onboard</code> เพื่อสร้างไฟล์เริ่มต้นก่อน):</li>
+</ol>
+
+<p><code>nano ~/.nanobot/config.json</code></p>
+<pre><code class="language-json">  "agents": {
+    "defaults": {
+      "workspace": "~/.nanobot/workspace",
+      "model": "gemini/gemini-2.5-flash",
+      "provider": "gemini",
+
+...
+
+    "gemini": {
+      "apiKey": "xxxxxxxxxxxxxxxxxxxxxxxxx",
+      "apiBase": null,
+      "extraHeaders": null
+</code></pre>
+
+<hr>
+
+<h3>4. การสร้าง Skill ให้ Nanobot ควบคุม Framebuffer</h3>
+
+<p>จุดเด่นของ Nanobot คือเราสามารถสอน Skill ใหม่ๆ ให้มันได้ โดยการสร้างไฟล์ <code>SKILL.md</code> เพื่ออธิบายความสามารถให้ AI เข้าใจ</p>
+
+<ol>
+<li><strong>สร้างโฟลเดอร์สำหรับ Skill:</strong><br>
+<code>mkdir -p ~/.nanobot/workspace/skills/led_control</code></li>
+
+<li><strong>สร้างไฟล์คู่มือสำหรับ AI (SKILL.md):</strong><br>
+<code>~/.nanobot/workspace/skills/led_control/SKILL.md</code></li>
+</ol>
+
+<blockquote class="info">
+<p><strong>NOTE</strong></p>
+<h1>LED Test Skill</h1>
+<p>This skill allows controlling an LED (simulated via framebuffer) by filling the screen with red or blue.</p>
+
+<h2>Actions</h2>
+<h3>turn_on_red_led</h3>
+<p>Turns on the red LED (fills the screen with red).</p>
+<pre><code class="language-python">default_api.exec(command="python3 fb_test_fill_red.py", working_dir="/home/debian/.nanobot/workspace/skills/led_test")
+</code></pre>
+
+<h3>turn_on_blue_led</h3>
+<p>Turns on the blue LED (fills the screen with blue).</p>
+<pre><code class="language-python">default_api.exec(command="python3 fb_test_fill_blue.py", working_dir="/home/debian/.nanobot/workspace/skills/led_test")
+</code></pre>
+
+<h1>test_led</h1>
+<p>when user want to test led, please use below command</p>
+<pre><code>default_api.exec(command="./test_rgb", working_dir="/home/debian/.nanobot/workspace/skills/led_test")
+</code></pre>
+</blockquote>
+
+<ol start="3">
+<li><strong>เขียน Python Script สำหรับควบคุม Hardware:</strong><br>
+   ตัวอย่างไฟล์ <code>fb_test_fill_red.py</code> สำหรับพ่นสีแดงลงบน <code>/dev/fb0</code>:</li>
+</ol>
+
+<pre><code class="language-python">import os
+import struct
+import mmap
+
+# Adjust these to match your framebuffer
+WIDTH = 480
+HEIGHT = 320
+BYTES_PER_PIXEL = 2  # 16-bit
+
+# RGB565 red = 0b1111100000000000 = 0xF800
+RED = 0xF800
+
+# Open framebuffer
+fb = os.open("/dev/fb0", os.O_RDWR)
+
+# Map framebuffer to memory
+screen_size = WIDTH * HEIGHT * BYTES_PER_PIXEL
+fb_mem = mmap.mmap(fb, screen_size, mmap.MAP_SHARED, mmap.PROT_WRITE | mmap.PROT_READ)
+
+# Create one red pixel in RGB565
+red_pixel = struct.pack("<H", RED)  # little-endian unsigned short
+
+# Fill screen
+for _ in range(WIDTH * HEIGHT):
+    fb_mem.write(red_pixel)
+
+fb_mem.close()
+os.close(fb)
+
+print("Screen filled with red.")
+</code></pre>
+
+<hr>
+
+<h3>ผลการทดสอบ</h3>
+
+<p>เมื่อทุกอย่างพร้อมแล้ว เราสามารถสั่งงานด้วยเสียงหรือพิมพ์สั่ง Nanobot เช่น <strong>"Turn on the red light"</strong> ตัว Agent จะไปอ่าน <code>SKILL.md</code> และตัดสินใจรันไฟล์ Python เพื่อเปลี่ยนสีหน้าจอ LCD ของเราได้ทันที!</p>
+
+<p>ตัวอย่างการทำงานจริง<br>
+<a href="https://www.youtube.com/shorts/IKD64x0DOTk" target="_blank">YouTube Shorts - Nanobot on PYNQ-Z2</a></p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center p-4 mt-5" style="background-color: #f8f9fa;">
+        <div class="container">
+            <p class="mb-0">Contact: <a href="https://www.facebook.com/wichayen.hong" target="_blank">Wichayen Hong on Facebook</a> | <a href="https://github.com/wichayen" target="_blank">GitHub</a> | <a href="https://www.linkedin.com/in/wichayen-luangsopapan-404133202/" target="_blank">LinkedIn</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
