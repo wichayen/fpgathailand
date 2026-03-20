@@ -1,33 +1,33 @@
-plugins:
-  - jekyll-sitemap
-
-# URL (ถูกแล้ว 👍)
-url: "https://wichayen.github.io"
-baseurl: "/fpgathailand"
-
-# ตัดไฟล์/โฟลเดอร์ที่ไม่ควรอยู่ใน sitemap
-exclude:
-  - "*_files"
-  - "*.pdf"
-  - "*.htm"
-  - googlee16899298bbe31dd.html
-
-# ควบคุม sitemap
-defaults:
-  # ค่า default ให้ทุก page
-  - scope:
-      path: ""
-    values:
-      sitemap: true
-
-  # ❌ ไม่เอา folder _files
-  - scope:
-      path: "*_files/*"
-    values:
-      sitemap: false
-
-  # ❌ ไม่เอาไฟล์ verify
-  - scope:
-      path: "googlee16899298bbe31dd.html"
-    values:
-      sitemap: false
+# plugins:
+#   - jekyll-sitemap
+# 
+# # URL (ถูกแล้ว 👍)
+# url: "https://wichayen.github.io"
+# baseurl: "/fpgathailand"
+# 
+# # ตัดไฟล์/โฟลเดอร์ที่ไม่ควรอยู่ใน sitemap
+# exclude:
+#   - "*_files"
+#   - "*.pdf"
+#   - "*.htm"
+#   - googlee16899298bbe31dd.html
+# 
+# # ควบคุม sitemap
+# defaults:
+#   # ค่า default ให้ทุก page
+#   - scope:
+#       path: ""
+#     values:
+#       sitemap: true
+# 
+#   # ❌ ไม่เอา folder _files
+#   - scope:
+#       path: "*_files/*"
+#     values:
+#       sitemap: false
+# 
+#   # ❌ ไม่เอาไฟล์ verify
+#   - scope:
+#       path: "googlee16899298bbe31dd.html"
+#     values:
+#       sitemap: false
