@@ -1,2 +1,25 @@
 plugins:
   - jekyll-sitemap
+
+# ใส่ URL ให้ถูก (สำคัญมากสำหรับ sitemap)
+url: "https://wichayen.github.io"
+baseurl: "/fpgathailand"
+
+# ตัดไฟล์/โฟลเดอร์ที่ไม่ควรอยู่ใน sitemap
+exclude:
+  - "*_files"
+  - "*.pdf"
+  - "*.htm"
+
+# ควบคุม sitemap แบบละเอียด
+defaults:
+  - scope:
+      path: ""
+    values:
+      sitemap: true
+
+  # ❌ ไม่เอาไฟล์ใน _files
+  - scope:
+      path: "*_files"
+    values:
+      sitemap: false
