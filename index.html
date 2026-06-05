@@ -2,162 +2,181 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="google-site-verification" content="Jfh1zU6XtH5D3oDkrfj7QD5ML_X4qEYJvOGK5ojjlfk" />
+    <meta name="google-site-verification" content="Jfh1zU6XtH5D3oDkrfj7QD5ML_X4qEYJvOGK5ojjlfk">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FPGATHAILAND</title>
-    <meta name="title" content="FPGA Engineer in Thailand | Wichayen">
-    <meta name="description" content="FPGA / Digital Logic / Verilog / PCIe / High-speed Interface | Freelance & Consulting in Thailand">
-    <meta name="keywords" content="FPGA Thailand, FPGA Engineer, FPGA Freelance, Verilog, VHDL, High Speed IO, Wichayen, PCIe, Zynq, Cyclone V">
+    <title>FPGATHAILAND | FPGA & Embedded Engineering Portfolio</title>
+    <meta name="title" content="FPGATHAILAND | FPGA & Embedded Engineering Portfolio">
+    <meta name="description" content="FPGA, digital logic, embedded system, validation, PCIe, USB, Zynq and PYNQ-Z2 engineering portfolio by Wichayen in Thailand.">
+    <meta name="keywords" content="FPGA Thailand, FPGA Engineer, FPGA Freelance, Verilog, VHDL, Embedded System, High Speed IO, PCIe, Zynq, PYNQ-Z2, Wichayen">
+    <meta property="og:title" content="FPGATHAILAND | FPGA & Embedded Engineering Portfolio">
+    <meta property="og:description" content="Industrial FPGA design, embedded systems, hardware validation, and technical project notes by Wichayen.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://wichayen.github.io/fpgathailand/">
+    <link rel="canonical" href="https://wichayen.github.io/fpgathailand/">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <style>
-        body { padding-top: 56px; }
-        .hero-section {
-            padding: 2rem 2rem;
-            background-color: #f8f9fa;
-        }
-        .article-content img {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 1rem;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            border-radius: 5px;
-        }
-        pre { background-color: #f8f9fa; padding: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 */
-            height: 0;
-            overflow: hidden;
-            max-width: 100%;
-            background: #000;
-            margin: 20px 0;
-            border-radius: 8px;
-        }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        blockquote {
-            border-left: 4px solid #ccc;
-            padding-left: 1rem;
-            color: #666;
-        }
-    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <nav class="navbar navbar-expand-lg fixed-top site-nav">
         <div class="container">
             <a class="navbar-brand" href="index.html">FPGATHAILAND</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Home</a>
-                    </li>
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link" href="#work">Work</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#articles">Articles</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAries" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Aries Board
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAries">
-                            <li><a class="dropdown-item" href="AriesBoard_ep1.html">ตอนที่ 1: การออกแบบโปรเจค</a></li>
-                            <li><a class="dropdown-item" href="AriesBoard_ep2.html">ตอนที่ 2: Version A.1</a></li>
-                            <li><a class="dropdown-item" href="AriesBoard_ep3.html">ตอนที่ 3: ออกแบบ FPGA</a></li>
-                            <li><a class="dropdown-item" href="AriesBoard_ep4.html">ตอนที่ 4: PCI driver for linux</a></li>
-                            <li><a class="dropdown-item" href="AriesBoard_ep5.html">ตอนที่ 5: PCI driver for windows</a></li>
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBoards" role="button" data-bs-toggle="dropdown" aria-expanded="false">Boards</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownBoards">
+                            <li><a class="dropdown-item" href="pynq-z2-vivado_th.html">PYNQ-Z2 Vivado</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-hls_th.html">PYNQ-Z2 HLS</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-ai_th.html">PYNQ-Z2 AI DPU</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep1.html">ARIES PCI Board</a></li>
+                            <li><a class="dropdown-item" href="EZUSB_FPGA.html">EZUSB + FPGA</a></li>
+                            <li><a class="dropdown-item" href="GeminiBoard_Beaglebone_Frambuffer.html">GeminiBoard</a></li>
                         </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPynq" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            PYNQ-Z2
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownPynq">
-                            <li><a class="dropdown-item" href="pynq-z2-ai_th.html">AI (DPU)</a></li>
-                            <li><a class="dropdown-item" href="pynq-z2-hls_th.html">HLS</a></li>
-                            <li><a class="dropdown-item" href="pynq-z2-modelsim_th.html">Modelsim</a></li>
-                            <li><a class="dropdown-item" href="pynq-z2-vivado_th.html">Vivado</a></li>
-                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1.html">LVGL ตอนที่ 1</a></li>
-                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2.html">LVGL ตอนที่ 2</a></li>
-                            <li><a class="dropdown-item" href="pynq_z2_lvlg_special_ep.html">Special Episode: AI Agent</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAI" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            AI
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAI">
-                            <li><a class="dropdown-item" href="AI_hardware.html">AI Hardware Control with MCP</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownTools" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Tools
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownTools">
-                            <li><a class="dropdown-item" href="Sigasi.html">Sigasi for VS Code</a></li>
-                            <li><a class="dropdown-item" href="UVVM.html">UVVM</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="EZUSB_FPGA.html">USB</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="GeminiBoard_Beaglebone_Frambuffer.html">GeminiBoard</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="hero-section text-center">
+    <header class="hero-section">
         <div class="container">
-            <h1 class="display-4">สวัสดีครับ! </h1>
-            <p class="lead">
-  ยินดีต้อนรับสู่ FPGATHAILAND!<br>
-  I am a Hardware / Digital System Engineer(FPGA + Embedded + Validation) with 10+ years experience in Industrial FPGA Design, and I enjoy sharing interesting projects I've been working on.</p>
-
-        </div>
-    </div>
-
-    <div class="container mt-3">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card p-4 shadow-sm">
-                    <h2 class="text-center mb-4">บทความทั้งหมด</h2>
-                    <ul class="list-group">
-                        <li class="list-group-item"><a href="pynq_z2_lvlg_special_ep.html">PYNQ-Z2 Special Episode: ควบคุม Hardware ด้วย AI Agent (Nanobot)</a></li>
-                        <li class="list-group-item"><a href="pynq_z2_lvgl_ep1.html">LVGL บน PYNQ-Z2 ตอนที่ 1</a></li>
-                        <li class="list-group-item"><a href="pynq_z2_lvgl_ep2.html">LVGL บน PYNQ-Z2 ตอนที่ 2</a></li>
-                        <li class="list-group-item"><a href="Sigasi.html">Sigasi: VS Code Extension สุดเทพสำหรับคนเขียน VHDL/Verilog</a></li>
-                        <li class="list-group-item"><a href="AriesBoard_ep1.html">โปรเจค PCI card ตอนที่ 1: การออกแบบโปรเจค ARIES Board</a></li>
-                        <li class="list-group-item"><a href="AriesBoard_ep2.html">โปรเจค PCI card ตอนที่ 2 Aries Board Version A.1</a></li>
-                        <li class="list-group-item"><a href="AriesBoard_ep3.html">โปรเจค PCI card ตอนที่ 3 ออกแบบ FPGA</a></li>
-                        <li class="list-group-item"><a href="AriesBoard_ep4.html">โปรเจค PCI card ตอนที่ 4 PCI driver for linux</a></li>
-                        <li class="list-group-item"><a href="AriesBoard_ep5.html">โปรเจค PCI card ตอนที่ 5 PCI driver for windows</a></li>
-                        <li class="list-group-item"><a href="pynq-z2-ai_th.html">PYNQ-Z2 AI (การตรวจจับวัตถุด้วย DPU IP ของ Xilinx)</a></li>
-                        <li class="list-group-item"><a href="pynq-z2-hls_th.html">PYNQ-Z2 HLS</a></li>
-                        <li class="list-group-item"><a href="pynq-z2-modelsim_th.html">PYNQ-Z2 การจำลองด้วย Modelsim</a></li>
-                        <li class="list-group-item"><a href="pynq-z2-vivado_th.html">PYNQ-Z2 Vivado</a></li>
-                        <li class="list-group-item"><a href="UVVM.html">การจำลอง UVVM ด้วย Modelsim</a></li>
-                        <li class="list-group-item"><a href="AI_hardware.html">AI Hardware Control with MCP</a></li>
-                        <li class="list-group-item"><a href="EZUSB_FPGA.html">การใช้งาน EZUSB (CY7C68013) interfacing กับ FPGA</a></li>
-                        <li class="list-group-item"><a href="GeminiBoard_Beaglebone_Frambuffer.html">โครงงาน Beaglebone GPMC Framebuffer ด้วย FPGA</a></li>
-                    </ul>
+            <div class="row align-items-center g-5">
+                <div class="col-lg-7">
+                    <p class="eyebrow">FPGA / Embedded / Validation Portfolio</p>
+                    <h1>Hardware engineering notes, projects, and experiments from real FPGA work.</h1>
+                    <p class="hero-copy">
+                        Hardware / Digital System Engineer ที่ทำงานกับ FPGA, embedded system และ validation มากกว่า 10 ปี
+                        เว็บนี้เป็นพื้นที่รวบรวมโปรไฟล์ งานทดลองจริง บทความ และบันทึกการ debug ที่เกี่ยวกับ digital system engineering.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn btn-primary btn-lg" href="#contact">Contact</a>
+                        <a class="btn btn-outline-light btn-lg" href="#work">View work</a>
+                    </div>
+                    <div class="trust-row" aria-label="Core strengths">
+                        <span>Verilog / VHDL</span>
+                        <span>Zynq / PYNQ</span>
+                        <span>PCIe / USB</span>
+                        <span>Linux Driver</span>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="expertise-panel">
+                        <img src="EZUSB_FPGA_files/ezusb1.jpg" alt="FPGA USB interface validation setup with waveform and transfer tool">
+                        <p class="panel-label">Engineering profile</p>
+                        <h2>From architecture to hardware validation</h2>
+                        <ul>
+                            <li>RTL design, review, simulation, and integration</li>
+                            <li>FPGA SoC workflows with Vivado, HLS, PYNQ, and AI accelerators</li>
+                            <li>Hardware validation, interface debug, and performance tuning</li>
+                            <li>Technical documentation and knowledge transfer for engineering teams</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </header>
 
-    <footer class="text-center p-4 mt-5" style="background-color: #f8f9fa;">
+    <main>
+        <section class="section section-muted" id="work">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Selected Work</p>
+                    <h2>ตัวอย่างงานและบทความเชิงเทคนิค</h2>
+                    <p>พื้นที่นี้รวบรวมงานทดลองจริง บันทึกการ debug และ tutorial ที่สะท้อนวิธีคิดด้าน hardware engineering.</p>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-4">
+                        <a class="work-card" href="AriesBoard_ep4.html">
+                            <img src="AriesBoard_ep1_files/image001.jpg" alt="ARIES FPGA PCI board architecture diagram">
+                            <span>PCIe / Driver</span>
+                            <h3>ARIES PCI board and Linux driver development</h3>
+                            <p>Exploration of FPGA PCI card workflow from board setup to Linux driver integration.</p>
+                        </a>
+                    </div>
+                    <div class="col-lg-4">
+                        <a class="work-card" href="pynq-z2-ai_th.html">
+                            <img src="pynq-z2-ai_th_files/image020.png" alt="PYNQ-Z2 AI accelerator output screenshot">
+                            <span>AI Accelerator</span>
+                            <h3>PYNQ-Z2 AI with Xilinx DPU IP</h3>
+                            <p>Hands-on notes for deploying an AI acceleration pipeline on FPGA SoC hardware.</p>
+                        </a>
+                    </div>
+                    <div class="col-lg-4">
+                        <a class="work-card" href="EZUSB_FPGA.html">
+                            <img src="EZUSB_FPGA_files/ezusb3.jpg" alt="EZUSB and FPGA hardware validation setup">
+                            <span>USB Interface</span>
+                            <h3>EZUSB CY7C68013 interfacing with FPGA</h3>
+                            <p>Practical hardware interface work between USB controller and FPGA logic.</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="articles">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Knowledge Base</p>
+                    <h2>บทความทั้งหมด</h2>
+                    <p>เลือกอ่านตามหัวข้อที่สนใจได้จากหมวดด้านล่าง.</p>
+                </div>
+                <div class="article-grid">
+                    <div class="article-group">
+                        <h3>PYNQ-Z2 / Zynq</h3>
+                        <a href="pynq-z2-vivado_th.html">PYNQ-Z2 Vivado</a>
+                        <a href="pynq-z2-hls_th.html">PYNQ-Z2 HLS</a>
+                        <a href="pynq-z2-modelsim_th.html">PYNQ-Z2 Modelsim</a>
+                        <a href="pynq-z2-ai_th.html">PYNQ-Z2 AI DPU</a>
+                        <a href="pynq_z2_lvgl_ep1.html">PYNQ-Z2 LVGL Episode 1</a>
+                        <a href="pynq_z2_lvgl_ep2.html">PYNQ-Z2 LVGL Episode 2</a>
+                        <a href="pynq_z2_lvlg_special_ep.html">Special Episode: AI Agent</a>
+                    </div>
+                    <div class="article-group">
+                        <h3>ARIES Board</h3>
+                        <a href="AriesBoard_ep1.html">ARIES Board Episode 1</a>
+                        <a href="AriesBoard_ep2.html">ARIES Board Episode 2</a>
+                        <a href="AriesBoard_ep3.html">ARIES Board Episode 3</a>
+                        <a href="AriesBoard_ep4.html">PCI driver for Linux</a>
+                        <a href="AriesBoard_ep5.html">PCI driver for Windows</a>
+                    </div>
+                    <div class="article-group">
+                        <h3>Tools / Interfaces</h3>
+                        <a href="Sigasi.html">Sigasi for VS Code</a>
+                        <a href="UVVM.html">UVVM with Modelsim</a>
+                        <a href="EZUSB_FPGA.html">EZUSB + FPGA</a>
+                        <a href="GeminiBoard_Beaglebone_Frambuffer.html">Beaglebone GPMC Framebuffer</a>
+                        <a href="AI_hardware.html">AI Hardware Control with MCP</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="contact-section" id="contact">
+            <div class="container">
+                <div class="contact-panel">
+                    <div>
+                        <p class="eyebrow">Contact</p>
+                        <h2>Contact</h2>
+                    </div>
+                    <div class="contact-actions">
+                        <a class="btn btn-primary btn-lg" href="https://www.linkedin.com/in/wichayen-luangsopapan-404133202/" target="_blank" rel="noopener">LinkedIn</a>
+                        <a class="btn btn-outline-dark btn-lg" href="https://www.facebook.com/wichayen.hong" target="_blank" rel="noopener">Facebook</a>
+                        <a class="btn btn-outline-dark btn-lg" href="https://github.com/wichayen" target="_blank" rel="noopener">GitHub</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
         <div class="container">
-            <p class="mb-0">Contact: <a href="https://www.facebook.com/wichayen.hong" target="_blank">Wichayen Hong on Facebook</a> | <a href="https://github.com/wichayen" target="_blank">GitHub</a> | <a href="https://www.linkedin.com/in/wichayen-luangsopapan-404133202/" target="_blank">LinkedIn</a></p>
+            <p>© 2026 FPGATHAILAND by Wichayen. FPGA, embedded systems, and hardware validation consulting.</p>
         </div>
     </footer>
 
