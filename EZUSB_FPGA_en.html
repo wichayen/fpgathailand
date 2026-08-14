@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Using EZUSB (CY7C68013) to Interface with FPGA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { padding-top: 56px; }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 1rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+        }
+        pre { background-color: #f8f9fa; padding: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        blockquote {
+            border-left: 4px solid #ccc;
+            padding-left: 1rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">FPGATHAILAND</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAries" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Aries Board
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAries">
+                            <li><a class="dropdown-item" href="AriesBoard_ep1_en.html">Episode 1: Project Design</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep2_en.html">Episode 2: Version A.1</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep3_en.html">Episode 3: FPGA Design</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep4_en.html">Episode 4: PCI driver for linux</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep5_en.html">Episode 5: PCI driver for windows</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPynq" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            PYNQ-Z2
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownPynq">
+                            <li><a class="dropdown-item" href="pynq-z2-ai_en.html">AI (DPU)</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-hls_en.html">HLS</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-modelsim_en.html">Modelsim</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-vivado_en.html">Vivado</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1_en.html">LVGL Episode 1</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2_en.html">LVGL Episode 2</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvlg_special_ep_en.html">Special Episode: AI Agent</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAI" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            AI
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAI">
+                            <li><a class="dropdown-item" href="AI_hardware_en.html">AI Hardware Control with MCP</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownTools" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Tools
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownTools">
+                            <li><a class="dropdown-item" href="Sigasi_en.html">Sigasi for VS Code</a></li>
+                            <li><a class="dropdown-item" href="UVVM_en.html">UVVM</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="EZUSB_FPGA_en.html">USB</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="GeminiBoard_Beaglebone_Frambuffer_en.html">GeminiBoard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="EZUSB_FPGA.html">TH</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto article-content">
+                <h1>Using EZUSB (CY7C68013) to Interface with FPGA</h1>
+
+                <h2>Overview</h2>
+
+                <p>This article explains the connection between a computer and an FPGA using the EZUSB FX2LP (CY7C68013A) chip, which acts as a bridge translating the USB protocol into a parallel bus (Slave FIFO) that the FPGA can easily communicate with.</p>
+
+                <p>The overall architecture of this example project is as follows:</p>
+
+                <div class="mermaid">
+graph TD
+        subgraph "Windows PC"
+            W1["Python (Jupyter) / C#"]
+            W2[USB Host Controller]
+        end
+        
+        subgraph "Hardware"
+            subgraph "FX2LP (CY7C68013A)"
+                E1[USB Device Core]
+                E2["Slave FIFO Interface (16-bit)"]
+            end
+            subgraph "FPGA"
+                F1["Slave FIFO Interface (16-bit)"]
+                F2[Loopback Logic]
+            end
+        end
+        
+        W1 &lt;--&gt; W2
+        W2 &lt;== USB ==&gt; E1
+        E1 &lt;--&gt; E2
+        E2 &lt;== Parallel Bus ==&gt; F1
+        F1 &lt;--&gt; F2	
+    </div>
+
+                <ul>
+                    <li><strong>Windows PC</strong>: Responsible for sending and receiving data over USB, using programs such as Python, C#, or test applications like Cypress Streamer.</li>
+                    <li><strong>FX2LP (CY7C68013A)</strong>: Functions as the USB device controller, translating USB data to a parallel data bus in Slave FIFO mode.</li>
+                    <li><strong>FPGA</strong>: Responsible for reading data from the FX2LP and writing data back. In this example, it performs a Loopback, meaning it reads the received data and immediately sends it back.</li>
+                </ul>
+
+                <h2>USB Endpoint Configuration</h2>
+
+                <p>The most critical part of operating in Slave FIFO mode is configuring the endpoints and flags inside the FX2LP correctly, enabling the FPGA to monitor the status of the FIFO (First-In, First-Out) buffers.</p>
+
+                <p>In this example, we configure the endpoints as follows:</p>
+                <ul>
+                    <li><strong><code>EP2</code></strong>: An <strong>OUT</strong> Endpoint of size 512 bytes, 4x buffered, used to receive data from the PC (<code>PC -&gt; Device</code>).
+                        <ul>
+                            <li><strong><code>FLAGA</code></strong> is configured as the <strong>Empty Flag</strong> of EP2. This means <code>FLAGA</code> will be Active ('1') when EP2 <strong>has data</strong> available for the FPGA to read.</li>
+                        </ul>
+                    </li>
+                    <li><strong><code>EP6</code></strong>: An <strong>IN</strong> Endpoint of size 512 bytes, 4x buffered, used to send data back to the PC (<code>Device -&gt; PC</code>).
+                        <ul>
+                            <li><strong><code>FLAGD</code></strong> is configured as the <strong>Full Flag</strong> of EP6. This means <code>FLAGD</code> will be Active ('1') when EP6 <strong>is not full</strong> and is ready for the FPGA to write data into.</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h2>Development Steps</h2>
+
+                <h3>1. Compile FX2LP (CY7C68013) Firmware</h3>
+
+                <p>The most important part of the firmware is configuring the registers inside the <code>TD_Init()</code> function in <code>slave.c</code> to define the operations of the Slave FIFO interface, endpoints, and flags according to our design.</p>
+
+                <p>You can use Keil C51 IDE (the trial version is sufficient since the code is small) to compile <code>slave.c</code> into a <code>.hex</code> file for downloading onto the FX2LP.</p>
+
+                <h4>Key Code Section in <code>slave.c</code></h4>
+
+                <pre><code>// slave.c
+
+void TD_Init( void )
+{
+  // ตั้งค่า Clock ของ CPU และเปิดการใช้งาน CLKOUT
+  CPUCS = 0x12; // CLKSPD[1:0]=10, for 48MHz operation, output CLKOUT
+
+  // ตั้งค่า FLAG A ให้เป็น Empty flag ของ EP2 (EP2EF)
+  // Active High หมายถึงเมื่อมีข้อมูลใน EP2, FLAGA จะเป็น High
+  PINFLAGSAB = 0x08;			// FLAGA - EP2EF
+  SYNCDELAY;
+
+  // ตั้งค่า FLAG D ให้เป็น Full flag ของ EP6 (EP6FF)
+  // Active High หมายถึงเมื่อ EP6 ยังไม่เต็ม, FLAGD จะเป็น High
+  PINFLAGSCD = 0xE0;			// FLAGD - EP6FF
+  SYNCDELAY;
+  
+  PORTACFG = 0x80; // เปิดใช้งาน FLAGD
+  SYNCDELAY;
+
+  // ตั้งค่า Interface เป็น Slave FIFO mode และรับ Clock จากภายนอก (FPGA)
+  IFCONFIG = 0x03;  // external clock input, Slave FIFO interface
+  SYNCDELAY;
+
+  // --- Endpoint Configuration ---
+  // EP2: OUT, 512 bytes, bulk, 4x buffered
+  EP2CFG = 0xA0;
+  SYNCDELAY;                    
+  // EP6: IN, 512 bytes, bulk, 4x buffered
+  EP6CFG = 0xE0;
+  SYNCDELAY;              
+  
+  // --- FIFO Reset ---
+  FIFORESET = 0x80; // Activate NAK-ALL
+  SYNCDELAY;                    
+  FIFORESET = 0x02; // Reset FIFO 2
+  SYNCDELAY;                    
+  FIFORESET = 0x06; // Reset FIFO 6
+  SYNCDELAY;                    
+  FIFORESET = 0x00; // Deactivate NAK-ALL
+  SYNCDELAY;
+
+  // --- FIFO Configuration ---
+  // EP2: AUTOOUT=1 (ส่งข้อมูลให้ master อัตโนมัติ), WORDWIDE=1 (16-bit)
+  EP2FIFOCFG = 0x11;
+  SYNCDELAY;                    
+  // EP6: AUTOIN=1 (รับข้อมูลจาก master อัตโนมัติ), WORDWIDE=1 (16-bit)
+  EP6FIFOCFG = 0x0D;
+  SYNCDELAY;
+}
+    </code></pre>
+
+                <h3>2. FPGA Design</h3>
+
+                <p>The FPGA side is responsible for monitoring the status of <code>FLAGA</code> and <code>FLAGD</code> to read and write data with the FX2LP over the 16-bit parallel bus.</p>
+
+                <div class="mermaid">
+graph TD
+        U[CY7C58013]
+        RAM[2-port RAM]
+        CTRL[Slave FIFO Control Logic]
+        
+        U &lt;-- 16bit Data & Flags --&gt; CTRL	
+        CTRL -- "Write data from EP2" --&gt; RAM
+        RAM -- "Read data for EP6" --&gt; CTRL
+    </div>
+
+                <ul>
+                    <li>When <code>FLAGA</code> is '1', the Control Logic detects that data from the PC is available in the EP2 FIFO. It then asserts the <code>SLRD_L</code> (Slave Read) signal to read data and store it in the RAM.</li>
+                    <li>When the FPGA needs to send data back, the Control Logic reads data from the RAM and checks <code>FLAGD</code>. If it is '1' (EP6 FIFO is not full), it asserts the <code>SLWR_L</code> (Slave Write) signal to write data into the EP6 FIFO.</li>
+                </ul>
+
+                <h4>Key Code Section in <code>PRJ_TOP.vhd</code></h4>
+
+                <pre><code>-- PRJ_TOP.vhd
+
+-- ... (entity declaration) ...
+
+architecture RTL of PRJ_TOP is
+	
+	-- ... (signal declarations) ...
+	
+	-- สัญญาณควบคุมการอ่าน/เขียน จะถูกสร้างตามสถานะของ FLAGA และ FLAGD
+	process( CLK_48M , RST_L )
+	begin
+		if ( RST_L = '0' ) then
+			wSLRD_L	&lt;=	'1'	; -- Active Low, '1' = inactive
+			wSLOE_L	&lt;=	'1'	; -- Active Low, '1' = inactive
+			wSLWR_L	&lt;=	'1'	; -- Active Low, '1' = inactive
+		elsif ( CLK_48M'event and CLK_48M = '1' ) then
+			if(wFLAGA = '1')then -- ถ้า FLAGA Active (มีข้อมูลให้อ่าน)
+				wSLRD_L	&lt;=	'0'	; -- ทำการ Read
+				wSLOE_L	&lt;=	'0'	; -- เปิด Output Enable
+				wSLWR_L	&lt;=	'1'	;
+			elsif(wFLAGD = '1')then -- ถ้า FLAGD Active (เขียนข้อมูลได้)
+				wSLRD_L	&lt;=	'1'	;
+				wSLOE_L	&lt;=	'1'	;
+				wSLWR_L	&lt;=	'0'	; -- ทำการ Write
+			else
+				if(wFLAGA = '0' and wFLAGD = '0')then
+					wSLRD_L	&lt;=	'1'	;
+					wSLOE_L	&lt;=	'1'	;
+					wSLWR_L	&lt;=	'1'	;
+				end if;
+			end if;
+		end if;
+	end process;
+	
+	--&gt;&gt;	EP2 : PC-&gt;device (Logic การอ่านข้อมูลจาก FX2LP)
+	process( CLK_48M , RST_L )
+	begin
+		if ( RST_L = '0' ) then
+			wPC2DevReq	&lt;=	'0'	;
+		elsif ( CLK_48M'event and CLK_48M = '1' ) then
+			if(wFLAGA = '1')then -- เริ่ม Request เมื่อ FLAGA Active
+				wPC2DevReq	&lt;=	'1'	;
+			else
+				if(wSLRD_L = '1')then -- หยุด Request เมื่อการอ่านสิ้นสุด
+					wPC2DevReq	&lt;=	'0'	;
+				end if;
+			end if;
+		end if;
+	end process;
+	
+	-- เขียนข้อมูลที่อ่านได้จาก FD bus ลง RAM
+	wWr		&lt;=	wPC2DevReq	; -- Write Enable
+	wWrData	&lt;=	wFD			; -- Data to Write
+	
+	
+	--&gt;&gt;	EP6 : device-&gt;PC (Logic การเขียนข้อมูลไปยัง FX2LP)
+	process( CLK_48M , RST_L )
+	begin
+		if ( RST_L = '0' ) then
+			wDev2PCReq	&lt;=	'0'	;
+		elsif ( CLK_48M'event and CLK_48M = '1' ) then
+			if(wFLAGD = '1')then -- เริ่ม Request เมื่อ FLAGD Active
+				wDev2PCReq	&lt;=	'1'	;
+			else
+				if(wSLWR_L = '1')then -- หยุด Request เมื่อการเขียนสิ้นสุด
+					wDev2PCReq	&lt;=	'0'	;
+				end if;
+			end if;
+		end if;
+	end process;
+	
+	-- นำข้อมูลจาก RAM (wRdData) ไปเขียนลง FD bus เมื่อ wSLWR_L Active
+	FD		&lt;=	wRdData	when (wSLWR_L = '0')	else	(others =&gt; 'Z')	;
+	
+	-- เลือก Endpoint Address ตาม Flag ที่ Active
+	process( CLK_48M , RST_L )
+	begin
+		if ( RST_L = '0' ) then
+			ADR1		&lt;=	'0'	;
+			ADR0		&lt;=	'0'	;
+		elsif ( CLK_48M'event and CLK_48M = '1' ) then
+			if (FLAGA = '1')then      -- FLAGA active, select EP2
+				ADR1		&lt;=	'0'	;
+				ADR0		&lt;=	'0'	;
+			elsif(FLAGD = '1')then    -- FLAGD active, select EP6
+				ADR1		&lt;=	'1'	;
+				ADR0		&lt;=	'0'	;
+			end if;
+		end if;
+	end process;
+
+end RTL;
+    </code></pre>
+
+                <h3>3. Test with Cypress Software</h3>
+
+                <p>After downloading the firmware into the FX2LP and programming the FPGA, you can use the <code>Streamer.exe</code> utility (included with the EZ-USB FX3 SDK) to test data transmission. The utility displays the data sent (OUT transfers) and the data received (IN transfers). If everything functions correctly, the received data should match the sent data (Loopback).</p>
+
+                <hr>
+                <h2>Test Results</h2>
+
+                <p><img src="EZUSB_FPGA_files/ezusb1.jpg" alt="ezusb1.jpg"></p>
+                <p><img src="EZUSB_FPGA_files/ezsub2.jpg" alt="ezsub2.jpg"></p>
+                <p><img src="EZUSB_FPGA_files/ezusb3.jpg" alt="ezusb3.jpg"></p>
+
+                <hr>
+                <h2>Note</h2>
+
+                <p>All example code can be downloaded at:<br><a href="https://github.com/wichayen/ezusb_experimental">https://github.com/wichayen/ezusb_experimental</a></p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center p-4 mt-5" style="background-color: #f8f9fa;">
+        <div class="container">
+            <p class="mb-0">Contact: <a href="https://www.facebook.com/wichayen.hong" target="_blank">Wichayen Hong on Facebook</a> | <a href="https://github.com/wichayen" target="_blank">GitHub</a> | <a href="https://www.linkedin.com/in/wichayen-luangsopapan-404133202/" target="_blank">LinkedIn</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true, theme: 'default'});</script>
+</body>
+</html>

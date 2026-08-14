@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVVM Simulation with Modelsim</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { padding-top: 56px; }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 1rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+        }
+        pre { background-color: #f8f9fa; padding: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        blockquote {
+            border-left: 4px solid #ccc;
+            padding-left: 1rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">FPGATHAILAND</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAries" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Aries Board
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAries">
+                            <li><a class="dropdown-item" href="AriesBoard_ep1_en.html">Part 1: Project Design</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep2_en.html">Part 2: Version A.1</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep3_en.html">Part 3: FPGA Design</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep4_en.html">Part 4: PCI driver for linux</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep5_en.html">Part 5: PCI driver for windows</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPynq" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            PYNQ-Z2
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownPynq">
+                            <li><a class="dropdown-item" href="pynq-z2-ai_en.html">AI (DPU)</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-hls_en.html">HLS</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-modelsim_en.html">Modelsim</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-vivado_en.html">Vivado</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1_en.html">LVGL Part 1</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2_en.html">LVGL Part 2</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvlg_special_ep_en.html">Special Episode: AI Agent</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAI" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            AI
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAI">
+                            <li><a class="dropdown-item" href="AI_hardware_en.html">AI Hardware Control with MCP</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownTools" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Tools
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownTools">
+                            <li><a class="dropdown-item" href="Sigasi_en.html">Sigasi for VS Code</a></li>
+                            <li><a class="dropdown-item" href="UVVM_en.html">UVVM</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="EZUSB_FPGA_en.html">USB</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="GeminiBoard_Beaglebone_Frambuffer_en.html">GeminiBoard</a>
+                    </li>
+                
+                    <li class="nav-item"><a class="nav-link" href="UVVM.html">TH</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto article-content">
+                <h1>UVVM Simulation with Modelsim</h1>
+                <p>This article introduces how to use UVVM on Modelsim to simulate a custom IP in a Zynq system.</p>
+                <h2>1. Simulation with Modelsim</h2>
+                <p>Typically, Vivado uses XSim as the default simulation tool. However, in this guide, we will use Modelsim instead. The main steps to run a simulation with Modelsim are:</p>
+                <ol>
+                    <li><strong>Compile Xilinx simulation libraries in Modelsim:</strong> This allows Modelsim to recognize and use Xilinx IPs (Intellectual Property).</li>
+                    <li><strong>Export simulation scripts from Vivado:</strong> Vivado can automatically export the scripts required for Modelsim simulation.</li>
+                    <li><strong>Launch Modelsim and run the simulation:</strong> Use the generated scripts to start the simulation process.</li>
+                    <li><strong>Modify/Create a Testbench:</strong> Improve or create testbenches to thoroughly verify your design's functionality.</li>
+                </ol>
+                <p><strong>Note:</strong> Xilinx AXI Verification IP (VIP) requires a specific license. Without this license, Modelsim will fail to simulate designs containing AXI VIP.</p>
+                <h3>1.1 Compiling Xilinx Libraries in Vivado</h3>
+                <p>Before using Modelsim, we must compile the Xilinx simulation libraries so that Modelsim knows the various Xilinx IPs. This is done as follows:</p>
+                <ol>
+                    <li>Open Vivado.</li>
+                    <li>Go to <strong>Tools → Compile Simulation Libraries</strong>.</li>
+                    <li>Specify the <strong>Compiled library location</strong> (where compiled libraries will be saved) and the <strong>Simulator executable path</strong> (path to the Modelsim executable file).</li>
+                    <li>Click <strong>"Compile"</strong>.</li>
+                </ol>
+                <p><img src="UVVM_files/image001.png" alt="image001.png"></p>
+                <p><img src="UVVM_files/image002.png" alt="image002.png"></p>
+                <p>Once compilation is complete, a <code>modelsim.ini</code> file will be generated. This file serves as the initialization script that Modelsim uses to load Xilinx libraries when it starts.</p>
+                <p><img src="UVVM_files/image003.png" alt="image003.png"></p>
+                <p><strong>Considerations:</strong></p>
+                <ul>
+                    <li><strong>Compilation Time:</strong> Compiling all Xilinx IPs can take a long time (approximately 1 hour in my experience).</li>
+                    <li><strong>Compilation Errors:</strong> Testing with Modelsim 10.5b (Quartus 17.1) and Vivado 2022.1 showed that a few modules (around 4 modules) might encounter compile errors. However, since my Vivado design doesn't use these modules, it shouldn't be an issue.</li>
+                </ul>
+                <p><img src="UVVM_files/image004.png" alt="image004.png"></p>
+                <p><img src="UVVM_files/image005.png" alt="image005.png"></p>
+                <ul>
+                    <li><strong>GCC Path Configuration:</strong> If a GCC path is required, there is an interface to configure it during the library compilation process.</li>
+                </ul>
+                <p><img src="UVVM_files/image006.png" alt="image006.png"></p>
+                <h3>1.2 Simulation with Modelsim (For Designs Without Xilinx VIP)</h3>
+                <p>For designs that do not use Xilinx VIP, simulation with Modelsim is straightforward:</p>
+                <ol>
+                    <li><strong>Export Simulation in Vivado:</strong>
+                        <ul>
+                            <li>Create a simulation set named "sim" in your project (if not already present).</li>
+                            <li>In Vivado, click <strong>"Export Simulation"</strong>.</li>
+                        </ul>
+                    </li>
+                </ol>
+                <p><img src="UVVM_files/image008.png" alt="image008.png"></p>
+                <p><img src="UVVM_files/image009.png" alt="image009.png"></p>
+                <ol start="2">
+                    <li><strong>Running the Simulation:</strong>
+                        <ul>
+                            <li>After exporting, you will find <code>compile.do</code> and <code>simulate.do</code> scripts under the "sim" directory in your project folder.</li>
+                            <li><strong>Tip:</strong> To prevent Modelsim from closing automatically after the simulation finishes, comment out the line containing <code>quit -force</code> in the <code>simulate.do</code> script.</li>
+                        </ul>
+                    </li>
+                </ol>
+                <p><img src="UVVM_files/image010.png" alt="image010.png"></p>
+                <ul>
+                    <li><strong>Note:</strong> If the design includes Xilinx VIP, you might encounter compile errors or simulation failures because of the missing license.</li>
+                </ul>
+                <p><img src="UVVM_files/image011.png" alt="image011.png"></p>
+                <h3>1.3 Running Simulations with UVVM + Modelsim</h3>
+                <p>Example commands for running a simulation that integrates UVVM and Modelsim:</p>
+                <pre><code>cd d:/xilinx/modelsim/AXI_Basics_3/UVVM_Light-master/sim/
+do ./compile_and_run_demo_tb.do
+do ./sim.do
+</code></pre>
+                <p>The arguments <code>xil_defaultlib uvvm_util.tb_axs_iomap xil_defaultlib.glbl</code> are part of the <code>vsim</code> command, specifying the libraries and design entities to load for simulation.</p>
+                <p><img src="UVVM_files/image012.png" alt="image012.png"></p>
+                <p><img src="UVVM_files/image013.png" alt="image013.png"></p>
+                <p><img src="UVVM_files/image014.png" alt="image014.png"></p>
+                <p><img src="UVVM_files/image015.png" alt="image015.png"></p>
+                <p><img src="UVVM_files/image016.png" alt="image016.png"></p>
+                <h3>1.4 Simulating Zynq Designs with UVVM + Modelsim</h3>
+                <p>To simulate more complex Zynq designs using UVVM and Modelsim, some script modifications are required:</p>
+                <ol>
+                    <li><strong>Copy UVVM Source Files:</strong>
+                        <ul>
+                            <li>Copy the <code>modelsim.ini</code> file (generated from compiling Xilinx libraries) into the <code>UVVM_Light-master\sim</code> directory.</li>
+                        </ul>
+                    </li>
+                </ol>
+                <p><img src="UVVM_files/image017.png" alt="image017.png"></p>
+                <p><img src="UVVM_files/image018.png" alt="image018.png"></p>
+                <ol start="2">
+                    <li><strong>Export Simulation in Vivado:</strong>
+                        <ul>
+                            <li>Create a folder named "sim" in your Vivado project.</li>
+                            <li>In Vivado, click <strong>"Export Simulation"</strong>.</li>
+                        </ul>
+                    </li>
+                </ol>
+                <p><img src="UVVM_files/image019.png" alt="image019.png"></p>
+                <p><img src="UVVM_files/image020.png" alt="image020.png"></p>
+                <ol start="3">
+                    <li><strong>Modify Code and Scripts:</strong>
+                        <ul>
+                            <li><strong>Modify <code>Pynq-Z2\sim\compile.do</code>:</strong>
+                                <ul>
+                                    <li>Add the line <code>vlib modelsim_lib</code> to create a library for Modelsim.</li>
+                                    <li>Remove the <code>include vip</code> part (if any) to avoid Xilinx VIP issues.</li>
+                                    <li>Remove the compilation lines for <code>base_ps7_0_0</code> (as we will use UVVM instead).</li>
+                                    <li>Modify the paths for <code>tb_prj_top.v</code> and <code>glbl.v</code> like this:
+                                        <pre><code>"../../UVVM_Light-master/tb/tb_prj_top.v" \
+"../../sim/modelsim/glbl.v"
+</code></pre>
+                                    </li>
+                                    <li><strong>Note on <code>tb_prj_top.v</code>:</strong> In a standard Vivado (XSim) setup, <code>tb_prj_top.v</code> uses Xilinx VIP to drive the AXI bus. If you wish to control it via UVVM, comment out all portions relating to Xilinx VIP in this file.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ol>
+                <p><img src="UVVM_files/image021.png" alt="image021.png"></p>
+                <ul>
+                    <li><strong>Modify <code>Pynq-Z2\UVVM_Light-master\sim\compile_and_run_demo_tb.do</code>:</strong>
+                        <ul>
+                            <li>Add the following code:
+                                <pre><code>do ../../sim/modelsim/compile.do
+vlib uvvm_util
+eval vcom $compdirectives -work xil_defaultlib ../tb/base_ps7_0_0.vhd
+</code></pre>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <p><img src="UVVM_files/image022.png" alt="image022.png"></p>
+                <ul>
+                    <li><strong>Note:</strong> The file <code>base_ps7_0_0.vhd</code> should contain the UVVM control logic for the Zynq Processing System (PS).</li>
+                    <li><strong>File Locations:</strong> Place the files <code>base_ps7_0_0.vhd</code> and <code>tb_prj_top.v</code> into the <code>Pynq-Z2\UVVM_Light-master\tb\</code> directory.</li>
+                </ul>
+                <p><img src="UVVM_files/image023.png" alt="image023.png"></p>
+                <ul>
+                    <li><strong>Create <code>sim.do</code> in <code>Pynq-Z2\UVVM_Light-master\sim</code>:</strong>
+                        <ul>
+                            <li>Copy the <code>vsim</code> command from <code>Pynq-Z2\sim\simulate.do</code>.</li>
+                            <li>Remove VIP-related libraries from the <code>vsim</code> command (leaving them in will cause errors without a license).</li>
+                            <li>Save the modified command to <code>Pynq-Z2\UVVM_Light-master\sim\sim.do</code>.</li>
+                        </ul>
+                    </li>
+                </ul>
+                <p><img src="UVVM_files/image024.png" alt="image024.png"></p>
+                <p><img src="UVVM_files/image025.png" alt="image025.png"></p>
+                <ol start="4">
+                    <li><strong>Simulating with Modelsim:</strong>
+                        <ul>
+                            <li>Open Modelsim.
+                                <pre><code>cd d:/xilinx/modelsim/Pynq-Z2/UVVM_Light-master/sim/
+do ./compile_and_run_demo_tb.do
+do ./sim.do
+</code></pre>
+                            </li>
+                        </ul>
+                    </li>
+                </ol>
+                <p><img src="UVVM_files/image026.png" alt="image026.png"></p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center p-4 mt-5" style="background-color: #f8f9fa;">
+        <div class="container">
+            <p class="mb-0">Contact: <a href="https://www.facebook.com/wichayen.hong" target="_blank">Wichayen Hong on Facebook</a> | <a href="https://github.com/wichayen" target="_blank">GitHub</a> | <a href="https://www.linkedin.com/in/wichayen-luangsopapan-404133202/" target="_blank">LinkedIn</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true, theme: 'default'});</script>
+</body>
+</html>

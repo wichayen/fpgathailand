@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeminiBoard Beaglebone Framebuffer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { padding-top: 56px; }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 1rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+        }
+        pre { background-color: #f8f9fa; padding: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        blockquote {
+            border-left: 4px solid #ccc;
+            padding-left: 1rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">FPGATHAILAND</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAries" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Aries Board
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAries">
+                            <li><a class="dropdown-item" href="AriesBoard_ep1_en.html">Part 1: Project Design</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep2_en.html">Part 2: Version A.1</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep3_en.html">Part 3: FPGA Design</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep4_en.html">Part 4: PCI driver for linux</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep5_en.html">Part 5: PCI driver for windows</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPynq" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            PYNQ-Z2
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownPynq">
+                            <li><a class="dropdown-item" href="pynq-z2-ai_en.html">AI (DPU)</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-hls_en.html">HLS</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-modelsim_en.html">Modelsim</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-vivado_en.html">Vivado</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1_en.html">LVGL Part 1</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2_en.html">LVGL Part 2</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvlg_special_ep_en.html">Special Episode: AI Agent</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAI" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            AI
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAI">
+                            <li><a class="dropdown-item" href="AI_hardware_en.html">AI Hardware Control with MCP</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownTools" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Tools
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownTools">
+                            <li><a class="dropdown-item" href="Sigasi_en.html">Sigasi for VS Code</a></li>
+                            <li><a class="dropdown-item" href="UVVM_en.html">UVVM</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="EZUSB_FPGA_en.html">USB</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="GeminiBoard_Beaglebone_Frambuffer_en.html">GeminiBoard</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="GeminiBoard_Beaglebone_Frambuffer.html">TH</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto article-content">
+                <h1>Beaglebone GPMC Framebuffer Project with FPGA</h1>
+                <h2>Overview</h2>
+                <p>This project implements a Framebuffer on an FPGA board (GeminiBoard) connected to Beaglebone via GPMC (General-Purpose Memory Controller). The Beaglebone sends pixel data to the FPGA, which stores it in the on-board SDRAM. The FPGA then generates HDMI signals to output the display onto a monitor.</p>
+                <div class="mermaid">
+graph TD
+	subgraph "Beaglebone"
+		B1[GPMC]
+	end
+	
+	subgraph "GeminiBoard"
+		subgraph "FPGA"
+			F1[GPMC Slave]
+			F2[HDMI TX]
+		end
+		G1[SDRAM]
+	end
+	
+	B1 -- Pixel Data --> F1
+	F1 -- Write --> G1
+	F2 -- Read --> G1
+	
+	F2 --> Monitor
+</div>
+
+                <p>In operation, Beaglebone writes image data via GPMC to the FPGA, which acts as a Slave device. The FPGA buffers the data in a FIFO and writes it to SDRAM. Simultaneously, the HDMI controller in the FPGA continuously reads data from the SDRAM to generate video signals for the HDMI monitor output.</p>
+                <hr />
+                <h1>Development Steps</h1>
+                <h2>1. FPGA Design</h2>
+                <p>The FPGA logic has three main responsibilities: GPMC interfacing, SDRAM management, and HDMI video signal generation.</p>
+                <div class="mermaid">
+graph TD
+    subgraph "FPGA"
+        F1[GPMC controller]
+        F1_1[write FIFO]
+        F2[SDRAM controller]
+        F2_1[read FIFO]
+        F3[HDMI controller]
+    end
+
+    S1[SDRAM]
+
+    GPMC -- pixel data --> F1
+    F1 --> F1_1 --> F2 -- write pixel data --> S1
+    S1 -- read pixel data (@30Hz) --> F2 --> F2_1 --> F3 --> Monitor
+</div>
+
+                <ul>
+                    <li><strong>GPMC Controller</strong>: Acts as a Slave device to receive pixel data from Beaglebone.</li>
+                    <li><strong>FIFO Buffers</strong>: A Write FIFO is used to buffer incoming pixel data line-by-line (line buffer) before writing to SDRAM to optimize memory access efficiency. A Read FIFO is used to buffer data before feeding it to the HDMI controller.</li>
+                    <li><strong>SDRAM Controller</strong>: Manages reading and writing data to external SDRAM, which serves as the Framebuffer memory space.</li>
+                    <li><strong>HDMI Controller</strong>: Continuously reads Framebuffer data from SDRAM at the desired refresh rate (e.g., 30Hz) and generates TMDS signals to output to the HDMI monitor.</li>
+                </ul>
+                <h3>VHDL Modules</h3>
+                <p>The FPGA project structure is divided into the following VHDL files:</p>
+                <ul>
+                    <li><code>PRJ_TOP.vhd</code>: Top-level file that connects all modules together.</li>
+                    <li><code>GPMC_IF.vhd</code>: GPMC slave interface for communicating with Beaglebone.</li>
+                    <li><code>FRAME_BUF.vhd</code>: Main Framebuffer controller, managing data flow from GPMC to SDRAM, and from SDRAM to the HDMI controller.</li>
+                    <li><code>vga_syncgen.vhd</code>: Generates basic VGA timing signals (HSYNC, VSYNC, DE) based on the target display resolution.</li>
+                    <li><code>tmds_encoder.vhd</code>: Encodes 8-bit color data into 10-bit TMDS (Transition-Minimized Differential Signaling) according to the DVI/HDMI standard.</li>
+                    <li><code>dvi_tx_pdiff.vhd</code>: Main DVI transmitter module, which receives image data and timing signals, encodes them using <code>tmds_encoder</code>, and serializes the data for transmission.</li>
+                    <li><code>pdiff_transmitter.vhd</code>: Sends serialized data out as pseudo-differential signals, utilizing the Double Data Rate I/O pin capabilities of the FPGA.</li>
+                </ul>
+                <p>Example code from <code>FRAME_BUF.vhd</code> showing the SDRAM read and write interface via the Avalon Bus:</p>
+                <div class="codehilite"><pre><span></span><code><span class="n">u0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">component</span><span class="w"> </span><span class="nc">MyQsys</span>
+<span class="w">    </span><span class="k">port</span><span class="w"> </span><span class="k">map</span><span class="w"> </span><span class="p">(
+</span><span class="w">        </span><span class="c1">-- Avalon Master signals for writing/reading SDRAM</span>
+<span class="w">        </span><span class="n">AvalonSimpleMaster_0_avm_m0_address</span><span class="w">     </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">AvalonSimpleMaster_0_avm_m0_address</span><span class="p">,
+</span><span class="w">        </span><span class="n">AvalonSimpleMaster_0_avm_m0_read</span><span class="w">        </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">AvalonSimpleMaster_0_avm_m0_read</span><span class="p">,
+</span><span class="w">        </span><span class="n">AvalonSimpleMaster_0_avm_m0_readdata</span><span class="w">    </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">AvalonSimpleMaster_0_avm_m0_readdata</span><span class="p">,
+</span><span class="w">        </span><span class="n">AvalonSimpleMaster_0_avm_m0_readdatavalid</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">AvalonSimpleMaster_0_avm_m0_readdatavalid</span><span class="p">,
+</span><span class="w">        </span><span class="n">AvalonSimpleMaster_0_avm_m0_write</span><span class="w">       </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">AvalonSimpleMaster_0_avm_m0_write</span><span class="p">,
+</span><span class="w">        </span><span class="n">AvalonSimpleMaster_0_avm_m0_writedata</span><span class="w">   </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">AvalonSimpleMaster_0_avm_m0_writedata</span><span class="p">,
+</span><span class="w">        </span><span class="n">AvalonSimpleMaster_0_avm_m0_waitrequest</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">AvalonSimpleMaster_0_avm_m0_waitrequest</span><span class="p">,
+</span><span class="w">        </span><span class="c1">-- SDRAM physical interface</span>
+<span class="w">        </span><span class="n">new_sdram_controller_0_wire_addr</span><span class="w">        </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">SDRAM_ADDR</span><span class="p">(</span><span class="mi">11</span><span class="w"> </span><span class="k">downto</span><span class="w"> </span><span class="mi">0</span><span class="p">),
+</span><span class="w">        </span><span class="c1">-- ... other SDRAM signals</span>
+<span class="w">        </span><span class="n">clk_clk</span><span class="w">                                 </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">CLK</span>,
+<span class="w">        </span><span class="n">reset_reset_n</span><span class="w">                           </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">RST_L</span>
+<span class="w">    </span><span class="p">);</span>
+
+<span class="c1">-- Process to handle WRITE requests to SDRAM (from GPMC FIFO)</span>
+<span class="k">process</span><span class="p">(</span><span class="w"> </span><span class="n">CLK</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">RST_L</span><span class="w"> </span><span class="p">)</span>
+<span class="k">begin</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">RST_L</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">'0'</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="n">AvalonSimpleMaster_0_avm_m0_write</span><span class="w">   </span><span class="o">&lt;=</span><span class="w">  </span><span class="sc">'0'</span><span class="p">;</span>
+<span class="w">    </span><span class="k">elsif</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">CLK</span><span class="na">'event</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">CLK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">'1'</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="c1">-- A write is requested when data is available from GPMC</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">wAvalonWrReq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">'1'</span><span class="p">)</span><span class="k">then</span><span class="w"> 
+            </span><span class="n">AvalonSimpleMaster_0_avm_m0_write</span><span class="w">   </span><span class="o">&lt;=</span><span class="w">  </span><span class="sc">'1'</span><span class="p">;</span>
+        <span class="c1">-- De-assert write when transaction is accepted</span>
+        <span class="k">elsif</span><span class="p">(</span><span class="n">AvalonSimpleMaster_0_avm_m0_waitrequest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">'0'</span><span class="p">)</span><span class="k">then</span>
+            </span><span class="n">AvalonSimpleMaster_0_avm_m0_write</span><span class="w">   </span><span class="o">&lt;=</span><span class="w">  </span><span class="sc">'0'</span><span class="p">;</span>
+<span class="w">        </span><span class="k">end</span><span class="w"> </span><span class="k">if</span><span class="p">;</span>
+<span class="w">    </span><span class="k">end</span><span class="w"> </span><span class="k">if</span><span class="p">;</span>
+<span class="k">end</span><span class="w"> </span><span class="k">process</span><span class="p">;</span>
+
+<span class="c1">-- Process to handle READ requests from SDRAM (for VGA output)</span>
+<span class="k">process</span><span class="p">(</span><span class="w"> </span><span class="n">CLK</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">RST_L</span><span class="w"> </span><span class="p">)</span>
+<span class="k">begin</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">RST_L</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">'0'</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="n">AvalonSimpleMaster_0_avm_m0_read</span><span class="w">    </span><span class="o">&lt;=</span><span class="w">  </span><span class="sc">'0'</span><span class="p">;</span>
+<span class="w">    </span><span class="k">elsif</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">CLK</span><span class="na">'event</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">CLK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">'1'</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="c1">-- Stop reading at the end of a line</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">wRdCnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k480p_COL_NUM</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="k">then</span>
+<span class="w">            </span><span class="n">AvalonSimpleMaster_0_avm_m0_read</span><span class="w">    </span><span class="o">&lt;=</span><span class="w">  </span><span class="sc">'0'</span><span class="p">;</span>
+        <span class="c1">-- Start reading when triggered by VGA timing (start of a line)</span>
+        <span class="k">elsif</span><span class="p">(</span><span class="n">wpAvalonRdReq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">'1'</span><span class="p">)</span><span class="k">then</span>
+            </span><span class="n">AvalonSimpleMaster_0_avm_m0_read</span><span class="w">    </span><span class="o">&lt;=</span><span class="w">  </span><span class="sc">'1'</span><span class="p">;</span>
+<span class="w">        </span><span class="k">end</span><span class="w"> </span><span class="k">if</span><span class="p">;</span>
+<span class="w">    </span><span class="k">end</span><span class="w"> </span><span class="k">if</span><span class="p">;</span>
+<span class="k">end</span><span class="w"> </span><span class="k">process</span><span class="p">;</span>
+</code></pre></div>
+
+                <hr />
+                <h2>2. Software Development</h2>
+                <p>The software running on Beaglebone's Linux must be configured to communicate with the FPGA. This consists of two main parts: GPMC pin configuration and Framebuffer driver implementation.</p>
+                <h3>2.1 GPMC Pin Configuration</h3>
+                <p>The pins of the AM335x processor can be configured in various ways. We need to configure Pin Multiplexing to enable GPMC functionality on the correct pins. This is typically done in the kernel's Board Support Package (BSP) file, which in this case is <code>board-am335xevm.c</code>.</p>
+                <p>The code below shows the pinmux configuration for the GPMC signals connected to the FPGA. This configures the data pins (<code>gpmc_ad0</code> to <code>gpmc_ad15</code>) and various control signal pins (<code>gpmc_csn1</code>, <code>gpmc_advn_ale</code>, etc.) to operate in GPMC mode.</p>
+                <div class="codehilite"><pre><span></span><code><span class="cm">/* From D:\hong\obsidian\hong\Myblog\board-am335xevm.c */</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">pinmux_config</span><span class="w"> </span><span class="n">fpga_gpmc_pin_mux</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{
+    </span><span class="p">{</span><span class="s">"gpmc_ad0.gpmc_ad0"</span><span class="p">,     </span><span class="n">OMAP_MUX_MODE0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">AM33XX_PIN_INPUT_PULLUP</span><span class="p">},</span>
+    <span class="p">{</span><span class="s">"gpmc_ad1.gpmc_ad1"</span><span class="p">,     </span><span class="n">OMAP_MUX_MODE0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">AM33XX_PIN_INPUT_PULLUP</span><span class="p">},</span>
+    <span class="p">{</span><span class="s">"gpmc_ad2.gpmc_ad2"</span><span class="p">,     </span><span class="n">OMAP_MUX_MODE0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">AM33XX_PIN_INPUT_PULLUP</span><span class="p">},</span>
+    <span class="p">{</span><span class="s">"gpmc_ad3.gpmc_ad3"</span><span class="p">,     </span><span class="n">OMAP_MUX_MODE0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">AM33XX_PIN_INPUT_PULLUP</span><span class="p">},</span>
+    <span class="p">{</span><span class="s">"gpmc_ad4.gpmc_ad4"</span><span class="p">,     </span><span class="n">OMAP_MUX_MODE0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">AM33XX_PIN_INPUT_PULLUP</span><span class="p">},</span>
+    <span class="p">{</span><span class="s">"gpmc_ad5.gpmc_ad5"</span><span class="p">,     </span><span class="n">OMAP_MUX_MODE0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">AM33XX_PIN_INPUT_PULLUP</span><span class="p">},</span>
+    <span class="p">{</span><span class="s">"gpmc_ad6.gpmc_ad6"</span><span class="p">,     </span><span class="n">OMAP_MUX_MODE0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">AM33XX_PIN_INPUT_PULLUP</span><span class="p">},</span>
+    <span class="p">{</span><span class="s">"gpmc_ad7.gpmc_ad7"</span><span class="p">,     </span><span class="n">OMAP_MUX_MODE0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">AM33XX_PIN_INPUT_PULLUP</span><span class="p">},</span>
+    <span class="p">{</span><span class="s">"gpmc_ad8.gpmc_ad8"</span><span class="p">,     </span><span class="n">OMAP_MUX_MODE0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">AM33XX_PIN_INPUT_PULLUP</span><span class="p">},</span>
+    <span class="p">{</span><span class="s">"gpmc_ad9.gpmc_ad9"</span><span class="p">,     </span><span class="n">OMAP_MUX_MODE0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">AM33XX_PIN_INPUT_PULLUP</span><span class="p">},</span>
+    <span class="p">{</span><span class="s">"gpmc_ad10.gpmc_ad10"</span><span class="p">,   </span><span class="n">OMAP_MUX_MODE0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">AM33XX_PIN_INPUT_PULLUP</span><span class="p">},</span>
+    <span class="p">{</span><span class="s">"gpmc_ad11.gpmc_ad11"</span><span class="p">,   </span><span class="n">OMAP_MUX_MODE0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">AM33XX_PIN_INPUT_PULLUP</span><span class="p">},</span>
+    <span class="p">{</span><span class="s">"gpmc_ad12.gpmc_ad12"</span><span class="p">,   </span><span class="n">OMAP_MUX_MODE0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">AM33XX_PIN_INPUT_PULLUP</span><span class="p">},</span>
+    <span class="p">{</span><span class="s">"gpmc_ad13.gpmc_ad13"</span><span class="p">,   </span><span class="n">OMAP_MUX_MODE0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">AM33XX_PIN_INPUT_PULLUP</span><span class="p">},</span>
+    <span class="p">{</span><span class="s">"gpmc_ad14.gpmc_ad14"</span><span class="p">,   </span><span class="n">OMAP_MUX_MODE0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">AM33XX_PIN_INPUT_PULLUP</span><span class="p">},</span>
+    <span class="p">{</span><span class="s">"gpmc_ad15.gpmc_ad15"</span><span class="p">,   </span><span class="n">OMAP_MUX_MODE0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">AM33XX_PIN_INPUT_PULLUP</span><span class="p">},</span>
+    <span class="p">{</span><span class="s">"gpmc_csn1.gpmc_csn1"</span><span class="p">,   </span><span class="n">OMAP_MUX_MODE0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">AM33XX_PULL_DISA</span><span class="p">},</span><span class="c1">//</span>
+    <span class="p">{</span><span class="s">"gpmc_advn_ale.gpmc_advn_ale"</span><span class="p">,  </span><span class="n">OMAP_MUX_MODE0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">AM33XX_PULL_DISA</span><span class="p">},</span><span class="c1">//</span>
+    <span class="p">{</span><span class="s">"gpmc_oen_ren.gpmc_oen_ren"</span><span class="p">,    </span><span class="n">OMAP_MUX_MODE0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">AM33XX_PULL_DISA</span><span class="p">},</span><span class="c1">//</span>
+    <span class="p">{</span><span class="s">"gpmc_wen.gpmc_wen"</span><span class="p">,     </span><span class="n">OMAP_MUX_MODE0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">AM33XX_PULL_DISA</span><span class="p">},</span><span class="c1">//</span>
+    <span class="p">{</span><span class="s">"gpmc_ben0_cle.gpmc_ben0_cle"</span><span class="p">,  </span><span class="n">OMAP_MUX_MODE0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">AM33XX_PULL_DISA</span><span class="p">},</span><span class="c1">//</span>
+    <span class="p">{</span><span class="s">"gpmc_ben1.gpmc_ben1"</span><span class="p">, </span><span class="n">OMAP_MUX_MODE0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">AM33XX_PULL_DISA</span><span class="p">},</span>
+    <span class="p">{</span><span class="s">"gpmc_clk.gpmc_clk"</span><span class="p">,    </span><span class="n">OMAP_MUX_MODE0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">AM33XX_PIN_INPUT</span><span class="p">},</span><span class="c1">//</span>
+    <span class="p">{</span><span class="nb">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">},</span>
+<span class="p">};</span>
+</code></pre></div>
+
+                <h3>2.2 Framebuffer Driver (Simple Framebuffer Driver)</h3>
+                <p>We will create a Framebuffer driver (<code>gpmcfb</code>) for Linux so that the OS and user applications can use our custom Framebuffer via standard device files (<code>/dev/fbX</code>). This allows applications to draw on the screen without needing to know the low-level hardware details.</p>
+                <p>The header file <code>gpmcfb.h</code> defines the main parameters of the driver:</p>
+                <div class="codehilite"><pre><span></span><code><span class="cm">/* From D:\hong\obsidian\hong\Myblog\gpmcfb.h */</span>
+
+<span class="cp">#define DRVNAME     "gpmcfb"</span>
+<span class="cp">#define WIDTH       720</span>
+<span class="cp">#define HEIGHT      480</span>
+<span class="cp">#define BPP     16</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">gpmcfb_par</span><span class="w"> </span><span class="p">{
+</span><span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">fb_info</span><span class="w"> </span><span class="o">*</span><span class="n">info</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">gpmc_adr</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+
+                <ul>
+                    <li><code>DRVNAME</code>: Name of the driver</li>
+                    <li><code>WIDTH</code>, <code>HEIGHT</code>, <code>BPP</code>: Specifies the screen resolution (720x480) and color depth (16 bits per pixel).</li>
+                    <li><code>gpmcfb_par</code>: Structure for storing device-specific information, including the GPMC address (<code>gpmc_adr</code>) mapped for the Framebuffer.</li>
+                </ul>
+                <p>The driver needs to implement key <code>file_operations</code>, most importantly <code>write</code>, which receives data from user-space and writes it to the hardware. For other operations (currently only fb_write is implemented), the <code>gpmcfb_write</code> function takes the received pixel data and writes it directly to the GPMC address mapped to the FPGA. The FPGA then forwards the data to SDRAM.</p>
+                <div class="codehilite"><pre><span></span><code><span class="cm">/* From gpmcfb.c (conceptual) */</span>
+<span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">fb_ops</span><span class="w"> </span><span class="n">gpmcfb_ops</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{
+</span><span class="w">    </span><span class="p">.</span><span class="n">owner</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">THIS_MODULE</span><span class="p">,</span>
+    <span class="c1">//.fb_read  = fb_sys_read,</span>
+    <span class="p">.</span><span class="n">fb_write</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">gpmcfb_write</span><span class="p">,</span>
+    <span class="p">.</span><span class="n">fb_fillrect</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">cfb_fillrect</span><span class="p">,</span>
+    <span class="p">.</span><span class="n">fb_copyarea</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">cfb_copyarea</span><span class="p">,</span>
+    <span class="p">.</span><span class="n">fb_imageblit</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">cfb_imageblit</span><span class="p">,</span>
+<span class="p">};</span>
+</code></pre></div>
+
+                <hr />
+                <h1>Note</h1>
+                <p>The example code for this project can be downloaded at:
+                    <a href="https://github.com/wichayen/geminiboard/tree/main/FPGA/BEAGLEBONE_HDMI_FB_8bit">https://github.com/wichayen/geminiboard/tree/main/FPGA/BEAGLEBONE_HDMI_FB_8bit</a></p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center p-4 mt-5" style="background-color: #f8f9fa;">
+        <div class="container">
+            <p class="mb-0">Contact: <a href="https://www.facebook.com/wichayen.hong" target="_blank">Wichayen Hong on Facebook</a> | <a href="https://github.com/wichayen" target="_blank">GitHub</a> | <a href="https://www.linkedin.com/in/wichayen-luangsopapan-404133202/" target="_blank">LinkedIn</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true, theme: 'default'});</script>
+
+</body>
+</html>

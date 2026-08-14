@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Hardware Control with MCP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { padding-top: 56px; }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 1rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+        }
+        pre { background-color: #f8f9fa; padding: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        blockquote {
+            border-left: 4px solid #ccc;
+            padding-left: 1rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">FPGATHAILAND</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAries" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Aries Board
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAries">
+                            <li><a class="dropdown-item" href="AriesBoard_ep1_en.html">Part 1: Project Design</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep2_en.html">Part 2: Version A.1</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep3_en.html">Part 3: FPGA Design</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep4_en.html">Part 4: PCI driver for linux</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep5_en.html">Part 5: PCI driver for windows</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPynq" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            PYNQ-Z2
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownPynq">
+                            <li><a class="dropdown-item" href="pynq-z2-ai_en.html">AI (DPU)</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-hls_en.html">HLS</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-modelsim_en.html">Modelsim</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-vivado_en.html">Vivado</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1_en.html">LVGL Part 1</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2_en.html">LVGL Part 2</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvlg_special_ep_en.html">Special Episode: AI Agent</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAI" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            AI
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAI">
+                            <li><a class="dropdown-item" href="AI_hardware_en.html">AI Hardware Control with MCP</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownTools" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Tools
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownTools">
+                            <li><a class="dropdown-item" href="Sigasi_en.html">Sigasi for VS Code</a></li>
+                            <li><a class="dropdown-item" href="UVVM_en.html">UVVM</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="EZUSB_FPGA_en.html">USB</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="GeminiBoard_Beaglebone_Frambuffer_en.html">GeminiBoard</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="AI_hardware.html">TH</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto article-content">
+                <h1>AI Hardware Control with MCP</h1>
+                <hr>
+                <h1>Overview</h1>
+                <p>The MCP (Model Context Protocol) has been out for a while now. I thought it would be interesting to connect it to hardware, so I decided to experiment with it. I will keep it simple, just allowing the AI to command turning lights on/off.</p>
+                <p>For example, type the command below to the AI:<br><strong>Prompt:</strong></p>
+                <pre><code>Turn on blue, red, green, yellow lights, loop 3 times</code></pre>
+                <p>The result will be as shown in the YouTube video below:</p>
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/pnmmWHnXl_I" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <h3>System Architecture</h3>
+                <div class="mermaid">
+graph TD
+    C1[Claude]
+    subgraph "Windows PC"
+        W1[Claude desktop app]
+        W2[MCP server]
+        W3[USB host]
+    end
+    subgraph "USB device"
+        subgraph "ESP32"
+            E1[CPU]
+            E2[USB device]
+            E3[SPI]
+        end
+        U2[LCD]
+    end
+    C1 &lt;--&gt; W1
+    W2 &lt;--&gt; W3
+    W3 &lt;--&gt; E2
+    E1 &lt;--&gt; E2
+    E1 &lt;--&gt; E3
+    E3 --&gt; U2
+                </div>
+                <hr>
+                <h1>Steps</h1>
+                <h2>1. Create ESP32 USB Device with Arduino</h2>
+                <p>First, we will program the ESP32-S3 to act as a Vendor-Specific USB Device using the TinyUSB library, which allows the computer to recognize the ESP32 as a custom USB device. This code will handle receiving commands via USB to control the display on the connected TFT ILI9488 screen.</p>
+                <p><strong>Caution:</strong> In Arduino IDE, you must set <code>Tools &gt; USB CDC On Boot</code> to <code>"Disabled"</code> and <code>Tools &gt; USB Mode</code> to <code>"USB-OTG (TinyUSB)"</code>.</p>
+                <h3>Code: vendor_generic_inout_ili9488.ino</h3>
+                <pre><code class="language-cpp">// vendor_generic_inout_ili9488.ino (showing only critical parts)
+
+// =============================================================================
+// LIBRARIES & GLOBAL OBJECTS
+// =============================================================================
+#include &lt;TFT_eSPI.h&gt;
+#include "USB.h"
+#include "tusb.h"
+
+TFT_eSPI tft = TFT_eSPI();
+
+// =============================================================================
+// USB DEVICE CONFIGURATION
+// =============================================================================
+// --- Custom VID/PID ---
+#define MY_VID 0xCAFE
+#define MY_PID 0x0300
+
+// --- USB Command Protocol ---
+#define CMD_UPDATE_STATUS 0x31 // Command to update the LED/color status
+
+// ... (USB Descriptors and Callbacks are omitted) ...
+
+// =============================================================================
+// APPLICATION LOGIC & COMMAND HANDLING
+// =============================================================================
+
+// This function is called when data is sent from the computer via USB
+void handleUsbCommand(uint8_t* buf, uint32_t count) {
+  // ... (Echo data back for debugging) ...
+
+  // Parse command and sent data
+  uint8_t command = buf[0];
+
+  switch (command) {
+    case CMD_UPDATE_STATUS:
+      // buf[10] onwards is the status of each LED color (0 or 1)
+      updateStatusRects(&buf[10]);
+      break;
+
+    // ... (other commands) ...
+  }
+}
+
+// Function to draw color rectangles on TFT screen according to received data
+void updateStatusRects(const uint8_t* status_bytes) {
+    const int RECT_X = 160 - 50;
+    const int RECT_W = 100;
+    const int RECT_H = 100;
+
+    // Draw rectangles based on received status: if 1 show color, if 0 show black
+    tft.fillRect(RECT_X, 50,  RECT_W, RECT_H, status_bytes[0] ? TFT_BLUE   : TFT_BLACK);
+    tft.fillRect(RECT_X, 150, RECT_W, RECT_H, status_bytes[1] ? TFT_RED    : TFT_BLACK);
+    tft.fillRect(RECT_X, 250, RECT_W, RECT_H, status_bytes[2] ? TFT_GREEN  : TFT_BLACK);
+    tft.fillRect(RECT_X, 350, RECT_W, RECT_H, status_bytes[3] ? TFT_YELLOW : TFT_BLACK);
+}
+
+// =============================================================================
+// MAIN SETUP & LOOP
+// =============================================================================
+
+void setup() {
+  // ... (Setup Serial, TFT) ...
+
+  // --- Important: Set USB Mode in Arduino IDE ---
+  // Tools -> USB CDC On Boot: "Disabled"
+  // Tools -> USB Mode: "USB-OTG (TinyUSB)"
+
+  // Start USB Stack
+  USB.begin();
+
+  // ... (Show initial screen display) ...
+}
+
+void loop() {
+  // All USB communication is handled via callbacks (Event-driven)
+  // Main loop doesn't need to do much
+  delay(10);
+}
+</code></pre>
+                <h2>2. Test USB Interface on Windows PC</h2>
+                <p>After uploading the code to the ESP32, we must make Windows recognize our USB device first.</p>
+                <ul>
+                    <li><strong>libusb:</strong> A library that allows programs on the PC to communicate with USB devices directly.</li>
+                    <li><strong>Zadig (&lt;a href="https://zadig.akeo.ie/">https://zadig.akeo.ie/</a>):</strong> Since our USB device is not certified, we must use Zadig to install the <code>libusb</code> driver for our device (with VID/PID <code>CAFE:0300</code>) so that Windows can communicate with it.</li>
+                    <li><strong>simpleio.py:</strong> A Python script that uses <code>pyusb</code> (which runs on top of <code>libusb</code>) to directly test sending data to our ESP32. This confirms that the USB connection works correctly before moving to the next step.</li>
+                </ul>
+                <h3>Code: simpleio.py</h3>
+                <p>This script will send byte data to the ESP32 to control the colors of the LEDs displayed on the TFT screen.<br><strong>Note:</strong> In the code, the path to <code>libusb-1.0.dll</code> is hardcoded. If you installed it elsewhere, do not forget to modify the path accordingly.</p>
+                <pre><code class="language-python">import usb.core
+import usb.backend.libusb1
+import usb.util
+import binascii
+import time
+
+def usb_led(b, r, g, y):
+    b = 0x1 if b != 0 else 0x0
+    r = 0x1 if r != 0 else 0x0
+    g = 0x1 if g != 0 else 0x0
+    y = 0x1 if y != 0 else 0x0    
+    
+    # Specify the path to the libusb-1.0.dll
+    # *** แก้ไข path ตรงนี้ให้ตรงกับที่ที่คุณติดตั้ง libusb ไว้ ***
+    usb.core.find(backend=usb.backend.libusb1.get_backend(find_library=lambda x: "D:/hong/github/AI_experimental/usb_driver/libusb-1.0.26-binaries/libusb-1.0.26-binaries/VS2015-x64/dll/libusb-1.0.dll"))
+
+    # Find the USB device based on its vendor and product IDs
+    vendor_id = 0xCAFE  # Device's vendor ID
+    product_id = 0x0300  # Device's product ID
+
+    # Find the device
+    device = usb.core.find(idVendor=vendor_id, idProduct=product_id)
+    if device is None:
+        raise ValueError('Device not found')
+
+    # set the active configuration. With no arguments, the first
+    # configuration will be the active one
+    device.set_configuration()
+
+    # Find the bulk endpoints for data in and data out
+    endpoint_out = 0x01  # Endpoint address for data out
+    endpoint_in = 0x81   # Endpoint address for data in
+
+    # [Command ID, x, y, ..., payload]
+    data_to_send = bytes([0x31, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, b, r, g, y])
+    device.write(endpoint_out, data_to_send)
+    
+    # Clean up
+    device.reset()
+</code></pre>
+                <h2>3. MCP Server</h2>
+                <p>In this step, we will create a server that serves as a "tool" for the AI (Claude) using <code>FastMCP</code>.</p>
+                <ul>
+                    <li><strong>uv:</strong> A fast Python package manager. We will use <code>uv</code> to create a virtual environment and install necessary libraries.
+                        <ul>
+                            <li><code>uv init mcp_server</code>: Create a new <code>uv</code> project</li>
+                            <li><code>uv add "mcp[cli]"</code>: Install the <code>mcp</code> library</li>
+                            <li><code>uv add pyusb</code>: Install <code>pyusb</code> to allow Python to communicate with the USB device</li>
+                        </ul>
+                    </li>
+                    <li><strong>server.py:</strong> The core of this step. This script creates the MCP server and defines a "tool" named <code>led_control</code> which the AI can invoke. When this tool is called, it calls the <code>usb_led</code> function in <code>simpleio.py</code> to send commands to the ESP32.</li>
+                </ul>
+                <h3>Code: server.py</h3>
+                <pre><code class="language-python">"""
+MCP server version of agent.py
+Implements the same tools (calculator, LED control, time, multiply)
+"""
+import json
+import datetime
+from typing import Optional
+from mcp.server.fastmcp import FastMCP
+
+import os
+from simpleio import usb_led
+    
+# --- Initialize MCP server ---
+mcp = FastMCP("general-assistant-mcp")
+
+# --- Tool: LED control ---
+@mcp.tool()
+def led_control(
+    blue: Optional[int] = None,
+    red: Optional[int] = None,
+    green: Optional[int] = None,
+    yellow: Optional[int] = None,
+) -> str:
+    """
+    Turn LEDs on/off. Provide 1 for ON, 0 for OFF.
+    Example: led_control(red=1, blue=0)
+    """
+    print(f"
+user control led -> blue:{blue}, red:{red}, green:{green}, yellow:{yellow}")
+    # Call the usb_led function, defaulting to 0 if a color is not specified
+    usb_led(blue or 0, red or 0, green or 0, yellow or 0)
+    led = {"blue": blue, "red": red, "green": green, "yellow": yellow}
+    return json.dumps(led)
+
+# --- Resource: Info ---
+@mcp.resource("info://agent")
+def agent_info() -> str:
+    """Provide general information about this agent MCP server."""
+    return (
+        "General Assistant MCP Server — can calculate, control LEDs, "
+        "get current time, and multiply numbers."
+    )
+
+# --- Main entry ---
+if __name__ == "__main__":
+    mcp.run()
+</code></pre>
+                <h2>4. Claude Desktop Settings</h2>
+                <p>Finally, we must configure the Claude Desktop app to recognize our MCP server by editing the <code>claude_desktop_config.json</code> file located at <code>%APPDATA%\Claude</code> (or <code>...\AppData\Roaming\Claude</code>).</p>
+                <p>We will add a new object to <code>mcpServers</code>, naming it <code>usb_device_bot</code>, and specify the command to run our server.</p>
+                <h3>claude_desktop_config.json</h3>
+                <pre><code class="language-json">{
+    "mcpServers": {
+        "usb_device_bot": {
+            "command": "uv",
+            "args": [
+                "--directory",
+                "D:/hong/mcp_server/usb_device_bot",
+                "run",
+                "server.py"
+            ]
+        }
+    }
+}
+</code></pre>
+                <ul>
+                    <li><strong><code>command</code></strong>: The main command to run, in this case, <code>uv</code>.</li>
+                    <li><strong><code>args</code></strong>: Arguments to pass to the <code>command</code>.
+                        <ul>
+                            <li><code>"--directory", "D:/hong/mcp_server/usb_device_bot"</code>: Tells <code>uv</code> to work in the directory containing <code>server.py</code> and <code>simpleio.py</code>.</li>
+                            <li><code>"run", "server.py"</code>: Instructs <code>uv</code> to run the <code>server.py</code> file.</li>
+                        </ul>
+                    </li>
+                </ul>
+                <p>Once all settings are configured, when we enable the <code>usb_device_bot</code> tool in Claude, it will run our MCP server and allow Claude to invoke the <code>led_control</code> function we created.</p>
+                <p>Note: You can check whether Claude recognizes the MCP from the settings menu.</p>
+                <hr>
+                <h1>Additional Details</h1>
+                <p>In addition to natural language commands, if we type a clear command, such as writing it as a Mermaid flowchart, it seems to make it even easier for the AI to process.</p>
+                <p><strong>Prompt:</strong></p>
+                <pre><code>please do below flowchart
+<div class="mermaid">
+flowchart TD
+    A[Start, n = 0] --&gt; B[Turn ON red LED]
+    B --&gt; C[Turn OFF red LED]
+    C --&gt; C1[n = n + 1]
+    C1 --&gt; D{n == 3?}
+    D -- No --&gt; B
+    D -- Yes --&gt; E[End]
+</div></code></pre>
+                <p>Below is the flowchart:</p>
+                <div class="mermaid">
+flowchart TD
+    A[Start, n = 0] --&gt; B[Turn ON red LED]
+    B --&gt; C[Turn OFF red LED]
+    C --&gt; C1[n = n + 1]
+    C1 --&gt; D{n == 3?}
+    D -- No --&gt; B
+    D -- Yes --&gt; E[End]
+                </div>
+                <p>Result: https://youtu.be/IZkFcYTdxvw</p>
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/IZkFcYTdxvw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <hr>
+                <p>All example code can be downloaded at:<br><a href="https://github.com/wichayen/AI_experimental">https://github.com/wichayen/AI_experimental</a></p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center p-4 mt-5" style="background-color: #f8f9fa;">
+        <div class="container">
+            <p class="mb-0">Contact: <a href="https://www.facebook.com/wichayen.hong" target="_blank">Wichayen Hong on Facebook</a> | <a href="https://github.com/wichayen" target="_blank">GitHub</a> | <a href="https://www.linkedin.com/in/wichayen-luangsopapan-404133202/" target="_blank">LinkedIn</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true, theme: 'default'});</script>
+</body>
+</html>

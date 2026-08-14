@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sigasi: The Ultimate VS Code Extension for VHDL/Verilog Developers</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { padding-top: 56px; }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 1rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+        }
+        pre { background-color: #f8f9fa; padding: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        blockquote {
+            border-left: 4px solid #ccc;
+            padding-left: 1rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">FPGATHAILAND</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAries" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Aries Board
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAries">
+                            <li><a class="dropdown-item" href="AriesBoard_ep1_en.html">Part 1: Project Design</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep2_en.html">Part 2: Version A.1</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep3_en.html">Part 3: FPGA Design</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep4_en.html">Part 4: PCI driver for linux</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep5_en.html">Part 5: PCI driver for windows</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPynq" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            PYNQ-Z2
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownPynq">
+                            <li><a class="dropdown-item" href="pynq-z2-ai_en.html">AI (DPU)</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-hls_en.html">HLS</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-modelsim_en.html">Modelsim</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-vivado_en.html">Vivado</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1_en.html">LVGL Part 1</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2_en.html">LVGL Part 2</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvlg_special_ep_en.html">Special Episode: AI Agent</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAI" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            AI
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAI">
+                            <li><a class="dropdown-item" href="AI_hardware_en.html">AI Hardware Control with MCP</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownTools" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Tools
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownTools">
+                            <li><a class="dropdown-item" href="Sigasi_en.html">Sigasi for VS Code</a></li>
+                            <li><a class="dropdown-item" href="UVVM_en.html">UVVM</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="EZUSB_FPGA_en.html">USB</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="GeminiBoard_Beaglebone_Frambuffer_en.html">GeminiBoard</a>
+                    </li>
+                
+                    <li class="nav-item"><a class="nav-link" href="Sigasi.html">TH</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto article-content">
+                <h1>Sigasi: The Ultimate VS Code Extension for VHDL/Verilog Developers</h1>
+<p>For hardware designers who use VHDL or Verilog, the challenges of writing and verifying complex code are well known. Today, I'll introduce a tool that will make your life much easier: <strong>Sigasi</strong>, an extension for Visual Studio Code.</p>
+<p>Simply put, Sigasi is a static analysis and linting tool that helps check for errors, find potential issues, and display the structure of VHDL/Verilog/SystemVerilog code in real-time. This allows you to spot and fix problems instantly as you write code, without waiting for the compilation step.</p>
+<hr>
+<h1>Installation</h1>
+<ol>
+<li>Open Visual Studio Code and go to the Extensions view (Ctrl+Shift+X).</li>
+<li>Search for <code>sigasi</code> and click Install.</li>
+</ol>
+<p><img src="Sigasi_files/1.png" alt="1.png" class="img-fluid mb-3"></p>
+<ol start="3">
+<li>After installation, open the Command Palette (Ctrl+Shift+P) and run <code>Sigasi: Enable Talkback</code> and <code>Sigasi: Use Community Edition</code> to activate the free version.</li>
+</ol>
+<blockquote><p><strong>Note:</strong> Sigasi is free for non-commercial use.</p></blockquote>
+<p><img src="Sigasi_files/2.png" alt="2.png" class="img-fluid mb-3"></p>
+<hr>
+<h1>Creating a Project</h1>
+<p>To allow Sigasi to recognize all files in your project, we need to create a project first.</p>
+<ol>
+<li>Open your project folder via <code>File -> Open Folder...</code></li>
+<li>Click the Sigasi icon on the left sidebar and select <strong>Create or Open Project</strong>.</li>
+</ol>
+<p><img src="Sigasi_files/3.png" alt="3.png" class="img-fluid mb-3"></p>
+<ol start="3">
+<li>Then, right-click our VHDL file or folder and select <strong>Add to Library -> work</strong>. Sigasi will start analyzing all files inside the <code>work</code> library.</li>
+</ol>
+<p><img src="Sigasi_files/4.png" alt="4.png" class="img-fluid mb-3"></p>
+<p><img src="Sigasi_files/5.png" alt="5.png" class="img-fluid mb-3"></p>
+<hr>
+<h1>Key Features</h1>
+<h2>1. Design Hierarchy</h2>
+<p>You can view the entire design hierarchy by navigating to your top-level file and selecting <strong>Set as Design Hierarchy Top</strong>. Sigasi will then display the <code>Design Hierarchy</code>, allowing you to easily visualize the structure and browse through different levels of your design.</p>
+<p><img src="Sigasi_files/6.png" alt="6.png" class="img-fluid mb-3"></p>
+<h2>2. Block Diagram View</h2>
+<p>This feature automatically generates a block diagram from your VHDL code, visualizing ports and internal signal connections within the entity. You can open it by clicking the <strong>Open Block Diagram</strong> icon in the top right corner of the editor.</p>
+<p><img src="Sigasi_files/7.png" alt="7.png" class="img-fluid mb-3"></p>
+<p><img src="Sigasi_files/8.png" alt="8.png" class="img-fluid mb-3"></p>
+<h2>3. Dependency View</h2>
+<p>If you want to see how files in the project depend on each other and which files reference others, you can open the <strong>Open Dependency Diagram</strong> to view a relationship map of all files.</p>
+<p><img src="Sigasi_files/9.png" alt="9.png" class="img-fluid mb-3"></p>
+<h2>4. State Machines View</h2>
+<p>For state machine designers, this feature is incredibly useful. Sigasi can extract your state machine code and visualize it as a state diagram, making logic verification and debugging much easier. Just click <strong>Open State Machines Diagram</strong>.</p>
+<p><img src="Sigasi_files/10.png" alt="10.png" class="img-fluid mb-3"></p>
+<h2>5. Code Check (VHDL Linting)</h2>
+<p>This is a key highlight. You can open the <strong>Problems</strong> view (shortcut <code>Ctrl+Shift+M</code>) to see all linting messages and alerts Sigasi has detected in your code.</p>
+<p><img src="Sigasi_files/11.png" alt="11.png" class="img-fluid mb-3"></p>
+<p>Sigasi categorizes issue severity into four levels: <code>Error</code>, <code>Warning</code>, <code>Info</code>, and <code>Ignore</code>, all of which are customizable.</p>
+<p><strong>Example 1: Unused Declaration</strong>
+If you declare a constant, signal, or variable but never use it, Sigasi will flag it with a <code>Warning</code>.</p>
+<p><img src="Sigasi_files/12.png" alt="12.png" class="img-fluid mb-3"></p>
+<p>You can customize the severity of this rule. For example, if you consider unused declarations critical, you can set it to trigger an <code>Error</code> instead.</p>
+<p><img src="Sigasi_files/13.png" alt="13.png" class="img-fluid mb-3"></p>
+<p><img src="Sigasi_files/14.png" alt="14.png" class="img-fluid mb-3"></p>
+<p>Furthermore, clicking on the issue brings up <strong>Quick Fix</strong> options:</p>
+<ul>
+<li><strong>Remove:</strong> Deletes the unused code.</li>
+<li><strong>Suppress:</strong> Keeps the code but adds a <code>-- @suppress</code> comment to silence future alerts for this issue.</li>
+<li><strong>Configure rule:</strong> Navigates to settings to configure the specific rule.</li>
+</ul>
+<p><img src="Sigasi_files/15.png" alt="15.png" class="img-fluid mb-3"></p>
+<p>The image below shows an example after applying a <code>Suppress</code> fix.</p>
+<p><img src="Sigasi_files/16.png" alt="16.png" class="img-fluid mb-3"></p>
+<p><strong>Example 2: Incomplete Sensitivity List (Rule 72)</strong>
+This is a classic and common mistake: forgetting to include signals that affect the process in the sensitivity list. This can lead to simulation/synthesis mismatches. Sigasi helps detect this immediately.
+In the example below, the code uses <code>RST_L</code> in the process but omits it from the sensitivity list, causing Sigasi to trigger an alert.</p>
+<p><img src="Sigasi_files/17.png" alt="17.png" class="img-fluid mb-3"></p>
+<p><strong>Example 3: Deep Nesting (Rule 239)</strong>
+Nesting <code>if-else</code> or <code>case</code> statements too deeply will result in synthesized logic with high path delays, potentially slowing down clock frequency. By default, Sigasi sets the limit to 5 levels; writing code deeper than that triggers a warning.</p>
+<p><img src="Sigasi_files/18.png" alt="18.png" class="img-fluid mb-3"></p>
+<p>You can view the full list of rules used by Sigasi for linting here: <a href="https://www.sigasi.com/legacy/eclipse/linting-vhdl/" target="_blank">Sigasi VHDL Linting Rules</a></p>
+<hr>
+<h1>Note</h1>
+<p>Please note again that this extension is the <strong>Community Edition</strong>, which is free for personal use and education only (non-commercial use). If you plan to use it in a professional environment, please consult your company regarding commercial licensing.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center p-4 mt-5" style="background-color: #f8f9fa;">
+        <div class="container">
+            <p class="mb-0">Contact: <a href="https://www.facebook.com/wichayen.hong" target="_blank">Wichayen Hong on Facebook</a> | <a href="https://github.com/wichayen" target="_blank">GitHub</a> | <a href="https://www.linkedin.com/in/wichayen-luangsopapan-404133202/" target="_blank">LinkedIn</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true, theme: 'default'});</script>
+</body>
+</html>

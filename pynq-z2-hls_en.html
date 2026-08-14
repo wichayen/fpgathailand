@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HLS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { padding-top: 56px; }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 1rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+        }
+        pre { background-color: #f8f9fa; padding: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        blockquote {
+            border-left: 4px solid #ccc;
+            padding-left: 1rem;
+            color: #666;
+        }
+        /* Styles for code blocks from MS Word */
+        p.MsoNormal, li.MsoNormal, div.MsoNormal {
+            margin-bottom: 0.4rem;
+            line-height: 1.25;
+            font-size: 1rem;
+        }
+        /* Normalize spacing inside WordSection content to align with site style */
+        .WordSection1 p {
+            margin-bottom: 0.4rem;
+            line-height: 1.25;
+            font-size: 1rem;
+        }
+    </style>
+  </head>
+  <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">FPGATHAILAND</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">Home</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAries" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Aries Board
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownAries">
+                                <li><a class="dropdown-item" href="AriesBoard_ep1_en.html">Episode 1: Project Design</a></li>
+                                <li><a class="dropdown-item" href="AriesBoard_ep2_en.html">Episode 2: Version A.1</a></li>
+                                <li><a class="dropdown-item" href="AriesBoard_ep3_en.html">Episode 3: FPGA Design</a></li>
+                                <li><a class="dropdown-item" href="AriesBoard_ep4_en.html">Episode 4: PCI driver for linux</a></li>
+                                <li><a class="dropdown-item" href="AriesBoard_ep5_en.html">Episode 5: PCI driver for windows</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPynq" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                PYNQ-Z2
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownPynq">
+                                <li><a class="dropdown-item" href="pynq-z2-ai_en.html">AI (DPU)</a></li>
+                                <li><a class="dropdown-item" href="pynq-z2-hls_en.html">HLS</a></li>
+                                <li><a class="dropdown-item" href="pynq-z2-modelsim_en.html">Modelsim</a></li>
+                                <li><a class="dropdown-item" href="pynq-z2-vivado_en.html">Vivado</a></li>
+                                <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1_en.html">LVGL Episode 1</a></li>
+                                <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2_en.html">LVGL Episode 2</a></li>
+                                <li><a class="dropdown-item" href="pynq_z2_lvlg_special_ep_en.html">Special Episode: AI Agent</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAI" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                AI
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownAI">
+                                <li><a class="dropdown-item" href="AI_hardware_en.html">AI Hardware Control with MCP</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownTools" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Tools
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownTools">
+                                <li><a class="dropdown-item" href="Sigasi_en.html">Sigasi for VS Code</a></li>
+                                <li><a class="dropdown-item" href="UVVM_en.html">UVVM</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="EZUSB_FPGA_en.html">USB</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="GeminiBoard_Beaglebone_Frambuffer_en.html">GeminiBoard</a>
+                        </li>
+                    
+                        <li class="nav-item"><a class="nav-link" href="pynq-z2-hls_th.html">TH</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-lg-8 mx-auto article-content">
+          <h1>HLS</h1>
+          <div class="WordSection1" style="layout-grid:18.0pt">
+            <h1 style="margin-left:21.25pt;text-align:left;text-indent:-21.25pt"
+              align="left"><a name="_Toc208827142"><span style="">1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;
+                    </span></span><span style="">HLS</span></a></h1>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
+            <h2 style="margin-left:28.35pt;text-align:left;text-indent:-28.35pt"
+              align="left"><a name="_Toc208827143"><span style="">1.1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+                    </span></span><span style="">Overview</span></a></h2>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">HLS (High-Level Synthesis) is a method for developing FPGA logic using the C language. Designs created with HLS can be exported as IP and integrated into Vivado.</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image001.png" alt="A computer screen shot of a computer
+Description automatically generated" height="254" width="624"></p>
+            &nbsp;
+            <br>
+            <p class="MsoNormal"><span style="">Example:</span></p>
+            <p class="MsoNormal"><span style="">For example, consider the following loop calculation (in C):</span></p>
+            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image002.png" alt="A computer screen shot of a program code
+Description automatically generated" height="197" width="253"></p>
+            <p class="MsoNormal"><span style="">&nbsp;</span></p>
+            <p class="MsoNormal"><span style="">Representing the loop calculation from the C code as a block diagram looks like this:</span></p>
+            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image003.png" height="192" width="442"></p>
+            <p class="MsoNormal"><span style="">&nbsp;</span></p>
+            <p class="MsoNormal"><span style="">Usually, to minimize FPGA logic usage, only one multiplier circuit is used and reused (shared):</span></p>
+            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image004.png" height="231" width="422"></p>
+            <span style="font-size:10.5pt;"><br style="page-break-before:always"
+                clear="all">
+            </span>
+            <p class="MsoNormal"><span style="">When converting C to HDL with HLS, the generated VHDL code looks like this:</span></p>
+            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image005.png" alt="A screenshot of a computer code
+Description automatically generated" height="166" width="280"></p>
+            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image006.png" alt="A text on a white background
+Description automatically generated" height="76" width="286"></p>
+            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image007.png" height="21" width="361"></p>
+            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image008.png" alt="A screenshot of a computer program
+Description automatically generated" height="150" width="433"></p>
+            <p class="MsoNormal"><span style="">&nbsp;</span></p>
+            <p class="MsoNormal"><span style="">And we can also check the FPGA logic utilization rate:</span></p>
+            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image009.png" height="47" width="624"></p>
+            <p class="MsoNormal"><span style="">Latency refers to the number of cycles it takes for the output to be produced after the computation begins (i.e. after xxx cycles).</span></p>
+            <p class="MsoNormal"><span style="">&nbsp;</span><span style="font-size:10.5pt;"></span><br
+                style="page-break-before:always" clear="all">
+              <span style="font-size:10.5pt;">
+              </span>
+            </p>
+            <h2 style=" text-align: left; margin-left:42.0pt;text-align:left;text-indent:-21.0pt"><a
+                name="_Toc208827144"><span style="">1.2.</span><span style="">Creating IP with HLS</span></a></h2>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">After creating an HLS project, the basic development flow is as follows:</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">1. C SIMULATION: Simulation at the C level, verified using a C testbench.</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">2. C SYNTHESIS: Synthesizing the C code into HDL.</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">3. C/RTL COSIMULATION: Co-simulation at the HDL level (verifying output waveforms using Vivado).</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">4. IMPLEMENTATION: Packaging the synthesized HDL as an IP in a zip file format.</span></p>
+            <br>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
+                First, to create an HLS project, click File -> New Project</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image010.png" alt="A screenshot of a computer
+Description automatically generated" height="213" width="356"></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Set the project location and select the FPGA board model.</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image011.png" alt="A screenshot of a computer
+Description automatically generated" height="164" width="343"></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image012.png" alt="A screenshot of a computer
+Description automatically generated" height="367" width="502"></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Right-click on Source and select Add Source File to add the C Source (the file to be converted to HDL). In this example, we will add SWtoLED.cpp. This test is a simple multiplication, where we prepare 2 switches (2 bits), multiply them, and display the result on the LEDs.</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image013.png" alt="A screenshot of a computer
+Description automatically generated" height="183" width="264"></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image014.png" alt="A screenshot of a computer program
+Description automatically generated" height="110" width="484"></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Right-click on Test Bench and select Add Source File to add the Test Bench (the C testbench used for verification). Here we will add SWtoLED_tb.cpp.</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image015.png" alt="A screenshot of a computer program
+Description automatically generated" height="196" width="264"></p>
+            <span style="font-size:10.5pt;"><br style="page-break-before:always"
+                clear="all">
+            </span>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;
+                Now, the contents inside the project look like this:</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image016.png" alt="A screenshot of a computer
+Description automatically generated" height="230" width="379"></p>
+            <span style="font-size:10.5pt;"><br style="page-break-before:always"
+                clear="all">
+            </span>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;
+                Then, click Project -> Project Settings -> Synthesis, and choose the C Source (the top function to be synthesized). In this case, we select swtoled.</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image017.png" alt="A screenshot of a computer
+Description automatically generated" height="71" width="237"></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image018.png" alt="A screenshot of a computer
+Description automatically generated" height="377" width="476"></p>
+            <br>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;‐
+                The Flow Navigator contains 4 menus:</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image019.png" alt="A screenshot of a computer
+Description automatically generated" height="231" width="261"></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
+                Click C SIMULATION -> Run C Simulation to simulate at the C level. The C testbench (SWtoLED_tb.cpp) will generate test cases to simulate the design's behavior.</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image025.png" alt="A screenshot of a computer program
+Description automatically generated" height="466" width="624"></p>
+            <span style="font-size:10.5pt;"></span><br>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
+                Click C SYNTHESIS -> Run C Synthesis and set the target clock period for operation.</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image027.png" alt="A screenshot of a computer
+Description automatically generated" height="202" width="282"></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
+                Once finished, the synthesized HDL files will display the FPGA logic utilization report and the timing report.</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image030.png" alt="A screenshot of a computer
+Description automatically generated" height="279" width="624"></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">The Uncertainty value acts as a timing margin.<br>
+              </span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image031.png" alt="A diagram of a period
+Description automatically generated" height="124" width="345"></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
+                Click C/RTL COSIMULATION -> Run Cosimulation</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Dump
+                Trace：port</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Set Wave Debug: Enabled</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image034.png" alt="A screenshot of a computer
+Description automatically generated" height="446" width="339"></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Then, Vivado will open and display the simulation waveforms.</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image035.png" alt="A screenshot of a computer
+Description automatically generated" height="237" width="624"></p>
+            <span style="font-size:10.5pt;"><br style="page-break-before:always"
+                clear="all">
+            </span>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
+                Click IMPLEMENTATION -> Export RTL</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Set Export Format to "Vivado IP"</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image036.png" alt="A screenshot of a computer
+Description automatically generated" height="384" width="323"></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Upon completion, you will get an export.zip file, which can be imported into Vivado as a custom IP.</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image037.png" alt="A screenshot of a computer program
+Description automatically generated" height="178" width="414"></p>
+            <span style="font-size:10.5pt;"><br style="page-break-before:always"
+                clear="all">
+            </span>
+            <p class="MsoNormal"><span style="">* Actually, you can reference the ip directory directly without needing export.zip.</span></p>
+            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image038.png" alt="A screenshot of a computer
+Description automatically generated" height="344" width="399"><span style="font-size:10.5pt;"></span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
+            <h2 style="margin-left:28.35pt;text-align:left;text-indent:-28.35pt"
+              align="left"><a name="_Toc208827145"><span style="">1.3.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+                    </span></span><span style="">Testing the HLS-Generated IP</span></a></h2>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
+            <p class="MsoListParagraph" style="margin-left:.25in;text-align:left;
+text-indent:-.25in" align="left"><span style="">-<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;
+                  </span></span><span style="">Extract the file obtained from HLS (Export.zip) to your desired location.</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image039.png" alt="A screenshot of a computer
+Description automatically generated" height="196" width="392"></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
+                In Vivado's IP Catalog, click Add Repository and add the HLS-generated IP.</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image040.png" alt="A screenshot of a computer
+Description automatically generated" height="266" width="392"></p>
+            <span style="font-size:10.5pt;"><br style="page-break-before:always"
+                clear="all">
+            </span>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
+                The added IP will be shown here:</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image042.png" alt="A screenshot of a computer
+Description automatically generated" height="250" width="397"></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
+                Add the IP to the Vivado Block Design, connect it to external switches and LEDs, then compile in Vivado to generate the bitstream.</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image043.png" height="53" width="624"></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image044.png" alt="A screenshot of a computer program
+Description automatically generated" height="212" width="361"></p>
+            <br>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
+                Testing on the real device</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image045.png" alt="A screenshot of a computer program
+Description automatically generated" height="110" width="484"></p>
+            <p class="MsoNormal" style="text-align:center" align="center"><span
+                style="">&nbsp;</span></p>
+            <table class="MsoTableGrid" style="border-collapse:collapse;border:none"
+              border="1" cellpadding="0" cellspacing="0">
+              <tbody>
+                <tr>
+                  <td style="width:233.75pt;border:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt" valign="top" width="312">
+                    <p class="MsoNormal" style="text-align:center" align="center"><span
+                        style="">1*1 = 1</span></p>
+                  </td>
+                  <td style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-left:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="312">
+                    <p class="MsoNormal" style="text-align:center" align="center"><span
+                        style="">1*2=2</span></p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="312">
+                    <p class="MsoNormal" style="text-align:center" align="center"><img
+                        class="img-fluid rounded mx-auto d-block" id="Picture 27"
+                        src="pynq-z2-hls_th_files/image046.jpg" alt="A hand holding a red circuit board
+Description automatically generated" height="203" width="271"></p>
+                  </td>
+                  <td style="width:233.75pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+                    valign="top" width="312">
+                    <p class="MsoNormal" style="text-align:center" align="center"><img
+                        class="img-fluid rounded mx-auto d-block" id="Picture 26"
+                        src="pynq-z2-hls_th_files/image047.jpg" alt="A hand holding a circuit board
+Description automatically generated" height="196" width="262"></p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="312">
+                    <p class="MsoNormal" style="text-align:center" align="center"><span
+                        style="">2*2= 4</span></p>
+                  </td>
+                  <td style="width:233.75pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+                    valign="top" width="312">
+                    <p class="MsoNormal" style="text-align:center" align="center"><span
+                        style="">3*2 = 6</span></p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="312">
+                    <p class="MsoNormal" style="text-align:center" align="center"><img
+                        class="img-fluid rounded mx-auto d-block" id="Picture 28"
+                        src="pynq-z2-hls_th_files/image048.jpg" alt="A hand holding a red circuit board
+Description automatically generated" height="201" width="268"></p>
+                  </td>
+                  <td style="width:233.75pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+                    valign="top" width="312">
+                    <p class="MsoNormal" style="text-align:center" align="center"><img
+                        class="img-fluid rounded mx-auto d-block" id="Picture 25"
+                        src="pynq-z2-hls_th_files/image049.jpg" alt="A hand holding a circuit board
+Description automatically generated" height="200" width="267"></p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="MsoNormal"><span style="">&nbsp;</span></p>
+            <span style="">&nbsp;</span>
+            <h2 style="margin-left:28.35pt;text-align:left;text-indent:-28.35pt"
+              align="left"><a name="_Toc208827146"><span style="">1.4.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+                    </span></span><span style="">HLS Pragmas</span></a></h2>
+            <p class="MsoNormal"><span style="">&nbsp;</span></p>
+            <p class="MsoNormal"><span style="">HLS synthesizes C code into HDL, but the synthesis behavior is controlled by Pragmas. There are many types of pragmas; for full details, refer to the Vitis High-Level Synthesis User Guide (UG1399). Below we describe some common pragmas.</span></p>
+            <br>
+            <h3 style="margin-left:0in"><a name="_Toc208827147"><span style="">Interface</span></a></h3>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">This is an HLS constraint that maps C function arguments to an AXI bus instead of simple signals. When the following pragma is added, function arguments will interface via the AXI bus. The AXI interface can be configured as a slave, master, or stream.</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
+            <p class="MsoNormal"><span style="">There are several ways to define the Interface. For example, if we add an Interface to the C Source used in section "1.2. Creating IP with HLS" as shown below, the exported IP will look like this, with addresses assigned automatically.</span></p>
+            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image050.png" alt="A screenshot of a computer program
+Description automatically generated" height="99" width="398"></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image052.png" alt="A screenshot of a computer
+Description automatically generated" height="424" width="488"></p>
+            <span style="font-size:10.5pt;"><br style="page-break-before:always"
+                clear="all">
+            </span>
+            <p class="MsoNormal"><span style="">If you do not want addresses to be assigned automatically, you can add an offset.</span></p>
+            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image053.png" alt="A screenshot of a computer program
+Description automatically generated" height="173" width="454"></p>
+            <span style="font-size:10.5pt;"></span><span style=""></span><span style="">&nbsp;</span>
+            <span style="font-size:10.5pt;"></span>
+            <h3 style="margin-left:0in"><a name="_Toc208827148"><span style="">Pipeline</span></a></h3>
+            <p class="MsoNormal"><span style="">When converting with HLS, you can specify whether to use a pipeline.</span></p>
+            <p class="MsoNormal"><span style="">* By default, HLS usually defaults to enabling pipeline.</span></p>
+            <p class="MsoNormal" style="text-align:center" align="center"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image054.png" alt="A diagram of a diagram
+Description automatically generated" height="224" width="384"></p>
+            <p class="MsoNormal"><span style="">Example:</span></p>
+            <table class="MsoTableGrid" style="border-collapse:collapse;border:none"
+              border="1" cellpadding="0" cellspacing="0">
+              <tbody>
+                <tr>
+                  <td style="width:233.75pt;border:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt" valign="top" width="312">
+                    <p class="MsoNormal"><span style="">With Pipeline</span></p>
+                  </td>
+                  <td style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-left:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="312">
+                    <p class="MsoNormal"><span style="">Without Pipeline</span></p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="312">
+                    <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+                        src="pynq-z2-hls_th_files/image055.png" alt="A computer screen shot of a program code
+Description automatically generated" height="208" width="268"></p>
+                  </td>
+                  <td style="width:233.75pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+                    valign="top" width="312">
+                    <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+                        src="pynq-z2-hls_th_files/image056.png" alt="A computer screen shot of a program code
+Description automatically generated" height="134" width="247"></p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="MsoNormal"><span style="">&nbsp;</span></p>
+            <table class="MsoTableGrid" style="border-collapse:collapse;border:none"
+              border="1" cellpadding="0" cellspacing="0">
+              <tbody>
+                <tr>
+                  <td style="width:49.4pt;border:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt" valign="top" width="66">
+                    <p class="MsoNormal" style="text-align:center" align="center"><span
+                        style="font-size:8.0pt;">Pipeline</span></p>
+                  </td>
+                  <td style="width:418.1pt;border:solid windowtext 1.0pt;
+  border-left:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="557">
+                    <p class="MsoNormal" style="text-align:center" align="center"><span
+                        style="font-size:8.0pt;">FPGA Logic Utilization</span></p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width:49.4pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="66">
+                    <p class="MsoNormal" style="text-align:center" align="center"><span
+                        style="font-size:8.0pt;">Yes</span></p>
+                  </td>
+                  <td style="width:418.1pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+                    valign="top" width="557">
+                    <p class="MsoNormal"><span style="font-size:8.0pt;
+  "><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-hls_th_files/image058.png"
+                          height="43" width="540"></span></p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width:49.4pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="66">
+                    <p class="MsoNormal" style="text-align:center" align="center"><span
+                        style="font-size:8.0pt;">No</span></p>
+                  </td>
+                  <td style="width:418.1pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+                    valign="top" width="557">
+                    <p class="MsoNormal"><span style="font-size:8.0pt;"><img class="img-fluid rounded mx-auto d-block"
+                          src="pynq-z2-hls_th_files/image059.png" height="43" width="540"></span></p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="MsoNormal"><span style="">&nbsp;</span></p>
+            <p class="MsoNormal"><span style="">Without a pipeline, the calculation output = input * input takes 8 clock cycles. Therefore, if we loop 64 times, the total computation takes 64 * 8 = 512 clock cycles. But if a pipeline is used, the results are output much faster, though it slightly increases the FPGA logic utilization.</span></p>
+            <p class="MsoNormal"><span style="">&nbsp;</span></p>
+            <h3 style="margin-left:0in"><a name="_Toc208827149"><span style="">Unroll</span></a></h3>
+            <p class="MsoNormal"><span style="">This constraint enables parallelizing computation circuits when translating loops into HDL.</span></p>
+            <p class="MsoNormal" style="text-align:center" align="center"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image060.png" alt="A screenshot of a computer program
+Description automatically generated" height="156" width="278"></p>
+            <p class="MsoNormal"><span style="">Example:</span></p>
+            <table class="MsoTableGrid" style="border-collapse:collapse;border:none"
+              border="1" cellpadding="0" cellspacing="0">
+              <tbody>
+                <tr>
+                  <td style="width:233.75pt;border:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt" valign="top" width="312">
+                    <p class="MsoNormal"><span style="">Without Unroll</span></p>
+                  </td>
+                  <td style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-left:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="312">
+                    <p class="MsoNormal"><span style="">With Unroll</span></p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="312">
+                    <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+                        src="pynq-z2-hls_th_files/image061.png" alt="A computer screen shot of a program code
+Description automatically generated" height="36" width="232"></p>
+                    <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+                        src="pynq-z2-hls_th_files/image062.png" alt="A computer screen shot of a program code
+Description automatically generated" height="118" width="219"></p>
+                  </td>
+                  <td style="width:233.75pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+                    valign="top" width="312">
+                    <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+                        src="pynq-z2-hls_th_files/image063.png" height="140" width="229"></p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="MsoNormal"><span style="">&nbsp;</span></p>
+            <table class="MsoTableGrid" style="border-collapse:collapse;border:none"
+              border="1" cellpadding="0" cellspacing="0">
+              <tbody>
+                <tr>
+                  <td style="width:49.4pt;border:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt" valign="top" width="66">
+                    <p class="MsoNormal" style="text-align:center" align="center"><span
+                        style="font-size:8.0pt;">Unroll</span></p>
+                  </td>
+                  <td style="width:418.1pt;border:solid windowtext 1.0pt;
+  border-left:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="557">
+                    <p class="MsoNormal" style="text-align:center" align="center"><span
+                        style="font-size:8.0pt;">FPGA Logic Utilization</span></p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width:49.4pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="66">
+                    <p class="MsoNormal" style="text-align:center" align="center"><span
+                        style="font-size:8.0pt;">None</span></p>
+                  </td>
+                  <td style="width:418.1pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+                    valign="top" width="557">
+                    <p class="MsoNormal"><span style="font-size:8.0pt;
+  "><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-hls_th_files/image066.png"
+                          height="43" width="540"></span></p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width:49.4pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="66">
+                    <p class="MsoNormal" style="text-align:center" align="center"><span
+                        style="font-size:8.0pt;">Factor=2</span></p>
+                  </td>
+                  <td style="width:418.1pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+                    valign="top" width="557">
+                    <p class="MsoNormal"><span style="font-size:8.0pt;"><img class="img-fluid rounded mx-auto d-block"
+                          src="pynq-z2-hls_th_files/image067.png" height="42" width="540"></span></p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width:49.4pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="66">
+                    <p class="MsoNormal" style="text-align:center" align="center"><span
+                        style="font-size:8.0pt;">Factor=4</span></p>
+                  </td>
+                  <td style="width:418.1pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+                    valign="top" width="557">
+                    <p class="MsoNormal"><span style="font-size:8.0pt;"><img class="img-fluid rounded mx-auto d-block"
+                          src="pynq-z2-hls_th_files/image068.png" height="42" width="543"></span></p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width:49.4pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="66">
+                    <p class="MsoNormal" style="text-align:center" align="center"><span
+                        style="font-size:8.0pt;">Factor=8</span></p>
+                  </td>
+                  <td style="width:418.1pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+                    valign="top" width="557">
+                    <p class="MsoNormal"><span style="font-size:8.0pt;"><img class="img-fluid rounded mx-auto d-block"
+                          src="pynq-z2-hls_th_files/image069.png" height="42" width="543"></span></p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width:49.4pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="66">
+                    <p class="MsoNormal" style="text-align:center" align="center"><span
+                        style="font-size:8.0pt;">Auto</span></p>
+                  </td>
+                  <td style="width:418.1pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+                    valign="top" width="557">
+                    <p class="MsoNormal"><span style="font-size:8.0pt;"><img class="img-fluid rounded mx-auto d-block"
+                          src="pynq-z2-hls_th_files/image070.png" height="36" width="543"></span></p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="MsoNormal"><span style="">&nbsp;</span></p>
+            <p class="MsoNormal"><span style="">Unroll defines the number of parallel circuits based on the Factor value. For example, if Factor=2, two multiplier circuits will be instantiated. As a result, the calculation finishes faster than without unrolling (and of course, the FPGA logic utilization increases accordingly).</span></p>
+            <p class="MsoNormal"><span style="">&nbsp;</span></p>
+            <h3 style="margin-left:0in"><a name="_Toc208827150"><span style="">Dataflow</span></a></h3>
+            <p class="MsoNormal"><span style="">Specifies the execution model when transferring data between modules. Without Dataflow, the next module starts execution only after the previous module finishes processing all data. With Dataflow, the next module can start processing as soon as partial outputs become available from the first module.</span></p>
+            <p class="MsoNormal"><span style="">&nbsp;</span></p>
+            <p class="MsoNormal" style="text-align:center" align="center"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image071.png" alt="A diagram of a function
+Description automatically generated" height="92" width="364"></p>
+            <p class="MsoNormal" style="text-align:center" align="center"><img class="img-fluid rounded mx-auto d-block"
+                src="pynq-z2-hls_th_files/image072.png" alt="A diagram of a function
+Description automatically generated with medium confidence" height="228" width="385"></p>
+            <p class="MsoNormal"><span style="">Example:</span></p>
+            <table class="MsoTableGrid" style="border-collapse:collapse;border:none"
+              border="1" cellpadding="0" cellspacing="0">
+              <tbody>
+                <tr>
+                  <td style="width:233.75pt;border:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt" valign="top" width="312">
+                    <p class="MsoNormal"><span style="">Without Dataflow</span></p>
+                  </td>
+                  <td style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-left:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="312">
+                    <p class="MsoNormal"><span style="">With Dataflow</span></p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width:233.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="312">
+                    <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+                        src="pynq-z2-hls_th_files/image073.png" alt="A computer screen shot of text
+Description automatically generated" height="220" width="267"></p>
+                  </td>
+                  <td style="width:233.75pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+                    valign="top" width="312">
+                    <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+                        src="pynq-z2-hls_th_files/image074.png" height="140" width="232"></p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="MsoNormal" style="text-align:center" align="center"><span
+                style="">&nbsp;</span><span style="font-size:10.5pt;"></span></p>
+            <table class="MsoTableGrid" style="border-collapse:collapse;border:none"
+              border="1" cellpadding="0" cellspacing="0">
+              <tbody>
+                <tr>
+                  <td style="width:49.4pt;border:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt" valign="top" width="66">
+                    <p class="MsoNormal"><span style="font-size:8.0pt;">Dataflow</span></p>
+                  </td>
+                  <td style="width:418.1pt;border:solid windowtext 1.0pt;
+  border-left:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="557">
+                    <p class="MsoNormal" style="text-align:center" align="center"><span
+                        style="font-size:8.0pt;">FPGA Logic Utilization</span></p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width:49.4pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="66">
+                    <p class="MsoNormal" style="text-align:center" align="center"><span
+                        style="font-size:8.0pt;">No</span></p>
+                  </td>
+                  <td style="width:418.1pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+                    valign="top" width="557">
+                    <p class="MsoNormal"><span style="font-size:8.0pt;
+  "><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-hls_th_files/image077.png"
+                          height="60" width="543"></span></p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width:49.4pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top" width="66">
+                    <p class="MsoNormal" style="text-align:center" align="center"><span
+                        style="font-size:8.0pt;">Yes</span></p>
+                  </td>
+                  <td style="width:418.1pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;  padding:0in 5.4pt 0in 5.4pt"
+                    valign="top" width="557">
+                    <p class="MsoNormal"><span style="font-size:8.0pt;"><img class="img-fluid rounded mx-auto d-block"
+                          src="pynq-z2-hls_th_files/image078.png" height="62" width="543"></span></p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="MsoNormal"><span style="">&nbsp;</span></p>
+            <p class="MsoNormal"><span style="">When using Dataflow, the computation time is reduced from 1539 clock cycles to 513 clock cycles (and of course, the FPGA logic utilization increases).</span></p>
+            <span style="font-size:10.5pt;"><br style="page-break-before:always"
+                clear="all">
+            </span>
+            <h2 style="margin-left:28.35pt;text-align:left;text-indent:-28.35pt"
+              align="left"><a name="_Toc208827151"><span style="">1.5.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
+                    </span></span><span style="">Limitations / Unsupported Constructs</span></a></h2>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">In the Vitis High-Level Synthesis User Guide, there is a section on "Unsupported C/C++ Constructs". Here is a brief summary:</span></p>
+            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
+                id="Picture 1" src="pynq-z2-hls_th_files/image079.png" alt="A screenshot of a computer program
+Description automatically generated" height="354" width="624"></p>
+            <p class="MsoNormal"><span style="">&nbsp;</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="text-center p-4 mt-5" style="background-color: #f8f9fa;">
+        <div class="container">
+            <p class="mb-0">Contact: <a href="https://www.facebook.com/wichayen.hong" target="_blank">Wichayen Hong on Facebook</a> | <a href="https://github.com/wichayen" target="_blank">GitHub</a> | <a href="https://www.linkedin.com/in/wichayen-luangsopapan-404133202/" target="_blank">LinkedIn</a></p>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true, theme: 'default'});</script>
+  </body>
+</html>

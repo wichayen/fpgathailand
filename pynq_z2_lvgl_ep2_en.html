@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LVGL on PYNQ-Z2 Episode 2: Compiling and Running an LVGL Application</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { padding-top: 56px; }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 1rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+        }
+        pre { background-color: #f8f9fa; padding: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        blockquote {
+            border-left: 4px solid #ccc;
+            padding-left: 1rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">FPGATHAILAND</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAries" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Aries Board
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAries">
+                            <li><a class="dropdown-item" href="AriesBoard_ep1_en.html">Episode 1: Project Design</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep2_en.html">Episode 2: Version A.1</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep3_en.html">Episode 3: FPGA Design</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep4_en.html">Episode 4: PCI driver for linux</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep5_en.html">Episode 5: PCI driver for windows</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPynq" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            PYNQ-Z2
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownPynq">
+                            <li><a class="dropdown-item" href="pynq-z2-ai_en.html">AI (DPU)</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-hls_en.html">HLS</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-modelsim_en.html">Modelsim</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-vivado_en.html">Vivado</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1_en.html">LVGL Episode 1</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2_en.html">LVGL Episode 2</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvlg_special_ep_en.html">Special Episode: AI Agent</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAI" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            AI
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAI">
+                            <li><a class="dropdown-item" href="AI_hardware_en.html">AI Hardware Control with MCP</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownTools" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Tools
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownTools">
+                            <li><a class="dropdown-item" href="Sigasi_en.html">Sigasi for VS Code</a></li>
+                            <li><a class="dropdown-item" href="UVVM_en.html">UVVM</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="EZUSB_FPGA.html">USB</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="GeminiBoard_Beaglebone_Frambuffer.html">GeminiBoard</a>
+                    </li>
+                
+                    <li class="nav-item"><a class="nav-link" href="pynq_z2_lvgl_ep2.html">TH</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto article-content">
+                <h1>LVGL on PYNQ-Z2 Episode 2: Compiling and Running an LVGL Application</h1>
+                <p>Hello! Welcome back to Episode 2 of the "LVGL on PYNQ-Z2" series.</p>
+                <p>In Episode 1, we successfully prepared an SD Card Image with Petalinux and the Framebuffer driver for our SPI LCD (ILI9486). In this episode, we will reach the most fun part, which is bringing the LVGL graphics library to compile and run on our PYNQ-Z2 board to create a beautiful UI on the screen!</p>
+                <p>We will use the SDK obtained from Petalinux to cross-compile the LVGL library and the example application. Then, we will test it on the prepared PYNQ-Z2 board.</p>
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/Nu4GIq9-OxY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <h2>1. Preparing the Environment for Cross-Compile</h2>
+                <p>First, we need to install the tools used to compile programs for the PYNQ-Z2 board on our computer.</p>
+                
+                <h3>1.1 Installing Petalinux SDK</h3>
+                <p>The SDK (Software Development Kit) is a set of tools that includes all the necessary cross-compilers and libraries. It allows us to compile programs on our computer (Host) and get a binary file that can run on the PYNQ-Z2 board (Target), which uses the ARM architecture.</p>
+                <p>This SDK is generated from the Petalinux project in Episode 1 using the <code>petalinux-build --sdk</code> command. Let's take the resulting <code>sdk.sh</code> file and install it on our Host machine:</p>
+                <pre><code>hong@ubuntu:~/pynq_z2/images/linux$ ./sdk.sh</code></pre>
+                <p>During installation, the installer will ask for the target directory for the SDK:</p>
+                <pre><code>PetaLinux SDK installer version 2019.2
+======================================
+Enter target directory for SDK (default: /opt/petalinux/2019.2): /opt/petalinux/2019.2
+You are about to install the SDK to "/opt/petalinux/2019.2". Proceed[Y/n]? y
+[sudo] password for hong: 
+Extracting SDK................................................done
+Setting it up...done
+SDK has been successfully set up and is ready to be used.
+Each time you wish to use the SDK in a new shell session, you need to source the environment setup script e.g.
+ $ . /opt/petalinux/2019.2/environment-setup-cortexa9t2hf-neon-xilinx-linux-gnueabi</code></pre>
+                
+                <h3>1.2 Setting up the SDK Environment</h3>
+                <p>Every time a new Terminal is opened to cross-compile, we need to run a script to set up various environment variables (such as <code>PATH</code>, <code>CC</code>, <code>SYSROOT</code>) to point to the correct toolchain first.</p>
+                <pre><code>$ source /opt/petalinux/2019.2/environment-setup-cortexa9t2hf-neon-xilinx-linux-gnueabi</code></pre>
+                
+                <h3>1.3 Testing the Cross-Compiler</h3>
+                <p>To ensure our SDK is working correctly, we will try creating a simple <code>test.c</code> file and compiling it.</p>
+                <pre><code class="language-c">// test.c
+#include &lt;stdio.h&gt;
+
+int main() {
+    printf("Hello, ARM world!\n");
+    return 0;
+}</code></pre>
+                <p>Then use the cross-compiler available in the environment (<code>$CC</code>) to compile it, and use the <code>file</code> command to verify the file type obtained:</p>
+                <pre><code>hong@ubuntu:~/Desktop$ $CC -O2 -o test_arm test.c
+hong@ubuntu:~/Desktop$ file test_arm
+test_arm: ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux-armhf.so.3, for GNU/Linux 3.2.0, ...</code></pre>
+                <p>If the result shows it as an <code>ARM</code> file, it means our cross-compiler is ready to use!</p>
+                
+                <h2>2. Compiling LVGL</h2>
+                <p>Now that we have the tools ready, let's move on to compiling LVGL.</p>
+                
+                <h3>2.1 Downloading Source Code</h3>
+                <p>We will use the <code>lv_port_linux</code> project, which is the official port of LVGL specifically for use on Linux. In this article, we will use version <code>release/v8.2</code>.</p>
+                <pre><code>$ git clone https://github.com/lvgl/lv_port_linux.git -b release/v8.2
+$ cd lv_port_linux-release-v8.2</code></pre>
+                
+                <h3>2.2 Porting LVGL for our Framebuffer</h3>
+                <p>The downloaded code is just a starting point. We need to modify some parts to make LVGL work correctly with the Framebuffer Driver (<code>/dev/fb0</code>) that we created in Episode 1.</p>
+                
+                <h4>2.2.1 <code>lv_conf.h</code> (LVGL Configuration File)</h4>
+                <p>Create an <code>lv_conf.h</code> file in the root of the project to set the basic configuration of LVGL to match our hardware.</p>
+                <pre><code class="language-c">#ifndef LV_CONF_H
+#define LV_CONF_H
+
+#include &lt;stdint.h&gt;
+
+/*====================
+   COLOR SETTINGS
+====================*/
+/*Color depth: 1, 8, 16, 24, 32*/
+#define LV_COLOR_DEPTH 16
+#define LV_COLOR_16_SWAP 0
+
+/*=========================
+   Memory manager
+ =========================*/
+#define LV_MEM_CUSTOM 0
+#if LV_MEM_CUSTOM == 0
+#  define LV_MEM_SIZE (32U * 1024U)
+#endif
+
+/*====================
+   DISPLAY SETTINGS
+====================*/
+#define LV_HOR_RES_MAX 320
+#define LV_VER_RES_MAX 480
+
+/*=======================
+ * FEATURE CONFIGURATION
+ *=======================*/
+#define LV_USE_LOG 1
+#if LV_USE_LOG
+#  define LV_LOG_LEVEL LV_LOG_LEVEL_INFO
+#endif
+
+#endif</code></pre>
+                <ul>
+                    <li><strong><code>LV_COLOR_DEPTH 16</code></strong>: Set the color depth to 16-bit (RGB565) to match what our driver and screen support.</li>
+                    <li><strong><code>LV_HOR_RES_MAX 320</code></strong>, <strong><code>LV_VER_RES_MAX 480</code></strong>: Set the resolution to match our ILI9486 screen.</li>
+                </ul>
+
+                <h4>2.2.2 <code>lv_drivers/display/fbdev.c</code> (LVGL Framebuffer Driver)</h4>
+                <p>This is the core of porting. We need to modify the <code>fbdev_flush</code> function to work with the driver we wrote.</p>
+                <p>Modify the <code>lv_drivers/display/fbdev.c</code> file as follows:</p>
+                <pre><code class="language-c">/**
+ * @file fbdev.c
+ */
+
+#include "fbdev.h"
+#if USE_FBDEV || USE_BSD_FBDEV
+
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;stddef.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;sys/mman.h&gt;
+#include &lt;sys/ioctl.h&gt;
+#include &lt;linux/fb.h&gt;
+
+static struct fb_var_screeninfo vinfo;
+static struct fb_fix_screeninfo finfo;
+static char *fbp = 0;
+static long int screensize = 0;
+static int fbfd = 0;
+
+void fbdev_init(void)
+{
+    fbfd = open("/dev/fb0", O_RDWR);
+    if (fbfd &lt; 0) {
+        perror("fbdev open failed");
+        return;
+    }
+
+    ioctl(fbfd, FBIOGET_FSCREENINFO, &amp;finfo);
+    ioctl(fbfd, FBIOGET_VSCREENINFO, &amp;vinfo);
+
+    screensize = vinfo.xres * vinfo.yres * vinfo.bits_per_pixel / 8;
+
+    fbp = mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fbfd, 0);
+
+    if (fbp == MAP_FAILED) {
+        perror("mmap failed");
+        fbp = NULL;
+        close(fbfd);
+        return;
+    }
+}
+
+void fbdev_exit(void)
+{
+    munmap(fbp, screensize);
+    close(fbfd);
+}
+
+void fbdev_flush(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_p)
+{
+    if (!fbp) {
+        lv_disp_flush_ready(drv);
+        return;
+    }
+
+    int32_t x, y;
+    int32_t width  = lv_area_get_width(area);
+    int32_t height = lv_area_get_height(area);
+
+    uint32_t fb_line_bytes = finfo.line_length;
+    uint32_t src_line_bytes = width * (vinfo.bits_per_pixel / 8);
+
+    uint8_t *dst_ptr = (uint8_t *)fbp;
+    uint8_t *src_ptr = (uint8_t *)color_p;
+
+    for (y = 0; y &lt; height; y++) {
+        // คำนวณตำแหน่ง Destination ใน Framebuffer
+        uint8_t *dst = dst_ptr + ((area-&gt;y1 + y) * fb_line_bytes) + (area-&gt;x1 * (vinfo.bits_per_pixel / 8));
+        // คัดลอกข้อมูล 1 บรรทัด
+        memcpy(dst, src_ptr, src_line_bytes);
+        // เลื่อน Source pointer ไปยังบรรทัดถัดไป
+        src_ptr += src_line_bytes;
+    }
+
+    /*
+     * เราไม่ต้องทำอะไรเพิ่มเติมตรงนี้!
+     * Kernel Deferred IO จะตรวจจับการเปลี่ยนแปลงใน memory (dirty page)
+     * แล้วเรียก ili9486_deferred_io() ที่อยู่ในไดรเวอร์ของเราให้เอง
+     * เพื่อทำการ flush ข้อมูลไปยังหน้าจอ
+     */
+
+    lv_disp_flush_ready(drv);
+}
+
+#endif</code></pre>
+
+                <h4>2.2.3 <code>Makefile</code></h4>
+                <p>Create a <code>Makefile</code> to define the compile process for the entire project, ensuring that the <code>CC</code> and <code>SYSROOT</code> values are correct as obtained from the environment <code>source</code> script.</p>
+                <pre><code># Makefile
+TARGET = demo_lvgl
+
+# Cross-compiler toolchain settings, will be inherited from the environment
+# CC ?= gcc
+# SYSROOT ?=
+
+# Default CFLAGS for Zynq-7000 (Cortex-A9)
+CFLAGS += -march=armv7-a -mthumb -mfpu=neon -mfloat-abi=hard -mcpu=cortex-a9 \
+          --sysroot=$(SYSROOT) \
+          -O3 -g -Wall -Wextra \
+          -I. \
+          -D LV_LVGL_H_INCLUDE_SIMPLE
+
+LDFLAGS += --sysroot=$(SYSROOT) -lpthread -lm
+
+# Collect source files
+LVGL_SRC_DIR = ./lvgl
+LV_DRIVERS_DIR = ./lv_drivers
+
+# Include all LVGL source files
+LVGL_SRCS = $(shell find $(LVGL_SRC_DIR)/src -name "*.c")
+
+# Include framebuffer and input device drivers for linux
+DRIVER_SRCS = $(LV_DRIVERS_DIR)/display/fbdev.c \
+              $(LV_DRIVERS_DIR)/indev/evdev.c
+
+# Main application source
+MAIN_SRC = main.c
+
+SRCS = $(LVGL_SRCS) $(DRIVER_SRCS) $(MAIN_SRC)
+OBJS = $(SRCS:.c=.o)
+
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) $(LDFLAGS) $(OBJS) -o $@
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $&lt; -o $@
+
+clean:
+	rm -f $(TARGET) $(OBJS)</code></pre>
+                
+                <h4>2.2.4 <code>main.c</code> (Example Application)</h4>
+                <p>Finally, there's <code>main.c</code>, which is our main program. We will use sample code that creates a full-screen rainbow gradient animation to test that everything works correctly.</p>
+                <pre><code class="language-c">// main.c
+#include "lvgl/lvgl.h"
+#include "lv_drivers/display/fbdev.h"
+#include &lt;unistd.h&gt;
+#include &lt;stdio.h&gt;
+
+#define SCR_W 320
+#define SCR_H 480
+
+static void anim_timer_cb(lv_timer_t *timer)
+{
+    static uint32_t hue = 0;
+    lv_obj_t *screen_obj = (lv_obj_t *)timer-&gt;user_data;
+
+    hue = (hue + 2) % 360;
+    lv_color_t c = lv_color_hsv_to_rgb(hue, 100, 100);
+
+    lv_obj_set_style_bg_color(screen_obj, c, LV_PART_MAIN);
+}
+
+int main(void)
+{
+    printf("[main] LVGL Full-screen Animation Demo\n");
+
+    lv_init();
+    fbdev_init();
+
+    static lv_color_t buf1[SCR_W * 100];
+    static lv_disp_draw_buf_t draw_buf;
+    lv_disp_draw_buf_init(&amp;draw_buf, buf1, NULL, SCR_W * 100);
+
+    static lv_disp_drv_t disp_drv;
+    lv_disp_drv_init(&amp;disp_drv);
+    disp_drv.draw_buf = &amp;draw_buf;
+    disp_drv.flush_cb = fbdev_flush;
+    disp_drv.hor_res  = SCR_W;
+    disp_drv.ver_res  = SCR_H;
+    lv_disp_drv_register(&amp;disp_drv);
+
+    lv_obj_t *screen_obj = lv_obj_create(lv_scr_act());
+    lv_obj_set_size(screen_obj, SCR_W, SCR_H);
+    lv_obj_center(screen_obj);
+    lv_obj_clear_flag(screen_obj, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_style_border_width(screen_obj, 0, 0);
+
+    lv_timer_create(anim_timer_cb, 20, screen_obj); /* ~50 FPS */
+
+    printf("[main] Animation running...\n");
+
+    while (1) {
+        lv_tick_inc(5);
+        lv_timer_handler();
+        usleep(5000);
+    }
+
+    return 0;
+}</code></pre>
+                
+                <h3>2.3 Starting the Compilation</h3>
+                <p>When all the files are prepared, run the <code>make</code> command in the Terminal where we have <code>source</code>d the environment script.</p>
+                <pre><code>$ source /opt/petalinux/2019.2/environment-setup-cortexa9t2hf-neon-xilinx-linux-gnueabi
+$ make</code></pre>
+                <p>If there are no errors, we will get the <code>demo_lvgl</code> file, which is an ARM executable.</p>
+                <pre><code>$ file demo_lvgl 
+demo_lvgl: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.3, ...</code></pre>
+                
+                <h2>3. Testing on the PYNQ-Z2 Board</h2>
+                <h3>3.1 Transferring the File to the Board</h3>
+                <p>Transfer the compiled <code>demo_lvgl</code> file to the PYNQ-Z2 board. The easiest way is to use <code>scp</code> over the network (requires knowing the board's IP Address).</p>
+                <pre><code>$ scp demo_lvgl root@&lt;PYNQ-Z2_IP_ADDRESS&gt;:~/</code></pre>
+                
+                <h3>3.2 Running the Application</h3>
+                <p>Connect to the PYNQ-Z2 board via <code>ssh</code>.</p>
+                <pre><code>$ ssh root@&lt;PYNQ-Z2_IP_ADDRESS&gt;</code></pre>
+                <p>Then, follow these steps on the board:</p>
+                <ol>
+                    <li><strong>Load the driver:</strong> Load the Kernel Module we created in Episode 1.
+                        <pre><code>root@pynq_z2:~# cd /lib/modules/4.19.0-xilinx/extra/
+root@pynq_z2:/lib/modules/4.19.0-xilinx/extra# modprobe fb-ili9486.ko</code></pre>
+                    </li>
+                    <li><strong>Grant permissions and run the program:</strong>
+                        <pre><code>root@pynq_z2:~# chmod +x demo_lvgl
+root@pynq_z2:~# ./demo_lvgl
+[main] LVGL Full-screen Animation Demo
+[main] Animation running...</code></pre>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center p-4 mt-5" style="background-color: #f8f9fa;">
+        <div class="container">
+            <p class="mb-0">Contact: <a href="https://www.facebook.com/wichayen.hong" target="_blank">Wichayen Hong on Facebook</a> | <a href="https://github.com/wichayen" target="_blank">GitHub</a> | <a href="https://www.linkedin.com/in/wichayen-luangsopapan-404133202/" target="_blank">LinkedIn</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true, theme: 'default'});</script>
+</body>
+</html>

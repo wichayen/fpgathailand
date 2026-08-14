@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aries Board - Episode 2</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { padding-top: 56px; }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 1rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+        }
+        pre { background-color: #f8f9fa; padding: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        blockquote {
+            border-left: 4px solid #ccc;
+            padding-left: 1rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">FPGATHAILAND</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAries" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Aries Board
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAries">
+                            <li><a class="dropdown-item" href="AriesBoard_ep1_en.html">Episode 1: Project Design</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep2_en.html">Episode 2: Version A.1</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep3_en.html">Episode 3: FPGA Design</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep4_en.html">Episode 4: PCI driver for linux</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep5_en.html">Episode 5: PCI driver for windows</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPynq" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            PYNQ-Z2
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownPynq">
+                            <li><a class="dropdown-item" href="pynq-z2-ai_en.html">AI (DPU)</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-hls_en.html">HLS</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-modelsim_en.html">Modelsim</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-vivado_en.html">Vivado</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1_en.html">LVGL Episode 1</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2_en.html">LVGL Episode 2</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvlg_special_ep_en.html">Special Episode: AI Agent</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAI" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            AI
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAI">
+                            <li><a class="dropdown-item" href="AI_hardware_en.html">AI Hardware Control with MCP</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownTools" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Tools
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownTools">
+                            <li><a class="dropdown-item" href="Sigasi_en.html">Sigasi for VS Code</a></li>
+                            <li><a class="dropdown-item" href="UVVM_en.html">UVVM</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="EZUSB_FPGA_en.html">USB</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="GeminiBoard_Beaglebone_Frambuffer_en.html">GeminiBoard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="AriesBoard_ep2.html">TH</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto article-content">
+                <h1>PCI Card Project Episode 2: Aries Board Version A.1</h1>
+                <p><b>1. The Board</b></p>
+                <p>Finally, version A.1 of the Aries board is here. It is designed to be highly versatile, eliminating the need to create a new board every time we want to experiment with something new.</p>
+                <p>
+                    <a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhiU9D4GvR5JE96u2S5A2Xdbu8VmGLDpiunQ58_y76Fsg2TqqE-4CHS38tj-O237y7S1GWY1E8AeYyj2N3aG4uCHBqMIkOkP4j20_NdLyREkd6ToAFedS_dz7BRdUwllH-NllU6RmxKR_jb/s1600/fr_88.jpg">
+                        <img src="AriesBoard_ep2_files/image001.jpg" class="img-fluid rounded">
+                    </a>
+                </p>
+                <p>
+                    <a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhoG6pBRdxMvQ_khdwEqqsGPYbpWBbYeemiagTbAhlVsJKn4hh6M-WxF2EKV32IaoPbnTC2aKpHdXqzzu3IrDONgW4H8bdUx2tqy53nzsu5ZTW_dLnziK74fexsh9ZOb-v_LiW5l-HqnYHF/s1600/fr_87.jpg">
+                        <img src="AriesBoard_ep2_files/image002.jpg" class="img-fluid rounded">
+                    </a>
+                </p>
+
+                <h2 class="mt-5">2. Board specification</h2>
+                <p>The specifications of the board are as follows:</p>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Component</th>
+                                <th>Specification</th>
+                                <th>Note</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>FPGA</td>
+                                <td>Cyclone II 5000 LE (EP2C5Q208C8)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Memory</td>
+                                <td>
+                                    SDRAM: 256Mbit<br>
+                                    FPGA config ROM: 4Mbit<br>
+                                    Serial Flash memory: 4Mbit
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>PCI interface</td>
+                                <td>32 bits 66MHz/33MHz</td>
+                                <td>Default: 33Mhz</td>
+                            </tr>
+                            <tr>
+                                <td>ADC</td>
+                                <td>12 bits / 8 Channels (MCP3208 x 1)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>DAC</td>
+                                <td>12 bits / 4 Channels (MCP4922 x 2)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Digital I/O</td>
+                                <td>16 Channels</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>RS232</td>
+                                <td>1 Channel</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>LED</td>
+                                <td>8 bit</td>
+                                <td>Shared with VGA</td>
+                            </tr>
+                            <tr>
+                                <td>VGA</td>
+                                <td>8 bit (RGB:222)</td>
+                                <td>Shared with LED</td>
+                            </tr>
+                            <tr>
+                                <td>Switch</td>
+                                <td>
+                                    Tact SW x3<br>
+                                    Slide SW x 4
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Input power</td>
+                                <td>5V</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="mt-4">The USB connector on the board works in conjunction with a USB Blaster clone, which is used to program the firmware via JTAG. <a href="http://sa89a.net/mp.cgi/ele/ub.htm">http://sa89a.net/mp.cgi/ele/ub.htm</a></p>
+                <p>Currently, I have successfully configured the FPGA using NIOS II and run a test program to verify the PCI card functionality.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center p-4 mt-5" style="background-color: #f8f9fa;">
+        <div class="container">
+            <p class="mb-0">Contact: <a href="https://www.facebook.com/wichayen.hong" target="_blank">Wichayen Hong on Facebook</a> | <a href="https://github.com/wichayen" target="_blank">GitHub</a> | <a href="https://www.linkedin.com/in/wichayen-luangsopapan-404133202/" target="_blank">LinkedIn</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true, theme: 'default'});</script>
+</body>
+</html>

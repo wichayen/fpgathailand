@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aries Board - Episode 4</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { padding-top: 56px; }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 1rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+        }
+        pre { background-color: #f8f9fa; padding: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        blockquote {
+            border-left: 4px solid #ccc;
+            padding-left: 1rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">FPGATHAILAND</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAries" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Aries Board
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAries">
+                            <li><a class="dropdown-item" href="AriesBoard_ep1_en.html">Episode 1: Project Design</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep2_en.html">Episode 2: Version A.1</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep3_en.html">Episode 3: FPGA Design</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep4_en.html">Episode 4: PCI driver for linux</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep5_en.html">Episode 5: PCI driver for windows</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPynq" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            PYNQ-Z2
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownPynq">
+                            <li><a class="dropdown-item" href="pynq-z2-ai_en.html">AI (DPU)</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-hls_en.html">HLS</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-modelsim_en.html">Modelsim</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-vivado_en.html">Vivado</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1_en.html">LVGL Episode 1</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2_en.html">LVGL Episode 2</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvlg_special_ep_en.html">Special Episode: AI Agent</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAI" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            AI
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAI">
+                            <li><a class="dropdown-item" href="AI_hardware_en.html">AI Hardware Control with MCP</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownTools" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Tools
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownTools">
+                            <li><a class="dropdown-item" href="Sigasi_en.html">Sigasi for VS Code</a></li>
+                            <li><a class="dropdown-item" href="UVVM_en.html">UVVM</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="EZUSB_FPGA_en.html">USB</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="GeminiBoard_Beaglebone_Frambuffer_en.html">GeminiBoard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="AriesBoard_ep4.html">TH</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto article-content">
+                <h1>PCI Card Project Episode 4: Writing Driver and Application</h1>
+                <hr>
+                <h2>Overview</h2>
+                <p>After finishing the FPGA design in Episode 3, we will now develop the software side, which consists of two main parts: a Driver to interface with the hardware and an Application to allow users to control our card.</p>
+                <p>To enable the PC to communicate with the PCI card, only two key things are required:</p>
+                <ol>
+                <li><strong>Vendor ID, Device ID</strong>: These identify to the operating system which driver to use for the hardware. For our card, we have set <code>Vendor ID = 0x1172</code> and <code>Device ID = 0x0004</code>.</li>
+                <li><strong>Memory map</strong>: The custom specifications we defined to indicate where data must be sent/read for specific operations, matching the memory map we designed for the FPGA.</li>
+                </ol>
+                <table class="table table-bordered">
+                <thead>
+                <tr>
+                <th>Offset address</th>
+                <th>Function</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                <td>0x0000_0000</td>
+                <td>Digital I/O CH1 ~ Digital I/O CH16</td>
+                </tr>
+                <tr>
+                <td>0x0000_0004</td>
+                <td>Digital I/O CH1 ~ Digital I/O CH16 Mode setting (0: Input, 1: Output)</td>
+                </tr>
+                <tr>
+                <td>0x0000_0100 ~ 0x0000_011C</td>
+                <td>ADC CH1 ~ ADC CH8</td>
+                </tr>
+                <tr>
+                <td>0x0000_0200 ~ 0x0000_020C</td>
+                <td>DAC CH1 ~ DAC CH4</td>
+                </tr>
+                <tr>
+                <td>0x0000_0210</td>
+                <td>DAC Output Enable</td>
+                </tr>
+                <tr>
+                <td>0x0000_0300</td>
+                <td>LED</td>
+                </tr>
+                <tr>
+                <td>0x0000_0400</td>
+                <td>FPGA Version</td>
+                </tr>
+                </tbody>
+                </table>
+                <hr>
+                <h2>Steps</h2>
+                <h3>1. Driver Development</h3>
+                <p>We will develop our driver as a Linux Kernel Module (<code>.ko</code>), specifically a Character Device Driver, with primary files being <code>AriesPCI.c</code> and <code>AriesPCI.h</code>.</p>
+                <h4>Driver Registration</h4>
+                <p>The first thing the driver must do is introduce itself to the kernel and specify which hardware it will handle via <code>pci_get_device</code> using our designated Vendor ID and Device ID.</p>
+                <pre><code class="language-c">// AriesPCI.c
+
+static int pci_init(void)
+{
+    // ...
+    device = pci_get_device( 0x1172, 0x0004, device );
+    if ( device == NULL ){
+        printk("AriesPCI device == NULL");
+        return -1;
+    }
+    // ...
+}
+</code></pre>
+                <p>Next, we map the PCI card's memory-mapped I/O (MMIO) region into the kernel's address space using <code>pci_iomap</code> so that the kernel can read and write data directly to the card.</p>
+                <pre><code class="language-c">// AriesPCI.c
+
+ioaddr = pci_iomap(device, 0, pci_resource_len(device,0));
+if (!ioaddr) {
+    dev_err(&device->dev, "cannot map MMIO, aborting\n");
+    return -EIO;
+}
+</code></pre>
+                <h4>File Operations</h4>
+                <p>The heart of a character driver is the <code>file_operations</code> struct, which maps standard system calls like <code>open</code>, <code>read</code>, <code>write</code>, or <code>ioctl</code> on the device file (<code>/dev/AriesPCI0</code>) to the corresponding functions in our driver.</p>
+                <pre><code class="language-c">// AriesPCI.c
+
+struct file_operations AriesPCI_fops = {
+	.owner = THIS_MODULE,
+	.open = AriesPCI_open,
+	.release = AriesPCI_close,
+	.read = AriesPCI_read,
+	.write = AriesPCI_write,
+	.llseek = AriesPCI_llseek,
+	.unlocked_ioctl = AriesPCI_ioctl,
+};
+</code></pre>
+                <ul>
+                <li><code>AriesPCI_read</code> / <code>AriesPCI_write</code>: Responsible for reading and writing 32-bit data to/from the address set by <code>llseek</code>.</li>
+                <li><code>AriesPCI_llseek</code>: Sets the current offset address for subsequent read/write operations.</li>
+                <li><code>AriesPCI_ioctl</code>: A custom control channel we defined to send specific commands directly to the driver, simplifying the application code by abstracting the raw address manipulations.</li>
+                </ul>
+                <h4>IOCTL Commands</h4>
+                <p>We defined various <code>ioctl</code> commands in <code>AriesPCI.h</code> for easy access by the user application.</p>
+                <pre><code class="language-c">// AriesPCI.h
+
+#define		IOCTL_READ_LED_BY_MEM			0x0
+#define		IOCTL_WRITE_LED_BY_MEM			0x1
+#define		IOCTL_DAC1_WRITE				0x20
+// ... (DAC, ADC commands)
+#define		IOCTL_FPGA_VER_READ				0x10
+#define		IOCTL_DIO_MODE_WRITE				0x11
+#define		IOCTL_DIO_WRITE					0x12
+#define		IOCTL_DIO_READ					0x13
+</code></pre>
+                <p>Inside <code>AriesPCI.c</code>, a <code>switch</code> statement is implemented to handle these commands:</p>
+                <pre><code class="language-c">// AriesPCI.c
+
+long AriesPCI_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+{
+	unsigned int data32 = 0;
+	
+	switch(cmd){
+		case	IOCTL_FPGA_VER_READ			:
+			data32 = ioread32(ioaddr + FPGA_VER_BASE);
+			if (copy_to_user((int __user *)arg, &data32, sizeof(data32)) ) {
+				return -EFAULT;
+			}
+			return	0;
+		case	IOCTL_DIO_WRITE				:
+			if (copy_from_user(&data32,(int __user *)arg,sizeof(data32))) {
+				return -EFAULT;
+			}
+			iowrite32(data32, ioaddr + DIO_BASE);
+			return	0;
+		// ... other cases
+	}
+	return 0;
+}
+</code></pre>
+                <h4>Compiling and Installing the Driver</h4>
+                <p>Once the code is ready, we compile the driver to obtain the <code>AriesPCI.ko</code> file. We then install the driver into the kernel using <code>insmod</code> and use <code>chmod</code> to allow non-root user applications to access the device file.</p>
+                <pre><code class="language-bash">sudo insmod AriesPCI.ko
+sudo chmod 666 /dev/AriesPCI0
+</code></pre>
+                <hr>
+                <img src="AriesBoard_ep4_files/image003.png" class="img-fluid rounded">
+                <h3>2. Userspace Application</h3>
+                <p>Once the driver is active, we can develop userspace applications to communicate with our PCI card. All interactions will happen through the device file named <code>/dev/AriesPCI0</code>.</p>
+                <h4>Debugging Library</h4>
+                <p>For convenience in testing and debugging, we created a simple helper library (<code>myLib.c</code>) wrapping the <code>open</code>, <code>lseek</code>, <code>read</code>, and <code>write</code> system calls. This allows us to read and write registers on the card easily.</p>
+                <pre><code class="language-c">// myLib.c
+
+int reg_write(unsigned int addr, int data)
+{
+  int fh = open("/dev/AriesPCI0", O_RDWR);
+  if(fh < 0){
+   printf("Cannot open \n");
+   return 1;
+  }
+  char buffer[4];
+  // ... pack data into buffer ...
+  lseek(fh, addr, SEEK_SET);
+  write(fh, buffer, 4);
+  close(fh);
+  return 0;
+}
+
+int reg_read(unsigned int addr)
+{
+  int fh = open("/dev/AriesPCI0", O_RDONLY);
+  if(fh < 0){
+   printf("Cannot open \n");
+   return 1;
+  }
+  char buffer[4];
+  lseek(fh, addr, SEEK_SET);
+  read(fh, buffer, 4);
+  close(fh);
+  // ... unpack data from buffer ...
+  return (data);
+}
+</code></pre>
+                <h3>3. Sample GUI Application</h3>
+                <img src="AriesBoard_ep4_files/image004.png" class="img-fluid rounded">
+                <p>We can build a graphical application using Qt (<code>mainwindow.cpp</code>) which, under the hood, uses standard <code>open</code>, <code>read</code>, and <code>write</code> system calls to interact with <code>/dev/AriesPCI0</code> as well.</p>
+                <p><strong>Example: Reading the FPGA Version</strong></p>
+                <pre><code class="language-cpp">// mainwindow.cpp
+
+void MainWindow::on_PCIEable_clicked()
+{
+    fh = open("/dev/AriesPCI0",O_RDWR);
+    // ... error handling ...
+
+    char buffer[4];
+    lseek(fh, FPGA_VER_BASE, SEEK_SET);
+    read(fh, buffer, 4);
+    
+    // ... unpack data and display ...
+    unsigned int data = ...;
+    QString tempText = QString::number(data, 16);
+    ui->FPGA_Ver->setText(tempText);
+}
+</code></pre>
+                <p><strong>Example: Configuring the DAC</strong></p>
+                <p>When the user enters the desired voltage and clicks the <code>DACSet</code> button, the program converts the float value to a 12-bit integer and writes it to the base address of each DAC channel.</p>
+                <pre><code class="language-cpp">// mainwindow.cpp
+
+void MainWindow::on_DACSet_clicked()
+{
+    float val;
+    unsigned int data;
+    char buffer[4];
+
+    // DAC Channel 1
+    val = ui->DAC1->text().toFloat();
+    data = (unsigned int)((val/3.3)*4095);
+    // ... pack data to buffer ...
+    lseek(fh, DAC1_BASE, SEEK_SET);
+    write(fh, buffer, 4);
+
+    // ... (repeat for DAC2, DAC3, DAC4)
+}
+</code></pre>
+                <p><strong>Example: Reading the ADC Values</strong></p>
+                <p>When the <code>ADCGet</code> button is clicked, the program reads data from each ADC channel's register and converts it back to a voltage value to display.</p>
+                <pre><code class="language-cpp">// mainwindow.cpp
+
+void MainWindow::on_ADCGet_clicked()
+{
+    unsigned int data;
+    char buffer[4];
+    float val;
+
+    // ADC Channel 1
+    lseek(fh, ADC1_BASE, SEEK_SET);
+    read(fh, buffer, 4);
+    // ... unpack data from buffer ...
+    data = ...;
+    val = (((float)data/4095))*3.3;
+    ui->ADC1->setText(QString::number(val));
+
+    // ... (repeat for other ADC channels)
+}
+</code></pre>
+                <hr>
+                <h2>Note</h2>
+                <p>All example code can be downloaded at:
+                <a href="https://github.com/wichayen/ariesboard">https://github.com/wichayen/ariesboard</a></p>
+				<div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/4BEhXDzQ8Ag" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <hr>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center p-4 mt-5" style="background-color: #f8f9fa;">
+        <div class="container">
+            <p class="mb-0">Contact: <a href="https://www.facebook.com/wichayen.hong" target="_blank">Wichayen Hong on Facebook</a> | <a href="https://github.com/wichayen" target="_blank">GitHub</a> | <a href="https://www.linkedin.com/in/wichayen-luangsopapan-404133202/" target="_blank">LinkedIn</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true, theme: 'default'});</script>
+</body>
+</html>

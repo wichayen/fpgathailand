@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aries Board - Episode 3</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { padding-top: 56px; }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 1rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+        }
+        pre { background-color: #f8f9fa; padding: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        blockquote {
+            border-left: 4px solid #ccc;
+            padding-left: 1rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">FPGATHAILAND</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAries" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Aries Board
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAries">
+                            <li><a class="dropdown-item" href="AriesBoard_ep1_en.html">Episode 1: Project Design</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep2_en.html">Episode 2: Version A.1</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep3_en.html">Episode 3: FPGA Design</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep4_en.html">Episode 4: PCI driver for linux</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep5_en.html">Episode 5: PCI driver for windows</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPynq" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            PYNQ-Z2
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownPynq">
+                            <li><a class="dropdown-item" href="pynq-z2-ai_en.html">AI (DPU)</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-hls_en.html">HLS</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-modelsim_en.html">Modelsim</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-vivado_en.html">Vivado</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1_en.html">LVGL Episode 1</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2_en.html">LVGL Episode 2</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvlg_special_ep_en.html">Special Episode: AI Agent</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAI" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            AI
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAI">
+                            <li><a class="dropdown-item" href="AI_hardware_en.html">AI Hardware Control with MCP</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownTools" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Tools
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownTools">
+                            <li><a class="dropdown-item" href="Sigasi_en.html">Sigasi for VS Code</a></li>
+                            <li><a class="dropdown-item" href="UVVM_en.html">UVVM</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="EZUSB_FPGA_en.html">USB</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="GeminiBoard_Beaglebone_Frambuffer_en.html">GeminiBoard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="AriesBoard_ep3.html">TH</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto article-content">
+                <h1>PCI Card Project Episode 3: FPGA Design</h1>
+                <hr>
+                <h2>Overview</h2>
+                <p>First of all, we need to specify how to control the various I/Os. For example, how will the PC control the GPIO, and which address should it access? Therefore, we must define the memory map first. Below is the mapping I have defined myself:</p>
+                <table class="table table-bordered">
+                <thead>
+                <tr>
+                <th>Offset address</th>
+                <th>Function</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                <td>0x0000_0000</td>
+                <td>Digital I/O CH1 ~ Digital I/O CH16</td>
+                </tr>
+                <tr>
+                <td>0x0000_0004</td>
+                <td>Digital I/O CH1 ~ Digital I/O CH16 Mode setting (0: Input, 1: Output)</td>
+                </tr>
+                <tr>
+                <td>0x0000_0100 ~ 0x0000_011C</td>
+                <td>ADC CH1 (ADC Enable: 1 = single-shot, 2 = continuous) ~ ADC CH8</td>
+                </tr>
+                <tr>
+                <td>0x0000_0200 ~ 0x0000_020C</td>
+                <td>DAC CH1 ~ DAC CH4</td>
+                </tr>
+                <tr>
+                <td>0x0000_0210</td>
+                <td>DAC Output Enable</td>
+                </tr>
+                <tr>
+                <td>0x0000_0300</td>
+                <td>LED</td>
+                </tr>
+                <tr>
+                <td>0x0000_0400</td>
+                <td>FPGA Version</td>
+                </tr>
+                </tbody>
+                </table>
+                <p>Next, to communicate with the PC, we must use the PCI bus, which can be designed in two ways:</p>
+                <ol>
+                <li>Use the IP core provided by Altera.</li>
+                <li>Write the PCI interface using VHDL or Verilog from scratch by ourselves.</li>
+                </ol>
+                <p>I chose the second option. The reason for writing it ourselves is to avoid license issues when referencing this board later. However, when I say writing the VHDL code from scratch, I didn't write all of it myself. I happened to find a book teaching VHDL design that included example code. The link is here: <a href="http://www.cqpub.co.jp/hanbai/books/33/33361.htm">http://www.cqpub.co.jp/hanbai/books/33/33361.htm</a>. It might be a bit challenging since it is in Japanese, but that's fine; we only need to use the PCI interface part of the code.</p>
+                <hr>
+                <h2>Design</h2>
+                <p>The design concept is divided into 4 main parts:</p>
+                <ul>
+                <li>PCI interface: For interfacing with the PCI bus</li>
+                <li>DAC controller: To control the MCP4922</li>
+                <li>ADC controller: To control the MCP3208</li>
+                <li>DIO controller: To control the GPIO</li>
+                </ul>
+                <div class="mermaid">graph TD
+                	PC_PCI_BUS <--> PCI_IP
+                	subgraph "FPGA"	
+                		PCI_IP <--> DAC_IP
+                		PCI_IP <--> ADC_IP
+                		PCI_IP <--> DIO_IP
+                	end
+                </div>
+                <h3>1. PCI Bus Interface</h3>
+                <p>This section is the most important and complex. Luckily, we got the sample code <code>PCI_TGT8.VHD</code> from the book, which acts as a PCI Target device. It translates the communications on the PCI bus into a simpler Local bus that is easy to work with.</p>
+                <p>This code handles all Configuration Read/Write, Memory Read/Write, and I/O Read/Write operations on the PCI bus for us, translating them into Local bus signals so that we can easily connect them to other modules we design.</p>
+                <p>Below is a snippet from <code>PCI_TGT8.VHD</code> declaring the ports for the Local bus:</p>
+                <pre><code class="language-vhdl">-- [JoXMs (Local Bus Signal Pins)
+		MEM_ADRS	: out	std_logic_vector(23 downto 0);	-- AhXoX (Memory address bus)
+		MEM_DATA	: inout	std_logic_vector(31 downto 0);	-- f[^oX (Memory data bus)
+		MEM_CEn		: out	std_logic;			-- SRAM0`3 /CE (Chip Enable)
+		MEM_OEn		: out	std_logic;			-- SRAM0`3 /OE (Output Enable)
+		MEM_WE0n	: out	std_logic;			-- SRAM0 /WE (Write Enable)
+		MEM_WE1n	: out	std_logic;			-- SRAM1 /WE
+		MEM_WE2n	: out	std_logic;			-- SRAM2 /WE
+		MEM_WE3n	: out	std_logic;			-- SRAM3 /WE
+</code></pre>
+                <p>As seen in the code, we get the Address bus (<code>MEM_ADRS</code>), Data bus (<code>MEM_DATA</code>), and control signals (<code>MEM_CEn</code>, <code>MEM_OEn</code>, <code>MEM_WEn</code>). We will use these signals to decode the addresses and select which IP core (DAC, ADC, or DIO) to interact with.</p>
+                <h3>2. DAC_IP</h3>
+                <p>This module is responsible for receiving values sent from the Local bus and using them to control the MCP4922 DAC chip, which uses an SPI interface. The file used is <code>DAC_CTRL.vhd</code>.</p>
+                <pre><code class="language-vhdl">entity	DAC_CTRL	is
+	port	(
+			CLK							:	in	std_logic							;
+			RST_L						:	in	std_logic							;
+			
+			-- system interface
+			iDACData					:	in	ODAC_DATA							;
+			iWriteREQ					:	in	std_logic							;
+			ipWriteFinish				:	out	std_logic							;
+			
+			-- DAC interface
+			MOSI						:	out	std_logic							;
+			SCLK						:	out	std_logic							;
+			CS_L1						:	out	std_logic							;
+			CS_L2						:	out	std_logic							;
+			LOADDACS_L					:	out	std_logic							
+			
+			);
+end	DAC_CTRL;
+</code></pre>
+                <p>When the <code>iWriteREQ</code> signal is asserted, the module takes the data from <code>iDACData</code> and generates the SPI signals (<code>MOSI</code>, <code>SCLK</code>, <code>CS_L1</code>, <code>CS_L2</code>) to transmit to the DAC chip.</p>
+                <img src="AriesBoard_ep3_files/image001.jpg" class="img-fluid rounded">
+                <h3>3. ADC_IP</h3>
+                <p>This module is responsible for controlling the MCP3208 ADC chip, which also uses an SPI interface. The file used is <code>ADC_CTRL.vhd</code>.</p>
+                <pre><code class="language-vhdl">entity	ADC_CTRL	is
+	port	(
+			CLK							:	in	std_logic							;
+			RST_L						:	in	std_logic							;
+			
+			-- system interface
+			iADCData					:	out	ADC_DATA							;
+			iReadREQ					:	in	std_logic							;
+			ipReadFinish				:	out	std_logic							;
+			
+			-- ADC interface
+			MISO						:	in	std_logic							;
+			MOSI						:	out	std_logic							;
+			SCLK						:	out	std_logic							;
+			CS_L						:	out	std_logic							
+			
+			
+			);
+end	ADC_CTRL;
+</code></pre>
+                <p>When the <code>iReadREQ</code> signal is asserted, the module commands the ADC chip via SPI (<code>MOSI</code>, <code>SCLK</code>, <code>CS_L</code>) to start the conversion. Once the conversion is complete, the data is read back through <code>MISO</code> and outputted to <code>iADCData</code>.</p>
+                <img src="AriesBoard_ep3_files/image002.jpg" class="img-fluid rounded">
+                <h3>4. DIO_IP</h3>
+                <p>This is the simplest module, responsible for controlling the General Purpose I/O directly. The file used is <code>PIO_CTRL.vhd</code>.</p>
+                <pre><code class="language-vhdl">entity	PIO_CTRL	is
+	port	(
+			CLK							:	in	std_logic							;
+			RST_L						:	in	std_logic							;
+			
+			-- system interface
+			iPIOCtrl					:	in	std_logic_vector(15 downto 0)		;
+			iPIOBufferIn				:	out	std_logic_vector(15 downto 0)		;
+			iPIOBufferOut				:	in	std_logic_vector(15 downto 0)		;
+			
+			-- PIO interface
+			PIO							:	inout	std_logic_vector(15 downto 0)	
+			
+			);
+end	PIO_CTRL;
+</code></pre>
+                <ul>
+                <li><code>iPIOCtrl</code>: Used to define the direction of each pin as either Input or Output.</li>
+                <li><code>iPIOBufferOut</code>: The data to be written to the Output pins.</li>
+                <li><code>iPIOBufferIn</code>: The data read from the Input pins.</li>
+                <li><code>PIO</code>: The port connected directly to the actual FPGA pins.</li>
+                </ul>
+                <hr>
+                <h2>Simulation</h2>
+                <p>For simulation, we did not write the entire testbench ourselves; instead, we modified Altera's testbench. The primary file we edited is <code>mstr_tranx.vhd</code>, which acts as a PCI Master to generate transactions to test our PCI Target.</p>
+                <p>We can write to or read from the memory based on the addresses defined in our Memory map using the <code>mem_wr_32</code> and <code>mem_rd_32</code> procedures provided in the testbench.</p>
+                <p>Example of writing data to various addresses:</p>
+                <pre><code class="language-vhdl">---------------------------------------------------      
+-- 32 bit memory write(Address, Data, Number of Dwords)   
+-- mem_wr_32(x"10000000",x"00000001",1);
+---------------------------------------------------
+  
+      -- เขียนค่า 0x12345678 ไปยัง address ของ Digital I/O
+      mem_wr_32(bar0_data,x"12345678",1);
+      
+      -- เขียนค่า 0x22222222 ไปยัง address ของ Mode setting
+	  mem_wr_32(bar0_data+4,x"22222222",1);
+      
+      -- เขียนค่าไปยัง DAC channel 1
+	  mem_wr_32(bar0_data+x"200",x"ffffffff",1);
+      
+      -- สั่งให้อ่านค่าจาก ADC channel 1
+	  mem_wr_32(bar0_data+x"100",x"00000000",1);
+</code></pre>
+                <table class="table table-bordered">
+                <thead>
+                <tr>
+                <th>bar0_data</th>
+                <th>0x0000_0000</th>
+                <th>Digital I/O CH1 ~ Digital I/O CH16</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                <td>bar0_data+4</td>
+                <td>0x0000_0004</td>
+                <td>Digital I/O CH1 ~ Digital I/O CH16 Mode setting (0: Input, 1: Output)</td>
+                </tr>
+                </tbody>
+                </table>
+                <p>We can observe the simulation results from the waveforms in the simulator to verify whether each of our IP cores functions correctly as expected.</p>
+                <img src="AriesBoard_ep3_files/image003.png" class="img-fluid rounded">
+                <img src="AriesBoard_ep3_files/image004.png" class="img-fluid rounded">
+                <hr>
+                <h2>Note</h2>
+                <p>All example code can be downloaded at:
+                <a href="https://github.com/wichayen/ariesboard">https://github.com/wichayen/ariesboard</a></p>
+                <hr>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center p-4 mt-5" style="background-color: #f8f9fa;">
+        <div class="container">
+            <p class="mb-0">Contact: <a href="https://www.facebook.com/wichayen.hong" target="_blank">Wichayen Hong on Facebook</a> | <a href="https://github.com/wichayen" target="_blank">GitHub</a> | <a href="https://www.linkedin.com/in/wichayen-luangsopapan-404133202/" target="_blank">LinkedIn</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true, theme: 'default'});</script>
+</body>
+</html>
