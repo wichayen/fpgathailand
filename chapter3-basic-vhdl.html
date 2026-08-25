@@ -1,0 +1,802 @@
+<!DOCTYPE html> <html lang="en"><head>
+<title>chapter3-basic-vhdl</title>
+<base href=".">
+<meta name="pathname" content="chapter3-basic-vhdl.html">
+<meta name="description" content="hong - chapter3-basic-vhdl">
+<meta property="og:title" content="chapter3-basic-vhdl">
+<meta property="og:description" content="hong - chapter3-basic-vhdl">
+<meta property="og:type" content="website">
+<meta property="og:url" content="chapter3-basic-vhdl.html">
+<meta property="og:image" content="img/vhdl_structure.png">
+<meta charset="UTF-8"><meta property="og:site_name" content="hong"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, minimum-scale=1.0, maximum-scale=5.0"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="site-lib/rss.xml"><script async="" id="webpage-script" src="site-lib/scripts/webpage.js" onload="this.onload=null;this.setAttribute(&quot;loaded&quot;, &quot;true&quot;)"></script><script async="" id="graph-wasm-script" src="site-lib/scripts/graph-wasm.js" onload="this.onload=null;this.setAttribute(&quot;loaded&quot;, &quot;true&quot;)"></script><script async="" id="graph-render-worker-script" src="site-lib/scripts/graph-render-worker.js" onload="this.onload=null;this.setAttribute(&quot;loaded&quot;, &quot;true&quot;)"></script><link rel="icon" href="site-lib/media/favicon.png"><link rel="preload" href="site-lib/styles/snippets.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="site-lib/styles/snippets.css"></noscript><link rel="stylesheet" href="site-lib/styles/obsidian.css"><link rel="preload" href="site-lib/styles/global-variable-styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="site-lib/styles/global-variable-styles.css"></noscript><link rel="preload" href="site-lib/styles/main-styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="site-lib/styles/main-styles.css"></noscript><style>body{--line-width:40em;--line-width-adaptive:40em;--file-line-width:40em;--sidebar-width:min(20em, 80vw);--collapse-arrow-size:11px;--tree-vertical-spacing:1.3em;--sidebar-margin:12px}:root{background-color:#202124}.sidebar{height:100%;font-size:14px;z-index:10;min-width:calc(var(--sidebar-width) + var(--divider-width-hover));max-width:calc(var(--sidebar-width) + var(--divider-width-hover));position:relative;overflow:hidden;overflow:clip;transition:min-width ease-in-out,max-width ease-in-out;transition-duration:.2s;contain:size}#left-sidebar{left:0}#right-sidebar{right:0}.sidebar.is-collapsed{min-width:0;max-width:0}.sidebar.floating{position:absolute}.sidebar .leaf-content{height:100%;min-width:calc(var(--sidebar-width) - var(--divider-width-hover));top:0;padding:var(--sidebar-margin);padding-top:4em;line-height:var(--line-height-tight);background-color:var(--background-secondary);transition:background-color,border-right,border-left,box-shadow;transition-duration:var(--color-fade-speed);transition-timing-function:ease-in-out;position:absolute;display:flex;flex-direction:column}.sidebar:not(.is-collapsed) .leaf-content{min-width:calc(max(100%,var(--sidebar-width)) - 3px);max-width:calc(max(100%,var(--sidebar-width)) - 3px)}#left-sidebar-content{left:0;border-top-right-radius:var(--radius-l);border-bottom-right-radius:var(--radius-l)}#right-sidebar-content{right:0;border-top-left-radius:var(--radius-l);border-bottom-left-radius:var(--radius-l)}.sidebar #left-sidebar-content,.sidebar #right-sidebar-content{contain:none!important;container-type:normal!important;animation:none!important}.sidebar:has(.leaf-content:empty):has(.topbar-content:empty){display:none}.sidebar-topbar{height:calc(2.3em + 2 * var(--sidebar-margin));width:var(--sidebar-width);padding:var(--sidebar-margin);z-index:1;position:fixed;display:flex;align-items:center;transition:width ease-in-out;transition-duration:inherit}.sidebar.is-collapsed .sidebar-topbar{width:calc(2.3em + var(--sidebar-margin) * 2)}.sidebar .sidebar-topbar.is-collapsed{width:0}#left-sidebar .sidebar-topbar{left:0;flex-direction:row;border-top-right-radius:var(--radius-l)}#right-sidebar .sidebar-topbar{right:0;flex-direction:row-reverse;border-top-left-radius:var(--radius-l)}#left-sidebar .topbar-content{margin-right:calc(2.3em + var(--sidebar-margin));flex-direction:row}#right-sidebar .topbar-content{margin-left:calc(2.3em + var(--sidebar-margin));flex-direction:row-reverse}.topbar-content{overflow:hidden visible;overflow:clip visible;width:100%;height:100%;display:flex;align-items:center;transition:inherit}.sidebar.is-collapsed .topbar-content{width:0;transition:inherit}.clickable-icon.sidebar-collapse-icon{background-color:transparent;color:var(--icon-color-focused);padding:2px!important;margin:0!important;height:100%!important;width:2.3em!important;margin-inline:0.14em!important;position:absolute}#left-sidebar .clickable-icon.sidebar-collapse-icon{transform:rotateY(180deg);right:var(--sidebar-margin)}#right-sidebar .clickable-icon.sidebar-collapse-icon{transform:rotateY(180deg);left:var(--sidebar-margin)}.clickable-icon.sidebar-collapse-icon svg.svg-icon{width:100%;height:100%}.feature-title{margin-left:1px;text-transform:uppercase;letter-spacing:.06em;margin-top:.75em;margin-bottom:.75em}.feature-header{display:flex;align-items:center;padding-top:0;font-size:1em;padding-left:0}body.floating-sidebars .sidebar{position:absolute}body{transition:background-color var(--color-fade-speed) ease-in-out}#navbar:not(:empty){display:flex;align-items:center;justify-content:space-between;padding:.5em 1em;width:100%}#main{display:flex;flex-direction:column;height:100%;width:100%;align-items:stretch;justify-content:center}#main-horizontal{display:flex;flex-direction:row;flex-grow:1;width:100%;align-items:stretch;justify-content:center}#center-content{flex-basis:100%;max-width:100%;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;transition:opacity .2s ease-in-out;contain:inline-size}.hide{opacity:0!important;transition:opacity .2s ease-in-out;pointer-events:none}#center-content>.obsidian-document{padding-left:2em;padding-right:1em;margin-bottom:0;width:100%;width:-webkit-fill-available;width:-moz-available;width:fill-available;transition:background-color var(--color-fade-speed) ease-in-out;border-top-right-radius:var(--window-radius,var(--radius-m));border-top-left-radius:var(--window-radius,var(--radius-m));overflow-x:hidden!important;overflow-y:auto!important;display:flex!important;flex-direction:column!important;align-items:center!important;contain:inline-size}body #center-content>.obsidian-document>.markdown-preview-sizer{padding-bottom:80vh;width:100%;max-width:var(--line-width);flex-basis:var(--line-width);transition:background-color var(--color-fade-speed) ease-in-out;contain:inline-size}#center-content>.obsidian-document>div{width:100%!important;transition:background-color var(--color-fade-speed) ease-in-out;contain:inline-size}#center-content>.obsidian-document:not([data-type=markdown]).embed{display:flex;padding:1em;height:100%;width:100%;align-items:center;justify-content:center}#center-content>.obsidian-document:not([data-type=markdown]).embed>*{max-width:100%;max-height:100%;object-fit:contain}:not(h1,h2,h3,h4,h5,h6,li):has(> :is(.math,table)){overflow-x:auto!important}#center-content>.obsidian-document:not([data-type=markdown]){overflow-x:auto;contain:content;padding:0;margin:0;height:100%}.obsidian-document[data-type=attachment]{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;width:100%}.obsidian-document[data-type=attachment]>*{outline:0;border:none;box-shadow:none}.obsidian-document[data-type=attachment] :is(img){max-width:90%;max-height:90%;object-fit:contain}.obsidian-document[data-type=attachment]>:is(audio){width:100%;max-width:min(90%,var(--line-width))}.obsidian-document[data-type=attachment]>:is(embed,iframe,video){width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain}.canvas-wrapper>:is(.header,.footer){z-index:100;position:absolute;display:flex;justify-content:center;flex-direction:column;width:100%;align-items:center}.scroll-highlight{position:absolute;width:100%;height:100%;pointer-events:none;z-index:1000;background-color:hsla(var(--color-accent-hsl),.25);opacity:0;padding:1em;inset:50%;translate:-50% -50%;border-radius:var(--radius-s)}</style><script defer="">async function loadIncludes(){let e=document.querySelectorAll("link[itemprop='include']");for(const t of e){let e=t.getAttribute("href");try{let o="";if(e.startsWith("https:")||e.startsWith("http:")||"file:"!=window.location.protocol){const n=await fetch(e);if(!n.ok){console.log("Could not include file: "+e),t?.remove();continue}o=await n.text()}else{const t=document.getElementById(btoa(encodeURI(e)));if(t){const e=JSON.parse(decodeURI(atob(t.getAttribute("value")??"")));o=e?.data??""}}let n=document.createRange().createContextualFragment(o);t.before(n),t.remove(),console.log("Included text: "+o),console.log("Included file: "+e)}catch(o){t?.remove(),console.log("Could not include file: "+e,o);continue}}}document.addEventListener("DOMContentLoaded",(()=>{loadIncludes()}));let isFileProtocol="file:"==location.protocol;function waitLoadScripts(e,t){let o=e.map((e=>document.getElementById(e+"-script")));!function e(n){let l=o[n],c=n+1;l?(l&&"true"!=l.getAttribute("loaded")||n<o.length&&e(c),n<o.length&&l.addEventListener("load",(()=>e(c)))):n<o.length?e(c):t()}(0)}</script></head><body class="publish css-settings-manager styled-scrollbars show-inline-title show-ribbon is-focused"><script defer="">let theme=localStorage.getItem("theme")||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");"dark"==theme?(document.body.classList.add("theme-dark"),document.body.classList.remove("theme-light")):(document.body.classList.add("theme-light"),document.body.classList.remove("theme-dark")),window.innerWidth<480?document.body.classList.add("is-phone"):window.innerWidth<768?document.body.classList.add("is-tablet"):window.innerWidth<1024?document.body.classList.add("is-small-screen"):document.body.classList.add("is-large-screen")</script><div class="parsed-feature-container" style="display: contents;"><link itemprop="include" href="site-lib/html/custom-head-content-content.html"></div><div id="main"><div id="navbar"></div><div id="main-horizontal"><div id="left-content" class="leaf" style="--sidebar-width: var(--sidebar-width-left);"><div id="left-sidebar" class="sidebar"><div class="sidebar-handle"></div><div class="sidebar-topbar"><div class="topbar-content"><div id="search-container"><div id="search-wrapper"><input enterkeyhint="search" type="search" spellcheck="false" placeholder="Search..."><div aria-label="Clear search" id="search-clear-button"></div></div></div></div><div class="clickable-icon sidebar-collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><path d="M21 3H3C1.89543 3 1 3.89543 1 5V19C1 20.1046 1.89543 21 3 21H21C22.1046 21 23 20.1046 23 19V5C23 3.89543 22.1046 3 21 3Z"></path><path d="M10 4V20"></path><path d="M4 7H7"></path><path d="M4 10H7"></path><path d="M4 13H7"></path></svg></div></div><div class="sidebar-content-wrapper"><div id="left-sidebar-content" class="leaf-content"><link itemprop="include" href="site-lib/html/file-tree-content.html"></div></div><script defer="">let ls = document.querySelector("#left-sidebar"); ls.classList.toggle("is-collapsed", window.innerWidth < 768); ls.style.setProperty("--sidebar-width", localStorage.getItem("sidebar-left-width"));</script></div></div><div id="center-content" class="leaf"><div class="obsidian-document markdown-preview-view markdown-rendered node-insert-event is-readable-line-width allow-fold-headings allow-fold-lists show-indentation-guide show-properties" data-type="markdown"><style id="MJX-CHTML-styles">mjx-c.mjx-c1D447.TEX-I::before{padding:.677em .704em 0 0;content:"T"}mjx-c.mjx-c1D461.TEX-I::before{padding:.626em .361em .011em 0;content:"t"}mjx-c.mjx-c1D45D.TEX-I::before{padding:.442em .503em .194em 0;content:"p"}mjx-c.mjx-c1D451.TEX-I::before{padding:.694em .52em .01em 0;content:"d"}mjx-c.mjx-c1D460.TEX-I::before{padding:.442em .469em .01em 0;content:"s"}mjx-c.mjx-c1D462.TEX-I::before{padding:.442em .572em .011em 0;content:"u"}mjx-c.mjx-c210E.TEX-I::before{padding:.694em .576em .011em 0;content:"h"}mjx-c.mjx-c1D439.TEX-I::before{padding:.68em .749em 0 0;content:"F"}mjx-c.mjx-c1D45A.TEX-I::before{padding:.442em .878em .011em 0;content:"m"}mjx-c.mjx-c1D44E.TEX-I::before{padding:.441em .529em .01em 0;content:"a"}mjx-c.mjx-c6B::before{padding:.694em .528em 0 0;content:"k"}mjx-c.mjx-c52::before{padding:.683em .736em .022em 0;content:"R"}mjx-c.mjx-c71::before{padding:.442em .528em .194em 0;content:"q"}mjx-c.mjx-c64::before{padding:.694em .556em .011em 0;content:"d"}mjx-c.mjx-c54::before{padding:.677em .722em 0 0;content:"T"}mjx-c.mjx-c41::before{padding:.716em .75em 0 0;content:"A"}mjx-c.mjx-c2265::before{padding:.636em .778em .138em 0;content:"≥"}mjx-c.mjx-c3C::before{padding:.54em .778em .04em 0;content:"<"}mjx-c.mjx-c1D437.TEX-I::before{padding:.683em .828em 0 0;content:"D"}mjx-c.mjx-c1D444.TEX-I::before{padding:.704em .791em .194em 0;content:"Q"}mjx-container[jax=CHTML]{line-height:0}mjx-container [space="1"]{margin-left:.111em}mjx-container [space="2"]{margin-left:.167em}mjx-container [space="3"]{margin-left:.222em}mjx-container [space="4"]{margin-left:.278em}mjx-container [space="5"]{margin-left:.333em}mjx-container [rspace="1"]{margin-right:.111em}mjx-container [rspace="2"]{margin-right:.167em}mjx-container [rspace="3"]{margin-right:.222em}mjx-container [rspace="4"]{margin-right:.278em}mjx-container [rspace="5"]{margin-right:.333em}mjx-container [size="s"]{font-size:70.7%}mjx-container [size=ss]{font-size:50%}mjx-container [size=Tn]{font-size:60%}mjx-container [size=sm]{font-size:85%}mjx-container [size=lg]{font-size:120%}mjx-container [size=Lg]{font-size:144%}mjx-container [size=LG]{font-size:173%}mjx-container [size=hg]{font-size:207%}mjx-container [size=HG]{font-size:249%}mjx-container [width=full]{width:100%}mjx-box{display:inline-block}mjx-block{display:block}mjx-itable{display:inline-table}mjx-row{display:table-row}mjx-row>*{display:table-cell}mjx-mtext{display:inline-block;text-align:left}mjx-mstyle{display:inline-block}mjx-merror{display:inline-block;color:red;background-color:#ff0}mjx-mphantom{visibility:hidden}mjx-assistive-mml{top:0;left:0;clip:rect(1px,1px,1px,1px);user-select:none;position:absolute!important;padding:1px 0 0!important;border:0!important;display:block!important;width:auto!important;overflow:hidden!important}mjx-assistive-mml[display=block]{width:100%!important}mjx-math{display:inline-block;text-align:left;line-height:0;text-indent:0;font-style:normal;font-weight:400;font-size:100%;font-size-adjust:none;letter-spacing:normal;border-collapse:collapse;overflow-wrap:normal;word-spacing:normal;white-space:nowrap;direction:ltr;padding:1px 0}mjx-container[jax=CHTML][display=true]{display:block;text-align:center;margin:1em 0}mjx-container[jax=CHTML][display=true][width=full]{display:flex}mjx-container[jax=CHTML][display=true] mjx-math{padding:0}mjx-container[jax=CHTML][justify=left]{text-align:left}mjx-container[jax=CHTML][justify=right]{text-align:right}mjx-mn{display:inline-block;text-align:left}mjx-c{display:inline-block}mjx-utext{display:inline-block;padding:.75em 0 .2em}mjx-mo{display:inline-block;text-align:left}mjx-stretchy-h{display:inline-table;width:100%}mjx-stretchy-h>*{display:table-cell;width:0}mjx-stretchy-h>*>mjx-c{display:inline-block;transform:scaleX(1)}mjx-stretchy-h>*>mjx-c::before{display:inline-block;width:initial}mjx-stretchy-h>mjx-ext{overflow:clip visible;width:100%}mjx-stretchy-h>mjx-ext>mjx-c::before{transform:scaleX(500)}mjx-stretchy-h>mjx-ext>mjx-c{width:0}mjx-stretchy-h>mjx-beg>mjx-c{margin-right:-.1em}mjx-stretchy-h>mjx-end>mjx-c{margin-left:-.1em}mjx-stretchy-v{display:inline-block}mjx-stretchy-v>*{display:block}mjx-stretchy-v>mjx-beg{height:0}mjx-stretchy-v>mjx-end>mjx-c{display:block}mjx-stretchy-v>*>mjx-c{transform:scaleY(1);transform-origin:left center;overflow:hidden}mjx-stretchy-v>mjx-ext{display:block;height:100%;box-sizing:border-box;border:0 solid transparent;overflow:visible clip}mjx-stretchy-v>mjx-ext>mjx-c::before{width:initial;box-sizing:border-box}mjx-stretchy-v>mjx-ext>mjx-c{transform:scaleY(500) translateY(.075em);overflow:visible}mjx-mark{display:inline-block;height:0}mjx-msub{display:inline-block;text-align:left}mjx-texatom{display:inline-block;text-align:left}mjx-mi{display:inline-block;text-align:left}mjx-msup{display:inline-block;text-align:left}mjx-mfrac{display:inline-block;text-align:left}mjx-frac{display:inline-block;vertical-align:.17em;padding:0 .22em}mjx-frac[type="d"]{vertical-align:.04em}mjx-frac[delims]{padding:0 .1em}mjx-frac[atop]{padding:0 .12em}mjx-frac[atop][delims]{padding:0}mjx-dtable{display:inline-table;width:100%}mjx-dtable>*{font-size:2000%}mjx-dbox{display:block;font-size:5%}mjx-num{display:block;text-align:center}mjx-den{display:block;text-align:center}mjx-mfrac[bevelled]>mjx-num{display:inline-block}mjx-mfrac[bevelled]>mjx-den{display:inline-block}mjx-den[align=right],mjx-num[align=right]{text-align:right}mjx-den[align=left],mjx-num[align=left]{text-align:left}mjx-nstrut{display:inline-block;height:.054em;width:0;vertical-align:-.054em}mjx-nstrut[type="d"]{height:.217em;vertical-align:-.217em}mjx-dstrut{display:inline-block;height:.505em;width:0}mjx-dstrut[type="d"]{height:.726em}mjx-line{display:block;box-sizing:border-box;min-height:1px;height:.06em;border-top:.06em solid;margin:.06em -.1em;overflow:hidden}mjx-line[type="d"]{margin:.18em -.1em}mjx-mover{display:inline-block;text-align:left}mjx-mover:not([limits=false]){padding-top:.1em}mjx-mover:not([limits=false])>*{display:block;text-align:left}mjx-mrow{display:inline-block;text-align:left}mjx-c::before{display:block;width:0}.MJX-TEX{font-family:MJXZERO,MJXTEX}.TEX-B{font-family:MJXZERO,MJXTEX-B}.TEX-I{font-family:MJXZERO,MJXTEX-I}.TEX-MI{font-family:MJXZERO,MJXTEX-MI}.TEX-BI{font-family:MJXZERO,MJXTEX-BI}.TEX-S1{font-family:MJXZERO,MJXTEX-S1}.TEX-S2{font-family:MJXZERO,MJXTEX-S2}.TEX-S3{font-family:MJXZERO,MJXTEX-S3}.TEX-S4{font-family:MJXZERO,MJXTEX-S4}.TEX-A{font-family:MJXZERO,MJXTEX-A}.TEX-C{font-family:MJXZERO,MJXTEX-C}.TEX-CB{font-family:MJXZERO,MJXTEX-CB}.TEX-FR{font-family:MJXZERO,MJXTEX-FR}.TEX-FRB{font-family:MJXZERO,MJXTEX-FRB}.TEX-SS{font-family:MJXZERO,MJXTEX-SS}.TEX-SSB{font-family:MJXZERO,MJXTEX-SSB}.TEX-SSI{font-family:MJXZERO,MJXTEX-SSI}.TEX-SC{font-family:MJXZERO,MJXTEX-SC}.TEX-T{font-family:MJXZERO,MJXTEX-T}.TEX-V{font-family:MJXZERO,MJXTEX-V}.TEX-VB{font-family:MJXZERO,MJXTEX-VB}mjx-stretchy-h mjx-c,mjx-stretchy-v mjx-c{font-family:MJXZERO,MJXTEX-S1,MJXTEX-S4,MJXTEX,MJXTEX-A!important}@font-face{font-family:MJXZERO;src:url("site-lib/fonts/mathjax_zero.woff") format("woff")}@font-face{font-family:MJXTEX;src:url("site-lib/fonts/mathjax_main-regular.woff") format("woff")}@font-face{font-family:MJXTEX-B;src:url("site-lib/fonts/mathjax_main-bold.woff") format("woff")}@font-face{font-family:MJXTEX-I;src:url("site-lib/fonts/mathjax_math-italic.woff") format("woff")}@font-face{font-family:MJXTEX-MI;src:url("site-lib/fonts/mathjax_main-italic.woff") format("woff")}@font-face{font-family:MJXTEX-BI;src:url("site-lib/fonts/mathjax_math-bolditalic.woff") format("woff")}@font-face{font-family:MJXTEX-S1;src:url("site-lib/fonts/mathjax_size1-regular.woff") format("woff")}@font-face{font-family:MJXTEX-S2;src:url("site-lib/fonts/mathjax_size2-regular.woff") format("woff")}@font-face{font-family:MJXTEX-S3;src:url("site-lib/fonts/mathjax_size3-regular.woff") format("woff")}@font-face{font-family:MJXTEX-S4;src:url("site-lib/fonts/mathjax_size4-regular.woff") format("woff")}@font-face{font-family:MJXTEX-A;src:url("site-lib/fonts/mathjax_ams-regular.woff") format("woff")}@font-face{font-family:MJXTEX-C;src:url("site-lib/fonts/mathjax_calligraphic-regular.woff") format("woff")}@font-face{font-family:MJXTEX-CB;src:url("site-lib/fonts/mathjax_calligraphic-bold.woff") format("woff")}@font-face{font-family:MJXTEX-FR;src:url("site-lib/fonts/mathjax_fraktur-regular.woff") format("woff")}@font-face{font-family:MJXTEX-FRB;src:url("site-lib/fonts/mathjax_fraktur-bold.woff") format("woff")}@font-face{font-family:MJXTEX-SS;src:url("site-lib/fonts/mathjax_sansserif-regular.woff") format("woff")}@font-face{font-family:MJXTEX-SSB;src:url("site-lib/fonts/mathjax_sansserif-bold.woff") format("woff")}@font-face{font-family:MJXTEX-SSI;src:url("site-lib/fonts/mathjax_sansserif-italic.woff") format("woff")}@font-face{font-family:MJXTEX-SC;src:url("site-lib/fonts/mathjax_script-regular.woff") format("woff")}@font-face{font-family:MJXTEX-T;src:url("site-lib/fonts/mathjax_typewriter-regular.woff") format("woff")}@font-face{font-family:MJXTEX-V;src:url("site-lib/fonts/mathjax_vector-regular.woff") format("woff")}@font-face{font-family:MJXTEX-VB;src:url("site-lib/fonts/mathjax_vector-bold.woff") format("woff")}.mjx-stretched mjx-c.mjx-c2013::before{content:"–"}mjx-stretchy-h.mjx-c2013 mjx-ext mjx-c::before{content:"–";padding:.285em 0 0}mjx-c.mjx-c30::before{padding:.666em .5em .022em 0;content:"0"}mjx-c.mjx-c3D::before{padding:.583em .778em .082em 0;content:"="}mjx-c.mjx-c2C::before{padding:.121em .278em .194em 0;content:","}mjx-c.mjx-c31::before{padding:.666em .5em 0 0;content:"1"}mjx-c.mjx-c2B::before{padding:.583em .778em .082em 0;content:"+"}mjx-c.mjx-c35::before{padding:.666em .5em .022em 0;content:"5"}mjx-c.mjx-c2212::before{padding:.583em .778em .082em 0;content:"−"}mjx-c.mjx-c34::before{padding:.677em .5em 0 0;content:"4"}mjx-c.mjx-c32::before{padding:.666em .5em 0 0;content:"2"}mjx-c.mjx-c37::before{padding:.676em .5em .022em 0;content:"7"}mjx-c.mjx-c38::before{padding:.666em .5em .022em 0;content:"8"}mjx-c.mjx-c33::before{padding:.665em .5em .022em 0;content:"3"}mjx-c.mjx-c36::before{padding:.666em .5em .022em 0;content:"6"}mjx-c.mjx-c2192::before{padding:.511em 1em .011em 0;content:"→"}mjx-c.mjx-c28::before{padding:.75em .389em .25em 0;content:"("}mjx-c.mjx-c63::before{padding:.448em .444em .011em 0;content:"c"}mjx-c.mjx-c61::before{padding:.448em .5em .011em 0;content:"a"}mjx-c.mjx-c72::before{padding:.442em .392em 0 0;content:"r"}mjx-c.mjx-c79::before{padding:.431em .528em .204em 0;content:"y"}mjx-c.mjx-c29::before{padding:.75em .389em .25em 0;content:")"}mjx-c.mjx-c1D434.TEX-I::before{padding:.716em .75em 0 0;content:"A"}mjx-c.mjx-c1D435.TEX-I::before{padding:.683em .759em 0 0;content:"B"}mjx-c.mjx-c2019::before{padding:.694em .278em 0 0;content:"’"}mjx-c.mjx-c73::before{padding:.448em .394em .011em 0;content:"s"}mjx-c.mjx-c20::before{padding:0 .25em 0 0;content:" "}mjx-c.mjx-c43::before{padding:.705em .722em .021em 0;content:"C"}mjx-c.mjx-c6F::before{padding:.448em .5em .01em 0;content:"o"}mjx-c.mjx-c6D::before{padding:.442em .833em 0 0;content:"m"}mjx-c.mjx-c70::before{padding:.442em .556em .194em 0;content:"p"}mjx-c.mjx-c6C::before{padding:.694em .278em 0 0;content:"l"}mjx-c.mjx-c65::before{padding:.448em .444em .011em 0;content:"e"}mjx-c.mjx-c6E::before{padding:.442em .556em 0 0;content:"n"}mjx-c.mjx-c74::before{padding:.615em .389em .01em 0;content:"t"}mjx-c.mjx-cA0::before{padding:0 .25em 0 0;content:" "}mjx-c.mjx-c4F::before{padding:.705em .778em .022em 0;content:"O"}mjx-c.mjx-c76::before{padding:.431em .528em .011em 0;content:"v"}mjx-c.mjx-c66::before{padding:.705em .372em 0 0;content:"f"}mjx-c.mjx-c77::before{padding:.431em .722em .011em 0;content:"w"}mjx-c.mjx-c2D::before{padding:.252em .333em 0 0;content:"-"}mjx-c.mjx-c69::before{padding:.669em .278em 0 0;content:"i"}mjx-c.mjx-c4D::before{padding:.683em .917em 0 0;content:"M"}mjx-c.mjx-c53::before{padding:.705em .556em .022em 0;content:"S"}mjx-c.mjx-c42::before{padding:.683em .708em 0 0;content:"B"}mjx-c.mjx-c2295::before{padding:.583em .778em .083em 0;content:"⊕"}mjx-c.mjx-c75::before{padding:.442em .556em .011em 0;content:"u"}mjx-c.mjx-c39::before{padding:.666em .5em .022em 0;content:"9"}mjx-c.mjx-c2E::before{padding:.12em .278em 0 0;content:"."}mjx-c.mjx-cD7::before{padding:.491em .778em 0 0;content:"×"}mjx-c.mjx-c78::before{padding:.431em .528em 0 0;content:"x"}mjx-c.mjx-c2F::before{padding:.75em .5em .25em 0;content:"/"}mjx-c.mjx-c1D465.TEX-I::before{padding:.442em .572em .011em 0;content:"x"}mjx-c.mjx-c1D45B.TEX-I::before{padding:.442em .6em .011em 0;content:"n"}mjx-c.mjx-c1D7F7.TEX-T::before{padding:.622em .525em 0 0;content:"1"}mjx-c.mjx-c1D7F6.TEX-T::before{padding:.621em .525em .01em 0;content:"0"}mjx-c.mjx-cB1::before{padding:.666em .778em 0 0;content:"±"}mjx-c.mjx-c1D44C.TEX-I::before{padding:.683em .763em 0 0;content:"Y"}mjx-c.mjx-c22C5::before{padding:.31em .278em 0 0;content:"⋅"}mjx-c.mjx-c2032::before{padding:.56em .275em 0 0;content:"′"}</style><div class="markdown-preview-sizer markdown-preview-section"><div class="header"><h1 class="page-title heading inline-title" id="chapter3-basic-vhdl_0">chapter3-basic-vhdl</h1><div class="data-bar"></div></div><div class="markdown-preview-pusher" style="width: 1px; height: 0.1px; margin-bottom: 0px;"></div><div class="el-pre"><div class="block-language-table-of-contents"><ul>
+<li dir="auto"><a data-tooltip-position="top" aria-label="1 ภาษาบรรยายฮาร์ดแวร์ VHDL &amp; Signal Naming Conventions" data-href="#1 ภาษาบรรยายฮาร์ดแวร์ VHDL &amp; Signal Naming Conventions" href="chapter3-basic-vhdl.html#1_ภาษาบรรยายฮาร์ดแวร์_VHDL_&amp;_Signal_Naming_Conventions_0" class="internal-link" target="_self" rel="noopener nofollow">1 ภาษาบรรยายฮาร์ดแวร์ VHDL &amp; Signal Naming Conventions</a></li>
+<li dir="auto"><a data-tooltip-position="top" aria-label="2 โครงสร้างภาษา VHDL: Entity &amp; Architecture" data-href="#2 โครงสร้างภาษา VHDL: Entity &amp; Architecture" href="chapter3-basic-vhdl.html#2_โครงสร้างภาษา_VHDL_Entity_&amp;_Architecture_0" class="internal-link" target="_self" rel="noopener nofollow">2 โครงสร้างภาษา VHDL: Entity &amp; Architecture</a></li>
+<li dir="auto"><div class="list-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></div><a data-tooltip-position="top" aria-label="3 Combinational Logic vs Sequential Logic" data-href="#3 Combinational Logic vs Sequential Logic" href="chapter3-basic-vhdl.html#3_Combinational_Logic_vs_Sequential_Logic_0" class="internal-link" target="_self" rel="noopener nofollow">3 Combinational Logic vs Sequential Logic</a>
+<ul>
+<li dir="auto"><a data-tooltip-position="top" aria-label="3.1 ตัวอย่างโค้ด VHDL: Combinational Process vs Clocked Sequential Process" data-href="#3.1 ตัวอย่างโค้ด VHDL: Combinational Process vs Clocked Sequential Process" href="chapter3-basic-vhdl.html#3.1_ตัวอย่างโค้ด_VHDL_Combinational_Process_vs_Clocked_Sequential_Process_0" class="internal-link" target="_self" rel="noopener nofollow">3.1 ตัวอย่างโค้ด VHDL: Combinational Process vs Clocked Sequential Process</a></li>
+<li dir="auto"><div class="list-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></div><a data-tooltip-position="top" aria-label="3.2 เจาะลึก Sensitivity List: การทำงานและข้อควรระวัง" data-href="#3.2 เจาะลึก Sensitivity List: การทำงานและข้อควรระวัง" href="chapter3-basic-vhdl.html#3.2_เจาะลึก_Sensitivity_List_การทำงานและข้อควรระวัง_0" class="internal-link" target="_self" rel="noopener nofollow">3.2 เจาะลึก Sensitivity List: การทำงานและข้อควรระวัง</a>
+<ul>
+<li dir="auto"><a data-tooltip-position="top" aria-label="3.2.1 Sensitivity List ใน Combinational Process" data-href="#3.2.1 Sensitivity List ใน Combinational Process" href="chapter3-basic-vhdl.html#3.2.1_Sensitivity_List_ใน_Combinational_Process_0" class="internal-link" target="_self" rel="noopener nofollow">3.2.1 Sensitivity List ใน Combinational Process</a></li>
+<li dir="auto"><a data-tooltip-position="top" aria-label="3.2.2 Sensitivity List ใน Clocked Sequential Process" data-href="#3.2.2 Sensitivity List ใน Clocked Sequential Process" href="chapter3-basic-vhdl.html#3.2.2_Sensitivity_List_ใน_Clocked_Sequential_Process_0" class="internal-link" target="_self" rel="noopener nofollow">3.2.2 Sensitivity List ใน Clocked Sequential Process</a></li>
+<li dir="auto"><a data-tooltip-position="top" aria-label="3.2.3 VHDL-2008 Standard Option: `process(all)`" data-href="#3.2.3 VHDL-2008 Standard Option: `process(all)`" href="chapter3-basic-vhdl.html#3.2.3_VHDL-2008_Standard_Option_`process(all)`_0" class="internal-link" target="_self" rel="noopener nofollow">3.2.3 VHDL-2008 Standard Option: process(all)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li dir="auto"><div class="list-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></div><a data-tooltip-position="top" aria-label="4 ชนิดข้อมูลและแอตทริบิวต์ (Data Types &amp; Attributes)" data-href="#4 ชนิดข้อมูลและแอตทริบิวต์ (Data Types &amp; Attributes)" href="chapter3-basic-vhdl.html#4_ชนิดข้อมูลและแอตทริบิวต์_(Data_Types_&amp;_Attributes)_0" class="internal-link" target="_self" rel="noopener nofollow">4 ชนิดข้อมูลและแอตทริบิวต์ (Data Types &amp; Attributes)</a>
+<ul>
+<li dir="auto"><a data-tooltip-position="top" aria-label="4.1 ชนิดข้อมูลหลักใน VHDL (`std_logic_1164`):" data-href="#4.1 ชนิดข้อมูลหลักใน VHDL (`std_logic_1164`):" href="chapter3-basic-vhdl.html#4.1_ชนิดข้อมูลหลักใน_VHDL_(`std_logic_1164`)_0" class="internal-link" target="_self" rel="noopener nofollow">4.1 ชนิดข้อมูลหลักใน VHDL (std_logic_1164):</a></li>
+<li dir="auto"><a data-tooltip-position="top" aria-label="4.2 แอตทริบิวต์ที่ใช้บ่อย (VHDL Attributes):" data-href="#4.2 แอตทริบิวต์ที่ใช้บ่อย (VHDL Attributes):" href="chapter3-basic-vhdl.html#4.2_แอตทริบิวต์ที่ใช้บ่อย_(VHDL_Attributes)_0" class="internal-link" target="_self" rel="noopener nofollow">4.2 แอตทริบิวต์ที่ใช้บ่อย (VHDL Attributes):</a></li>
+</ul>
+</li>
+<li dir="auto"><div class="list-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></div><a data-tooltip-position="top" aria-label="5 โครงสร้างควบคุมการทำงาน (Control Flow &amp; Hardware Generation)" data-href="#5 โครงสร้างควบคุมการทำงาน (Control Flow &amp; Hardware Generation)" href="chapter3-basic-vhdl.html#5_โครงสร้างควบคุมการทำงาน_(Control_Flow_&amp;_Hardware_Generation)_0" class="internal-link" target="_self" rel="noopener nofollow">5 โครงสร้างควบคุมการทำงาน (Control Flow &amp; Hardware Generation)</a>
+<ul>
+<li dir="auto"><a data-tooltip-position="top" aria-label="5.1 คำสั่งควบคุมลำดับภายใน Process (Sequential Control Statements)" data-href="#5.1 คำสั่งควบคุมลำดับภายใน Process (Sequential Control Statements)" href="chapter3-basic-vhdl.html#5.1_คำสั่งควบคุมลำดับภายใน_Process_(Sequential_Control_Statements)_0" class="internal-link" target="_self" rel="noopener nofollow">5.1 คำสั่งควบคุมลำดับภายใน Process (Sequential Control Statements)</a></li>
+<li dir="auto"><a data-tooltip-position="top" aria-label="5.2 คำสั่งสร้างฮาร์ดแวร์ขนานภายนอก Process (Concurrent Generate Statement)" data-href="#5.2 คำสั่งสร้างฮาร์ดแวร์ขนานภายนอก Process (Concurrent Generate Statement)" href="chapter3-basic-vhdl.html#5.2_คำสั่งสร้างฮาร์ดแวร์ขนานภายนอก_Process_(Concurrent_Generate_Statement)_0" class="internal-link" target="_self" rel="noopener nofollow">5.2 คำสั่งสร้างฮาร์ดแวร์ขนานภายนอก Process (Concurrent Generate Statement)</a></li>
+</ul>
+</li>
+<li dir="auto"><div class="list-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></div><a data-tooltip-position="top" aria-label="6 การออกแบบเชิงโมดูลขั้นสูง (Package, Functions &amp; Procedures)" data-href="#6 การออกแบบเชิงโมดูลขั้นสูง (Package, Functions &amp; Procedures)" href="chapter3-basic-vhdl.html#6_การออกแบบเชิงโมดูลขั้นสูง_(Package,_Functions_&amp;_Procedures)_0" class="internal-link" target="_self" rel="noopener nofollow">6 การออกแบบเชิงโมดูลขั้นสูง (Package, Functions &amp; Procedures)</a>
+<ul>
+<li dir="auto"><a data-tooltip-position="top" aria-label="6.1 Package (`*_pkg.vhd`)" data-href="#6.1 Package (`*_pkg.vhd`)" href="chapter3-basic-vhdl.html#6.1_Package_(`*_pkg.vhd`)_0" class="internal-link" target="_self" rel="noopener nofollow">6.1 Package (_pkg.vhd)</a></li>
+<li dir="auto"><a data-tooltip-position="top" aria-label="6.2 Functions (`function`)" data-href="#6.2 Functions (`function`)" href="chapter3-basic-vhdl.html#6.2_Functions_(`function`)_0" class="internal-link" target="_self" rel="noopener nofollow">6.2 Functions (function)</a></li>
+<li dir="auto"><a data-tooltip-position="top" aria-label="6.3 Procedures (`procedure`)" data-href="#6.3 Procedures (`procedure`)" href="chapter3-basic-vhdl.html#6.3_Procedures_(`procedure`)_0" class="internal-link" target="_self" rel="noopener nofollow">6.3 Procedures (procedure)</a></li>
+</ul>
+</li>
+<li dir="auto"><a data-tooltip-position="top" aria-label="7 Signal vs Variable" data-href="#7 Signal vs Variable" href="chapter3-basic-vhdl.html#7_Signal_vs_Variable_0" class="internal-link" target="_self" rel="noopener nofollow">7 Signal vs Variable</a></li>
+<li dir="auto"><div class="list-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></div><a data-tooltip-position="top" aria-label="8 Signal Naming example" data-href="#8 Signal Naming example" href="chapter3-basic-vhdl.html#8_Signal_Naming_example_0" class="internal-link" target="_self" rel="noopener nofollow">8 Signal Naming example</a>
+<ul>
+<li dir="auto"><a data-tooltip-position="top" aria-label="8.1 ตัวอย่าง Convention หลัก" data-href="#8.1 ตัวอย่าง Convention หลัก" href="chapter3-basic-vhdl.html#8.1_ตัวอย่าง_Convention_หลัก_0" class="internal-link" target="_self" rel="noopener nofollow">8.1 ตัวอย่าง Convention หลัก</a></li>
+<li dir="auto"><a data-tooltip-position="top" aria-label="8.2 Convention อื่นๆ ที่พบได้บ่อยในอุตสาหกรรม (สำหรับอ้างอิง)" data-href="#8.2 Convention อื่นๆ ที่พบได้บ่อยในอุตสาหกรรม (สำหรับอ้างอิง)" href="chapter3-basic-vhdl.html#8.2_Convention_อื่นๆ_ที่พบได้บ่อยในอุตสาหกรรม_(สำหรับอ้างอิง)_0" class="internal-link" target="_self" rel="noopener nofollow">8.2 Convention อื่นๆ ที่พบได้บ่อยในอุตสาหกรรม (สำหรับอ้างอิง)</a></li>
+</ul>
+</li>
+<li dir="auto"><div class="list-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></div><a data-tooltip-position="top" aria-label="9 Synthesizable vs Non-synthesizable (Testbench-only) VHDL Syntax" data-href="#9 Synthesizable vs Non-synthesizable (Testbench-only) VHDL Syntax" href="chapter3-basic-vhdl.html#9_Synthesizable_vs_Non-synthesizable_(Testbench-only)_VHDL_Syntax_0" class="internal-link" target="_self" rel="noopener nofollow">9 Synthesizable vs Non-synthesizable (Testbench-only) VHDL Syntax</a>
+<ul>
+<li dir="auto"><a data-tooltip-position="top" aria-label="9.1 ตารางเปรียบเทียบ Syntax ที่พบบ่อย" data-href="#9.1 ตารางเปรียบเทียบ Syntax ที่พบบ่อย" href="chapter3-basic-vhdl.html#9.1_ตารางเปรียบเทียบ_Syntax_ที่พบบ่อย_0" class="internal-link" target="_self" rel="noopener nofollow">9.1 ตารางเปรียบเทียบ Syntax ที่พบบ่อย</a></li>
+<li dir="auto"><a data-tooltip-position="top" aria-label="9.2 ตัวอย่างโค้ด: รูปแบบ Non-synthesizable (Testbench-only) ที่พบบ่อย" data-href="#9.2 ตัวอย่างโค้ด: รูปแบบ Non-synthesizable (Testbench-only) ที่พบบ่อย" href="chapter3-basic-vhdl.html#9.2_ตัวอย่างโค้ด_รูปแบบ_Non-synthesizable_(Testbench-only)_ที่พบบ่อย_0" class="internal-link" target="_self" rel="noopener nofollow">9.2 ตัวอย่างโค้ด: รูปแบบ Non-synthesizable (Testbench-only) ที่พบบ่อย</a></li>
+<li dir="auto"><a data-tooltip-position="top" aria-label="9.3 วิธีเช็คว่าโค้ดของเรา Synthesizable หรือ Non-synthesizable" data-href="#9.3 วิธีเช็คว่าโค้ดของเรา Synthesizable หรือ Non-synthesizable" href="chapter3-basic-vhdl.html#9.3_วิธีเช็คว่าโค้ดของเรา_Synthesizable_หรือ_Non-synthesizable_0" class="internal-link" target="_self" rel="noopener nofollow">9.3 วิธีเช็คว่าโค้ดของเรา Synthesizable หรือ Non-synthesizable</a></li>
+</ul>
+</li>
+</ul></div></div><div class="el-h1"><h1 data-heading="1 ภาษาบรรยายฮาร์ดแวร์ VHDL &amp; Signal Naming Conventions" dir="auto" class="heading" id="1_ภาษาบรรยายฮาร์ดแวร์_VHDL_&amp;_Signal_Naming_Conventions_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>1 ภาษาบรรยายฮาร์ดแวร์ VHDL &amp; Signal Naming Conventions</h1></div><div class="el-p"><p dir="auto">เนื้อหานี้มุ่งเน้นการทำความเข้าใจสถาปัตยกรรมภาษา VHDL (Hardware Description Language) ตั้งแต่พื้นฐานโครงสร้าง พฤติกรรมฮาร์ดแวร์ กฎการตั้งชื่อสัญญาณมาตรฐานอุตสาหกรรม จนถึงการออกแบบโมดูลขั้นสูง</p></div><div class="el-hr"><hr></div><div class="el-h1"><h1 data-heading="2 โครงสร้างภาษา VHDL: Entity &amp; Architecture" dir="auto" class="heading" id="2_โครงสร้างภาษา_VHDL_Entity_&amp;_Architecture_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>2 โครงสร้างภาษา VHDL: Entity &amp; Architecture</h1></div><div class="el-p"><p dir="auto">โครงสร้างหลักของไฟล์ VHDL แบ่งออกเป็น 3 ส่วนหลักตามลำดับดังแสดงในรูป:</p></div><div class="el-p"><p dir="auto"><span alt="vhdl_structure.png" src="img/vhdl_structure.png" class="internal-embed media-embed image-embed is-loaded" target="_self" style="width: 553px; max-width: 100%;"><img alt="vhdl_structure.png" src="img/vhdl_structure.png" target="_self" style="width: 553px; max-width: 100%;"></span></p></div><div class="el-h6"><h6 data-heading="Figure 2-1" dir="auto" class="heading" id="Figure_2-1_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>Figure 2-1</h6></div><div class="el-ol"><ol>
+<li data-line="0" dir="auto"><span class="list-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>
+<p><strong>Library Declaration (ส่วนประกาศไลบรารี)</strong>:</p>
+<ul class="has-list-bullet">
+<li data-line="1" dir="auto"><span class="list-bullet"></span>ทำหน้าที่ระบุไลบรารีและแพ็กเกจที่จะดึงมาใช้งาน เช่น <code>library IEEE; use IEEE.STD_LOGIC_1164.ALL;</code> เพื่อใช้งานชนิดข้อมูลมาตรฐานฮาร์ดแวร์</li>
+</ul>
+</li>
+<li data-line="3" dir="auto"><span class="list-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>
+<p><strong>Entity Declaration (ส่วนประกาศเอนทิตี)</strong>:</p>
+<ul class="has-list-bullet">
+<li data-line="4" dir="auto"><span class="list-bullet"></span>เปรียบเสมือน <strong>"กรอบกล่องฮาร์ดแวร์ภายนอก"</strong> ที่กำหนดชื่อโมดูล พารามิเตอร์ปรับขนาดวงจร (<code>Generic</code>) และสัญญาณขาเข้า/ขาออก (<code>Port</code>)</li>
+</ul>
+</li>
+<li data-line="6" dir="auto"><span class="list-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>
+<p><strong>Architecture Definition (ส่วนนิยามสถาปัตยกรรม)</strong>:</p>
+<ul class="has-list-bullet">
+<li data-line="7" dir="auto"><span class="list-bullet"></span><span class="list-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>เปรียบเสมือน <strong>"วงจรภายในกล่อง"</strong> ที่บรรยายการทำงานของฮาร์ดแวร์ โดยแบ่งโครงสร้างภายในออกเป็น 2 โซนสำคัญ:
+<ul class="has-list-bullet">
+<li data-line="8" dir="auto"><span class="list-bullet"></span><span class="list-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span><strong>Declarative Region (โซนประกาศก่อนคำสั่ง <code>begin</code>)</strong>:
+<ul class="has-list-bullet">
+<li data-line="9" dir="auto"><span class="list-bullet"></span><strong>Component Declaration</strong>: ประกาศโมดูลย่อย (Sub-modules) ที่ต้องการดึงมาต่อร่วมในวงจร</li>
+<li data-line="10" dir="auto"><span class="list-bullet"></span><strong>Signal Declaration</strong>: ประกาศสายสัญญาณภายใน (Internal Nodes) และสลักข้อมูล/เรจิสเตอร์ (Registers)</li>
+</ul>
+</li>
+<li data-line="11" dir="auto"><span class="list-bullet"></span><span class="list-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span><strong>Statement Region (โซนบรรยายวงจรหลังคำสั่ง <code>begin</code>)</strong>:
+<ul class="has-list-bullet">
+<li data-line="12" dir="auto"><span class="list-bullet"></span>เขียนบรรยายพฤติกรรมวงจร (Circuit Description) ด้วยคำสั่งขนาน (Concurrent Statements), การต่อสายโมดูลย่อย (Component Instantiation), หรือบล็อกการทำงานตามลำดับ (<code>process</code>)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol></div><div class="el-pre"><pre class="language-vhdl"><code data-line="0" class="language-vhdl is-loaded"><span class="token keyword">library</span> IEEE<span class="token punctuation">;</span>
+<span class="token keyword">use</span> IEEE<span class="token punctuation">.</span>STD_LOGIC_1164<span class="token punctuation">.</span><span class="token keyword">ALL</span><span class="token punctuation">;</span>
+
+<span class="token comment">-- 1. Library &amp; Entity Declaration (กรอบกล่องภายนอก)</span>
+<span class="token keyword">entity</span> my_module <span class="token keyword">is</span>
+    <span class="token keyword">Generic</span> <span class="token punctuation">(</span>
+        G_DATA_WIDTH <span class="token punctuation">:</span> integer <span class="token operator">:=</span> <span class="token number">8</span>  <span class="token comment">-- Generic Parameter</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">Port</span> <span class="token punctuation">(</span>
+        clk   <span class="token punctuation">:</span> <span class="token keyword">in</span>  std_logic<span class="token punctuation">;</span>
+        rst_n <span class="token punctuation">:</span> <span class="token keyword">in</span>  std_logic<span class="token punctuation">;</span>
+        i_data<span class="token punctuation">:</span> <span class="token keyword">in</span>  <span class="token function">std_logic_vector</span><span class="token punctuation">(</span>G_DATA_WIDTH<span class="token operator">-</span><span class="token number">1</span> <span class="token keyword">downto</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        o_data<span class="token punctuation">:</span> <span class="token keyword">out</span> <span class="token function">std_logic_vector</span><span class="token punctuation">(</span>G_DATA_WIDTH<span class="token operator">-</span><span class="token number">1</span> <span class="token keyword">downto</span> <span class="token number">0</span><span class="token punctuation">)</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">end</span> <span class="token keyword">entity</span> my_module<span class="token punctuation">;</span>
+
+<span class="token comment">-- 2. Architecture Definition (วงจรภายในกล่อง)</span>
+<span class="token keyword">architecture</span> Behavioral <span class="token keyword">of</span> my_module <span class="token keyword">is</span>
+    <span class="token comment">-- [Declarative Region] ประกาศ Signal / Component ภายใน</span>
+    <span class="token keyword">signal</span> s_data_reg <span class="token punctuation">:</span> <span class="token function">std_logic_vector</span><span class="token punctuation">(</span>G_DATA_WIDTH<span class="token operator">-</span><span class="token number">1</span> <span class="token keyword">downto</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">begin</span>
+    <span class="token comment">-- [Statement Region] บรรยายวงจรฮาร์ดแวร์หลังคำสั่ง begin</span>
+    <span class="token keyword">process</span><span class="token punctuation">(</span>clk<span class="token punctuation">,</span> rst_n<span class="token punctuation">)</span>
+    <span class="token keyword">begin</span>
+        <span class="token keyword">if</span> rst_n <span class="token operator">=</span> <span class="token number">'0'</span> <span class="token keyword">then</span>
+            s_data_reg <span class="token operator">&lt;=</span> <span class="token punctuation">(</span><span class="token keyword">others</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token number">'0'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">elsif</span> <span class="token function">rising_edge</span><span class="token punctuation">(</span>clk<span class="token punctuation">)</span> <span class="token keyword">then</span>
+            s_data_reg <span class="token operator">&lt;=</span> i_data<span class="token punctuation">;</span>
+        <span class="token keyword">end</span> <span class="token keyword">if</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span> <span class="token keyword">process</span><span class="token punctuation">;</span>
+
+    o_data <span class="token operator">&lt;=</span> s_data_reg<span class="token punctuation">;</span>
+<span class="token keyword">end</span> <span class="token keyword">architecture</span> Behavioral<span class="token punctuation">;</span>
+</code><button class="copy-code-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-copy"><rect x="8" y="8" width="14" height="14" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></button></pre></div><div class="el-div"><div data-callout-metadata="" data-callout-fold="" data-callout="warning" class="callout"><div class="callout-title" dir="auto"><div class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-alert-triangle"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg></div><div class="callout-title-inner">ข้อควรระวัง: การกำหนดค่าเริ่มต้นที่ Signal Declaration</div></div><div class="callout-content">
+<p dir="auto">การเขียน <code>signal s_data_reg : std_logic_vector(...) := (others =&gt; '0');</code> เป็นการกำหนดค่า <strong>Initial Value สำหรับ Simulation</strong> เท่านั้น (ค่า ณ เวลา 0 ns) <strong>ไม่ใช่วงจร Reset จริง</strong> — บน FPGA จริง ค่านี้จะถูกโหลดผ่านกลไก Configuration/Bitstream ของแต่ละเวนเดอร์เท่านั้น (ใช้ได้กับบาง Flow) และไม่สามารถพึ่งพาแทนวงจร Reset (เช่น <code>rst_n</code>) ได้ หากต้องการ Reset ที่ทำงานได้จริงหลัง Power-up หรือระหว่างการทำงาน ต้องออกแบบผ่าน <code>process(clk, rst_n)</code> ตามตัวอย่างข้างต้นเสมอ</p>
+</div></div></div><div class="el-hr"><hr></div><div class="el-h1"><h1 data-heading="3 Combinational Logic vs Sequential Logic" dir="auto" class="heading" id="3_Combinational_Logic_vs_Sequential_Logic_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>3 Combinational Logic vs Sequential Logic</h1></div><div class="el-p"><p dir="auto">ในภาษา VHDL วงจรฮาร์ดแวร์และการประมวลผลคำสั่งแบ่งออกเป็น 2 ประเภทหลัก:</p></div><div class="el-ol"><ol>
+<li data-line="0" dir="auto">
+<p><strong>Combinational Logic (วงจรรวมเชิงผสม — นอก Process หรือใน Combinational Process)</strong>: โค้ดที่อยู่นอก <code>process</code> (เช่น สัญญาณกำหนดค่าธรรมดา, <code>when-else</code>, <code>with-select</code>) รวมถึง Combinational Process จะถูกประมวลผล <strong>ขนานกันตลอดเวลา (Parallel Execution)</strong> ไม่ว่าเราจะสลับบรรทัดขึ้นลงอย่างไร วงจรฮาร์ดแวร์ที่สังเคราะห์ได้จะมีผลลัพธ์เหมือนกันทุกประการ</p>
+</li>
+<li data-line="2" dir="auto">
+<p><strong>Sequential Logic (วงจรเชิงลำดับ — ใน Clocked Process)</strong>: โค้ดที่อยู่ภายในบล็อก <code>process(...)</code> ที่ทำงานตามขอบสัญญาณนาฬิกา จะถูกประมวลผล <strong>เรียงตามลำดับบรรทัดจากบนลงล่าง (Sequential Execution)</strong> เมื่อสัญญาณใน <strong>Sensitivity List</strong> มีการเปลี่ยนแปลงค่า</p>
+</li>
+</ol></div><div class="el-div"><div data-callout-metadata="" data-callout-fold="" data-callout="note" class="callout"><div class="callout-title" dir="auto"><div class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path><path d="m15 5 4 4"></path></svg></div><div class="callout-title-inner">💡 <strong>ข้อสังเกต Combinational Logic:</strong> </div></div><div class="callout-content">
+<p dir="auto">ถึงแม้โค้ดใน <code>process</code> จะอ่านและประมวลผลเรียงบรรทัด แต่เมื่อนำไปสังเคราะห์เป็นวงจร Combinational Logic (ที่ใส่ Sensitivity List ครบถ้วน) ผลลัพธ์ฮาร์ดแวร์ที่ได้ในชิปจริงก็คือ <strong>การทำงานขนานกันตลอดเวลา (Parallel Hardware)</strong> ไม่ต่างจากการเขียน Combinational Logic นอก Process</p>
+</div></div></div><div class="el-p"><p dir="auto"><span alt="logic_type.png" src="img/logic_type.png" class="internal-embed media-embed image-embed is-loaded" target="_self" style="width: 966px; max-width: 100%;"><img alt="logic_type.png" src="img/logic_type.png" target="_self" style="width: 966px; max-width: 100%;"></span></p></div><div class="el-h2"><h2 data-heading="3.1 ตัวอย่างโค้ด VHDL: Combinational Process vs Clocked Sequential Process" dir="auto" class="heading" id="3.1_ตัวอย่างโค้ด_VHDL_Combinational_Process_vs_Clocked_Sequential_Process_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>3.1 ตัวอย่างโค้ด VHDL: Combinational Process vs Clocked Sequential Process</h2></div><div class="el-p"><p dir="auto">ในทางปฏิบัติ การใช้งาน Process แบ่งออกเป็น 2 ประเภทหลัก:</p></div><div class="el-ol"><ol>
+<li data-line="0" dir="auto"><strong>Combinational Process (ไม่มี Clock)</strong>: ทำงานเมื่ออินพุตเปลี่ยนค่า (ต้องใส่สัญญาณอินพุตทุกตัวใน Sensitivity List หรือใช้ <code>process(all)</code> เพื่อให้ได้วงจร Combinational Logic ขนานที่สมบูรณ์และป้องกัน Latch)</li>
+<li data-line="1" dir="auto"><strong>Clocked Sequential Process (มี Clock — ⭐ วิธีมาตรฐานที่แนะนำสำหรับ FPGA)</strong>: ทำงานเฉพาะที่ขอบสัญญาณนาฬิกา (<code>rising_edge(clk)</code>) สังเคราะห์ได้ Flip-Flops (Sequential Logic) ที่มีไทม์มิ่งเสถียร ป้องกันการเกิด Glitch และ Latch โดยสมบูรณ์</li>
+</ol></div><div class="el-pre"><pre class="language-vhdl"><code data-line="0" class="language-vhdl is-loaded"><span class="token keyword">library</span> IEEE<span class="token punctuation">;</span>
+<span class="token keyword">use</span> IEEE<span class="token punctuation">.</span>STD_LOGIC_1164<span class="token punctuation">.</span><span class="token keyword">ALL</span><span class="token punctuation">;</span>
+
+<span class="token keyword">entity</span> process_types_demo <span class="token keyword">is</span>
+    <span class="token keyword">Port</span> <span class="token punctuation">(</span>
+        clk        <span class="token punctuation">:</span> <span class="token keyword">in</span>  std_logic<span class="token punctuation">;</span>
+        rst_n      <span class="token punctuation">:</span> <span class="token keyword">in</span>  std_logic<span class="token punctuation">;</span>
+        i_a        <span class="token punctuation">:</span> <span class="token keyword">in</span>  std_logic<span class="token punctuation">;</span>
+        i_b        <span class="token punctuation">:</span> <span class="token keyword">in</span>  std_logic<span class="token punctuation">;</span>
+        o_comb_y   <span class="token punctuation">:</span> <span class="token keyword">out</span> std_logic<span class="token punctuation">;</span> <span class="token comment">-- ผลลัพธ์จาก Combinational Process</span>
+        o_clocked_q<span class="token punctuation">:</span> <span class="token keyword">out</span> std_logic  <span class="token comment">-- ผลลัพธ์จาก Clocked Sequential Process (แนะนำ)</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">end</span> <span class="token keyword">entity</span> process_types_demo<span class="token punctuation">;</span>
+
+<span class="token keyword">architecture</span> Behavioral <span class="token keyword">of</span> process_types_demo <span class="token keyword">is</span>
+    <span class="token keyword">signal</span> s_comb_node <span class="token punctuation">:</span> std_logic<span class="token punctuation">;</span>
+<span class="token keyword">begin</span>
+
+    <span class="token comment">------------------------------------------------------------------</span>
+    <span class="token comment">-- 1. Combinational Process (ประมวลผลทันทีที่อินพุตเปลี่ยน)</span>
+    <span class="token comment">-- ⚠️ ต้องใส่ "ทุกสัญญาณที่ถูกอ่านค่าใน Process" เข้า Sensitivity List ให้ครบ</span>
+    <span class="token comment">------------------------------------------------------------------</span>
+    <span class="token keyword">process</span><span class="token punctuation">(</span>i_a<span class="token punctuation">,</span> i_b<span class="token punctuation">,</span> s_comb_node<span class="token punctuation">)</span>
+    <span class="token keyword">begin</span>
+        s_comb_node <span class="token operator">&lt;=</span> i_a <span class="token operator">and</span> i_b<span class="token punctuation">;</span>
+        o_comb_y    <span class="token operator">&lt;=</span> s_comb_node <span class="token operator">or</span> i_a<span class="token punctuation">;</span>
+    <span class="token keyword">end</span> <span class="token keyword">process</span><span class="token punctuation">;</span>
+
+    <span class="token comment">------------------------------------------------------------------</span>
+    <span class="token comment">-- 2. Clocked Sequential Process (⭐ แนะนำที่สุดสำหรับการออกแบบ FPGA)</span>
+    <span class="token comment">-- ทำงานเรียงลำดับเฉพาะจังหวะขอบขาขึ้นของ clk (และ Async Reset)</span>
+    <span class="token comment">------------------------------------------------------------------</span>
+    <span class="token keyword">process</span><span class="token punctuation">(</span>clk<span class="token punctuation">,</span> rst_n<span class="token punctuation">)</span>
+    <span class="token keyword">begin</span>
+        <span class="token keyword">if</span> rst_n <span class="token operator">=</span> <span class="token number">'0'</span> <span class="token keyword">then</span>
+            o_clocked_q <span class="token operator">&lt;=</span> <span class="token number">'0'</span><span class="token punctuation">;</span>
+        <span class="token keyword">elsif</span> <span class="token function">rising_edge</span><span class="token punctuation">(</span>clk<span class="token punctuation">)</span> <span class="token keyword">then</span>
+            <span class="token comment">-- สังเคราะห์กลายเป็น D Flip-Flop บันทึกค่าตามจังหวะ Clock</span>
+            o_clocked_q <span class="token operator">&lt;=</span> i_a <span class="token operator">and</span> i_b<span class="token punctuation">;</span>
+        <span class="token keyword">end</span> <span class="token keyword">if</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span> <span class="token keyword">process</span><span class="token punctuation">;</span>
+
+<span class="token keyword">end</span> <span class="token keyword">architecture</span> Behavioral<span class="token punctuation">;</span>
+</code><button class="copy-code-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-copy"><rect x="8" y="8" width="14" height="14" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></button></pre></div><div class="el-div"><div data-callout-metadata="" data-callout-fold="" data-callout="tip" class="callout"><div class="callout-title" dir="auto"><div class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-flame"><path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"></path></svg></div><div class="callout-title-inner">ข้อสังเกตฮาร์ดแวร์:</div></div><div class="callout-content">
+<ul class="has-list-bullet">
+<li data-line="1" dir="auto"><span class="list-bullet"></span><strong>Combinational Logic</strong>: เหมาะสำหรับเขียนสมการ Combinational สั้นๆ (เช่น <code>o_y &lt;= i_a and i_b;</code>, <code>when-else</code>, <code>with-select</code>)</li>
+<li data-line="2" dir="auto"><span class="list-bullet"></span><strong>Sequential Logic</strong>: จำเป็นต้องใช้เมื่อสร้าง <strong>Sequential Logic (Flip-Flops / Clock Edge)</strong> หรือต้องการใช้โครงสร้างเงื่อนไขที่ซับซ้อน เช่น <code>if-then-else</code> และ <code>case-when</code></li>
+</ul>
+</div></div></div><div class="el-h2"><h2 data-heading="3.2 เจาะลึก Sensitivity List: การทำงานและข้อควรระวัง" dir="auto" class="heading" id="3.2_เจาะลึก_Sensitivity_List_การทำงานและข้อควรระวัง_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>3.2 เจาะลึก Sensitivity List: การทำงานและข้อควรระวัง</h2></div><div class="el-p"><p dir="auto"><strong>Sensitivity List</strong> คือรายการสัญญาณที่ระบุไว้ในวงเล็บหลังคำสั่ง <code>process(...)</code> เพื่อบอก Simulator และ Synthesis Tool ว่า <strong>"ให้บล็อก Process นี้ประมวลผลใหม่ทุกครั้งที่มีสัญญาณตัวใดตัวหนึ่งในรายการเปลี่ยนค่า (Signal Event)"</strong></p></div><div class="el-h3"><h3 data-heading="3.2.1 Sensitivity List ใน Combinational Process" dir="auto" class="heading" id="3.2.1_Sensitivity_List_ใน_Combinational_Process_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>3.2.1 Sensitivity List ใน Combinational Process</h3></div><div class="el-ul"><ul class="has-list-bullet">
+<li data-line="0" dir="auto"><span class="list-bullet"></span><strong>กฎเหล็ก:</strong> ต้องใส่ <strong>สัญญาณอินพุตทุกตัว</strong> ที่ถูกอ่านค่าภายใน Process เข้าไปใน Sensitivity List ให้ครบถ้วน</li>
+<li data-line="1" dir="auto"><span class="list-bullet"></span><strong>หากใส่ไม่ครบ:</strong> จะเกิดปัญหา <strong>Simulation vs Synthesis Mismatch</strong> (ผลการจำลองใน Simulation ไม่ตรงกับฮาร์ดแวร์จริง) และ Synthesis Tool จะสร้าง <strong>Unintentional Latch</strong> ขึ้นมาเก็บค่าสัญญาณที่ไม่ได้ถูกอัปเดต</li>
+</ul></div><div class="el-h3"><h3 data-heading="3.2.2 Sensitivity List ใน Clocked Sequential Process" dir="auto" class="heading" id="3.2.2_Sensitivity_List_ใน_Clocked_Sequential_Process_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>3.2.2 Sensitivity List ใน Clocked Sequential Process</h3></div><div class="el-ul"><ul class="has-list-bullet">
+<li data-line="0" dir="auto"><span class="list-bullet"></span><strong>กฎเหล็ก:</strong> ใส่เฉพาะสัญญาณ <strong>Clock</strong> (และ <strong>Asynchronous Reset</strong> ถ้ามี) เท่านั้น!</li>
+<li data-line="1" dir="auto"><span class="list-bullet"></span><strong>เหตุผล:</strong> วงจร Register / Flip-Flop จะตอบสนองและเปลี่ยนสถานะเฉพาะที่ขอบสัญญาณนาฬิกา (<code>rising_edge(clk)</code>) สัญญาณ Data Input อื่นๆ ไม่จำเป็นต้องใส่ใน Sensitivity List เพราะค่าจะถูกจับบันทึก (Sample) ตามจังหวะ Clock เท่านั้น</li>
+</ul></div><div class="el-h3"><h3 data-heading="3.2.3 VHDL-2008 Standard Option: `process(all)`" dir="auto" class="heading" id="3.2.3_VHDL-2008_Standard_Option_`process(all)`_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>3.2.3 VHDL-2008 Standard Option: <code>process(all)</code></h3></div><div class="el-p"><p dir="auto">ในมาตรฐาน VHDL-2008 เพิ่มฟีเจอร์ <code>process(all)</code> สำหรับ Combinational Logic ช่วยให้ Compiler รวบรวมสัญญาณอินพุตทั้งหมดที่อ่านใน Process เข้า Sensitivity List ให้อัตโนมัติ ช่วยลดข้อผิดพลาดในการลืมใส่สัญญาณให้ครบถ้วน</p></div><div class="el-hr"><hr></div><div class="el-h1"><h1 data-heading="4 ชนิดข้อมูลและแอตทริบิวต์ (Data Types &amp; Attributes)" dir="auto" class="heading" id="4_ชนิดข้อมูลและแอตทริบิวต์_(Data_Types_&amp;_Attributes)_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>4 ชนิดข้อมูลและแอตทริบิวต์ (Data Types &amp; Attributes)</h1></div><div class="el-h2"><h2 data-heading="4.1 ชนิดข้อมูลหลักใน VHDL (`std_logic_1164`):" dir="auto" class="heading" id="4.1_ชนิดข้อมูลหลักใน_VHDL_(`std_logic_1164`)_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>4.1 ชนิดข้อมูลหลักใน VHDL (<code>std_logic_1164</code>):</h2></div><div class="el-ul"><ul class="has-list-bullet">
+<li data-line="0" dir="auto"><span class="list-bullet"></span>
+<p><code>std_logic</code>: สัญญาณ 1 บิต มี 9 สถานะ (สถานะหลักคือ <code>'0'</code>, <code>'1'</code>, <code>'Z'</code> (High Impedance), <code>'X'</code> (Unknown))<br>
+<span alt="std_logic.png" src="img/std_logic.png" class="internal-embed media-embed image-embed is-loaded" target="_self" style="width: 672px; max-width: 100%;"><img alt="std_logic.png" src="img/std_logic.png" target="_self" style="width: 672px; max-width: 100%;"></span></p>
+</li>
+<li data-line="4" dir="auto"><span class="list-bullet"></span>
+<p><code>std_logic_vector</code>: อาเรย์ชุดสัญญาณบิต เช่น <code>std_logic_vector(7 downto 0)</code></p>
+</li>
+<li data-line="5" dir="auto"><span class="list-bullet"></span>
+<p><code>array</code>: การจำลองหน่วยความจำ เช่น อาเรย์ของ vector:</p>
+<pre class="language-vhdl"><code data-line="6" class="language-vhdl is-loaded"><span class="token keyword">type</span> ram_type <span class="token keyword">is</span> <span class="token keyword">array</span> <span class="token punctuation">(</span><span class="token number">0</span> <span class="token keyword">to</span> <span class="token number">255</span><span class="token punctuation">)</span> <span class="token keyword">of</span> <span class="token function">std_logic_vector</span><span class="token punctuation">(</span><span class="token number">7</span> <span class="token keyword">downto</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">signal</span> s_ram <span class="token punctuation">:</span> ram_type<span class="token punctuation">;</span>
+</code><button class="copy-code-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-copy"><rect x="8" y="8" width="14" height="14" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></button></pre>
+</li>
+<li data-line="10" dir="auto"><span class="list-bullet"></span>
+<p><code>record</code>: กลุ่มข้อมูลรวมหลายประเภทไว้ในชื่อเดียว (คล้าย <code>struct</code> ในภาษา C):</p>
+<pre class="language-vhdl"><code data-line="11" class="language-vhdl is-loaded"><span class="token keyword">type</span> bus_header_t <span class="token keyword">is</span> <span class="token keyword">record</span>
+    addr <span class="token punctuation">:</span> <span class="token function">std_logic_vector</span><span class="token punctuation">(</span><span class="token number">15</span> <span class="token keyword">downto</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    data <span class="token punctuation">:</span> <span class="token function">std_logic_vector</span><span class="token punctuation">(</span><span class="token number">31</span> <span class="token keyword">downto</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    valid<span class="token punctuation">:</span> std_logic<span class="token punctuation">;</span>
+<span class="token keyword">end</span> <span class="token keyword">record</span><span class="token punctuation">;</span>
+</code><button class="copy-code-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-copy"><rect x="8" y="8" width="14" height="14" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></button></pre>
+</li>
+</ul></div><div class="el-h2"><h2 data-heading="4.2 แอตทริบิวต์ที่ใช้บ่อย (VHDL Attributes):" dir="auto" class="heading" id="4.2_แอตทริบิวต์ที่ใช้บ่อย_(VHDL_Attributes)_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>4.2 แอตทริบิวต์ที่ใช้บ่อย (VHDL Attributes):</h2></div><div class="el-ul"><ul class="has-list-bullet">
+<li data-line="0" dir="auto"><span class="list-bullet"></span><code>'high</code> / <code>'low</code>: คืนค่าดัชนีสูงสุด / ต่ำสุดของเวกเตอร์</li>
+<li data-line="1" dir="auto"><span class="list-bullet"></span><code>'range</code> / <code>'reverse_range</code>: คืนค่าช่วงดัชนี เช่น <code>(7 downto 0)</code></li>
+<li data-line="2" dir="auto"><span class="list-bullet"></span><code>'length</code>: คืนค่าจำนวนบิตทั้งหมดของเวกเตอร์</li>
+</ul></div><div class="el-hr"><hr></div><div class="el-h1"><h1 data-heading="5 โครงสร้างควบคุมการทำงาน (Control Flow &amp; Hardware Generation)" dir="auto" class="heading" id="5_โครงสร้างควบคุมการทำงาน_(Control_Flow_&amp;_Hardware_Generation)_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>5 โครงสร้างควบคุมการทำงาน (Control Flow &amp; Hardware Generation)</h1></div><div class="el-h2"><h2 data-heading="5.1 คำสั่งควบคุมลำดับภายใน Process (Sequential Control Statements)" dir="auto" class="heading" id="5.1_คำสั่งควบคุมลำดับภายใน_Process_(Sequential_Control_Statements)_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>5.1 คำสั่งควบคุมลำดับภายใน Process (Sequential Control Statements)</h2></div><div class="el-ul"><ul class="has-list-bullet">
+<li data-line="0" dir="auto"><span class="list-bullet"></span><strong><code>if-then-else</code></strong>:<br>
+ใช้สร้างเงื่อนไขตามลำดับความสำคัญ (Priority Logic) ซึ่งหากไม่ระบุเงื่อนไข <code>else</code> ครบถ้วนในวงจร Combinational Logic จะทำให้เกิด <strong>Unintentional Latch</strong> ได้
+<pre class="language-vhdl"><code data-line="2" class="language-vhdl is-loaded"><span class="token keyword">process</span><span class="token punctuation">(</span>i_enable<span class="token punctuation">,</span> i_data<span class="token punctuation">)</span>
+<span class="token keyword">begin</span>
+    <span class="token keyword">if</span> i_enable <span class="token operator">=</span> <span class="token number">'1'</span> <span class="token keyword">then</span>
+        o_out <span class="token operator">&lt;=</span> i_data<span class="token punctuation">;</span>
+    <span class="token keyword">else</span>
+        o_out <span class="token operator">&lt;=</span> <span class="token punctuation">(</span><span class="token keyword">others</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token number">'0'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span> <span class="token keyword">if</span><span class="token punctuation">;</span>
+<span class="token keyword">end</span> <span class="token keyword">process</span><span class="token punctuation">;</span>
+</code><button class="copy-code-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-copy"><rect x="8" y="8" width="14" height="14" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></button></pre>
+</li>
+<li data-line="12" dir="auto"><span class="list-bullet"></span><strong><code>case-when</code></strong>:<br>
+ใช้สร้าง Multiplexer หรือ FSM State Transition โดยบังคับให้ระบุเงื่อนไขให้ครอบคลุมทุกค่าอินพุตที่เป็นไปได้ด้วย <code>when others</code>
+<pre class="language-vhdl"><code data-line="14" class="language-vhdl is-loaded"><span class="token keyword">process</span><span class="token punctuation">(</span>s_state<span class="token punctuation">)</span>
+<span class="token keyword">begin</span>
+    <span class="token keyword">case</span> s_state <span class="token keyword">is</span>
+        <span class="token keyword">when</span> <span class="token vhdl-vectors number">"00"</span>   <span class="token operator">=</span><span class="token operator">&gt;</span> o_led <span class="token operator">&lt;=</span> <span class="token vhdl-vectors number">"0001"</span><span class="token punctuation">;</span>
+        <span class="token keyword">when</span> <span class="token vhdl-vectors number">"01"</span>   <span class="token operator">=</span><span class="token operator">&gt;</span> o_led <span class="token operator">&lt;=</span> <span class="token vhdl-vectors number">"0010"</span><span class="token punctuation">;</span>
+        <span class="token keyword">when</span> <span class="token vhdl-vectors number">"10"</span>   <span class="token operator">=</span><span class="token operator">&gt;</span> o_led <span class="token operator">&lt;=</span> <span class="token vhdl-vectors number">"0100"</span><span class="token punctuation">;</span>
+        <span class="token keyword">when</span> <span class="token keyword">others</span> <span class="token operator">=</span><span class="token operator">&gt;</span> o_led <span class="token operator">&lt;=</span> <span class="token vhdl-vectors number">"1000"</span><span class="token punctuation">;</span> <span class="token comment">-- ป้องกัน Latch</span>
+    <span class="token keyword">end</span> <span class="token keyword">case</span><span class="token punctuation">;</span>
+<span class="token keyword">end</span> <span class="token keyword">process</span><span class="token punctuation">;</span>
+</code><button class="copy-code-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-copy"><rect x="8" y="8" width="14" height="14" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></button></pre>
+</li>
+<li data-line="25" dir="auto"><span class="list-bullet"></span><strong><code>for-loop</code></strong>:<br>
+ใช้คลี่สร้างโครงสร้างลอจิกขนานตามจำนวนรอบแบบตายตัว (Unrolling Loop) ในการสังเคราะห์ฮาร์ดแวร์ เช่น การสลับกลับบิตข้อมูล (Bit Reversal):
+<pre class="language-vhdl"><code data-line="27" class="language-vhdl is-loaded"><span class="token keyword">process</span><span class="token punctuation">(</span>i_data<span class="token punctuation">)</span>
+<span class="token keyword">begin</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token number">0</span> <span class="token keyword">to</span> <span class="token number">7</span> <span class="token keyword">loop</span>
+        <span class="token function">o_reversed</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span> <span class="token operator">&lt;=</span> <span class="token function">i_data</span><span class="token punctuation">(</span><span class="token number">7</span> <span class="token operator">-</span> i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span> <span class="token keyword">loop</span><span class="token punctuation">;</span>
+<span class="token keyword">end</span> <span class="token keyword">process</span><span class="token punctuation">;</span>
+</code><button class="copy-code-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-copy"><rect x="8" y="8" width="14" height="14" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></button></pre>
+</li>
+</ul></div><div class="el-h2"><h2 data-heading="5.2 คำสั่งสร้างฮาร์ดแวร์ขนานภายนอก Process (Concurrent Generate Statement)" dir="auto" class="heading" id="5.2_คำสั่งสร้างฮาร์ดแวร์ขนานภายนอก_Process_(Concurrent_Generate_Statement)_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>5.2 คำสั่งสร้างฮาร์ดแวร์ขนานภายนอก Process (Concurrent Generate Statement)</h2></div><div class="el-ul"><ul class="has-list-bullet">
+<li data-line="0" dir="auto"><span class="list-bullet"></span>
+<p><strong><code>for-generate</code></strong>: ถอดแบบโมดูลหรือวงจรขนานตามจำนวนที่กำหนด เช่น สร้าง Buffer 4 ช่อง:</p>
+<pre class="language-vhdl"><code data-line="1" class="language-vhdl is-loaded">g_buf_array<span class="token punctuation">:</span> <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token number">0</span> <span class="token keyword">to</span> <span class="token number">3</span> <span class="token keyword">generate</span>
+    u_buf <span class="token punctuation">:</span> <span class="token keyword">entity</span> work<span class="token punctuation">.</span>buffer_cell
+        <span class="token keyword">port</span> <span class="token keyword">map</span> <span class="token punctuation">(</span>
+            i_in  <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token function">i_data</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">,</span>
+            o_out <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token function">o_data</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">end</span> <span class="token keyword">generate</span> g_buf_array<span class="token punctuation">;</span>
+</code><button class="copy-code-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-copy"><rect x="8" y="8" width="14" height="14" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></button></pre>
+</li>
+<li data-line="10" dir="auto"><span class="list-bullet"></span>
+<p><strong><code>if-generate</code></strong>: เลือกสร้างโครงสร้างฮาร์ดแวร์ตามเงื่อนไข Generic (Conditional Instantiation) เช่น เลือกสร้างวงจร Pipe-lined Register หรือต่อตรงตามค่า Generic <code>G_INCLUDE_REG</code>:</p>
+<pre class="language-vhdl"><code data-line="11" class="language-vhdl is-loaded"><span class="token comment">-- สร้างวงจรเก็บข้อมูลเมื่อ Generic G_INCLUDE_REG = true</span>
+g_reg_gen<span class="token punctuation">:</span> <span class="token keyword">if</span> G_INCLUDE_REG <span class="token keyword">generate</span>
+    u_reg <span class="token punctuation">:</span> <span class="token keyword">entity</span> work<span class="token punctuation">.</span>data_register
+        <span class="token keyword">port</span> <span class="token keyword">map</span> <span class="token punctuation">(</span>
+            clk   <span class="token operator">=</span><span class="token operator">&gt;</span> clk<span class="token punctuation">,</span>
+            i_d   <span class="token operator">=</span><span class="token operator">&gt;</span> i_data<span class="token punctuation">,</span>
+            o_q   <span class="token operator">=</span><span class="token operator">&gt;</span> o_data
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">end</span> <span class="token keyword">generate</span> g_reg_gen<span class="token punctuation">;</span>
+
+<span class="token comment">-- สร้างวงจรต่อสายตรงเมื่อ Generic G_INCLUDE_REG = false</span>
+g_pass_gen<span class="token punctuation">:</span> <span class="token keyword">if</span> <span class="token operator">not</span> G_INCLUDE_REG <span class="token keyword">generate</span>
+    o_data <span class="token operator">&lt;=</span> i_data<span class="token punctuation">;</span>
+<span class="token keyword">end</span> <span class="token keyword">generate</span> g_pass_gen<span class="token punctuation">;</span>
+</code><button class="copy-code-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-copy"><rect x="8" y="8" width="14" height="14" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></button></pre>
+</li>
+</ul></div><div class="el-hr"><hr></div><div class="el-h1"><h1 data-heading="6 การออกแบบเชิงโมดูลขั้นสูง (Package, Functions &amp; Procedures)" dir="auto" class="heading" id="6_การออกแบบเชิงโมดูลขั้นสูง_(Package,_Functions_&amp;_Procedures)_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>6 การออกแบบเชิงโมดูลขั้นสูง (Package, Functions &amp; Procedures)</h1></div><div class="el-h2"><h2 data-heading="6.1 Package (`*_pkg.vhd`)" dir="auto" class="heading" id="6.1_Package_(`*_pkg.vhd`)_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>6.1 Package (<code>*_pkg.vhd</code>)</h2></div><div class="el-p"><p dir="auto">ใช้เก็บประกาศประเภทข้อมูลชนิดพิเศษ (<code>type</code>), ค่าคงที่ (<code>constant</code>), และฟังก์ชันส่วนกลาง เพื่อให้ทุกโมดูลในโปรเจกต์อ้างอิงและดึงไปใช้งานร่วมกันได้:</p></div><div class="el-pre"><pre class="language-vhdl"><code data-line="0" class="language-vhdl is-loaded"><span class="token keyword">library</span> IEEE<span class="token punctuation">;</span>
+<span class="token keyword">use</span> IEEE<span class="token punctuation">.</span>STD_LOGIC_1164<span class="token punctuation">.</span><span class="token keyword">ALL</span><span class="token punctuation">;</span>
+
+<span class="token keyword">package</span> sys_config_pkg <span class="token keyword">is</span>
+    <span class="token keyword">constant</span> C_CLK_FREQ  <span class="token punctuation">:</span> integer <span class="token operator">:=</span> <span class="token number">100_000_000</span><span class="token punctuation">;</span> <span class="token comment">-- 100 MHz</span>
+    <span class="token keyword">type</span> T_BUS_RECORD <span class="token keyword">is</span> <span class="token keyword">record</span>
+        addr  <span class="token punctuation">:</span> <span class="token function">std_logic_vector</span><span class="token punctuation">(</span><span class="token number">15</span> <span class="token keyword">downto</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        data  <span class="token punctuation">:</span> <span class="token function">std_logic_vector</span><span class="token punctuation">(</span><span class="token number">31</span> <span class="token keyword">downto</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        valid <span class="token punctuation">:</span> std_logic<span class="token punctuation">;</span>
+    <span class="token keyword">end</span> <span class="token keyword">record</span><span class="token punctuation">;</span>
+<span class="token keyword">end</span> <span class="token keyword">package</span> sys_config_pkg<span class="token punctuation">;</span>
+</code><button class="copy-code-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-copy"><rect x="8" y="8" width="14" height="14" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></button></pre></div><div class="el-h2"><h2 data-heading="6.2 Functions (`function`)" dir="auto" class="heading" id="6.2_Functions_(`function`)_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>6.2 Functions (<code>function</code>)</h2></div><div class="el-p"><p dir="auto">บล็อกการคำนวณแบบ Pure Combinational Logic ที่คืนค่ากลับมา 1 ค่าเสมอ (ไม่มี Propagation Delay ในการจำลอง และไม่สร้าง Clock Edge) นิยมใช้ทำ Math Calculation หรือหาขนาด Bit Width:</p></div><div class="el-pre"><pre class="language-vhdl"><code data-line="0" class="language-vhdl is-loaded"><span class="token keyword">function</span> calc_parity <span class="token punctuation">(</span>val <span class="token punctuation">:</span> std_logic_vector<span class="token punctuation">)</span> <span class="token keyword">return</span> std_logic <span class="token keyword">is</span>
+    <span class="token keyword">variable</span> v_parity <span class="token punctuation">:</span> std_logic <span class="token operator">:=</span> <span class="token number">'0'</span><span class="token punctuation">;</span>
+<span class="token keyword">begin</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> val<span class="token attribute attr-name">'range</span> <span class="token keyword">loop</span>
+        v_parity <span class="token operator">:=</span> v_parity <span class="token operator">xor</span> <span class="token function">val</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span> <span class="token keyword">loop</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> v_parity<span class="token punctuation">;</span>
+<span class="token keyword">end</span> <span class="token keyword">function</span> calc_parity<span class="token punctuation">;</span>
+</code><button class="copy-code-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-copy"><rect x="8" y="8" width="14" height="14" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></button></pre></div><div class="el-h2"><h2 data-heading="6.3 Procedures (`procedure`)" dir="auto" class="heading" id="6.3_Procedures_(`procedure`)_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>6.3 Procedures (<code>procedure</code>)</h2></div><div class="el-p"><p dir="auto">บล็อกโค้ดย่อยที่สามารถรับและส่งค่าผ่านพอร์ต <code>in</code>, <code>out</code>, <code>inout</code> ได้หลายค่าพร้อมกัน นิยมนำมาใช้สร้าง Helper Subprograms <mark>สำหรับไดรฟ์สัญญาณในไฟล์ <strong>Testbench</strong> ให้เขียนได้สั้นและอ่านง่ายขึ้น</mark> (สามารถใช้คำสั่ง <code>wait for</code> หน่วงเวลาภายใน Procedure ได้เมื่อใช้ใน Testbench)</p></div><div class="el-pre"><pre class="language-vhdl"><code data-line="0" class="language-vhdl is-loaded"><span class="token comment">-- 1. ประกาศและนิยาม Procedure สำหรับส่งข้อมูลผ่าน Bus ใน Testbench</span>
+<span class="token keyword">procedure</span> write_bus <span class="token punctuation">(</span>
+    <span class="token keyword">constant</span> addr   <span class="token punctuation">:</span> <span class="token keyword">in</span>  <span class="token function">std_logic_vector</span><span class="token punctuation">(</span><span class="token number">7</span> <span class="token keyword">downto</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">constant</span> data   <span class="token punctuation">:</span> <span class="token keyword">in</span>  <span class="token function">std_logic_vector</span><span class="token punctuation">(</span><span class="token number">7</span> <span class="token keyword">downto</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">signal</span>   o_addr <span class="token punctuation">:</span> <span class="token keyword">out</span> <span class="token function">std_logic_vector</span><span class="token punctuation">(</span><span class="token number">7</span> <span class="token keyword">downto</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">signal</span>   o_data <span class="token punctuation">:</span> <span class="token keyword">out</span> <span class="token function">std_logic_vector</span><span class="token punctuation">(</span><span class="token number">7</span> <span class="token keyword">downto</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">signal</span>   o_valid<span class="token punctuation">:</span> <span class="token keyword">out</span> std_logic
+<span class="token punctuation">)</span> <span class="token keyword">is</span>
+<span class="token keyword">begin</span>
+    o_addr  <span class="token operator">&lt;=</span> addr<span class="token punctuation">;</span>
+    o_data  <span class="token operator">&lt;=</span> data<span class="token punctuation">;</span>
+    o_valid <span class="token operator">&lt;=</span> <span class="token number">'1'</span><span class="token punctuation">;</span>
+    <span class="token keyword">wait</span> <span class="token keyword">for</span> <span class="token number">10</span> ns<span class="token punctuation">;</span> <span class="token comment">-- หน่วงเวลา 1 Clock Cycle</span>
+    o_valid <span class="token operator">&lt;=</span> <span class="token number">'0'</span><span class="token punctuation">;</span>
+    <span class="token keyword">wait</span> <span class="token keyword">for</span> <span class="token number">10</span> ns<span class="token punctuation">;</span>
+<span class="token keyword">end</span> <span class="token keyword">procedure</span> write_bus<span class="token punctuation">;</span>
+
+<span class="token comment">-- 2. การเรียกใช้งานภายใน Stimulus Process ของ Testbench</span>
+p_stimulus <span class="token punctuation">:</span> <span class="token keyword">process</span>
+<span class="token keyword">begin</span>
+    <span class="token comment">-- ส่งข้อมูลผ่าน Procedure ได้สั้นกระชับ ไม่ต้องเขียนโค้ดซ้ำหลายบรรทัด</span>
+    <span class="token function">write_bus</span><span class="token punctuation">(</span><span class="token vhdl-vectors number">X"0A"</span><span class="token punctuation">,</span> <span class="token vhdl-vectors number">X"FF"</span><span class="token punctuation">,</span> s_tb_addr<span class="token punctuation">,</span> s_tb_data<span class="token punctuation">,</span> s_tb_valid<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">write_bus</span><span class="token punctuation">(</span><span class="token vhdl-vectors number">X"0B"</span><span class="token punctuation">,</span> <span class="token vhdl-vectors number">X"A5"</span><span class="token punctuation">,</span> s_tb_addr<span class="token punctuation">,</span> s_tb_data<span class="token punctuation">,</span> s_tb_valid<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">wait</span><span class="token punctuation">;</span>
+<span class="token keyword">end</span> <span class="token keyword">process</span> p_stimulus<span class="token punctuation">;</span>
+</code><button class="copy-code-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-copy"><rect x="8" y="8" width="14" height="14" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></button></pre></div><div class="el-hr"><hr></div><div class="el-h1"><h1 data-heading="7 Signal vs Variable" dir="auto" class="heading" id="7_Signal_vs_Variable_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>7 Signal vs Variable</h1></div><div class="el-p"><p dir="auto">สิ่งสำคัญที่สุดในการเขียน VHDL คือความเข้าใจเรื่อง <strong>การอัปเดตค่าของ Signal และ Variable</strong>:</p></div><div class="el-table" dir="ltr" style="overflow-x: auto;"><table>
+<thead>
+<tr>
+<th align="left" dir="ltr">คุณสมบัติ (Feature)</th>
+<th align="left" dir="ltr">Signal (<code>signal</code>)</th>
+<th align="left" dir="ltr">Variable (<code>variable</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" dir="ltr"><strong>ขอบเขตการใช้งาน (Scope)</strong></td>
+<td align="left" dir="ltr">ประกาศภายนอก Process (ใช้เชื่อมต่อได้ทั้ง Architecture)</td>
+<td align="left" dir="ltr">ประกาศและใช้ได้ <strong>ภายใน Process เท่านั้น</strong></td>
+</tr>
+<tr>
+<td align="left" dir="ltr"><strong>ตัวดำเนินการกำหนดค่า</strong></td>
+<td align="left" dir="ltr"><code>&lt;=</code> (Signal Assignment)</td>
+<td align="left" dir="ltr"><code>:=</code> (Variable Assignment)</td>
+</tr>
+<tr>
+<td align="left" dir="ltr"><strong>ช่วงเวลาการอัปเดตค่า</strong></td>
+<td align="left" dir="ltr"><strong>Scheduled Update</strong>: ค่าจะยังไม่อัปเดตทันที แต่จะอัปเดตเมื่อจบ Process Delta Cycle</td>
+<td align="left" dir="ltr"><strong>Immediate Update</strong>: ค่าจะเปลี่ยนแปลง <strong>ทันที</strong> ในบรรทัดนั้นๆ</td>
+</tr>
+<tr>
+<td align="left" dir="ltr"><strong>ผลลัพธ์ฮาร์ดแวร์</strong></td>
+<td align="left" dir="ltr">สร้างเป็นสายสัญญาณ (Wire) หรือ Flip-Flop</td>
+<td align="left" dir="ltr">มักกลายเป็นสายสัญญาณ Combinational Intermediate หรือ Register ขึ้นอยู่กับโครงสร้าง</td>
+</tr>
+</tbody>
+</table></div><div class="el-div"><div data-callout-metadata="" data-callout-fold="" data-callout="warning" class="callout"><div class="callout-title" dir="auto"><div class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-alert-triangle"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg></div><div class="callout-title-inner">ข้อควรระวัง Signal vs Variable:</div></div><div class="callout-content">
+<p dir="auto">การใช้ Variable กำหนดค่าหลายครั้งใน Process เดียวกัน จะสร้าง Combinational Logic ที่ต่อซ้อนกันเป็นทอดๆ (Cascaded Logic) ซึ่งอาจส่งผลเสียต่อ Data Path Delay และเกิด Timing Violation ได้ หากไม่จำเป็นควรเน้นใช้ <code>signal</code> เป็นหลัก</p>
+</div></div></div><div class="el-hr"><hr></div><div class="el-h1"><h1 data-heading="8 Signal Naming example" dir="auto" class="heading" id="8_Signal_Naming_example_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>8 Signal Naming example</h1></div><div class="el-p"><p dir="auto">เพื่อเพิ่มความอ่านง่าย (Readability) และลดความผิดพลาดในการเชื่อมต่อโมดูลความซับซ้อนสูง การออกแบบ FPGA มักมีข้อตกลงในการเติม <strong>Prefix/Suffix</strong> ให้กับสัญญาณ</p></div><div class="el-div"><div data-callout-metadata="" data-callout-fold="" data-callout="note" class="callout"><div class="callout-title" dir="auto"><div class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path><path d="m15 5 4 4"></path></svg></div><div class="callout-title-inner">ข้อควรทราบก่อนอ่านตาราง</div></div><div class="callout-content">
+<p dir="auto">แต่ละบริษัท/ทีมออกแบบมี Naming Convention ของตัวเอง ซึ่ง<strong>ไม่มีสูตรตายตัวว่าแบบไหนถูกหรือผิด</strong> สิ่งที่สำคัญที่สุดคือ <strong>เลือกใช้ Convention เดียวให้สม่ำเสมอตลอดทั้งโปรเจกต์</strong> ห้ามผสมหลาย Convention ปนกัน (เช่น ใช้ทั้ง <code>_n</code> และ <code>_l</code> แทนความหมาย Active-Low ในโปรเจกต์เดียวกัน) เพราะจะทำให้ทีมสับสนและอ่านโค้ดยากขึ้น<br>
+หัวข้อ <strong>8.1</strong> เป็นตัวอย่าง Convention หลักที่แนะนำ ส่วน <strong>8.2</strong> เป็น Convention อื่นๆ ที่พบได้บ่อยในอุตสาหกรรม ไว้สำหรับอ้างอิงเวลาไปอ่านโค้ดของทีม/บริษัทอื่น</p>
+</div></div></div><div class="el-h2"><h2 data-heading="8.1 ตัวอย่าง Convention หลัก" dir="auto" class="heading" id="8.1_ตัวอย่าง_Convention_หลัก_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>8.1 ตัวอย่าง Convention หลัก</h2></div><div class="el-table" dir="ltr" style="overflow-x: auto;"><table>
+<thead>
+<tr>
+<th dir="ltr">ประเภท (Category)</th>
+<th dir="ltr">Naming Pattern</th>
+<th dir="ltr">ตัวอย่าง</th>
+<th dir="ltr">หมายเหตุ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td dir="ltr"><strong>Clock Signal</strong></td>
+<td dir="ltr"><code>*_clk</code></td>
+<td dir="ltr"><code>sys_clk</code>, <code>axi_clk</code>, <code>pixel_clk</code></td>
+<td dir="ltr">ใช้สำหรับสัญญาณ Clock</td>
+</tr>
+<tr>
+<td dir="ltr"><strong>Reset Signal (Active Low)</strong></td>
+<td dir="ltr"><code>*_rst_n</code></td>
+<td dir="ltr"><code>sys_rst_n</code>, <code>cpu_rst_n</code></td>
+<td dir="ltr">แนะนำให้ใช้ <code>_rst_n</code> เพื่อสื่อความหมายชัดเจน</td>
+</tr>
+<tr>
+<td dir="ltr"><strong>Reset Signal (Active High)</strong></td>
+<td dir="ltr"><code>*_rst</code></td>
+<td dir="ltr"><code>sys_rst</code>, <code>soft_rst</code></td>
+<td dir="ltr">ใช้เมื่อ Reset เป็น Active High</td>
+</tr>
+<tr>
+<td dir="ltr"><strong>Input Port</strong></td>
+<td dir="ltr"><code>i_*</code></td>
+<td dir="ltr"><code>i_data</code>, <code>i_valid</code>, <code>i_addr</code></td>
+<td dir="ltr">Prefix เป็นที่นิยมและอ่านง่าย</td>
+</tr>
+<tr>
+<td dir="ltr"><strong>Output Port</strong></td>
+<td dir="ltr"><code>o_*</code></td>
+<td dir="ltr"><code>o_data</code>, <code>o_ready</code>, <code>o_error</code></td>
+<td dir="ltr">Prefix คู่กับ Input Port เพื่อดูทิศทางสัญญาณได้ทันที</td>
+</tr>
+<tr>
+<td dir="ltr"><strong>Bidirectional Port</strong></td>
+<td dir="ltr"><code>io_*</code></td>
+<td dir="ltr"><code>io_data</code>, <code>io_sda</code></td>
+<td dir="ltr">สำหรับ <code>inout</code></td>
+</tr>
+<tr>
+<td dir="ltr"><strong>Internal Signal</strong></td>
+<td dir="ltr"><code>s_*</code></td>
+<td dir="ltr"><code>s_counter</code>, <code>s_enable</code>, <code>s_sum</code></td>
+<td dir="ltr">Signal ภายใน Architecture</td>
+</tr>
+<tr>
+<td dir="ltr"><strong>Register Signal</strong></td>
+<td dir="ltr"><code>r_*</code></td>
+<td dir="ltr"><code>r_state</code>, <code>r_counter</code>, <code>r_data</code></td>
+<td dir="ltr">Signal ที่เก็บค่าด้วย Flip-Flop (Registered Signal)</td>
+</tr>
+<tr>
+<td dir="ltr"><strong>Variable</strong></td>
+<td dir="ltr"><code>v_*</code></td>
+<td dir="ltr"><code>v_index</code>, <code>v_temp</code>, <code>v_count</code></td>
+<td dir="ltr">ใช้เฉพาะ Variable ภายใน Process / Function</td>
+</tr>
+<tr>
+<td dir="ltr"><strong>Constant</strong></td>
+<td dir="ltr"><code>C_*</code></td>
+<td dir="ltr"><code>C_DATA_WIDTH</code>, <code>C_TIMEOUT</code></td>
+<td dir="ltr">ใช้ตัวพิมพ์ใหญ่ทั้งหมด</td>
+</tr>
+<tr>
+<td dir="ltr"><strong>Generic Parameter</strong></td>
+<td dir="ltr"><code>G_*</code></td>
+<td dir="ltr"><code>G_DATA_WIDTH</code>, <code>G_CLK_FREQ</code></td>
+<td dir="ltr">Generic ของ Entity</td>
+</tr>
+<tr>
+<td dir="ltr"><strong>Type / Subtype</strong></td>
+<td dir="ltr"><code>T_*</code></td>
+<td dir="ltr"><code>T_STATE</code>, <code>T_PACKET</code></td>
+<td dir="ltr">User-defined Type</td>
+</tr>
+<tr>
+<td dir="ltr"><strong>Record Type</strong></td>
+<td dir="ltr"><code>T_*</code></td>
+<td dir="ltr"><code>T_HEADER</code>, <code>T_AXI_STREAM</code></td>
+<td dir="ltr">Record Type</td>
+</tr>
+<tr>
+<td dir="ltr"><strong>Enumeration Type</strong></td>
+<td dir="ltr"><code>T_*</code></td>
+<td dir="ltr"><code>T_FSM_STATE</code></td>
+<td dir="ltr">Enumeration Type</td>
+</tr>
+<tr>
+<td dir="ltr"><strong>Package</strong></td>
+<td dir="ltr"><code>*_pkg</code></td>
+<td dir="ltr"><code>uart_pkg</code>, <code>math_pkg</code></td>
+<td dir="ltr">Package และ Utility Library</td>
+</tr>
+<tr>
+<td dir="ltr"><strong>Component / Entity</strong></td>
+<td dir="ltr"><code>snake_case</code></td>
+<td dir="ltr"><code>uart_tx</code>, <code>fifo_controller</code></td>
+<td dir="ltr">แนะนำให้ใช้ <code>snake_case</code> ให้สอดคล้องกับ VHDL</td>
+</tr>
+<tr>
+<td dir="ltr"><strong>Instance Label</strong></td>
+<td dir="ltr"><code>u_*</code></td>
+<td dir="ltr"><code>u_uart</code>, <code>u_fifo</code>, <code>u_ram</code></td>
+<td dir="ltr">Instance ของ Component/Entity</td>
+</tr>
+<tr>
+<td dir="ltr"><strong>Generate Block</strong></td>
+<td dir="ltr"><code>gen_*</code></td>
+<td dir="ltr"><code>gen_channel</code>, <code>gen_fifo</code></td>
+<td dir="ltr">Label ของ Generate — ใช้ <code>gen_</code> แทน <code>g_</code> เพื่อไม่ให้สับสนกับ Generic Parameter (<code>G_*</code>) ด้านบน</td>
+</tr>
+<tr>
+<td dir="ltr"><strong>Process Label</strong></td>
+<td dir="ltr"><code>p_*</code></td>
+<td dir="ltr"><code>p_fsm</code>, <code>p_counter</code>, <code>p_output</code></td>
+<td dir="ltr">Label ของ Process</td>
+</tr>
+</tbody>
+</table></div><div class="el-h2"><h2 data-heading="8.2 Convention อื่นๆ ที่พบได้บ่อยในอุตสาหกรรม (สำหรับอ้างอิง)" dir="auto" class="heading" id="8.2_Convention_อื่นๆ_ที่พบได้บ่อยในอุตสาหกรรม_(สำหรับอ้างอิง)_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>8.2 Convention อื่นๆ ที่พบได้บ่อยในอุตสาหกรรม (สำหรับอ้างอิง)</h2></div><div class="el-div"><div data-callout-metadata="" data-callout-fold="" data-callout="warning" class="callout"><div class="callout-title" dir="auto"><div class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-alert-triangle"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg></div><div class="callout-title-inner">⚠️ คำเตือน</div></div><div class="callout-content">
+<p dir="auto">ตารางด้านล่างนี้รวบรวมมาจากหลายแหล่ง/หลายบริษัท มีบาง Pattern ที่ <strong>ขัดแย้งกับตาราง 8.1</strong> โดยตรง (เช่น Active-Low ใช้ <code>_n</code> ใน 8.1 แต่บางแหล่งใช้ <code>_l</code>, Internal Signal ใช้ <code>s_*</code> ใน 8.1 แต่บางแหล่งใช้ <code>w_*</code>) — อ่านไว้เพื่อ "รู้จัก" เวลาไปเจอโค้ดของทีมอื่น</p>
+</div></div></div><div class="el-p"><p dir="auto"><strong>Convention แบบ Xilinx/AMD</strong> (Active-Low ใช้ Suffix <code>_l</code> แทน <code>_n</code>)</p></div><div class="el-table" dir="ltr" style="overflow-x: auto;"><table>
+<thead>
+<tr>
+<th dir="ltr">ประเภท</th>
+<th dir="ltr">Rule</th>
+<th dir="ltr">ตัวอย่าง</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td dir="ltr">Clock</td>
+<td dir="ltr">ใช้ <code>clk</code></td>
+<td dir="ltr"><code>clk</code>, <code>clk_100m</code>, <code>clk_div2</code>, <code>clk_x2</code></td>
+</tr>
+<tr>
+<td dir="ltr">Synchronous Reset</td>
+<td dir="ltr">ใช้ <code>reset</code> หรือ <code>rst</code></td>
+<td dir="ltr"><code>rst</code></td>
+</tr>
+<tr>
+<td dir="ltr">Asynchronous Reset</td>
+<td dir="ltr">ใช้ <code>areset</code> หรือ <code>arst</code></td>
+<td dir="ltr"><code>arst</code></td>
+</tr>
+<tr>
+<td dir="ltr">Active Low Async Reset</td>
+<td dir="ltr">เติม <code>_l</code></td>
+<td dir="ltr"><code>arst_l</code></td>
+</tr>
+<tr>
+<td dir="ltr">Active Low Signal</td>
+<td dir="ltr">เติม <code>_l</code></td>
+<td dir="ltr"><code>enable_l</code>, <code>cs_l</code>, <code>oe_l</code></td>
+</tr>
+<tr>
+<td dir="ltr">Bidirectional</td>
+<td dir="ltr">เติม <code>_io</code></td>
+<td dir="ltr"><code>data_io</code></td>
+</tr>
+<tr>
+<td dir="ltr">Address</td>
+<td dir="ltr">ใช้ <code>addr</code></td>
+<td dir="ltr"><code>cpu_addr</code>, <code>mem_addr</code></td>
+</tr>
+<tr>
+<td dir="ltr">Read/Write (รวมขาเดียว)</td>
+<td dir="ltr">สัญญาณเดียวควบคุมทั้ง Read/Write โดย Active-Low ตอน Write</td>
+<td dir="ltr"><code>rw_l</code></td>
+</tr>
+</tbody>
+</table></div><div class="el-p"><p dir="auto"><strong>Convention แบบ EmLogic</strong> (Internal Signal แยก Prefix <code>w_*</code>/<code>r_*</code> ตาม Combinational/Registered)</p></div><div class="el-table" dir="ltr" style="overflow-x: auto;"><table>
+<thead>
+<tr>
+<th dir="ltr">Signal</th>
+<th dir="ltr">Rule</th>
+<th dir="ltr">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td dir="ltr">Clock</td>
+<td dir="ltr"><code>clk_*</code></td>
+<td dir="ltr"><code>clk_sys</code>, <code>clk_axi</code></td>
+</tr>
+<tr>
+<td dir="ltr">Reset Active High</td>
+<td dir="ltr"><code>rst</code></td>
+<td dir="ltr"><code>rst</code></td>
+</tr>
+<tr>
+<td dir="ltr">Reset Active Low</td>
+<td dir="ltr"><code>rst_n</code></td>
+<td dir="ltr"><code>rst_n</code></td>
+</tr>
+<tr>
+<td dir="ltr">Register (Sequential Signal)</td>
+<td dir="ltr"><code>r_*</code></td>
+<td dir="ltr"><code>r_count</code></td>
+</tr>
+<tr>
+<td dir="ltr">Wire (Combinational Signal)</td>
+<td dir="ltr"><code>w_*</code></td>
+<td dir="ltr"><code>w_sum</code></td>
+</tr>
+<tr>
+<td dir="ltr">One-shot/Pulse</td>
+<td dir="ltr"><code>wp_*</code></td>
+<td dir="ltr"><code>wp_start</code></td>
+</tr>
+<tr>
+<td dir="ltr">FSM State</td>
+<td dir="ltr"><code>state_*</code></td>
+<td dir="ltr"><code>state_idle</code></td>
+</tr>
+<tr>
+<td dir="ltr">Next State</td>
+<td dir="ltr"><code>next_state</code></td>
+<td dir="ltr"><code>next_state</code></td>
+</tr>
+<tr>
+<td dir="ltr">Constant</td>
+<td dir="ltr"><code>C_*</code></td>
+<td dir="ltr"><code>C_TIMEOUT</code></td>
+</tr>
+<tr>
+<td dir="ltr">Generic</td>
+<td dir="ltr"><code>G_*</code></td>
+<td dir="ltr"><code>G_DATA_WIDTH</code></td>
+</tr>
+<tr>
+<td dir="ltr">Address</td>
+<td dir="ltr"><code>addr</code></td>
+<td dir="ltr"><code>axi_addr</code></td>
+</tr>
+<tr>
+<td dir="ltr">Data</td>
+<td dir="ltr"><code>data</code></td>
+<td dir="ltr"><code>rx_data</code></td>
+</tr>
+<tr>
+<td dir="ltr">Valid</td>
+<td dir="ltr"><code>valid</code></td>
+<td dir="ltr"><code>rx_valid</code></td>
+</tr>
+<tr>
+<td dir="ltr">Ready</td>
+<td dir="ltr"><code>ready</code></td>
+<td dir="ltr"><code>tx_ready</code></td>
+</tr>
+<tr>
+<td dir="ltr">Enable</td>
+<td dir="ltr"><code>en</code></td>
+<td dir="ltr"><code>wr_en</code></td>
+</tr>
+<tr>
+<td dir="ltr">Bidirectional</td>
+<td dir="ltr"><code>_io</code></td>
+<td dir="ltr"><code>sda_io</code></td>
+</tr>
+</tbody>
+</table></div><div class="el-p"><p dir="auto">อ่านเพิ่มเติมได้ที่:</p></div><div class="el-ul"><ul class="has-list-bullet">
+<li data-line="0" dir="auto"><span class="list-bullet"></span><a rel="noopener nofollow" class="external-link is-unresolved" href="https://emlogic.no/vhdl-conventions/" target="_self">https://emlogic.no/vhdl-conventions/</a></li>
+<li data-line="1" dir="auto"><span class="list-bullet"></span><a rel="noopener nofollow" class="external-link is-unresolved" href="https://wiki.electroniciens.cnrs.fr/images/Xilinx_HDL_Coding_style.pdf" target="_self">https://wiki.electroniciens.cnrs.fr/images/Xilinx_HDL_Coding_style.pdf</a></li>
+</ul></div><div class="el-hr"><hr></div><div class="el-h1"><h1 data-heading="9 Synthesizable vs Non-synthesizable (Testbench-only) VHDL Syntax" dir="auto" class="heading" id="9_Synthesizable_vs_Non-synthesizable_(Testbench-only)_VHDL_Syntax_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>9 Synthesizable vs Non-synthesizable (Testbench-only) VHDL Syntax</h1></div><div class="el-p"><p dir="auto">ภาษา VHDL ถูกออกแบบมาให้ใช้ได้ทั้ง <strong>สร้างฮาร์ดแวร์จริง (Synthesis)</strong> และ <strong>จำลองพฤติกรรม (Simulation)</strong> <mark>แต่ไม่ใช่ทุกคำสั่งใน VHDL จะสามารถ "สังเคราะห์" ออกมาเป็นวงจรจริงบนชิปได้ บาง Syntax มีไว้สำหรับ <strong>Testbench เท่านั้น</strong> (Simulation-only)</mark> เพราะมันอธิบายพฤติกรรมของ "เวลา" หรือ "สภาพแวดล้อมการทดสอบ" ซึ่งไม่มีตัวตนอยู่จริงในฮาร์ดแวร์</p></div><div class="el-div"><div data-callout-metadata="" data-callout-fold="" data-callout="note" class="callout"><div class="callout-title" dir="auto"><div class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path><path d="m15 5 4 4"></path></svg></div><div class="callout-title-inner">💡 หลักการ</div></div><div class="callout-content">
+<ul class="has-list-bullet">
+<li data-line="1" dir="auto"><span class="list-bullet"></span><strong>Synthesizable Code (RTL)</strong> = โค้ดที่ Synthesis Tool (Quartus, Vivado) แปลงเป็น Gate/Flip-Flop/Wire จริงได้</li>
+<li data-line="2" dir="auto"><span class="list-bullet"></span><strong>Non-synthesizable Code (Testbench-only)</strong> = โค้ดที่ใช้ได้เฉพาะตอน Simulate (ModelSim, QuestaSim, GHDL) เพื่อสร้าง Stimulus หรือตรวจสอบผลลัพธ์ ถ้านำไปสังเคราะห์ Synthesis Tool จะ <strong>Error หรือเพิกเฉย (Ignore)</strong> ทันที</li>
+</ul>
+</div></div></div><div class="el-p"><p dir="auto">ผู้เริ่มต้นศึกษา FPGA ส่วนใหญ่มักเจอปัญหานี้เป็นด่านแรกๆ คือ <strong>แยกไม่ออกว่า Syntax ไหน "Synthesizable" (สังเคราะห์เป็นวงจรจริงได้) และ Syntax ไหน "Un-synthesizable" (ใช้ได้แค่ตอน Simulate)</strong> เพราะ Compiler ของ Simulator (เช่น ModelSim) จะ <strong>Compile ผ่านหมดทุกคำสั่ง</strong> โดยไม่มี Error ใดๆ ทำให้เข้าใจผิดว่าโค้ดที่รันผ่านใน Simulation จะสังเคราะห์เป็นฮาร์ดแวร์ได้เสมอ ทั้งที่จริงแล้ว <strong>VHDL เป็น Superset ที่ใหญ่กว่า Hardware ที่สังเคราะห์ได้จริงมาก</strong> ความสับสนนี้เป็นสาเหตุอันดับต้นๆ ที่ทำให้ Code รันบน Simulator ได้ปกติ แต่พอนำไป Synthesis กลับ Error หรือได้วงจรที่ทำงานผิดจากที่ตั้งใจ ตารางด้านล่างนี้จึงสรุป Keyword/Syntax ที่พบบ่อยไว้ให้</p></div><div class="el-h2"><h2 data-heading="9.1 ตารางเปรียบเทียบ Syntax ที่พบบ่อย" dir="auto" class="heading" id="9.1_ตารางเปรียบเทียบ_Syntax_ที่พบบ่อย_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>9.1 ตารางเปรียบเทียบ Syntax ที่พบบ่อย</h2></div><div class="el-table" dir="ltr" style="overflow-x: auto;"><table>
+<thead>
+<tr>
+<th dir="ltr">Syntax / Construct</th>
+<th align="center" dir="ltr">Synthesizable (RTL)</th>
+<th align="center" dir="ltr">Non-synthesizable (Testbench-only)</th>
+<th dir="ltr">หมายเหตุ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td dir="ltr"><code>process(clk, rst_n)</code> + <code>rising_edge(clk)</code></td>
+<td align="center" dir="ltr">✅ ได้</td>
+<td align="center" dir="ltr">✅ ได้</td>
+<td dir="ltr">รูปแบบมาตรฐานของ Sequential Logic ใช้ได้ทั้งสองฝั่ง</td>
+</tr>
+<tr>
+<td dir="ltr"><code>process(all)</code> / <code>process(input_list)</code></td>
+<td align="center" dir="ltr">✅ ได้</td>
+<td align="center" dir="ltr">✅ ได้</td>
+<td dir="ltr">Combinational Logic ใช้ได้ทั้งสองฝั่ง</td>
+</tr>
+<tr>
+<td dir="ltr"><code>wait for 10 ns;</code></td>
+<td align="center" dir="ltr">❌ ไม่ได้</td>
+<td align="center" dir="ltr">✅ ได้</td>
+<td dir="ltr">หน่วงเวลาแบบ "สัมบูรณ์" ไม่มีอยู่จริงในฮาร์ดแวร์ (ฮาร์ดแวร์รอได้แค่ตาม Clock Edge เท่านั้น)</td>
+</tr>
+<tr>
+<td dir="ltr"><code>wait until &lt;condition&gt;;</code></td>
+<td align="center" dir="ltr">❌ ไม่ได้</td>
+<td align="center" dir="ltr">✅ ได้</td>
+<td dir="ltr">ใช้รอเงื่อนไขใน Stimulus Process เท่านั้น</td>
+</tr>
+<tr>
+<td dir="ltr"><code>wait;</code> (ไม่มีเงื่อนไข)</td>
+<td align="center" dir="ltr">❌ ไม่ได้</td>
+<td align="center" dir="ltr">✅ ได้</td>
+<td dir="ltr">หยุด Process ค้างไว้ตลอดไป ใช้ปิดท้าย Stimulus Process</td>
+</tr>
+<tr>
+<td dir="ltr"><code>signal &lt;= value after 10 ns;</code></td>
+<td align="center" dir="ltr">⚠️ ส่วนใหญ่ไม่ได้</td>
+<td align="center" dir="ltr">✅ ได้</td>
+<td dir="ltr"><code>after</code> clause (Transport/Inertial Delay) ถูก <strong>เพิกเฉย</strong> โดย Synthesis Tool ส่วนใหญ่</td>
+</tr>
+<tr>
+<td dir="ltr"><code>assert &lt;cond&gt; report "msg" severity ...;</code></td>
+<td align="center" dir="ltr">⚠️ Tool-dependent</td>
+<td align="center" dir="ltr">✅ ได้</td>
+<td dir="ltr">บาง Tool รองรับเป็น Synthesis Assertion แต่ส่วนใหญ่ใช้เฉพาะ Debug ใน Simulation</td>
+</tr>
+<tr>
+<td dir="ltr"><code>report "message";</code></td>
+<td align="center" dir="ltr">❌ ไม่ได้</td>
+<td align="center" dir="ltr">✅ ได้</td>
+<td dir="ltr">พิมพ์ข้อความออก Console ของ Simulator เท่านั้น</td>
+</tr>
+<tr>
+<td dir="ltr"><code>std.textio</code> (<code>file_open</code>, <code>readline</code>, ...)</td>
+<td align="center" dir="ltr">❌ ไม่ได้</td>
+<td align="center" dir="ltr">✅ ได้</td>
+<td dir="ltr">อ่าน/เขียนไฟล์บน Disk — ไม่มีแนวคิด "ไฟล์" อยู่ในฮาร์ดแวร์</td>
+</tr>
+<tr>
+<td dir="ltr"><code>std.env.stop</code> / <code>std.env.finish</code></td>
+<td align="center" dir="ltr">❌ ไม่ได้</td>
+<td align="center" dir="ltr">✅ ได้</td>
+<td dir="ltr">สั่งจบการ Simulation (VHDL-2008)</td>
+</tr>
+<tr>
+<td dir="ltr"><code>integer</code> (มีขอบเขต / Constrained Range)</td>
+<td align="center" dir="ltr">✅ ได้</td>
+<td align="center" dir="ltr">✅ ได้</td>
+<td dir="ltr">ต้องระบุ Range ให้ชัดเจน (เช่น <code>integer range 0 to 255</code>) เพื่อให้สังเคราะห์เป็น Bit-width ที่แน่นอน</td>
+</tr>
+<tr>
+<td dir="ltr"><code>for-loop</code> แบบมีขอบเขตตายตัว (Static Range)</td>
+<td align="center" dir="ltr">✅ ได้ (Unroll)</td>
+<td align="center" dir="ltr">✅ ได้</td>
+<td dir="ltr">สังเคราะห์โดยการ "คลี่ลูป" ตามจำนวนรอบที่กำหนดไว้ตายตัว</td>
+</tr>
+<tr>
+<td dir="ltr"><code>while-loop</code> / Loop ที่ขอบเขตไม่แน่นอน</td>
+<td align="center" dir="ltr">❌ ไม่ได้</td>
+<td align="center" dir="ltr">✅ ได้</td>
+<td dir="ltr">Synthesis Tool ไม่สามารถคลี่ลูปที่ไม่รู้จำนวนรอบล่วงหน้าได้</td>
+</tr>
+<tr>
+<td dir="ltr"><code>std_logic</code> ค่า <code>'U'</code>, <code>'W'</code>, <code>'L'</code>, <code>'H'</code>, <code>'-'</code></td>
+<td align="center" dir="ltr">⚠️ มีความหมายจำกัด</td>
+<td align="center" dir="ltr">✅ ได้ครบ 9 ค่า</td>
+<td dir="ltr">ฮาร์ดแวร์จริงมีแค่ <code>'0'</code>, <code>'1'</code>, <code>'Z'</code> เท่านั้น ค่าอื่นมีไว้ช่วย Debug ใน Simulation</td>
+</tr>
+</tbody>
+</table></div><div class="el-h2"><h2 data-heading="9.2 ตัวอย่างโค้ด: รูปแบบ Non-synthesizable (Testbench-only) ที่พบบ่อย" dir="auto" class="heading" id="9.2_ตัวอย่างโค้ด_รูปแบบ_Non-synthesizable_(Testbench-only)_ที่พบบ่อย_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>9.2 ตัวอย่างโค้ด: รูปแบบ Non-synthesizable (Testbench-only) ที่พบบ่อย</h2></div><div class="el-pre"><pre class="language-vhdl"><code data-line="0" class="language-vhdl is-loaded"><span class="token keyword">library</span> IEEE<span class="token punctuation">;</span>
+<span class="token keyword">use</span> IEEE<span class="token punctuation">.</span>STD_LOGIC_1164<span class="token punctuation">.</span><span class="token keyword">ALL</span><span class="token punctuation">;</span>
+<span class="token keyword">use</span> STD<span class="token punctuation">.</span>TEXTIO<span class="token punctuation">.</span><span class="token keyword">ALL</span><span class="token punctuation">;</span>
+
+<span class="token keyword">entity</span> tb_my_module <span class="token keyword">is</span>
+<span class="token keyword">end</span> <span class="token keyword">entity</span> tb_my_module<span class="token punctuation">;</span> <span class="token comment">-- Testbench ไม่มี Port</span>
+
+<span class="token keyword">architecture</span> sim <span class="token keyword">of</span> tb_my_module <span class="token keyword">is</span>
+    <span class="token keyword">constant</span> C_CLK_PERIOD <span class="token punctuation">:</span> time <span class="token operator">:=</span> <span class="token number">10</span> ns<span class="token punctuation">;</span> <span class="token comment">-- 'time' type: Non-synthesizable</span>
+
+    <span class="token keyword">signal</span> clk    <span class="token punctuation">:</span> std_logic <span class="token operator">:=</span> <span class="token number">'0'</span><span class="token punctuation">;</span>
+    <span class="token keyword">signal</span> rst_n  <span class="token punctuation">:</span> std_logic <span class="token operator">:=</span> <span class="token number">'0'</span><span class="token punctuation">;</span>
+    <span class="token keyword">signal</span> i_data <span class="token punctuation">:</span> <span class="token function">std_logic_vector</span><span class="token punctuation">(</span><span class="token number">7</span> <span class="token keyword">downto</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">:=</span> <span class="token punctuation">(</span><span class="token keyword">others</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token number">'0'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">signal</span> o_data <span class="token punctuation">:</span> <span class="token function">std_logic_vector</span><span class="token punctuation">(</span><span class="token number">7</span> <span class="token keyword">downto</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">begin</span>
+
+    <span class="token comment">-- Instance ของวงจรจริง (DUT: Design Under Test)</span>
+    u_dut <span class="token punctuation">:</span> <span class="token keyword">entity</span> work<span class="token punctuation">.</span>my_module
+        <span class="token keyword">port</span> <span class="token keyword">map</span> <span class="token punctuation">(</span>
+            clk    <span class="token operator">=</span><span class="token operator">&gt;</span> clk<span class="token punctuation">,</span>
+            rst_n  <span class="token operator">=</span><span class="token operator">&gt;</span> rst_n<span class="token punctuation">,</span>
+            i_data <span class="token operator">=</span><span class="token operator">&gt;</span> i_data<span class="token punctuation">,</span>
+            o_data <span class="token operator">=</span><span class="token operator">&gt;</span> o_data
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">------------------------------------------------------------------</span>
+    <span class="token comment">-- Clock Generator: ใช้ wait for สร้างสัญญาณนาฬิกา (Non-synthesizable)</span>
+    <span class="token comment">------------------------------------------------------------------</span>
+    p_clk_gen <span class="token punctuation">:</span> <span class="token keyword">process</span>
+    <span class="token keyword">begin</span>
+        clk <span class="token operator">&lt;=</span> <span class="token number">'0'</span><span class="token punctuation">;</span>
+        <span class="token keyword">wait</span> <span class="token keyword">for</span> C_CLK_PERIOD <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">;</span>
+        clk <span class="token operator">&lt;=</span> <span class="token number">'1'</span><span class="token punctuation">;</span>
+        <span class="token keyword">wait</span> <span class="token keyword">for</span> C_CLK_PERIOD <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span> <span class="token keyword">process</span> p_clk_gen<span class="token punctuation">;</span>
+
+    <span class="token comment">------------------------------------------------------------------</span>
+    <span class="token comment">-- Stimulus Process: สั่งค่าอินพุตตามลำดับเวลา แล้วปิดท้ายด้วย wait;</span>
+    <span class="token comment">------------------------------------------------------------------</span>
+    p_stimulus <span class="token punctuation">:</span> <span class="token keyword">process</span>
+    <span class="token keyword">begin</span>
+        rst_n  <span class="token operator">&lt;=</span> <span class="token number">'0'</span><span class="token punctuation">;</span>
+        <span class="token keyword">wait</span> <span class="token keyword">for</span> <span class="token number">20</span> ns<span class="token punctuation">;</span>              <span class="token comment">-- absolute delay: Non-synthesizable</span>
+        rst_n  <span class="token operator">&lt;=</span> <span class="token number">'1'</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">wait</span> <span class="token keyword">until</span> <span class="token function">rising_edge</span><span class="token punctuation">(</span>clk<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">-- รอ Edge: Non-synthesizable</span>
+        i_data <span class="token operator">&lt;=</span> <span class="token vhdl-vectors number">X"AA"</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">wait</span> <span class="token keyword">for</span> <span class="token number">40</span> ns<span class="token punctuation">;</span>
+        <span class="token keyword">assert</span> <span class="token punctuation">(</span>o_data <span class="token operator">=</span> <span class="token vhdl-vectors number">X"AA"</span><span class="token punctuation">)</span>      <span class="token comment">-- assert/report: Non-synthesizable</span>
+            <span class="token keyword">report</span> <span class="token string">"o_data mismatch!"</span> <span class="token keyword">severity</span> error<span class="token punctuation">;</span>
+
+        <span class="token keyword">wait</span><span class="token punctuation">;</span> <span class="token comment">-- หยุด Process ค้างตลอดไป จบการทดสอบ</span>
+    <span class="token keyword">end</span> <span class="token keyword">process</span> p_stimulus<span class="token punctuation">;</span>
+
+<span class="token keyword">end</span> <span class="token keyword">architecture</span> sim<span class="token punctuation">;</span>
+</code><button class="copy-code-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-copy"><rect x="8" y="8" width="14" height="14" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></button></pre></div><div class="el-div"><div data-callout-metadata="" data-callout-fold="" data-callout="warning" class="callout"><div class="callout-title" dir="auto"><div class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-alert-triangle"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg></div><div class="callout-title-inner">Syntax เหล่านี้ไม่สามารถสังเคราะห์เป็นวงจรจริงได้</div></div><div class="callout-content">
+<ul class="has-list-bullet">
+<li data-line="1" dir="auto"><span class="list-bullet"></span><code>wait for</code>, <code>wait until</code>, <code>assert/report</code>, <code>std.textio</code>, ชนิดข้อมูล <code>time</code>/<code>real</code></li>
+<li data-line="2" dir="auto"><span class="list-bullet"></span>Clock Generator (<code>p_clk_gen</code> แบบข้างต้น)</li>
+</ul>
+</div></div></div><div class="el-h2"><h2 data-heading="9.3 วิธีเช็คว่าโค้ดของเรา Synthesizable หรือ Non-synthesizable" dir="auto" class="heading" id="9.3_วิธีเช็คว่าโค้ดของเรา_Synthesizable_หรือ_Non-synthesizable_0"><span class="heading-collapse-indicator collapse-indicator collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></span>9.3 วิธีเช็คว่าโค้ดของเรา Synthesizable หรือ Non-synthesizable</h2></div><div class="el-p"><p dir="auto">วิธีที่ง่ายและแม่นยำที่สุดคือ <strong>ลอง Compile/รัน Synthesis จริงบน Tool ที่ใช้งานอยู่ (เช่น Quartus, Vivado)</strong> หากโค้ดส่วนใดเป็น Non-synthesizable Tool จะแจ้ง Error หรือ Warning ให้ทราบทันที</p></div><div class="footer"><div class="data-bar"></div></div></div></div></div><div id="right-content" class="leaf" style="--sidebar-width: var(--sidebar-width-right);"><div id="right-sidebar" class="sidebar"><div class="sidebar-handle"></div><div class="sidebar-topbar"><div class="topbar-content"><label class="theme-toggle-container" for="theme-toggle-input" id=""><input class="theme-toggle-input" type="checkbox" id="theme-toggle-input"><div class="toggle-background"></div></label></div><div class="clickable-icon sidebar-collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><path d="M21 3H3C1.89543 3 1 3.89543 1 5V19C1 20.1046 1.89543 21 3 21H21C22.1046 21 23 20.1046 23 19V5C23 3.89543 22.1046 3 21 3Z"></path><path d="M10 4V20"></path><path d="M4 7H7"></path><path d="M4 10H7"></path><path d="M4 13H7"></path></svg></div></div><div class="sidebar-content-wrapper"><div id="right-sidebar-content" class="leaf-content"><div class="graph-view-wrapper"><div class="feature-header"><div class="feature-title">Interactive Graph</div></div><div class="graph-view-placeholder">
+		<div class="graph-view-container">
+			<div class="graph-icon graph-expand" role="button" aria-label="Expand" data-tooltip-position="top"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></div>
+			<div class="graph-icon graph-global" role="button" aria-label="Global Graph" data-tooltip-position="top"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-git-fork"><circle cx="12" cy="18" r="3"></circle><circle cx="6" cy="6" r="3"></circle><circle cx="18" cy="6" r="3"></circle><path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9"></path><path d="M12 12v3"></path></svg></div>
+			<canvas id="graph-canvas" class="hide" width="512px" height="512px"></canvas>
+		</div>
+		</div></div><div id="outline" class=" tree-container"><div class="feature-header"><div class="feature-title">Table Of Contents</div><button class="clickable-icon nav-action-button tree-collapse-all" aria-label="Collapse All"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg></button></div><div class="tree-item" data-depth="1"><a class="tree-item-self is-clickable" href="chapter3-basic-vhdl.html#chapter3-basic-vhdl_0" data-path="#chapter3-basic-vhdl_0"><div class="tree-item-inner heading-link" heading-name="chapter3-basic-vhdl">chapter3-basic-vhdl</div></a><div class="tree-item-children"></div></div><div class="tree-item" data-depth="1"><a class="tree-item-self is-clickable" href="chapter3-basic-vhdl.html#1_ภาษาบรรยายฮาร์ดแวร์_VHDL_&amp;_Signal_Naming_Conventions_0" data-path="#1_ภาษาบรรยายฮาร์ดแวร์_VHDL_&amp;_Signal_Naming_Conventions_0"><div class="tree-item-inner heading-link" heading-name="1 ภาษาบรรยายฮาร์ดแวร์ VHDL &amp; Signal Naming Conventions">1 ภาษาบรรยายฮาร์ดแวร์ VHDL &amp; Signal Naming Conventions</div></a><div class="tree-item-children"></div></div><div class="tree-item mod-collapsible" data-depth="1"><a class="tree-item-self is-clickable mod-collapsible" href="chapter3-basic-vhdl.html#2_โครงสร้างภาษา_VHDL_Entity_&amp;_Architecture_0" data-path="#2_โครงสร้างภาษา_VHDL_Entity_&amp;_Architecture_0"><div class="tree-item-icon collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></div><div class="tree-item-inner heading-link" heading-name="2 โครงสร้างภาษา VHDL: Entity &amp; Architecture">2 โครงสร้างภาษา VHDL: Entity &amp; Architecture</div></a><div class="tree-item-children"><div class="tree-item" data-depth="6"><a class="tree-item-self is-clickable" href="chapter3-basic-vhdl.html#Figure_2-1_0" data-path="#Figure_2-1_0"><div class="tree-item-inner heading-link" heading-name="Figure 2-1">Figure 2-1</div></a><div class="tree-item-children"></div></div></div></div><div class="tree-item mod-collapsible" data-depth="1"><a class="tree-item-self is-clickable mod-collapsible" href="chapter3-basic-vhdl.html#3_Combinational_Logic_vs_Sequential_Logic_0" data-path="#3_Combinational_Logic_vs_Sequential_Logic_0"><div class="tree-item-icon collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></div><div class="tree-item-inner heading-link" heading-name="3 Combinational Logic vs Sequential Logic">3 Combinational Logic vs Sequential Logic</div></a><div class="tree-item-children"><div class="tree-item" data-depth="2"><a class="tree-item-self is-clickable" href="chapter3-basic-vhdl.html#3.1_ตัวอย่างโค้ด_VHDL_Combinational_Process_vs_Clocked_Sequential_Process_0" data-path="#3.1_ตัวอย่างโค้ด_VHDL_Combinational_Process_vs_Clocked_Sequential_Process_0"><div class="tree-item-inner heading-link" heading-name="3.1 ตัวอย่างโค้ด VHDL: Combinational Process vs Clocked Sequential Process">3.1 ตัวอย่างโค้ด VHDL: Combinational Process vs Clocked Sequential Process</div></a><div class="tree-item-children"></div></div><div class="tree-item mod-collapsible" data-depth="2"><a class="tree-item-self is-clickable mod-collapsible" href="chapter3-basic-vhdl.html#3.2_เจาะลึก_Sensitivity_List_การทำงานและข้อควรระวัง_0" data-path="#3.2_เจาะลึก_Sensitivity_List_การทำงานและข้อควรระวัง_0"><div class="tree-item-icon collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></div><div class="tree-item-inner heading-link" heading-name="3.2 เจาะลึก Sensitivity List: การทำงานและข้อควรระวัง">3.2 เจาะลึก Sensitivity List: การทำงานและข้อควรระวัง</div></a><div class="tree-item-children"><div class="tree-item" data-depth="3"><a class="tree-item-self is-clickable" href="chapter3-basic-vhdl.html#3.2.1_Sensitivity_List_ใน_Combinational_Process_0" data-path="#3.2.1_Sensitivity_List_ใน_Combinational_Process_0"><div class="tree-item-inner heading-link" heading-name="3.2.1 Sensitivity List ใน Combinational Process">3.2.1 Sensitivity List ใน Combinational Process</div></a><div class="tree-item-children"></div></div><div class="tree-item" data-depth="3"><a class="tree-item-self is-clickable" href="chapter3-basic-vhdl.html#3.2.2_Sensitivity_List_ใน_Clocked_Sequential_Process_0" data-path="#3.2.2_Sensitivity_List_ใน_Clocked_Sequential_Process_0"><div class="tree-item-inner heading-link" heading-name="3.2.2 Sensitivity List ใน Clocked Sequential Process">3.2.2 Sensitivity List ใน Clocked Sequential Process</div></a><div class="tree-item-children"></div></div><div class="tree-item" data-depth="3"><a class="tree-item-self is-clickable" href="chapter3-basic-vhdl.html#3.2.3_VHDL-2008_Standard_Option_`process(all)`_0" data-path="#3.2.3_VHDL-2008_Standard_Option_`process(all)`_0"><div class="tree-item-inner heading-link" heading-name="3.2.3 VHDL-2008 Standard Option: `process(all)`">3.2.3 VHDL-2008 Standard Option: <code>process(all)</code></div></a><div class="tree-item-children"></div></div></div></div></div></div><div class="tree-item mod-collapsible" data-depth="1"><a class="tree-item-self is-clickable mod-collapsible" href="chapter3-basic-vhdl.html#4_ชนิดข้อมูลและแอตทริบิวต์_(Data_Types_&amp;_Attributes)_0" data-path="#4_ชนิดข้อมูลและแอตทริบิวต์_(Data_Types_&amp;_Attributes)_0"><div class="tree-item-icon collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></div><div class="tree-item-inner heading-link" heading-name="4 ชนิดข้อมูลและแอตทริบิวต์ (Data Types &amp; Attributes)">4 ชนิดข้อมูลและแอตทริบิวต์ (Data Types &amp; Attributes)</div></a><div class="tree-item-children"><div class="tree-item" data-depth="2"><a class="tree-item-self is-clickable" href="chapter3-basic-vhdl.html#4.1_ชนิดข้อมูลหลักใน_VHDL_(`std_logic_1164`)_0" data-path="#4.1_ชนิดข้อมูลหลักใน_VHDL_(`std_logic_1164`)_0"><div class="tree-item-inner heading-link" heading-name="4.1 ชนิดข้อมูลหลักใน VHDL (`std_logic_1164`):">4.1 ชนิดข้อมูลหลักใน VHDL (<code>std_logic_1164</code>):</div></a><div class="tree-item-children"></div></div><div class="tree-item" data-depth="2"><a class="tree-item-self is-clickable" href="chapter3-basic-vhdl.html#4.2_แอตทริบิวต์ที่ใช้บ่อย_(VHDL_Attributes)_0" data-path="#4.2_แอตทริบิวต์ที่ใช้บ่อย_(VHDL_Attributes)_0"><div class="tree-item-inner heading-link" heading-name="4.2 แอตทริบิวต์ที่ใช้บ่อย (VHDL Attributes):">4.2 แอตทริบิวต์ที่ใช้บ่อย (VHDL Attributes):</div></a><div class="tree-item-children"></div></div></div></div><div class="tree-item mod-collapsible" data-depth="1"><a class="tree-item-self is-clickable mod-collapsible" href="chapter3-basic-vhdl.html#5_โครงสร้างควบคุมการทำงาน_(Control_Flow_&amp;_Hardware_Generation)_0" data-path="#5_โครงสร้างควบคุมการทำงาน_(Control_Flow_&amp;_Hardware_Generation)_0"><div class="tree-item-icon collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></div><div class="tree-item-inner heading-link" heading-name="5 โครงสร้างควบคุมการทำงาน (Control Flow &amp; Hardware Generation)">5 โครงสร้างควบคุมการทำงาน (Control Flow &amp; Hardware Generation)</div></a><div class="tree-item-children"><div class="tree-item" data-depth="2"><a class="tree-item-self is-clickable" href="chapter3-basic-vhdl.html#5.1_คำสั่งควบคุมลำดับภายใน_Process_(Sequential_Control_Statements)_0" data-path="#5.1_คำสั่งควบคุมลำดับภายใน_Process_(Sequential_Control_Statements)_0"><div class="tree-item-inner heading-link" heading-name="5.1 คำสั่งควบคุมลำดับภายใน Process (Sequential Control Statements)">5.1 คำสั่งควบคุมลำดับภายใน Process (Sequential Control Statements)</div></a><div class="tree-item-children"></div></div><div class="tree-item" data-depth="2"><a class="tree-item-self is-clickable" href="chapter3-basic-vhdl.html#5.2_คำสั่งสร้างฮาร์ดแวร์ขนานภายนอก_Process_(Concurrent_Generate_Statement)_0" data-path="#5.2_คำสั่งสร้างฮาร์ดแวร์ขนานภายนอก_Process_(Concurrent_Generate_Statement)_0"><div class="tree-item-inner heading-link" heading-name="5.2 คำสั่งสร้างฮาร์ดแวร์ขนานภายนอก Process (Concurrent Generate Statement)">5.2 คำสั่งสร้างฮาร์ดแวร์ขนานภายนอก Process (Concurrent Generate Statement)</div></a><div class="tree-item-children"></div></div></div></div><div class="tree-item mod-collapsible" data-depth="1"><a class="tree-item-self is-clickable mod-collapsible" href="chapter3-basic-vhdl.html#6_การออกแบบเชิงโมดูลขั้นสูง_(Package,_Functions_&amp;_Procedures)_0" data-path="#6_การออกแบบเชิงโมดูลขั้นสูง_(Package,_Functions_&amp;_Procedures)_0"><div class="tree-item-icon collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></div><div class="tree-item-inner heading-link" heading-name="6 การออกแบบเชิงโมดูลขั้นสูง (Package, Functions &amp; Procedures)">6 การออกแบบเชิงโมดูลขั้นสูง (Package, Functions &amp; Procedures)</div></a><div class="tree-item-children"><div class="tree-item" data-depth="2"><a class="tree-item-self is-clickable" href="chapter3-basic-vhdl.html#6.1_Package_(`*_pkg.vhd`)_0" data-path="#6.1_Package_(`*_pkg.vhd`)_0"><div class="tree-item-inner heading-link" heading-name="6.1 Package (`*_pkg.vhd`)">6.1 Package (<code>*_pkg.vhd</code>)</div></a><div class="tree-item-children"></div></div><div class="tree-item" data-depth="2"><a class="tree-item-self is-clickable" href="chapter3-basic-vhdl.html#6.2_Functions_(`function`)_0" data-path="#6.2_Functions_(`function`)_0"><div class="tree-item-inner heading-link" heading-name="6.2 Functions (`function`)">6.2 Functions (<code>function</code>)</div></a><div class="tree-item-children"></div></div><div class="tree-item" data-depth="2"><a class="tree-item-self is-clickable" href="chapter3-basic-vhdl.html#6.3_Procedures_(`procedure`)_0" data-path="#6.3_Procedures_(`procedure`)_0"><div class="tree-item-inner heading-link" heading-name="6.3 Procedures (`procedure`)">6.3 Procedures (<code>procedure</code>)</div></a><div class="tree-item-children"></div></div></div></div><div class="tree-item" data-depth="1"><a class="tree-item-self is-clickable" href="chapter3-basic-vhdl.html#7_Signal_vs_Variable_0" data-path="#7_Signal_vs_Variable_0"><div class="tree-item-inner heading-link" heading-name="7 Signal vs Variable">7 Signal vs Variable</div></a><div class="tree-item-children"></div></div><div class="tree-item mod-collapsible" data-depth="1"><a class="tree-item-self is-clickable mod-collapsible" href="chapter3-basic-vhdl.html#8_Signal_Naming_example_0" data-path="#8_Signal_Naming_example_0"><div class="tree-item-icon collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></div><div class="tree-item-inner heading-link" heading-name="8 Signal Naming example">8 Signal Naming example</div></a><div class="tree-item-children"><div class="tree-item" data-depth="2"><a class="tree-item-self is-clickable" href="chapter3-basic-vhdl.html#8.1_ตัวอย่าง_Convention_หลัก_0" data-path="#8.1_ตัวอย่าง_Convention_หลัก_0"><div class="tree-item-inner heading-link" heading-name="8.1 ตัวอย่าง Convention หลัก">8.1 ตัวอย่าง Convention หลัก</div></a><div class="tree-item-children"></div></div><div class="tree-item" data-depth="2"><a class="tree-item-self is-clickable" href="chapter3-basic-vhdl.html#8.2_Convention_อื่นๆ_ที่พบได้บ่อยในอุตสาหกรรม_(สำหรับอ้างอิง)_0" data-path="#8.2_Convention_อื่นๆ_ที่พบได้บ่อยในอุตสาหกรรม_(สำหรับอ้างอิง)_0"><div class="tree-item-inner heading-link" heading-name="8.2 Convention อื่นๆ ที่พบได้บ่อยในอุตสาหกรรม (สำหรับอ้างอิง)">8.2 Convention อื่นๆ ที่พบได้บ่อยในอุตสาหกรรม (สำหรับอ้างอิง)</div></a><div class="tree-item-children"></div></div></div></div><div class="tree-item mod-collapsible" data-depth="1"><a class="tree-item-self is-clickable mod-collapsible" href="chapter3-basic-vhdl.html#9_Synthesizable_vs_Non-synthesizable_(Testbench-only)_VHDL_Syntax_0" data-path="#9_Synthesizable_vs_Non-synthesizable_(Testbench-only)_VHDL_Syntax_0"><div class="tree-item-icon collapse-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon right-triangle"><path d="M3 8L12 17L21 8"></path></svg></div><div class="tree-item-inner heading-link" heading-name="9 Synthesizable vs Non-synthesizable (Testbench-only) VHDL Syntax">9 Synthesizable vs Non-synthesizable (Testbench-only) VHDL Syntax</div></a><div class="tree-item-children"><div class="tree-item" data-depth="2"><a class="tree-item-self is-clickable" href="chapter3-basic-vhdl.html#9.1_ตารางเปรียบเทียบ_Syntax_ที่พบบ่อย_0" data-path="#9.1_ตารางเปรียบเทียบ_Syntax_ที่พบบ่อย_0"><div class="tree-item-inner heading-link" heading-name="9.1 ตารางเปรียบเทียบ Syntax ที่พบบ่อย">9.1 ตารางเปรียบเทียบ Syntax ที่พบบ่อย</div></a><div class="tree-item-children"></div></div><div class="tree-item" data-depth="2"><a class="tree-item-self is-clickable" href="chapter3-basic-vhdl.html#9.2_ตัวอย่างโค้ด_รูปแบบ_Non-synthesizable_(Testbench-only)_ที่พบบ่อย_0" data-path="#9.2_ตัวอย่างโค้ด_รูปแบบ_Non-synthesizable_(Testbench-only)_ที่พบบ่อย_0"><div class="tree-item-inner heading-link" heading-name="9.2 ตัวอย่างโค้ด: รูปแบบ Non-synthesizable (Testbench-only) ที่พบบ่อย">9.2 ตัวอย่างโค้ด: รูปแบบ Non-synthesizable (Testbench-only) ที่พบบ่อย</div></a><div class="tree-item-children"></div></div><div class="tree-item" data-depth="2"><a class="tree-item-self is-clickable" href="chapter3-basic-vhdl.html#9.3_วิธีเช็คว่าโค้ดของเรา_Synthesizable_หรือ_Non-synthesizable_0" data-path="#9.3_วิธีเช็คว่าโค้ดของเรา_Synthesizable_หรือ_Non-synthesizable_0"><div class="tree-item-inner heading-link" heading-name="9.3 วิธีเช็คว่าโค้ดของเรา Synthesizable หรือ Non-synthesizable">9.3 วิธีเช็คว่าโค้ดของเรา Synthesizable หรือ Non-synthesizable</div></a><div class="tree-item-children"></div></div></div></div></div></div></div><script defer="">let rs = document.querySelector("#right-sidebar"); rs.classList.toggle("is-collapsed", window.innerWidth < 768); rs.style.setProperty("--sidebar-width", localStorage.getItem("sidebar-right-width"));</script></div></div></div></div></body></html>
