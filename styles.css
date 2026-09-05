@@ -138,14 +138,38 @@ a:hover {
     border-radius: var(--radius) !important;
     box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7), 0 0 25px rgba(14, 165, 233, 0.18) !important;
     padding: 0.5rem !important;
+    max-height: 85vh !important;
+    overflow-y: auto !important;
+}
+
+.dropdown-menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb {
+    background: #1e2d42;
+    border-radius: 3px;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb:hover {
+    background: #38bdf8;
+}
+
+.dropdown-header {
+    color: #38bdf8 !important;
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    padding: 0.5rem 0.95rem 0.25rem !important;
 }
 
 .dropdown-item {
     color: #f8fafc !important;
     font-weight: 600 !important;
-    padding: 0.6rem 0.95rem !important;
+    padding: 0.55rem 0.95rem !important;
     border-radius: 6px !important;
-    font-size: 0.92rem !important;
+    font-size: 0.9rem !important;
     display: flex !important;
     align-items: center !important;
     transition: all 0.15s ease !important;
@@ -153,7 +177,7 @@ a:hover {
 
 .dropdown-item i {
     color: #38bdf8 !important;
-    font-size: 1rem !important;
+    font-size: 0.95rem !important;
 }
 
 .dropdown-item:hover,
@@ -163,8 +187,8 @@ a:hover {
 }
 
 .dropdown-divider {
-    border-color: rgba(255, 255, 255, 0.12) !important;
-    margin: 0.45rem 0 !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    margin: 0.4rem 0 !important;
 }
 
 .hero-section {

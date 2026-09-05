@@ -56,68 +56,59 @@
     </style>
   </head>
   <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <!-- Top Navigation Bar -->
+    <nav class="navbar navbar-expand-lg fixed-top site-nav">
         <div class="container">
-            <a class="navbar-brand" href="index.html">FPGATHAILAND</a>
+            <a class="navbar-brand" href="index_en.html">
+                <span class="navbar-brand-icon"><i class="bi bi-cpu"></i></span>
+                <span>FPGATHAILAND</span>
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Home</a>
-                    </li>
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+                    <li class="nav-item"><a class="nav-link" href="index_en.html#work">Featured Work</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index_en.html#articles">Articles & Labs</a></li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAries" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Aries Board
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBoards" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Lab Boards
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAries">
-                            <li><a class="dropdown-item" href="AriesBoard_ep1_en.html">Episode 1: Project Design</a></li>
-                            <li><a class="dropdown-item" href="AriesBoard_ep2_en.html">Episode 2: Version A.1</a></li>
-                            <li><a class="dropdown-item" href="AriesBoard_ep3_en.html">Episode 3: FPGA Design</a></li>
-                            <li><a class="dropdown-item" href="AriesBoard_ep4_en.html">Episode 4: PCI driver for linux</a></li>
-                            <li><a class="dropdown-item" href="AriesBoard_ep5_en.html">Episode 5: PCI driver for windows</a></li>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownBoards">
+                            <li><a class="dropdown-item" href="coursecontent/chapter1-introduction-to-fpga.html"><i class="bi bi-book me-2"></i>FPGA Fundamentals</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">PYNQ-Z2</h6></li>
+                            <li><a class="dropdown-item" href="pynq-z2-vivado_en.html"><i class="bi bi-cpu me-2"></i>Vivado Setup</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-hls_en.html"><i class="bi bi-lightning-charge me-2"></i>HLS Acceleration</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-ai_en.html"><i class="bi bi-robot me-2"></i>AI (DPU IP)</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-modelsim_en.html"><i class="bi bi-activity me-2"></i>Modelsim</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1_en.html"><i class="bi bi-display me-2"></i>LVGL Part 1</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2_en.html"><i class="bi bi-display me-2"></i>LVGL Part 2</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvlg_special_ep_en.html"><i class="bi bi-stars me-2"></i>Special: AI Agent</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">ARIES PCI Board</h6></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep1_en.html"><i class="bi bi-motherboard me-2"></i>Part 1: Architecture</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep2_en.html"><i class="bi bi-motherboard me-2"></i>Part 2: Revision A.1</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep3_en.html"><i class="bi bi-motherboard me-2"></i>Part 3: FPGA Logic</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep4_en.html"><i class="bi bi-motherboard me-2"></i>Part 4: Linux PCI Driver</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep5_en.html"><i class="bi bi-motherboard me-2"></i>Part 5: Windows PCI Driver</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">Other Boards & Tools</h6></li>
+                            <li><a class="dropdown-item" href="EZUSB_FPGA_en.html"><i class="bi bi-usb-symbol me-2"></i>EZUSB + FPGA</a></li>
+                            <li><a class="dropdown-item" href="GeminiBoard_Beaglebone_Frambuffer_en.html"><i class="bi bi-display me-2"></i>GeminiBoard Framebuffer</a></li>
+                            <li><a class="dropdown-item" href="Sigasi_en.html"><i class="bi bi-code-square me-2"></i>Sigasi for VS Code</a></li>
+                            <li><a class="dropdown-item" href="UVVM_en.html"><i class="bi bi-check2-circle me-2"></i>UVVM Verification</a></li>
+                            <li><a class="dropdown-item" href="AI_hardware_en.html"><i class="bi bi-robot me-2"></i>AI Hardware Control (MCP)</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-info" href="index_en.html#articles"><i class="bi bi-grid-3x3-gap me-2"></i>View All Articles (22)</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPynq" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            PYNQ-Z2
+                    <li class="nav-item"><a class="nav-link" href="index_en.html#contact">Contact</a></li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="lang-switch-btn" href="pynq-z2-ai_th.html" title="Switch to Thai">
+                            <i class="bi bi-translate"></i> TH
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownPynq">
-                            <li><a class="dropdown-item" href="pynq-z2-ai_en.html">AI (DPU)</a></li>
-                            <li><a class="dropdown-item" href="pynq-z2-hls_en.html">HLS</a></li>
-                            <li><a class="dropdown-item" href="pynq-z2-modelsim_en.html">Modelsim</a></li>
-                            <li><a class="dropdown-item" href="pynq-z2-vivado_en.html">Vivado</a></li>
-                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1_en.html">LVGL Episode 1</a></li>
-                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2_en.html">LVGL Episode 2</a></li>
-                            <li><a class="dropdown-item" href="pynq_z2_lvlg_special_ep_en.html">Special Episode: AI Agent</a></li>
-                        </ul>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAI" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            AI
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAI">
-                            <li><a class="dropdown-item" href="AI_hardware_en.html">AI Hardware Control with MCP</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownTools" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Tools
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownTools">
-                            <li><a class="dropdown-item" href="Sigasi_en.html">Sigasi for VS Code</a></li>
-                            <li><a class="dropdown-item" href="UVVM_en.html">UVVM</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="EZUSB_FPGA_en.html">USB</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="GeminiBoard_Beaglebone_Frambuffer_en.html">GeminiBoard</a>
-                    </li>
-                
-                    <li class="nav-item"><a class="nav-link" href="pynq-z2-ai_th.html">TH</a></li>
                 </ul>
             </div>
         </div>
