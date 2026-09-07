@@ -41,7 +41,11 @@
 </url>
 <url>
 <loc>https://wichayen.github.io/fpgathailand/</loc>
-<lastmod>2026-03-20T08:51:32+00:00</lastmod>
+<lastmod>2026-09-07T07:42:00+07:00</lastmod>
+</url>
+<url>
+<loc>https://wichayen.github.io/fpgathailand/index.html</loc>
+<lastmod>2026-09-07T07:42:00+07:00</lastmod>
 </url>
 <url>
 <loc>https://wichayen.github.io/fpgathailand/pynq-z2-ai_th.html</loc>
@@ -73,7 +77,11 @@
 </url>
 <url>
 <loc>https://wichayen.github.io/fpgathailand/index_th.html</loc>
-<lastmod>2026-07-17T12:16:00+07:00</lastmod>
+<lastmod>2026-09-07T07:42:00+07:00</lastmod>
+</url>
+<url>
+<loc>https://wichayen.github.io/fpgathailand/index_en.html</loc>
+<lastmod>2026-09-07T07:42:00+07:00</lastmod>
 </url>
 <url>
 <loc>https://wichayen.github.io/fpgathailand/AI_hardware_en.html</loc>
@@ -158,5 +166,9 @@
 <url>
 <loc>https://wichayen.github.io/fpgathailand/coursecontent/chapter4-coding-tools.html</loc>
 <lastmod>2026-09-05T14:42:00+07:00</lastmod>
+</url>
+<url>
+<loc>https://wichayen.github.io/fpgathailand/coursecontent/chapter5-basic-simulation.html</loc>
+<lastmod>2026-09-07T07:31:14+07:00</lastmod>
 </url>
 </urlset>
