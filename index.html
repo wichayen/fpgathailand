@@ -297,10 +297,10 @@
                         <div class="col-lg-7">
                             <div class="filter-pills-bar" id="categoryFilterGroup">
                                 <button type="button" class="filter-pill-btn active" data-filter="all">ทั้งหมด (22)</button>
-                                <button type="button" class="filter-pill-btn" data-filter="basics">FPGA Basics (4)</button>
+                                <button type="button" class="filter-pill-btn" data-filter="basics">FPGA Basics (5)</button>
                                 <button type="button" class="filter-pill-btn" data-filter="pynq">PYNQ-Z2 / Zynq (7)</button>
                                 <button type="button" class="filter-pill-btn" data-filter="aries">ARIES PCI Board (5)</button>
-                                <button type="button" class="filter-pill-btn" data-filter="tools">Tools & Protocols (6)</button>
+                                <button type="button" class="filter-pill-btn" data-filter="tools">Tools & Protocols (5)</button>
                             </div>
                         </div>
                     </div>
@@ -308,7 +308,7 @@
 
                 <!-- Articles Grid -->
                 <div class="articles-grid-modern" id="articlesContainer">
-                    <!-- Basics (4) -->
+                    <!-- Basics (5) -->
                     <a class="article-row-card" href="coursecontent/chapter1-introduction-to-fpga.html" data-category="basics" data-keywords="fpga intro introduction architecture clb lut basic พื้นฐาน">
                         <div class="article-card-meta">
                             <span class="article-category-tag"><i class="bi bi-journal-text me-1"></i> FPGA Basics</span>
@@ -346,6 +346,16 @@
                         </div>
                         <h4 class="article-card-name">Chapter 4: Coding Tools & Assistants</h4>
                         <p class="article-card-desc">แนะนำเครื่องมือช่วยเขียนโค้ด HDL, Text Editor, ส่วนเสริม VS Code และการนำ AI มาช่วยเขียนเทสต์เบนช์</p>
+                        <span class="article-read-btn">อ่านบทเรียน <i class="bi bi-arrow-right"></i></span>
+                    </a>
+
+                    <a class="article-row-card" href="coursecontent/chapter5-basic-simulation.html" data-category="basics" data-keywords="simulation testbench waveform xsim modelsim questa ghdl verilator จำลองการทำงาน ซิมูเลชั่น">
+                        <div class="article-card-meta">
+                            <span class="article-category-tag"><i class="bi bi-journal-text me-1"></i> FPGA Basics</span>
+                            <span class="article-level-tag">Beginner</span>
+                        </div>
+                        <h4 class="article-card-name">Chapter 5: Basic Simulation</h4>
+                        <p class="article-card-desc">เปรียบเทียบเครื่องมือจำลองการทำงาน FPGA แต่ละค่าย (Vivado XSim, ModelSim, Questa, GHDL, Verilator) และเวิร์กโฟลว์การจำลองการทำงานด้วย ModelSim GUI & Script</p>
                         <span class="article-read-btn">อ่านบทเรียน <i class="bi bi-arrow-right"></i></span>
                     </a>
 
@@ -471,7 +481,7 @@
                         <span class="article-read-btn">อ่านบทความ <i class="bi bi-arrow-right"></i></span>
                     </a>
 
-                    <!-- Tools & Protocols (6) -->
+                    <!-- Tools & Protocols (5) -->
                     <a class="article-row-card" href="Sigasi.html" data-category="tools" data-keywords="sigasi vscode vhdl verilog hdl editor linting formatting เครื่องมือ">
                         <div class="article-card-meta">
                             <span class="article-category-tag"><i class="bi bi-tools me-1"></i> Tools & EDA</span>
@@ -597,6 +607,50 @@
 
             let currentFilter = 'all';
             let currentSearch = '';
+
+            // Auto-calculate article and category counts from DOM
+            function autoCalculateCounts() {
+                const totalCount = cards.length;
+                const categoryCounts = {};
+
+                cards.forEach(card => {
+                    const cat = card.getAttribute('data-category');
+                    if (cat) {
+                        categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+                    }
+                });
+
+                // Update filter buttons
+                filterBtns.forEach(btn => {
+                    const filter = btn.getAttribute('data-filter');
+                    const count = (filter === 'all') ? totalCount : (categoryCounts[filter] || 0);
+                    btn.textContent = btn.textContent.replace(/\(\d+\)/, `(${count})`);
+                });
+
+                // Update hero metric for Lab Tutorials / Articles
+                const heroMetricItems = document.querySelectorAll('.hero-metric-item');
+                heroMetricItems.forEach(item => {
+                    const label = item.querySelector('.metric-label')?.textContent || '';
+                    if (/Tutorial|Lab|บทความ/i.test(label)) {
+                        const valElem = item.querySelector('.metric-value');
+                        if (valElem) {
+                            valElem.innerHTML = `${totalCount}<span class="metric-accent">+</span>`;
+                        }
+                    }
+                });
+
+                // Update dropdown link & featured section button
+                const allLinks = document.querySelectorAll('a[href*="#articles"]');
+                allLinks.forEach(link => {
+                    if (/\(\d+(?:\s+บทความ)?\)/.test(link.innerHTML)) {
+                        link.innerHTML = link.innerHTML.replace(/\(\d+(\s+บทความ)?\)/, (match, p1) => {
+                            return p1 ? `(${totalCount}${p1})` : `(${totalCount})`;
+                        });
+                    }
+                });
+            }
+
+            autoCalculateCounts();
 
             function updateDisplay() {
                 let visibleCount = 0;

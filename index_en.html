@@ -297,10 +297,10 @@
                         <div class="col-lg-7">
                             <div class="filter-pills-bar" id="categoryFilterGroup">
                                 <button type="button" class="filter-pill-btn active" data-filter="all">All (22)</button>
-                                <button type="button" class="filter-pill-btn" data-filter="basics">FPGA Basics (4)</button>
+                                <button type="button" class="filter-pill-btn" data-filter="basics">FPGA Basics (5)</button>
                                 <button type="button" class="filter-pill-btn" data-filter="pynq">PYNQ-Z2 / Zynq (7)</button>
                                 <button type="button" class="filter-pill-btn" data-filter="aries">ARIES PCI Board (5)</button>
-                                <button type="button" class="filter-pill-btn" data-filter="tools">Tools & Protocols (6)</button>
+                                <button type="button" class="filter-pill-btn" data-filter="tools">Tools & Protocols (5)</button>
                             </div>
                         </div>
                     </div>
@@ -308,7 +308,7 @@
 
                 <!-- Articles Grid -->
                 <div class="articles-grid-modern" id="articlesContainer">
-                    <!-- Basics (4) -->
+                    <!-- Basics (5) -->
                     <a class="article-row-card" href="coursecontent/chapter1-introduction-to-fpga.html" data-category="basics" data-keywords="fpga intro introduction architecture clb lut basic fundamentals">
                         <div class="article-card-meta">
                             <span class="article-category-tag"><i class="bi bi-journal-text me-1"></i> FPGA Basics</span>
@@ -319,13 +319,13 @@
                         <span class="article-read-btn">Read Article <i class="bi bi-arrow-right"></i></span>
                     </a>
 
-                    <a class="article-row-card" href="coursecontent/chapter2-fpga-design-flow.html" data-category="basics" data-keywords="flow synthesis place route timing constraints vivado bitstream">
+                    <a class="article-row-card" href="coursecontent/chapter2-fundamental-of-digital-logic.html" data-category="basics" data-keywords="digital logic gate combinational sequential flip flop boolean timing analysis">
                         <div class="article-card-meta">
                             <span class="article-category-tag"><i class="bi bi-journal-text me-1"></i> FPGA Basics</span>
                             <span class="article-level-tag">Beginner</span>
                         </div>
-                        <h4 class="article-card-name">Chapter 2: FPGA Design Flow</h4>
-                        <p class="article-card-desc">Step-by-step FPGA design lifecycle from RTL coding, synthesis, implementation, place & route, to bitstream programming.</p>
+                        <h4 class="article-card-name">Chapter 2: Fundamental of Digital Logic</h4>
+                        <p class="article-card-desc">Review of essential digital logic design, number systems, 2's complement, combinational & sequential logic, and timing analysis basics.</p>
                         <span class="article-read-btn">Read Article <i class="bi bi-arrow-right"></i></span>
                     </a>
 
@@ -346,6 +346,16 @@
                         </div>
                         <h4 class="article-card-name">Chapter 4: Coding Tools & Text Editors</h4>
                         <p class="article-card-desc">Recommended text editors, VS Code extensions, linting plugins, and productivity setups for VHDL/Verilog development.</p>
+                        <span class="article-read-btn">Read Article <i class="bi bi-arrow-right"></i></span>
+                    </a>
+
+                    <a class="article-row-card" href="coursecontent/chapter5-basic-simulation.html" data-category="basics" data-keywords="simulation testbench waveform xsim modelsim questa ghdl verilator rtl verification">
+                        <div class="article-card-meta">
+                            <span class="article-category-tag"><i class="bi bi-journal-text me-1"></i> FPGA Basics</span>
+                            <span class="article-level-tag">Beginner</span>
+                        </div>
+                        <h4 class="article-card-name">Chapter 5: Basic Simulation</h4>
+                        <p class="article-card-desc">Comparison of FPGA simulation tools (Vivado XSim, ModelSim, Questa, GHDL, Verilator) and basic simulation workflow with ModelSim GUI & Script.</p>
                         <span class="article-read-btn">Read Article <i class="bi bi-arrow-right"></i></span>
                     </a>
 
@@ -471,7 +481,7 @@
                         <span class="article-read-btn">Read Article <i class="bi bi-arrow-right"></i></span>
                     </a>
 
-                    <!-- Tools & Protocols (6) -->
+                    <!-- Tools & Protocols (5) -->
                     <a class="article-row-card" href="EZUSB_FPGA_en.html" data-category="tools" data-keywords="ezusb cy7c68013 cypress fx2 slave fifo usb 2.0 high speed transfer">
                         <div class="article-card-meta">
                             <span class="article-category-tag"><i class="bi bi-usb-symbol me-1"></i> Protocol & Interface</span>
@@ -512,15 +522,7 @@
                         <span class="article-read-btn">Read Article <i class="bi bi-arrow-right"></i></span>
                     </a>
 
-                    <a class="article-row-card" href="pynq_z2_lvlg_special_ep_en.html" data-category="tools" data-keywords="ai coding agent copilot claude deepseek llm hardware prompt">
-                        <div class="article-card-meta">
-                            <span class="article-category-tag"><i class="bi bi-cpu-fill me-1"></i> Emerging Workflows</span>
-                            <span class="article-level-tag">AI in Hardware</span>
-                        </div>
-                        <h4 class="article-card-name">AI Coding Agents in Hardware & Embedded Engineering</h4>
-                        <p class="article-card-desc">Practical workflows for utilizing AI coding assistants to write drivers, synthesize testbenches, and accelerate HDL design.</p>
-                        <span class="article-read-btn">Read Article <i class="bi bi-arrow-right"></i></span>
-                    </a>
+
 
                     <a class="article-row-card" href="AI_hardware_en.html" data-category="tools" data-keywords="ai hardware mcp model context protocol scpi oscilloscope automation">
                         <div class="article-card-meta">
@@ -607,6 +609,50 @@
 
             let currentFilter = 'all';
             let currentSearch = '';
+
+            // Auto-calculate article and category counts from DOM
+            function autoCalculateCounts() {
+                const totalCount = cards.length;
+                const categoryCounts = {};
+
+                cards.forEach(card => {
+                    const cat = card.getAttribute('data-category');
+                    if (cat) {
+                        categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+                    }
+                });
+
+                // Update filter buttons
+                filterBtns.forEach(btn => {
+                    const filter = btn.getAttribute('data-filter');
+                    const count = (filter === 'all') ? totalCount : (categoryCounts[filter] || 0);
+                    btn.textContent = btn.textContent.replace(/\(\d+\)/, `(${count})`);
+                });
+
+                // Update hero metric for Lab Tutorials / Articles
+                const heroMetricItems = document.querySelectorAll('.hero-metric-item');
+                heroMetricItems.forEach(item => {
+                    const label = item.querySelector('.metric-label')?.textContent || '';
+                    if (/Tutorial|Lab|บทความ/i.test(label)) {
+                        const valElem = item.querySelector('.metric-value');
+                        if (valElem) {
+                            valElem.innerHTML = `${totalCount}<span class="metric-accent">+</span>`;
+                        }
+                    }
+                });
+
+                // Update dropdown link & featured section button
+                const allLinks = document.querySelectorAll('a[href*="#articles"]');
+                allLinks.forEach(link => {
+                    if (/\(\d+(?:\s+บทความ)?\)/.test(link.innerHTML)) {
+                        link.innerHTML = link.innerHTML.replace(/\(\d+(\s+บทความ)?\)/, (match, p1) => {
+                            return p1 ? `(${totalCount}${p1})` : `(${totalCount})`;
+                        });
+                    }
+                });
+            }
+
+            autoCalculateCounts();
 
             function updateDisplay() {
                 let visibleCount = 0;
