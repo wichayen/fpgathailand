@@ -127,14 +127,12 @@
               align="left"><a name="_Ref120004158"></a><a name="_Ref120004175"></a><a
                 name="_Toc208827132"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">1.1.<span
                     style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
-                  </span></span><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">การส
-                  ร้าง AXI IP ของตัวเอง</span></a></h2>
+                  </span></span><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">การสร้าง AXI IP ของตัวเอง</span></a></h2>
             <span style="">&nbsp;</span>
             <p class="MsoListParagraph" style="margin-left:21.0pt;text-align:left;
 text-indent:-21.0pt" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">1.<span
                   style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">เปิด Vivado
-                และสร้างโปรเจกต์ ในครั้งนี้จะสร้างโปรเจกต์ตัวอย่างชื่อ project_1</span><span
+                style="font-family:&quot;ＭＳ 明朝&quot;,serif">เปิด Vivado แล้วสร้างโปรเจกต์ขึ้นมาใหม่ (ในตัวอย่างนี้จะตั้งชื่อโปรเจกต์ว่า project_1)</span><span
                 style="">&nbsp;</span>
             </p>
             <p class="MsoListParagraph" style="margin-left:21.0pt;text-align:left;
@@ -157,16 +155,13 @@ Description automatically generated" height="212" width="482"></p>
 Description automatically generated" height="424" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">กำหนดชื่อ </span>IP<span lang="JA"> ที่เหมาะสม
-                  ในครั้งนี้จะสร้างเป็น </span> myip
+                กำหนดชื่อ IP ตามต้องการ (ในตัวอย่างนี้จะใช้ชื่อว่า myip)
               </span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 6" src="pynq-z2-vivado_th_files/image003.png" alt="Graphical user interface, text, application, email
 Description automatically generated" height="385" width="567"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                สามารถเพิ่มอินเทอร์เฟซ AXI ในส่วน Interface
-                และตั้งค่าจำนวนรีจิสเตอร์ได้ ในครั้งนี้จะสร้างเป็น IP
-                อย่างง่ายโดยใช้การตั้งค่านี้ (AXI lite)</span></p>
+                ในส่วน Interface สามารถเพิ่มอินเทอร์เฟซ AXI และกำหนดจำนวนรีจิสเตอร์ที่ต้องการได้ โดยในตัวอย่างนี้จะสร้างเป็น IP แบบพื้นฐานโดยใช้การตั้งค่าเริ่มต้น (AXI-Lite)</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 7" src="pynq-z2-vivado_th_files/image004.png" alt="Graphical user interface, application
 Description automatically generated" height="310" width="567"></p>
@@ -175,8 +170,7 @@ Description automatically generated" height="310" width="567"></p>
             </span>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span><span
                 style=""></span><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                หากเลือก Verify Peripheral IP using AXI4 VIP
-                ระบบจะสร้างสภาพแวดล้อมการจำลองให้โดยอัตโนมัติ</span>
+                หากติ๊กเลือก Verify Peripheral IP using AXI4 VIP ระบบจะสร้างสภาพแวดล้อมและ Testbench สำหรับการจำลอง (Simulation) ให้โดยอัตโนมัติ</span>
             </p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 8" src="pynq-z2-vivado_th_files/image005.png" alt="Graphical user interface, text, application
@@ -184,8 +178,7 @@ Description automatically generated" height="341" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><br>
             </p>
             <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">เมื่อตั้งค่าสภาพแวด
-                ล้อมแล้ว การจำลองจะถูกสร้างขึ้นดังภาพด้านล่าง</span></p>
+                style="font-family:&quot;ＭＳ 明朝&quot;,serif">เมื่อตั้งค่าสภาพแวดล้อมเสร็จแล้ว ระบบจะสร้างโปรเจกต์สำหรับ Simulation ขึ้นมาดังภาพด้านล่าง</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 9" src="pynq-z2-vivado_th_files/image006.png" alt="Graphical user interface, application
 Description automatically generated" height="351" width="624"></p>
@@ -193,8 +186,7 @@ Description automatically generated" height="351" width="624"></p>
                 style="page-break-before:always" clear="all">
             </span>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">จากนั้น </span> IP Catalog<span lang="JA"> จะมี
-                </span>myip_v1.0<span lang="JA">จะถูกเพิ่มเข้าไปด้วย</span></span></p>
+                จากนั้นใน IP Catalog จะมี myip_v1.0 ถูกเพิ่มเข้ามาพร้อมใช้งาน</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 11" src="pynq-z2-vivado_th_files/image007.png" alt="Graphical user interface, text, application
 Description automatically generated" height="200" width="624"></p>
@@ -202,13 +194,9 @@ Description automatically generated" height="200" width="624"></p>
                 style="page-break-before:always" clear="all">
             </span>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif" lang="JA">※
-                หากต้องการเปลี่ยน IP สำหรับการจำลอง ให้คลิกขวาที่ไฟล์จำลองภายใต้
-              </span><span style="">Simulation Source<span lang="JA"> ใน </span>Sources<span
-                  lang="JA"> แล้วเลือก </span>Set as Top<span lang="JA">
-                  จากนั้นคลิกขวาที่ </span>Sim_1<span lang="JA"> ใน </span>Sources<span
-                  lang="JA"> แล้วเลือก </span>Run Simulation -&gt; Run
-                Behavioral Simulation</span></p>
+                style="font-family:&quot;ＭＳ 明朝&quot;,serif">※
+                หากต้องการเปลี่ยน IP หรือสลับไฟล์ Top สำหรับการจำลอง ให้คลิกขวาที่ไฟล์จำลองภายใต้
+              </span><span style="">Simulation Sources ในหน้าต่าง Sources แล้วเลือก Set as Top จากนั้นคลิกขวาที่ sim_1 ใน Sources แล้วเลือก Run Simulation -&gt; Run Behavioral Simulation</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 20" src="pynq-z2-vivado_th_files/image008.png" alt="Graphical user interface, text, application, email
 Description automatically generated" height="345" width="576"></p>
@@ -226,25 +214,17 @@ Description automatically generated" height="224" width="624"></p>
             <p><br>
             </p>
             <p class="MsoNormal" style="margin-left:42.0pt;text-align:left" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">ไฟล์ HDL ของ IP
-                ที่สร้างขึ้นโดยอัตโนมัติจะถูกบันทึกไว้ที่ ./ip_repo/myip_1.0/hld</span></p>
+                style="font-family:&quot;ＭＳ 明朝&quot;,serif">ไฟล์ HDL ของ IP ที่สร้างขึ้นโดยอัตโนมัติจะถูกบันทึกไว้ที่ ./ip_repo/myip_1.0/hdl</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 10" src="pynq-z2-vivado_th_files/image010.png" alt="Graphical user interface, text, application, email
 Description automatically generated" height="150" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">เป็นตัวอย่าง จะทำการเพิ่มพอร์ตเอาต์พุต </span>myip_out<span
-                  lang="JA"> โดยเพิ่มเอาต์พุตในโมดูลของ </span>myip_v1_0_S00_AXI.v<span
-                  lang="JA"> ดังนี้</span></span></p>
+                ในตัวอย่างนี้ เราจะเพิ่มพอร์ตเอาต์พุตชื่อ myip_out โดยเข้าไปเพิ่มสัญญาณเอาต์พุตในโมดูล myip_v1_0_S00_AXI.v ดังนี้</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 12" src="pynq-z2-vivado_th_files/image011.png" alt="Graphical user interface, application, table
 Description automatically generated" height="124" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif"
-                lang="JA">※ ภาษา HDL
-                ที่จะสร้างขึ้นจะแตกต่างกันไปขึ้นอยู่กับการตั้งค่าโปรเจกต์ของ </span><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">vivado<span lang="JA">
-                  สามารถตั้งค่าได้ที่ </span>Settings -&gt; General -&gt;
-                Target language</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">※ ภาษา HDL ที่ระบบสร้างขึ้นจะแตกต่างกันไปตามการตั้งค่าโปรเจกต์ของ Vivado ซึ่งสามารถเลือกเป็น Verilog หรือ VHDL ได้ที่ Settings -&gt; General -&gt; Target language</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 31" src="pynq-z2-vivado_th_files/image012.png" alt="Graphical user interface, text, application, email
 Description automatically generated" height="243" width="516"></p>
@@ -253,24 +233,21 @@ Description automatically generated" height="243" width="516"></p>
             </span>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span><span
                 style=""></span><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">จากนั้น เพิ่มพอร์ตเอาต์พุต </span>myip_out<span
-                  lang="JA"> ในโมดูลของ </span>myip_v1_0.v<span lang="JA">
-                  ดังนี้</span></span>
+                จากนั้น ให้เพิ่มพอร์ตเอาต์พุต myip_out ในโมดูลระดับบน myip_v1_0.v เพื่อเชื่อมต่อสัญญาณออกมาด้านนอก ดังนี้</span>
             </p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 16" src="pynq-z2-vivado_th_files/image013.png" alt="Graphical user interface, text
 Description automatically generated" height="567" width="624"></p>
             <br>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                ในช่อง IP catalog<span lang="JA"> ให้คลิกขวาที่ </span>myip_v1.0<span
-                  lang="JA"> แล้วเลือก </span>Edit in IP Packager</span></p>
+                ในหน้าต่าง IP Catalog ให้คลิกขวาที่ myip_v1.0 แล้วเลือก Edit in IP Packager</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 13" src="pynq-z2-vivado_th_files/image014.png" alt="Graphical user interface, text
 Description automatically generated" height="425" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">คลิก </span>OK<span lang="JA"> ไปได้เลย</span></span></p>
+                คลิก OK เพื่อดำเนินการต่อ</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 14" src="pynq-z2-vivado_th_files/image015.png" alt="Graphical user interface, text, application
 Description automatically generated" height="249" width="224"></p>
@@ -278,57 +255,41 @@ Description automatically generated" height="249" width="224"></p>
                 style="page-break-before:always" clear="all">
             </span>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">จากนั้น หน้าต่าง </span>vivado<span lang="JA">
-                  อีกอันจะเปิดขึ้นมาโดยอัตโนมัติ คลิกที่ </span>Ports
-                and Interface <span lang="JA">แล้วคลิกที่ </span>Merge change
-                from Ports and Interface
-                Wizard</span></p>
+                ระบบจะเปิดหน้าต่าง Vivado ขึ้นมาอีกหน้าต่างหนึ่งโดยอัตโนมัติ ให้ไปที่ Ports and Interfaces แล้วคลิก Merge changes from Ports and Interfaces Wizard เพื่ออัปเดตพอร์ตใหม่</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 17" src="pynq-z2-vivado_th_files/image016.png" alt="Graphical user interface, text, application
 Description automatically generated" height="243" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                คลิกที่ Review and Package <span lang="JA">แล้วคลิก </span>Re-Package
-                IP<span lang="JA"> เพื่ออัปเดต </span>IP<span lang="JA">
-                  จากนั้นปิด </span>Vivado<span lang="JA"> ที่ใช้แก้ไข </span>IP<span
-                  lang="JA"> แล้วกลับไปที่โปรเจกต์ </span>Vivado<span lang="JA">
-                  หลัก</span></span></p>
+                คลิกที่แถบ Review and Package แล้วคลิก Re-Package IP เพื่ออัปเดตแพ็กเกจ IP จากนั้นปิดหน้าต่าง Vivado ที่ใช้แก้ไข IP แล้วสลับกลับไปยังโปรเจกต์ Vivado หลัก</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 18" src="pynq-z2-vivado_th_files/image017.png" alt="Graphical user interface, text, application
 Description automatically generated" height="278" width="624"><span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"></span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">ดับเบิลคลิกที่ </span>myip_1_0_bfm_1_i<span lang="JA">
-                  ใน </span>Sources<span lang="JA"> ของ </span>Block design</span></p>
+                ดับเบิลคลิกที่ myip_1_0_bfm_1_i ใต้ Design Sources เพื่อเปิด Block Design</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 32" src="pynq-z2-vivado_th_files/image018.png" alt="Graphical user interface, text, application, email
 Description automatically generated" height="190" width="419"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                คลิกที่ Show IP Staus<span lang="JA"> แล้วทำการ </span>Upgrade<span
-                  lang="JA"> </span>myip_v1_0_bfm_1</span></p>
+                คลิกที่ Show IP Status แล้วกด Upgrade myip_v1_0_bfm_1 เพื่ออัปเดต IP ให้เป็นเวอร์ชันล่าสุด</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 23" src="pynq-z2-vivado_th_files/image019.png" alt="Graphical user interface, application, Word
 Description automatically generated" height="362" width="623"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">จากนั้นพอร์ต </span>myip_out<span lang="JA">
-                  จะถูกเพิ่มเข้ามา คลิกขวาที่ </span>myip_out<span lang="JA">
-                  แล้วเลือก </span>Make External</span></p>
+                เมื่ออัปเดตแล้ว พอร์ต myip_out จะปรากฏขึ้นมา ให้คลิกขวาที่ myip_out แล้วเลือก Make External เพื่อดึงพอร์ตออกเป็นพอร์ตภายนอก</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 24" src="pynq-z2-vivado_th_files/image020.png" alt="Graphical user interface
 Description automatically generated" height="197" width="503"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">เพื่อรีสตาร์ทการจำลอง ให้คลิกขวาที่ </span>sim_1<span
-                  lang="JA"> ใน </span>Sources<span lang="JA"> แล้วเลือก </span>Run
-                Simulation -&gt; Run
-                Behavioral Simulation</span></p>
+                เมื่อต้องการเริ่มการจำลองใหม่ ให้คลิกขวาที่ sim_1 ในหน้าต่าง Sources แล้วเลือก Run Simulation -&gt; Run Behavioral Simulation</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 33" src="pynq-z2-vivado_th_files/image021.png" alt="Graphical user interface, text, application, email
 Description automatically generated" height="224" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">จากนั้น </span>myip_out<span lang="JA">
-                  จะถูกเพิ่มเข้าไปใน </span>myip_v1_0_bfm<span lang="JA"> ของ </span>DUT</span></p>
+                จะเห็นว่าสัญญาณ myip_out ถูกเพิ่มเข้าไปในโมดูล DUT (myip_v1_0_bfm) ของการจำลองเรียบร้อยแล้ว</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 28" src="pynq-z2-vivado_th_files/image022.png" alt="Graphical user interface
 Description automatically generated" height="191" width="624"></p>
@@ -338,10 +299,7 @@ Description automatically generated" height="191" width="624"></p>
                     style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span><span
                   style="font-family:&quot;ＭＳ 明朝&quot;,serif">การแก้ไข Testbench</span></a></h2>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif"
-                lang="JA">Testbench สำหรับการจำลองถูกเขียนไว้ใน </span><span style="">project_1\project_1.srcs\sim_1\imports\bfm_design\myip_v1_0_tb.sv<span
-                  lang="JA"> หากเพิ่มคำสั่ง </span>Read<span lang="JA"> และ </span>Write<span
-                  lang="JA"> ต่อไปนี้ลงในไฟล์ จะสามารถแก้ไขลำดับการจำลองได้</span></span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">ไฟล์ Testbench สำหรับการจำลองจะอยู่ที่ project_1\project_1.srcs\sim_1\imports\bfm_design\myip_v1_0_tb.sv โดยเราสามารถเพิ่มคำสั่ง Write และ Read ของ Master Agent เพื่อกำหนดลำดับขั้นตอนการจำลองและทดสอบการเข้าถึงรีจิสเตอร์ได้ดังนี้</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">mst_agent_0.AXI4LITE_WRITE_BURST(32'h00000000,
                 0, 32'h12345678,
                 mtestBresp ); </span></p>
@@ -373,22 +331,18 @@ Description automatically generated" height="183" width="624"></p>
 Description automatically generated" height="316" width="538"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
             <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">ตั้งชื่อ Block
-                design<span lang="JA"> ในครั้งนี้จะตั้งชื่อเป็น </span>
-                design_1</span></p>
+                style="font-family:&quot;ＭＳ 明朝&quot;,serif">ตั้งชื่อ Block Design (ในตัวอย่างนี้ใช้ชื่อเริ่มต้นคือ design_1)</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 3" src="pynq-z2-vivado_th_files/image026.png" alt="Graphical user interface, application
 Description automatically generated" height="168" width="235"><span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"></span></p>
             <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">คลิก ADD IP<span lang="JA">
-                  แล้วเพิ่ม </span>zynq</span></p>
+                style="font-family:&quot;ＭＳ 明朝&quot;,serif">คลิก Add IP (+) แล้วเลือกเพิ่ม ZYNQ7 Processing System</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 15" src="pynq-z2-vivado_th_files/image027.png" alt="Graphical user interface, text, application
 Description automatically generated" height="332" width="400"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
             <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">คลิก ADD IP<span lang="JA">
-                  แล้วเพิ่ม </span>myip</span></p>
+                style="font-family:&quot;ＭＳ 明朝&quot;,serif">คลิก Add IP (+) แล้วเลือกเพิ่ม myip ที่เราสร้างขึ้น</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 19" src="pynq-z2-vivado_th_files/image028.png" alt="Text
 Description automatically generated with medium confidence" height="260" width="494"></p>
@@ -396,11 +350,7 @@ Description automatically generated with medium confidence" height="260" width="
                 style="page-break-before:always" clear="all">
             </span>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span><span
-                style=""></span><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">เชื่อม
-                ต่อ Block<span lang="JA"> (หากคลิก </span>Run
-                Connection Automation<span lang="JA">
-                  ระบบจะเชื่อมต่อให้โดยอัตโนมัติ
-                  แต่หลังจากเชื่อมต่อแล้วควรตรวจสอบอีกครั้ง)</span></span>
+                style=""></span><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">ทำการเชื่อมต่อ Block เข้าด้วยกัน (หากคลิก Run Connection Automation ระบบจะช่วยเชื่อมต่อบัสและสัญญาณให้อัตโนมัติ แต่หลังจากเชื่อมต่อเสร็จแล้วควรตรวจสอบความถูกต้องอีกครั้ง)</span>
             </p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 22" src="pynq-z2-vivado_th_files/image029.png" alt="Graphical user interface, text
@@ -413,28 +363,19 @@ Description automatically generated with medium confidence" height="327" width="
                 style="page-break-before:always" clear="all">
             </span>
             <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">ใน Block ของ myip<span
-                  lang="JA"> ให้คลิกขวาที่ </span>myip_out<span lang="JA">
-                  แล้วเลือก </span>Make External<span lang="JA">
-                  ระบบจะสร้างพอร์ตออกไปด้านนอก </span>Block<span lang="JA">
-                  โดยอัตโนมัติ</span></span></p>
+                style="font-family:&quot;ＭＳ 明朝&quot;,serif">ในบล็อกของ myip ให้คลิกขวาที่พอร์ต myip_out แล้วเลือก Make External เพื่อดึงสัญญาณออกไปเป็นพอร์ตภายนอกของ Block Design โดยอัตโนมัติ</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 34" src="pynq-z2-vivado_th_files/image031.png" alt="Diagram
 Description automatically generated with medium confidence" height="250" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
             <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">กำหนดตำแหน่งแอดเดรส
-                ของ myip<span lang="JA"> ใน </span>Address Editor</span></p>
+                style="font-family:&quot;ＭＳ 明朝&quot;,serif">ตรวจสอบและกำหนดตำแหน่งแอดเดรส (Address Map) ของ myip ในแถบ Address Editor</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 39" src="pynq-z2-vivado_th_files/image032.png" alt="Graphical user interface, text, application
 Description automatically generated" height="117" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
             <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">ใน Design Sources<span
-                  lang="JA"> ของ </span>Sources<span lang="JA"> ให้คลิกขวาที่ </span>design_1<span
-                  lang="JA"> แล้วเลือก </span>Create HDL Wrapper<span lang="JA">
-                  เพื่อสร้าง </span>wrapper<span lang="JA"> ของ </span>Block
-                design<span lang="JA"> โดยอัตโนมัติ</span></span></p>
+                style="font-family:&quot;ＭＳ 明朝&quot;,serif">ในหน้าต่าง Sources ภายใต้ Design Sources ให้คลิกขวาที่ design_1 แล้วเลือก Create HDL Wrapper เพื่อสร้างไฟล์ Top Wrapper ของ Block Design โดยอัตโนมัติ</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 27" src="pynq-z2-vivado_th_files/image033.png" alt="Graphical user interface, text, application
 Description automatically generated" height="251" width="624"></p>
@@ -442,21 +383,13 @@ Description automatically generated" height="251" width="624"></p>
                 style="page-break-before:always" clear="all">
             </span>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span><span
-                style=""></span><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">สร้าง
-                ไฟล์ TOP<span lang="JA"> ของ </span>FPGA<span lang="JA">
-                  และเชื่อมต่อกับ </span>Block design<span lang="JA"> ที่ถูก </span>wrapper<span
-                  lang="JA"> ไว้ ในครั้งนี้จะสร้างไฟล์ </span>prj_top.v<span lang="JA">
-                  เป็นไฟล์ </span>TOP</span>
+                style=""></span><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">สร้างไฟล์ Top ระดับบนสุดของ FPGA เพื่อเชื่อมต่อสัญญาณภายนอกเข้ากับ Block Design ที่สร้าง Wrapper ไว้ (ในตัวอย่างนี้จะสร้างไฟล์ prj_top.v ขึ้นมาเป็นไฟล์ TOP)</span>
             </p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 4" src="pynq-z2-vivado_th_files/image034.png" alt="Table
 Description automatically generated" height="502" width="332"><span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"></span></p>
             <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">เพิ่ม prj_top.v<span
-                  lang="JA"> เข้าไปใน </span>Vivado <span lang="JA">จากนั้นใน
-                </span>Sources -&gt; Design Sources -&gt; prj_top<span lang="JA">
-                  ให้คลิกขวาแล้วเลือก
-                </span>Set as Top</span></p>
+                style="font-family:&quot;ＭＳ 明朝&quot;,serif">เพิ่มไฟล์ prj_top.v เข้าไปในโปรเจกต์ Vivado จากนั้นไปที่ Sources -&gt; Design Sources -&gt; คลิกขวาที่ prj_top แล้วเลือก Set as Top</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 37" src="pynq-z2-vivado_th_files/image035.png" alt="Graphical user interface, text, application
 Description automatically generated" height="463" width="431"></p>
@@ -469,23 +402,14 @@ Description automatically generated" height="463" width="431"></p>
                   style="font-family:&quot;ＭＳ 明朝&quot;,serif">การจำลอง IP โดยใช้
                   Zynq VIP</span></a></h2>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">สร้าง
-                Testbench<span lang="JA"> ด้วย </span>zynq_tb.v<span lang="JA">
-                  (โปรดดู </span>example.zip<span lang="JA"> ที่แนบมา)</span></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">การ
-                ทำงานของ Zynq VIP<span lang="JA"> คือ</span></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">กรณี
-                เขียนข้อมูลจาก Zynq<span lang="JA"> ไปยัง </span>IP</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">ใช้
-                xxx.inst.write_data(32'h43C0_0000,4, 32'h12345678, resp);</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">กรณี
-                อ่านข้อมูลจาก IP<span lang="JA"> มายัง </span>Zynq</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">ใช้
-                xxx.inst.read_data(32'h43C0_0000,4,read_data,resp);</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">(xxx<span
-                  lang="JA"> จะเปลี่ยนไปตามลำดับชั้นของดีไซน์ ในดีไซน์นี้คือ </span></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">tb.prj_top_u.design_1_wrapper_u.design_1_i.processing_system7_0<span
-                  lang="JA"> です。</span>)</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">สร้าง Testbench ขึ้นมา เช่น zynq_tb.v (สามารถดูตัวอย่างได้ในไฟล์แนบ example.zip)</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">รูปแบบคำสั่งพื้นฐานในการควบคุม Zynq VIP มีดังนี้:</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">• กรณีเขียนข้อมูล (Write) จาก Zynq ไปยัง IP:</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">ใช้คำสั่ง: xxx.inst.write_data(32'h43C0_0000,4, 32'h12345678, resp);</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">• กรณีอ่านข้อมูล (Read) จาก IP กลับมายัง Zynq:</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">ใช้คำสั่ง: xxx.inst.read_data(32'h43C0_0000,4,read_data,resp);</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">(หมายเหตุ: ลำดับชั้น xxx จะขึ้นอยู่กับโครงสร้าง Hierarchy ของแต่ละดีไซน์ โดยในตัวอย่างนี้คือ</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">tb.prj_top_u.design_1_wrapper_u.design_1_i.processing_system7_0)</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 25" src="pynq-z2-vivado_th_files/image036.png" alt="Graphical user interface, text, application
 Description automatically generated" height="173" width="623"></p>
@@ -500,16 +424,10 @@ Description automatically generated" height="288" width="624"></p>
             <h2 style="margin-left:28.35pt;text-align:left;text-indent:-28.35pt"
               align="left"><a name="_Toc208827137"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">1.6.<span
                     style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span><span
-                  style="font-family:&quot;ＭＳ 明朝&quot;,serif">การดีบักบนอุปกรณ์
-                  จริง</span></a></h2>
+                  style="font-family:&quot;ＭＳ 明朝&quot;,serif">การดีบักบนอุปกรณ์จริง</span></a></h2>
             <span style="">&nbsp;</span>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Vitis
-                IDE</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif"
-                lang="JA">จริงๆ แล้ว ตอนที่ทำ </span><span style="">1.1<span lang="JA">การส
-                  ร้าง </span>AXI IP<span lang="JA"> ของตัวเอง</span></span><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif"><span lang="JA"> </span>Vivado<span
-                  lang="JA"> จะสร้างซอร์สโค้ดตัวอย่างดังต่อไปนี้โดยอัตโนมัติ</span></span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style=""><b>Vitis IDE</b></span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">ในขั้นตอนที่สร้าง AXI IP ในหัวข้อ 1.1 นั้น Vivado ได้สร้างซอร์สโค้ดภาษา C ตัวอย่างสำหรับควบคุม IP มาให้ด้วยโดยอัตโนมัติ ดังภาพ</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 78" src="pynq-z2-vivado_th_files/image038.png" alt="Graphical user interface, text, application
 Description automatically generated" height="145" width="624"></p>
@@ -519,7 +437,7 @@ Description automatically generated" height="145" width="624"></p>
 Description automatically generated" height="408" width="483"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span><span
                 style=""></span><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                เลือก Include bitstream</span>
+                เลือก Export Hardware แล้วติ๊กเลือก Include bitstream</span>
             </p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif"
                 lang="TH"><img class="img-fluid rounded mx-auto d-block" id="Picture 75"
@@ -531,7 +449,7 @@ Description automatically generated" height="528" width="624"></span></p>
                 id="Picture 81" src="pynq-z2-vivado_th_files/image041.png" alt="Graphical user interface, text, application
 Description automatically generated" height="410" width="511"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                ตั้งค่า Worksapce</span></p>
+                เปิด Vitis IDE แล้วกำหนดตำแหน่ง Workspace</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 82" src="pynq-z2-vivado_th_files/image042.png" alt="Graphical user interface, text, application, email
 Description automatically generated" height="276" width="624"></p>
@@ -542,34 +460,23 @@ Description automatically generated" height="276" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 83" src="pynq-z2-vivado_th_files/image043.png" alt="Graphical user interface, application
 Description automatically generated" height="257" width="616"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif"
-                lang="JA">คลิก </span><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">Next<span
-                  lang="JA"> ไปได้เลย</span></span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">คลิก Next เพื่อดำเนินการต่อ</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 84" src="pynq-z2-vivado_th_files/image044.png" alt="Graphical user interface
 Description automatically generated" height="495" width="624"><span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">คลิ
-                กที่ Create a new platform from hardware(XSA)<span lang="JA">
-                  แล้วใช้ </span>Browse<span lang="JA"> เพื่อเลือกไฟล์ </span>.xsa<span
-                  lang="JA"> ที่สร้างไว้ก่อนหน้านี้ จากนั้นคลิก </span>Next</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">เลือก Create a new platform from hardware (XSA) แล้วคลิก Browse เพื่อเลือกไฟล์ .xsa ที่สร้างไว้ก่อนหน้านี้ จากนั้นคลิก Next</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 86" src="pynq-z2-vivado_th_files/image045.png" alt="Graphical user interface, application
 Description automatically generated" height="497" width="624"><span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"></span></p>
-            <p class="MsoNormal"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif"
-                lang="JA">ระบุชื่อแอปพลิเคชัน แล้วคลิก </span><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">Next</span></p>
+            <p class="MsoNormal"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">ระบุชื่อ Application Project ตามต้องการ แล้วคลิก Next</span></p>
             <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 87" src="pynq-z2-vivado_th_files/image046.png" alt="Graphical user interface, application
 Description automatically generated" height="495" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif"
-                lang="JA">คลิก </span><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">Next<span
-                  lang="JA"> ไปได้เลย</span></span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">คลิก Next เพื่อดำเนินการต่อ</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 88" src="pynq-z2-vivado_th_files/image047.png" alt="Graphical user interface
 Description automatically generated" height="495" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif"
-                lang="JA">ในครั้งนี้เป็นการทำงานกับรีจิสเตอร์อย่างง่าย จึงเลือก
-              </span><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">Empty
-                Application(C)</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">ในตัวอย่างนี้เป็นการทดสอบอ่านเขียนรีจิสเตอร์แบบง่าย ให้เลือกเทมเพลตเป็น Empty Application(C)</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 89" src="pynq-z2-vivado_th_files/image048.png" alt="Graphical user interface, table
 Description automatically generated" height="495" width="624"><span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"></span></p>
@@ -661,29 +568,21 @@ Description automatically generated" height="318" width="624"></p>
             <h2 style="margin-left:28.35pt;text-align:left;text-indent:-28.35pt"
               align="left"><a name="_Toc208827138"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">1.7.<span
                     style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span><span
-                  style="font-family:&quot;ＭＳ 明朝&quot;,serif">การตรวจสอบ IP ด้วย
-                  Chipscope</span></a></h2>
+                  style="font-family:&quot;ＭＳ 明朝&quot;,serif">การตรวจสอบ IP ด้วย Chipscope (Logic Analyzer)</span></a></h2>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif"
-                lang="JA">รัน </span><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">SYNTHESIS<span
-                  lang="JA"> หนึ่งครั้ง</span></span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">สั่ง Run Synthesis 1 รอบ เพื่อสังเคราะห์วงจร</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 36" src="pynq-z2-vivado_th_files/image057.png" alt="Graphical user interface, text, application, email
 Description automatically generated" height="255" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif"
-                lang="JA">จากนั้น คลิกที่ </span><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">SYNTHESIS
--&gt;
-                Open Synthesized Design -&gt; Set Up Debug</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">เมื่อสังเคราะห์เสร็จแล้ว คลิกที่ SYNTHESIS -&gt; Open Synthesized Design -&gt; Set Up Debug</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 35" src="pynq-z2-vivado_th_files/image058.png" alt="Graphical user interface, text, application
 Description automatically generated" height="195" width="220"></p>
             <span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"><br
                 style="page-break-before:always" clear="all">
             </span>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">คลิ
-                กที่ Find Nets to Add<span lang="JA">
-                  ค้นหาสัญญาณที่ต้องการจับแล้วลงทะเบียน</span></span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">คลิก Find Nets to Add แล้วค้นหาสัญญาณที่ต้องการจับมาตรวจสอบ จากนั้นกดเพิ่มลงในรายการ</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 44" src="pynq-z2-vivado_th_files/image059.png" alt="Graphical user interface, text, application
 Description automatically generated" height="308" width="519"></p>
@@ -692,10 +591,7 @@ Description automatically generated" height="308" width="519"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 42" src="pynq-z2-vivado_th_files/image060.png" alt="Graphical user interface, text, application, email
 Description automatically generated" height="351" width="516"><span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif"
-                lang="JA">ในช่อง </span><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">Clock
-                Domain<span lang="JA"> ของแต่ละสัญญาณ ให้คลิกขวาแล้วเลือก </span>Sampling<span
-                  lang="JA"> </span>Clock</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">ในช่อง Clock Domain ของแต่ละสัญญาณ ให้คลิกขวาแล้วเลือก Sampling Clock ที่จะใช้จับสัญญาณ</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 41" src="pynq-z2-vivado_th_files/image061.png" alt="Graphical user interface, text, application
 Description automatically generated" height="193" width="624"></p>
@@ -706,18 +602,13 @@ Description automatically generated" height="193" width="624"></p>
 Description automatically generated" height="384" width="515"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style=""><br>
               </span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif"
-                lang="JA">จากนั้น รันไปจนถึง </span><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">Run
-                Implementation<span lang="JA"> และ </span>Generate Bitstream</span></p>
-            <span style="">&nbsp;</span><span style="">คลิก Open Target<span lang="JA">
-                แล้วคลิก </span>Auto Connect</span>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">จากนั้น ดำเนินการต่อไปยังขั้นตอน Run Implementation และ Generate Bitstream</span></p>
+            <span style="">&nbsp;</span><span style="">เปิด Hardware Manager แล้วคลิก Open Target -&gt; Auto Connect เพื่อเชื่อมต่อกับบอร์ด</span>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 46" src="pynq-z2-vivado_th_files/image063.png" alt="Graphical user interface, application, Word
 Description automatically generated" height="165" width="253"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span><span
-                style="">คลิก Program device<span lang="JA"> เพื่อกำหนดค่า </span>FPGA<span
-                  lang="JA"> ทางฝั่ง
-                </span>PL<span lang="JA"> ของ </span>zynq</span>
+                style="">คลิก Program Device เพื่อดาวน์โหลด Bitstream ลงสู่วงจร FPGA (ฝั่ง PL ของ Zynq)</span>
             </p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 47" src="pynq-z2-vivado_th_files/image064.png" alt="Graphical user interface, application
@@ -726,16 +617,12 @@ Description automatically generated" height="211" width="392"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 48" src="pynq-z2-vivado_th_files/image065.png" alt="Graphical user interface, text, application
 Description automatically generated" height="215" width="408"><span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif"
-                lang="JA">ตั้งค่า </span><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">Trigger
-                setup<span lang="JA"> เช่นเดียวกับ Logic Analyzer</span></span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">ตั้งค่าเงื่อนไข Trigger setup เช่นเดียวกับการใช้งาน Logic Analyzer ทั่วไป</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 49" src="pynq-z2-vivado_th_files/image066.png" alt="Graphical user interface, application
 Description automatically generated" height="328" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">ทำ
-                การ Run<span lang="JA"> เมื่อตรวจจับ </span>Trigger<span lang="JA">
-                  ได้ รูปคลื่นจะแสดงดังภาพด้านล่าง</span></span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">สั่ง Run Trigger เมื่อสัญญาณตรวจจับเงื่อนไข Trigger ได้ รูปคลื่นสัญญาณจะแสดงขึ้นมาดังรูปด้านล่าง</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 50" src="pynq-z2-vivado_th_files/image067.png" height="283"
                 width="623"></p>
@@ -746,10 +633,7 @@ Description automatically generated" height="328" width="624"></p>
                   style="font-family:&quot;ＭＳ 明朝&quot;,serif">Advanced trigger</span></a><span
                 style="font-family:&quot;ＭＳ 明朝&quot;,serif"> </span></h2>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif"
-                lang="JA">【เคล็ดลับการตรวจสอบ FPGA】ลองใช้ Vivado™ Logic Analyzer
-                ให้เป็นประโยชน์ (วิธีใช้ Advanced trigger)
-                ~ฉบับเตรียมการและภาพรวม~</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">[เทคนิคการตรวจสอบ FPGA] การประยุกต์ใช้งาน Vivado™ Logic Analyzer (วิธีใช้ Advanced Trigger) ~ ภาคเตรียมความพร้อมและภาพรวม ~</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><a href="https://www.paltek.co.jp/techblog/techinfo/231127_01"><span
                   style="font-family:&quot;ＭＳ 明朝&quot;,serif">https://www.paltek.co.jp/techblog/techinfo/231127_01</span></a></p>
             <span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"><br
@@ -763,145 +647,78 @@ Description automatically generated" height="328" width="624"></p>
                   style="font-family:&quot;ＭＳ 明朝&quot;,serif">แนะนำสภาพแวดล้อม
                   Jupyter สำหรับการดีบัก IP ที่สร้างเองบนอุปกรณ์จริง</span></a></h2>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif"
-                lang="JA">การดีบัก IP ที่สร้างเองบนอุปกรณ์จริงจำเป็นต้องมี
-                U-Boot หรือซอฟต์แวร์ดีบัก
-                แต่การสร้างซอฟต์แวร์ดีบักนั้นต้องมีการเตรียมการหลายอย่าง
-                ในครั้งนี้จะขอแนะนำวิธีการดีบักอย่างง่ายโดยใช้สภาพแวดล้อม
-                Jupyter</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif;color:black;background:white"
-                lang="JA">「</span><span style="font-family:&quot;ＭＳ 明朝&quot;,serif;color:black;background:white">Jupyter
-                Notebook」
-                คือสภาพแวดล้อมที่สามารถพัฒนาซอฟต์แวร์บนเว็บเบราว์เซอร์ได้
-                (ส่วนใหญ่อยู่ฝั่ง PC) แต่ในกรณีของอุปกรณ์ Zynq
-                จะมีโปรเจกต์ที่ชื่อว่า PYNQ ซึ่งเป็นเฟรมเวิร์กสำหรับใช้ FPGA
-                ด้วย Python โดย Linux จะทำงานบนฝั่งโปรเซสเซอร์ (PS) ของ Zynq และ
-                Jupyter จะทำงานบนนั้น ทำให้สามารถกำหนดค่าฝั่ง FPGA (PL) ด้วย
-                Python ผ่านเว็บเบราว์เซอร์ได้</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">การดีบัก IP ที่สร้างขึ้นเองบนอุปกรณ์จริงโดยทั่วไปจำเป็นต้องมี U-Boot หรือเขียนโปรแกรมดีบักขึ้นมา ซึ่งต้องใช้เวลาและขั้นตอนในการเตรียมการค่อนข้างมาก ในหัวข้อนี้จึงขอแนะนำวิธีดีบักที่สะดวกและรวดเร็วกว่า โดยใช้สภาพแวดล้อม Jupyter Notebook บน PYNQ</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif;color:black;background:white">"Jupyter Notebook" คือสภาพแวดล้อมการพัฒนาที่สามารถเขียนและรันโปรแกรมผ่านเว็บเบราว์เซอร์ได้ (โดยทั่วไปจะรันอยู่บน PC) แต่สำหรับชิป Zynq นั้นมีโอเพนซอร์สเฟรมเวิร์กที่ชื่อว่า PYNQ (Python Productivity for Zynq) ซึ่งรันระบบปฏิบัติการ Linux บนฝั่ง Processing System (PS) ของ Zynq และเปิดเซอร์วิส Jupyter ทำงานอยู่ ทำให้เราสามารถเขียนสคริปต์ Python ผ่านเว็บเบราว์เซอร์เพื่อเข้าถึงและควบคุมวงจรบนฝั่ง FPGA (PL) ได้โดยตรง</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 54" src="pynq-z2-vivado_th_files/image068.png" alt="Diagram
 Description automatically generated" border="0" height="129" width="364"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">บอร์ด
-                ที่รองรับสภาพแวดล้อม PYNQ<span lang="JA"> มีระบุไว้ที่ </span></span><a
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">บอร์ดที่รองรับสภาพแวดล้อม PYNQ สามารถดูรายการได้ที่ </span><a
                 href="http://www.pynq.io/board.html"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">http://www.pynq.io/board.html</span></a></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif"
-                lang="JA">การตั้งค่าสภาพแวดล้อมมีดังนี้: ให้บอร์ดที่ต้องการดีบัก
-                (</span><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">Zynq<span
-                  lang="JA">） อยู่ในเครือข่ายเดียวกับ </span>PC<span lang="JA">
-                  ผ่านเราเตอร์ จากนั้นเชื่อมต่อ </span>JTAG<span lang="JA">
-                  debugger จาก </span>PC<span lang="JA"> ผ่าน </span>USB<span
-                  lang="JA"> เข้ากับพินดีบักของอุปกรณ์ </span>Zynq<span lang="JA">
-                  และเชื่อมต่อคอนโซล
-                </span>Linux<span lang="JA"> กับ </span>PC<span lang="JA"> ผ่าน
-                </span>UART</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">การเตรียมสภาพแวดล้อมมีดังนี้: ให้เชื่อมต่อบอร์ด Zynq และเครื่อง PC ให้อยู่ในเครือข่ายวงเดียวกันผ่านเราเตอร์/สวิตช์ จากนั้นต่อสาย USB สำหรับ JTAG Debugger จาก PC เข้ากับพินดีบักของบอร์ด Zynq และต่อสาย UART Serial เพื่อดูคอนโซลของ Linux บนเครื่อง PC</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-vivado_th_files/image069.png" border="0" height="269"
                 width="470"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style=""><br>
               </span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">วิธี
-                การดีบัก</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">1<span
-                  lang="JA">．เปิดเครื่องบอร์ดที่ต้องการดีบัก แล้วรอจนกว่า </span>Linux<span
-                  lang="JA"> จะบูตเสร็จ จากนั้นพิมพ์ </span>ifconfig<span lang="JA">
-                  เพื่อตรวจสอบ </span>IP<span lang="JA"> ของ </span>Zynq<span
-                  lang="JA"> (ตัวอย่าง: จะได้ IP เช่น </span>192.168.1.55<span
-                  lang="JA">)</span></span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">ขั้นตอนการดีบัก:</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">1. เปิดสวิตช์เปิดเครื่องบอร์ด แล้วรอจนกว่า Linux จะบูตเสร็จสมบูรณ์ จากนั้นพิมพ์คำสั่ง ifconfig บนเทอร์มินัลเพื่อตรวจสอบ IP Address ของบอร์ด Zynq (เช่น ได้ IP เป็น 192.168.1.55)</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 63" src="pynq-z2-vivado_th_files/image070.png" alt="Text
 Description automatically generated" border="0" height="184" width="478"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">2<span
-                  lang="JA">．เปิดเบราว์เซอร์บน </span>PC<span lang="JA">
-                  แล้วป้อน </span>IP<span lang="JA"> ที่ได้รับมา (เพื่อเข้าถึง
-                </span>Zynq<span lang="JA">) หน้าจอเริ่มต้นจะต้องการรหัสผ่าน
-                  ให้ป้อน
-                </span>“xilinx”</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">2. เปิดเบราว์เซอร์บน PC แล้วป้อน IP Address ดังกล่าวเพื่อเข้าสู่หน้าเว็บ Jupyter Notebook (รหัสผ่านเริ่มต้นสำหรับเข้าสู่ระบบคือ "xilinx")</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 64" src="pynq-z2-vivado_th_files/image071.png" alt="Graphical user interface, text, application
 Description automatically generated" border="0" height="124" width="429"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">3<span
-                  lang="JA">．กลับไปที่ </span>Vivado<span lang="JA"> แล้วคลิก </span>Program
-                device<span lang="JA"> เพื่อกำหนดค่า </span>FPGA<span lang="JA">
-                  ทางฝั่ง </span>PL<span lang="JA"> ของ </span>zynq</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">3. สลับกลับไปที่ Vivado แล้วคลิก Program Device เพื่อดาวน์โหลด Bitstream กำหนดค่า FPGA ทางฝั่ง PL ของ Zynq</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 65" src="pynq-z2-vivado_th_files/image064.png" alt="Graphical user interface, application
 Description automatically generated" border="0" height="211" width="392"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">4<span
-                  lang="JA">．กลับไปที่หน้าจอ </span>Jupyter<span lang="JA">
-                  แล้วคลิก </span>New<span lang="JA">　→　</span>Python3</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">4. กลับมาที่หน้าจอ Jupyter Notebook แล้วคลิก New -&gt; Python 3 เพื่อเปิดโน้ตบุ๊กใหม่</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 62" src="pynq-z2-vivado_th_files/image072.png" alt="Table
 Description automatically generated with medium confidence" border="0" height="111"
                 width="429"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">5<span
-                  lang="JA">．ใส่สคริปต์ดังต่อไปนี้
-                  เพื่อให้สามารถเข้าถึงรีจิสเตอร์ฝั่ง </span>FPGA<span lang="JA">
-                  (</span>PL<span lang="JA">) ได้อย่างอิสระ</span></span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">5. เขียนโค้ด Python ตามตัวอย่างด้านล่าง เพื่อเข้าถึงรีจิสเตอร์ฝั่ง FPGA (PL) ได้โดยตรง:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 61" src="pynq-z2-vivado_th_files/image073.png" alt="Graphical user interface, text, application, email
 Description automatically generated" border="0" height="166" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Mmio
-                = pynq.MMIO<span lang="JA">
-                  ใช้สำหรับตั้งค่าแอดเดรสและพื้นที่การเข้าถึงของรีจิสเตอร์</span></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">mmio.write<span
-                  lang="JA"> คือการเข้าถึงรีจิสเตอร์เพื่อเขียนข้อมูล</span></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">mmio.read<span
-                  lang="JA"> คือการเข้าถึงรีจิสเตอร์เพื่ออ่านข้อมูล</span></span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">• mmio = pynq.MMIO(...) ใช้กำหนดค่า Base Address และขนาดพื้นที่การเข้าถึงรีจิสเตอร์</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">• mmio.write(offset, data) ใช้เขียนข้อมูลลงในรีจิสเตอร์ตาม Offset ที่กำหนด</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">• mmio.read(offset) ใช้อ่านข้อมูลจากรีจิสเตอร์ตาม Offset ที่กำหนด</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif"
-                lang="JA">※ สามารถตรวจสอบรูปคลื่นด้วย </span><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">chipscope<span
-                  lang="JA"> เพื่อดูว่ามีการเข้าถึงรีจิสเตอร์จริงหรือไม่</span></span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">※ ข้อแนะนำ: สามารถใช้ Chipscope / Logic Analyzer ตรวจสอบรูปคลื่นสัญญาณควบคู่ไปด้วย เพื่อดูว่ามีการเข้าถึงรีจิสเตอร์บนฮาร์ดแวร์จริงตามที่สั่งจาก Python หรือไม่</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 66" src="pynq-z2-vivado_th_files/image074.png" alt="Graphical user interface
 Description automatically generated" border="0" height="223" width="536"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif"
-                lang="JA">※ ในกรณีที่พัฒนาบอร์ดเอง
-                จำเป็นต้องทำการพอร์ตเพื่อให้สามารถใช้สภาพแวดล้อม
-              </span><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">Jupyter<span
-                  lang="JA"> ได้ ซึ่งการพอร์ตนั้นใช้เวลา
-                  แต่ถ้าทำสำเร็จแล้ว
-                  จะสามารถเข้าถึงรีจิสเตอร์ได้อย่างอิสระด้วยสคริปต์ </span>Python<span
-                  lang="JA"> ตามวิธีที่แนะนำไปข้างต้น
-                  ทำให้การดีบักฮาร์ดแวร์สะดวกขึ้นมาก</span></span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">※ หมายเหตุ: ในกรณีที่ออกแบบและพัฒนาบอร์ดขึ้นมาเอง จำเป็นต้องพอร์ต PYNQ/Linux ให้รองรับกับตัวบอร์ดก่อน ซึ่งแม้การพอร์ตจะใช้เวลาในช่วงแรก แต่เมื่อพร้อมใช้งานแล้ว จะสามารถเข้าถึงรีจิสเตอร์ได้อย่างอิสระด้วยสคริปต์ Python ตามวิธีที่แนะนำข้างต้น ช่วยให้การดีบักฮาร์ดแวร์สะดวกรวดเร็วขึ้นมาก</span></p>
             <span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"><br
                 style="page-break-before:always" clear="all">
             </span>
             <h2 style="margin-left:28.35pt;text-align:left;text-indent:-28.35pt"
               align="left"><a name="_Toc208827141"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">1.10.<span
                     style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span><span
-                  style="font-family:&quot;ＭＳ 明朝&quot;,serif">อื่นๆ </span></a><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">1<span lang="JA">：</span>การ
-                นำบัส AXI ออกไปนอก Block design</span></h2>
+                  style="font-family:&quot;ＭＳ 明朝&quot;,serif">เพิ่มเติม 1: การนำบัส AXI ออกไปนอก Block Design</span></a></h2>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
             <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">เพื่อเพิ่มพอร์
-                ตสำหรับบัส AXI master<span lang="JA"> ให้เพิ่มจำนวน
-                </span>Master Interface<span lang="JA"> ของ </span>AXI
-                Interconnect<span lang="JA"> (เปลี่ยนจาก
-                </span>1<span lang="JA"> เป็น </span>2<span lang="JA">)</span></span></p>
+                style="font-family:&quot;ＭＳ 明朝&quot;,serif">หากต้องการเพิ่มพอร์ตสำหรับบัส AXI Master ให้เพิ่มจำนวน Master Interfaces ของ AXI Interconnect (เช่น เปลี่ยนจาก 1 เป็น 2)</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 51" src="pynq-z2-vivado_th_files/image075.png" alt="Graphical user interface, text, application
 Description automatically generated" border="0" height="416" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">ในครั้งนี้ เพื่อให้ได้ </span>AXI Lite<span lang="JA">
-                  ออกมา จะทำการเพิ่มการแปลงจาก </span>AXI<span lang="JA"> เป็น
-                </span>AXI Lite<span lang="JA"> ด้วย </span>AXI Protocol
-                Converter</span></p>
+                ในตัวอย่างนี้ เพื่อให้ได้บัสแบบ AXI-Lite ออกมาใช้งาน จะทำการเพิ่มบล็อก AXI Protocol Converter เพื่อแปลงโปรโตคอลจาก AXI ให้เป็น AXI-Lite</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 45" src="pynq-z2-vivado_th_files/image076.png" alt="A picture containing graphical user interface
 Description automatically generated" border="0" height="230" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                ดับเบิลคลิกที่ AXI Protocol Converter<span lang="JA">
-                  แล้วตั้งค่า
-                </span>Address width<span lang="JA"> ในครั้งนี้จะตั้งเป็น </span>12bit</span></p>
+                ดับเบิลคลิกที่ AXI Protocol Converter แล้วตั้งค่า Address width (ในตัวอย่างนี้กำหนดเป็น 12 บิต)</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="position:
 absolute;z-index:251665408;margin-left:325px;margin-top:153px;width:175px;height:20px"><img
                   src="pynq-z2-vivado_th_files/image077.png" height="20" width="175"></span><img
@@ -910,8 +727,7 @@ absolute;z-index:251665408;margin-left:325px;margin-top:153px;width:175px;height
 Description automatically generated" border="0" height="354" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                คลิกขวาที่ M_AXI<span lang="JA"> ของ </span>AXI Protocol
-                Converter<span lang="JA"> แล้วเลือก </span>Make External</span></p>
+                คลิกขวาที่พอร์ตอินเทอร์เฟซ M_AXI ของ AXI Protocol Converter แล้วเลือก Make External เพื่อส่งสัญญาณออกเป็นพอร์ตภายนอก</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="position:
 relative;z-index:251663360"><span style="position:absolute;left:128px;
 top:-103px;width:76px;height:1px"><img src="pynq-z2-vivado_th_files/image079.png"
@@ -920,9 +736,7 @@ top:-103px;width:76px;height:1px"><img src="pynq-z2-vivado_th_files/image079.png
 Description automatically generated" border="0" height="148" width="274"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">จากนั้น บัส </span>M_AXI_0<span lang="JA">
-                  จะส่งสัญญาณออกไปนอก
-                </span>Block design</span></p>
+                จากนั้น สัญญาณของบัส M_AXI_0 จะถูกนำออกไปภายนอก Block Design</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 52" src="pynq-z2-vivado_th_files/image081.png" alt="Diagram
 Description automatically generated" border="0" height="130" width="624"></p>
@@ -930,8 +744,7 @@ Description automatically generated" border="0" height="130" width="624"></p>
                 style="page-break-before:always" clear="all">
             </span>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                ตั้งค่า Address Map สำหรับบัส AXI<span lang="JA"> (</span>M_AXI_0<span
-                  lang="JA">) ที่จะส่งออกไปข้างนอกใน </span>Address Editor</span></p>
+                กำหนดค่า Address Map สำหรับบัส AXI (M_AXI_0) ที่จะส่งออกไปข้างนอกในแถบ Address Editor</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="position:
 relative;z-index:251661312"><span style="position:absolute;left:374px;
 top:-559px;width:80px;height:1px"><img src="pynq-z2-vivado_th_files/image082.png"
@@ -941,12 +754,7 @@ Description automatically generated" border="0" height="136" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                เพื่อนำสัญญาณ CLK<span lang="JA"> และรีเซ็ตออกไปนอก </span>Block
-                design<span lang="JA"> พร้อมกับบัส </span>AXI<span lang="JA">
-                  ให้สร้างสัญญาณ </span>CLK<span lang="JA"> และรีเซ็ต
-                  โดยคลิกขวาบนหน้าจอ </span>Block design<span lang="JA">
-                  แล้วเลือก </span>Create
-                Port</span></p>
+                ในการส่งสัญญาณ CLK และ Reset ออกไปนอก Block Design พร้อมกับบัส AXI ให้คลิกขวาบนหน้าจอ Block Design แล้วเลือก Create Port เพื่อสร้างสัญญาณ CLK และ Reset</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="position:
 relative;z-index:251659264"><span style="position:absolute;left:238px;
 top:-775px;width:108px;height:1px"><img src="pynq-z2-vivado_th_files/image084.png"
@@ -954,7 +762,7 @@ top:-775px;width:108px;height:1px"><img src="pynq-z2-vivado_th_files/image084.pn
                 id="Picture 57" src="pynq-z2-vivado_th_files/image085.png" alt="Graphical user interface
 Description automatically generated" border="0" height="500" width="624"><span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"></span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                ตั้งค่าสัญญาณ CLK<span lang="JA"> และรีเซ็ตดังนี้</span></span></p>
+                กำหนดค่าพอร์ตสัญญาณ CLK และ Reset ตามตัวอย่างด้านล่าง</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 55" src="pynq-z2-vivado_th_files/image086.png" alt="Graphical user interface, application
 Description automatically generated" border="0" height="315" width="379"></p>
@@ -962,54 +770,40 @@ Description automatically generated" border="0" height="315" width="379"></p>
                 id="Picture 56" src="pynq-z2-vivado_th_files/image087.png" alt="Graphical user interface, application, email
 Description automatically generated" border="0" height="314" width="378"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                เมื่อคลิก Validate Design<span lang="JA"> จะเกิดข้อผิดพลาดดังภาพ
-                  (ข้อผิดพลาดที่ว่าบัส </span>M_AXI_0<span lang="JA"> ไม่มี </span>CLK<span
-                  lang="JA"> ที่เกี่ยวข้อง)</span></span></p>
+                เมื่อคลิก Validate Design จะเกิดข้อผิดพลาดดังภาพ (เนื่องจากบัส M_AXI_0 ยังไม่ได้ผูกสัญญาณ CLK ที่เกี่ยวข้องไว้)</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 58" src="pynq-z2-vivado_th_files/image088.png" alt="Graphical user interface
 Description automatically generated" border="0" height="413" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">เพื่อแก้ไขข้อผิดพลาด ให้คลิกที่ </span>M_CLK_0_CLK<span
-                  lang="JA"> แล้วในส่วน </span>CONFIG<span lang="JA"> ของ </span>Properties<span
-                  lang="JA"> ให้ระบุ
-                </span>M_AXI_0<span lang="JA"> ใน </span>ASSOCIATED_BUSIF<span
-                  lang="JA"> จากนั้นเมื่อทำการ
-                </span>Validate Design<span lang="JA"> อีกครั้ง
-                  ข้อผิดพลาดจะหายไป</span></span></p>
+                วิธีแก้ไขข้อผิดพลาด ให้คลิกที่ M_CLK_0_CLK แล้วในส่วน CONFIG ของ Properties ให้ระบุ M_AXI_0 ในช่อง ASSOCIATED_BUSIF จากนั้นเมื่อทำการ Validate Design อีกครั้ง ข้อผิดพลาดจะหายไป</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 59" src="pynq-z2-vivado_th_files/image089.png" alt="Diagram
 Description automatically generated with low confidence" border="0" height="239"
                 width="572"><span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"></span></p>
-            <p class="MsoNormal" style="text-indent:42.0pt"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">คลิ
-                กขวาที่ design_1_i<span lang="JA"> แล้วเลือก </span>Create HDL
-                Wrapper</span></p>
+            <p class="MsoNormal" style="text-indent:42.0pt"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">คลิกขวาที่ design_1 แล้วเลือก Create HDL Wrapper เพื่อสร้างไฟล์ Wrapper ใหม่</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 60" src="pynq-z2-vivado_th_files/image090.png" alt="Graphical user interface, text, application
 Description automatically generated" border="0" height="368" width="624"></p>
             <p class="MsoNormal"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">จากนั้น สัญญาณของบัส </span>A_AXI_0<span lang="JA">
-                  จะปรากฏขึ้นดังนี้</span></span></p>
+                จากนั้น สัญญาณของพอร์ตบัส M_AXI_0 จะปรากฏขึ้นใน Wrapper ดังนี้</span></p>
             <p class="MsoNormal" style="text-align:center" align="center"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 76" src="pynq-z2-vivado_th_files/image091.png" alt="Graphical user interface, text
 Description automatically generated" border="0" height="339" width="430"><span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"></span></p>
             <p class="MsoNormal" style="margin-left:42.0pt;text-align:left" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif" lang="JA">เชื่อมต่อ
-                กับ AXI IP ที่สร้างเองในไฟล์ top ของโปรเจกต์</span></p>
+                style="font-family:&quot;ＭＳ 明朝&quot;,serif">นำสัญญาณบัส M_AXI_0 ไปเชื่อมต่อเข้ากับ Custom AXI IP ในไฟล์ Top ของโปรเจกต์</span></p>
             <p class="MsoNormal" style="text-align:center" align="center"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 74" src="pynq-z2-vivado_th_files/image092.png" alt="Table
 Description automatically generated" border="0" height="411" width="260"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">เพิ่มการเข้าถึงแบบเขียน/อ่านใน </span>Testbench<span
-                  lang="JA"> ของการจำลองไปยังตำแหน่งที่แมป </span>M_AXI_0<img class="img-fluid rounded mx-auto d-block"
+                เพิ่มคำสั่งการเข้าถึงแบบเขียน/อ่าน (Read/Write Access) ใน Testbench ของการจำลองไปยังตำแหน่ง Address ที่แมปไว้สำหรับ M_AXI_0<img class="img-fluid rounded mx-auto d-block"
                   id="Picture 77" src="pynq-z2-vivado_th_files/image093.png" alt="Graphical user interface, text, application, email
 Description automatically generated" border="0" height="225" width="624"></span></p>
             <span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"><br
                 style="page-break-before:always" clear="all">
             </span>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">เมื่อทำการจำลอง จะสามารถตรวจสอบ </span>AXI IP<span
-                  lang="JA"> ที่สร้างเองได้</span></span></p>
+                เมื่อทำการจำลอง จะสามารถตรวจสอบการทำงานของ Custom AXI IP ที่เราสร้างขึ้นได้</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 69" src="pynq-z2-vivado_th_files/image094.png" alt="Graphical user interface
 Description automatically generated" border="0" height="283" width="625"></p>
