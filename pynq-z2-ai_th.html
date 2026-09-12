@@ -124,20 +124,15 @@
                   ของ Xilinx)</span></a></h1>
             <p class="MsoNormal" style="text-align:left" align="left"><span style=""><br>
               </span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">สิ่ง
-                ที่ระบุในบทนี้จะดำเนินการในสภาพแวดล้อมต่อไปนี้</span><span style=""><br>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">สิ่งที่จะอธิบายในบทความนี้ จะดำเนินการภายใต้สภาพแวดล้อมดังต่อไปนี้:</span><span style=""><br>
               </span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">ฮาร์ดแวร์:
-                </span><span style="">Windows
-                OS<span lang="JA">上で</span>Vivado 2020.1</span>
+                </span><span style="">Vivado 2020.1 บนระบบปฏิบัติการ Windows</span>
             </p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">ซอฟต์แวร์:
-                </span><span style="">Ubuntu
-                18.04<span lang="JA">上（</span>VMware 17.5.2<span lang="JA">）で</span>Petalinux
-                2019.2</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">แอ
-                ปพลิเคชัน: การตรวจจับวัตถุด้วย </span><span style="">YOLO<span
-                  lang="JA"> บนบอร์ด </span>Pynq-Z2<span lang="JA"></span></span></p>
+                </span><span style="">PetaLinux 2019.2 บน Ubuntu 18.04 (ผ่าน VMware Workstation 17.5.2)</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">แอปพลิเคชัน:
+                การตรวจจับวัตถุด้วยโมเดล YOLO บนบอร์ด PYNQ-Z2</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><a href="https://xilinx.github.io/Vitis-AI/3.0/html/docs/reference/release_documentation.html"><span
                   style="">https://xilinx.github.io/Vitis-AI/3.0/html/docs/reference/release_documentation.html</span></a></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
@@ -147,22 +142,11 @@
             <p class="MsoNormal"><span style="">&nbsp;</span></p>
             <h3 style="margin-left:35.45pt;text-indent:-35.45pt"><a name="_Toc208827155"><span
                   style="">1.1.1.<span style="font:7.0pt &quot;Times New Roman&quot;">
-                  </span></span><span style="">การรับ DPU IP ของ Xilinx</span></a></h3>
-            <p class="MsoNormal" style="text-indent:35.45pt"><span style="">DPU
-                IP เวอร์ชันล่าสุดไม่รองรับ Zynq-7000 อีกต่อไป
-                แต่ยังรองรับจนถึงเวอร์ชัน 3.3 ในครั้งนี้เราจะใช้เวอร์ชัน 3.0
-                เพื่อติดตั้งบน Zynq-7000 DPU IP ที่รองรับ Zynq-7000
-                นั้นไม่ค่อยมีการเปิดเผยต่อสาธารณะ แต่มีอยู่ในไฟล์
-                zcu102-dpu-trd-2019-1-190809.zip</span></p>
+                  </span></span><span style="">การเตรียม DPU IP ของ Xilinx</span></a></h3>
+            <p class="MsoNormal" style="text-indent:35.45pt"><span style="">DPU IP เวอร์ชันล่าสุดในปัจจุบันไม่รองรับชิปตระกูล Zynq-7000 แล้ว (เวอร์ชันสุดท้ายที่รองรับคือ v3.3) ในบทความนี้เราจึงเลือกใช้เวอร์ชัน 3.0 เพื่อนำมาติดตั้งลงบน Zynq-7000 โดยตัว DPU IP ที่รองรับ Zynq-7000 นั้นมักจะไม่ค่อยมีให้ดาวน์โหลดทั่วไป แต่สามารถดึงออกมาได้จากแพ็กเกจ zcu102-dpu-trd-2019-1-190809.zip</span></p>
             <p class="MsoNormal" style="text-align:left;text-indent:35.45pt" align="left"><span
-                style="">หลังจากแตกไฟล์ zcu102-dpu-trd-2019-1-190809.zip
-                จะมีโฟลเดอร์ชื่อ dpu_ip อยู่ใน
-                zcu102-dpu-trd-2019-1-timer\pl\srcs ให้คัดลอกทั้งโฟลเดอร์ dpu_ip
-                ไปไว้ที่ตำแหน่งที่ต้องการ ในครั้งนี้จะวางไว้ที่
-                D:\xilinx\pynq_z2\AI\DPU\ip_repo</span></p>
-            <p class="MsoNormal"><span style="">(โปรเจกต์ Vivado คือ </span><span
-                style="">D:\xilinx\pynq_z2\AI\DPU\Pynq-Z2_2020_1\pynqz2_dpu.xpr<span
-                  lang="JA">）</span></span></p>
+                style="">หลังจากแตกไฟล์ zcu102-dpu-trd-2019-1-190809.zip แล้ว จะพบโฟลเดอร์ชื่อ dpu_ip อยู่ที่ไดเรกทอรี zcu102-dpu-trd-2019-1-timer\pl\srcs ให้คัดลอกโฟลเดอร์ dpu_ip ทั้งหมดไปไว้ในโฟลเดอร์ที่ต้องการ (ในตัวอย่างนี้จะวางไว้ที่ D:\xilinx\pynq_z2\AI\DPU\ip_repo)</span></p>
+            <p class="MsoNormal"><span style="">(และไฟล์โปรเจกต์ Vivado จะอยู่ที่ D:\xilinx\pynq_z2\AI\DPU\Pynq-Z2_2020_1\pynqz2_dpu.xpr)</span></p>
             <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image001.png" alt="A screenshot of a computer
 Description automatically generated" border="0" height="153" width="562"></p>
@@ -171,9 +155,8 @@ Description automatically generated" border="0" height="153" width="562"></p>
             </span>
             <h3 style="margin-left:35.45pt;text-indent:-35.45pt"><a name="_Toc208827156"><span
                   style="">1.1.2.<span style="font:7.0pt &quot;Times New Roman&quot;">
-                  </span></span><span style="">การเพิ่ม DPU IP ไปยัง IP Catalog</span></a></h3>
-            <p class="MsoNormal"><span style="">ใน IP Catalog คลิกที่ Add
-                Repository และเพิ่ม dpu_ip</span></p>
+                  </span></span><span style="">การเพิ่ม DPU IP เข้าสู่ IP Catalog</span></a></h3>
+            <p class="MsoNormal"><span style="">ในหน้าต่าง IP Catalog ให้คลิกที่ Add Repository แล้วเลือกเพิ่มโฟลเดอร์ dpu_ip เข้ามาในโปรเจกต์</span></p>
             <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image002.png" alt="A screenshot of a computer
 Description automatically generated" border="0" height="174" width="394"></p>
@@ -192,64 +175,42 @@ Description automatically generated" border="0" height="155" width="498"></p>
                   style="">1.1.3.<span style="font:7.0pt &quot;Times New Roman&quot;">
                   </span></span><span style="">การติดตั้ง DPU IP</span></a></h3>
             <br>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                เปิด Block design แล้วใส่ DPU IP จากนั้นเชื่อมต่อกับ Zynq
-                ดังภาพด้านล่าง</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐ เปิดหน้าต่าง Block Design จากนั้นเพิ่มบล็อก DPU IP เข้ามา แล้วทำการเชื่อมต่อเข้ากับ Processing System (Zynq) ดังรูปด้านล่าง</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image005.png" alt="A diagram of a computer
 Description automatically generated" border="0" height="243" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">อิน
-                เทอร์เฟซของ DPU มีพอร์ตอยู่หลายพอร์ต</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">1<span
-                  lang="JA">．</span>S_AXI<span lang="JA">、</span>s_axi_aclk</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">พอร์ตอินเทอร์เฟซหลักของ DPU ประกอบด้วย:</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">1. S_AXI, s_axi_aclk</span></p>
             <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="">ใช้สำหรับการตั้งค่าการทำงานของ DPU และอื่นๆ
-                โดยจะเชื่อมต่อกับ AXI Master (M_AXI_GP) ของ Zynq</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">2<span
-                  lang="JA">．</span>M_AXI_DATA0<span lang="JA">、</span>M_AXI_DATA1<span
-                  lang="JA">、</span>M_AXI_INSTR<span lang="JA">、</span>m_axi_dpu_aclk</span></p>
+                style="">ใช้สำหรับการกำหนดค่าและควบคุมการทำงานของ DPU โดยเชื่อมต่อเข้ากับ AXI Master (M_AXI_GP) ของ Zynq</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">2. M_AXI_DATA0, M_AXI_DATA1, M_AXI_INSTR, m_axi_dpu_aclk</span></p>
             <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="">ใช้สำหรับส่งออกผลลัพธ์การคำนวณของ DPU โดยจะเชื่อมต่อกับ
-                AXI Slave (S_AXI_HP0～2) ของ Zynq</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">3<span
-                  lang="JA">．</span>dpu_2x_clk</span></p>
+                style="">ใช้สำหรับรับส่งข้อมูลและคำสั่งระหว่างหน่วยความจำกับ DPU โดยเชื่อมต่อเข้ากับพอร์ต AXI Slave (S_AXI_HP0 - S_AXI_HP2) ของ Zynq</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">3. dpu_2x_clk</span></p>
             <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="">จะรับสัญญาณนาฬิกา (clock) ที่มีความถี่เป็นสองเท่าของ
-                m_axi_dpu_aclk</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">4<span
-                  lang="JA">．</span>dup_interrupt</span></p>
+                style="">รับสัญญาณ Clock ที่มีความถี่เป็น 2 เท่าของ m_axi_dpu_aclk เพื่อใช้ในการประมวลผลภายใน DPU Core</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">4. dpu_interrupt</span></p>
             <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="">คือสัญญาณขัดจังหวะ (interrupt) ของ DPU</span></p>
-            <p class="MsoNormal"><span style="">※ สัญญาณนาฬิกาที่ป้อนเข้า DPU IP
-                มี 3 สัญญาณ</span></p>
-            <p class="MsoNormal" style="text-indent:42.0pt"><span style="">s_axi_aclk<span
-                  lang="JA">：</span>Zynq<span lang="JA">→</span>DPU<span lang="JA">
-                  เซ็ตเป็น </span>100MHz<span lang="JA"></span></span></p>
+                style="">สัญญาณ Interrupt แจ้งเตือนสถานะการทำงานของ DPU ส่งกลับไปยัง Zynq</span></p>
+            <p class="MsoNormal"><span style="">※ สัญญาณ Clock ที่ป้อนเข้าสู่ DPU IP มีทั้งหมด 3 สัญญาณ ดังนี้:</span></p>
+            <p class="MsoNormal" style="text-indent:42.0pt"><span style="">• s_axi_aclk: สัญญาณ Clock สำหรับบัสควบคุม (Zynq -&gt; DPU) กำหนดความถี่เป็น 100 MHz</span></p>
             <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="">m_axi_dpu_aclk<span lang="JA">：</span><span lang="JA"></span>DPU<span
-                  lang="JA">→</span>Zynq เซ็ตเป็น <span lang="JA"></span>150MHz</span></p>
+                style="">• m_axi_dpu_aclk: สัญญาณ Clock สำหรับการเข้าถึงหน่วยความจำ (DPU -&gt; Zynq) กำหนดความถี่เป็น 150 MHz</span></p>
             <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="">dpu_2x_clk<span lang="JA">：</span>DPU<span lang="JA">
-                  เซ็ตเป็น </span>300MHz</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">สัญญาณ
-                150MHz และ 300MHz จะถูกสร้างขึ้นโดย PLL และป้อนเข้าสู่
-                m_axi_dpu_aclk และ dpu_2x_clk</span></p>
+                style="">• dpu_2x_clk: สัญญาณ Clock ความถี่สองเท่าสำหรับแกน DPU Core กำหนดความถี่เป็น 300 MHz</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">โดยสัญญาณ Clock 150 MHz และ 300 MHz จะถูกสร้างขึ้นจากโมดูล Clocking Wizard (PLL) แล้วป้อนเข้าสู่พอร์ต m_axi_dpu_aclk และ dpu_2x_clk ตามลำดับ</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                บอร์ด pynq-z2 มีจำนวนลอจิกใน FPGA น้อย เพื่อลดการใช้ลอจิกของ DPU
-                ให้เปลี่ยน Arch of DPU ของ DPU เป็น B1152</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐ เนื่องจากบอร์ด PYNQ-Z2 มีทรัพยากรลอจิก (Logic Cells) บน FPGA จำกัด เพื่อลดการใช้ทรัพยากรฮาร์ดแวร์ของ DPU ให้ปรับคอนฟิก Arch of DPU เป็น B1152</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image007.png" alt="A screenshot of a computer
 Description automatically generated" border="0" height="336" width="410"></p>
             <br>
             <h3 style="margin-left:35.45pt;text-indent:-35.45pt"><a name="_Toc208827158"><span
                   style="">1.1.4.<span style="font:7.0pt &quot;Times New Roman&quot;">
-                  </span></span><span style="">การสร้างข้อมูลฮาร์ดแวร์ (.XSA)</span></a></h3>
+                  </span></span><span style="">การ Export ข้อมูลฮาร์ดแวร์ (.XSA)</span></a></h3>
             <br>
-            <p class="MsoNormal"><span style="">หลังจากคอมไพล์โปรเจกต์ใน Vivado
-                เสร็จแล้ว ให้ส่งออกข้อมูลฮาร์ดแวร์ (.xsa) โดยไปที่
-                File　→　Export　→　Export Hardware</span></p>
+            <p class="MsoNormal"><span style="">หลังจากทำ Synthesis, Implementation และ Generate Bitstream ใน Vivado เสร็จสมบูรณ์แล้ว ให้ Export ข้อมูลฮาร์ดแวร์ (.xsa) ออกไปใช้งาน โดยไปที่เมนู File -&gt; Export -&gt; Export Hardware (อย่าลืมติ๊กเลือก Include bitstream)</span></p>
             <p class="MsoNormal"><span style="">&nbsp;</span></p>
             <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image008.png" alt="A screenshot of a computer
@@ -274,9 +235,7 @@ Description automatically generated" border="0" height="278" width="624"></p>
             <h3 style="margin-left:35.45pt;text-align:left;text-indent:-35.45pt"
               align="left"><a name="_Toc208827160"><span style="">1.2.1.<span style="font:7.0pt &quot;Times New Roman&quot;">
                   </span></span><span style="">การเตรียมสภาพแวดล้อม</span></a></h3>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                ติดตั้ง Petalinux 2019.2 บนเครื่อง Linux (Ubuntu)
-                ในครั้งนี้จะใช้ Ubuntu 18.04</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐ ติดตั้ง PetaLinux 2019.2 บนระบบปฏิบัติการ Linux โดยในตัวอย่างนี้จะใช้ Ubuntu 18.04 LTS:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 sudo apt update</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
@@ -302,10 +261,8 @@ Description automatically generated" border="0" height="278" width="624"></p>
                 sudo apt-get install gparted</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style=""><br>
               </span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                ติดตั้งแพ็คเกจที่จำเป็น</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">#
-                petalinux install</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐ ดาวน์โหลดและติดตั้งตัวติดตั้ง PetaLinux:</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style=""># ติดตั้ง PetaLinux</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 mkdir ~/petalinux_2019</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
@@ -320,9 +277,7 @@ Description automatically generated" border="0" height="278" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">([q]
                 to close message)</span></p>
             <br>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                ใน Ubuntu ให้เปลี่ยนเชลล์เริ่มต้นของระบบ
-                โดยเปลี่ยนเชลล์ที่ใช้รันสคริปต์จาก dash เป็น bash</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐ ใน Ubuntu ให้เปลี่ยน Default Shell ของระบบจาก dash เป็น bash เพื่อให้สคริปต์ของ PetaLinux ทำงานได้อย่างถูกต้อง:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 chsh -s /bin/bash</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">then
@@ -334,15 +289,13 @@ Description automatically generated" border="0" height="278" width="624"></p>
             <br>
             <h3 style="margin-left:35.45pt;text-indent:-35.45pt"><a name="_Toc208827161"><span
                   style="">1.2.2.<span style="font:7.0pt &quot;Times New Roman&quot;">
-                  </span></span><span style="">การบิวด์ Linux</span></a></h3>
+                  </span></span><span style="">การบิลด์ระบบปฏิบัติการ Linux ด้วย PetaLinux</span></a></h3>
             <span style="">&nbsp;</span>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                เตรียม Petalinux</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐ โหลด Environment ของ PetaLinux:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 source ~/petalinux_2019/settings.sh</span></p>
             <span style="">&nbsp;</span>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                สร้างโปรเจกต์ Petalinux โดยรวมข้อมูลฮาร์ดแวร์เข้าไปด้วย</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐ สร้างโปรเจกต์ PetaLinux และนำเข้าการตั้งค่าฮาร์ดแวร์จากไฟล์ .xsa ที่ได้จาก Vivado:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 cd ~/</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
@@ -352,24 +305,15 @@ Description automatically generated" border="0" height="278" width="624"></p>
                 cd pynqz2_dpu/</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 petalinux-config --get-hw-description=~/Desktop/Pynq-Z2_2020_1</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">จาก
-                นั้น ทำการตั้งค่าต่อไปนี้</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">1.</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">DTG
-                Settings-&gt;Kernel Bootargs-&gt;disable generate boot args
-                automatically</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">On
-                "user set kernel bootargs", paste the following:</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">จากนั้น ทำการตั้งค่าคอนฟิกูเรชันในเมนู petalinux-config ดังนี้:</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">1. ไปที่เมนู DTG Settings -&gt; Kernel Bootargs -&gt; ติ๊กปิด (disable) generate boot args automatically</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">จากนั้นในช่อง "user set kernel bootargs" ให้ใส่พารามิเตอร์ต่อไปนี้:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">console=ttyPS0,115200
                 root=/dev/mmcblk0p2 rw earlyprintk quiet
                 rootfstype=ext4 rootwait cma=256M</span></p>
             <br>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">2.</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Image
-                Packaging Configuration --&gt; Root filesystem type (SD
-                card) --&gt; EXT4 (SD/eMMC/SATA/USB) -&gt; enable</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                เพิ่มการตั้งค่าที่จำเป็นเกี่ยวกับ DPU</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">2. ไปที่เมนู Image Packaging Configuration -&gt; Root filesystem type (SD card) -&gt; EXT4 (SD/eMMC/SATA/USB) -&gt; enable</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐ เพิ่มการตั้งค่าและไดรเวอร์โมดูลที่จำเป็นสำหรับ DPU:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 cp -rp
 ~/Downloads/zcu102-dpu-trd-2019-1-190809/zcu102-dpu-trd-2019-1-timer/apu/dpu_petalinux_bsp/xilinx-dpu-trd-zcu102-v2019.1/zcu102-dpu-trd-2019-1/project-spec/meta-user/recipes-modules
@@ -456,10 +400,7 @@ project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 usb-phy = &lt;&amp;usb_phy0&gt;;</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">};</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">※
-                interrupts = &lt;0 29 4&gt;; คือ IRQF2P หมายเลข 61 (61-32 = 29)
-                จำเป็นต้องตั้งค่าให้ตรงกับช่องสัญญาณ IRQ
-                ที่ใช้ตอนออกแบบฮาร์ดแวร์ DPU</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">* หมายเหตุ: ค่า interrupts = &lt;0 29 4&gt;; หมายถึงสัญญาณ IRQF2P หมายเลข 61 (61 - 32 = 29) ซึ่งจำเป็นต้องตั้งค่าให้ตรงกับพอร์ต IRQ ที่เชื่อมต่อไว้ใน Block Design ของ Vivado</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image012.png" alt="A screenshot of a computer
 Description automatically generated" border="0" height="171" width="624"></p>
@@ -474,10 +415,10 @@ Description automatically generated" border="0" height="171" width="624"></p>
                 Packages -&gt; misc -&gt;
                 packagegroup-petalinux-self-hosted</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">Petalinux
-                Package Groups <span lang="JA">→</span>
+                Package Groups <span>→</span>
                 packagegroup-petalinux-python-modules, -dev</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">Petalinux
-                Package Groups <span lang="JA">→</span>
+                Package Groups <span>→</span>
                 packagegroup-petalinux-x11, -dev</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">Filesystem
                 Packages -&gt; console -&gt; utils -&gt; pkgconfig
@@ -504,8 +445,7 @@ Description automatically generated" border="0" height="171" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 gedit
 project-spec/meta-user/recipes-kernel/linux/linux-xlnx/devtool-fragment.cfg</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">※
-                จากนั้นลบข้อความเดิมและวางข้อความนี้ลงไป:</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">* เพิ่มการตั้งค่ารองรับ USB Device Drivers ในไฟล์ devtool-fragment.cfg ดังนี้:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">CONFIG_USB_OTG=y</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">#
                 CONFIG_USB_OTG_FSM is not set</span></p>
@@ -546,8 +486,7 @@ project-spec/meta-user/recipes-kernel/linux/linux-xlnx/devtool-fragment.cfg</spa
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">CONFIG_USB_ULPI=y</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">CONFIG_USB_ULPI_VIEWPORT=y</span></p>
             <br>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                บิวด์ Petalinux</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐ สั่งคอมไพล์และสร้างอิมเมจระบบ (PetaLinux Build):</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 petalinux-build</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
@@ -555,43 +494,29 @@ project-spec/meta-user/recipes-kernel/linux/linux-xlnx/devtool-fragment.cfg</spa
                 images/linux/zynq_fsbl.elf --fpga images/linux/*.bit --u-boot</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 petalinux-package --bsp -p ./ -o pynq-z2-dpu.bsp</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">ไฟล์
-                ที่ได้จากการบิวด์จะถูกสร้างไว้ที่</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">ไฟล์ผลลัพธ์ที่ได้จากการบิลด์จะถูกสร้างไว้ที่โฟลเดอร์ images/linux/ ได้แก่:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">./images/linux/BOOT.BIN</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">./images/linux/image.ub</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">./images/linux/rootfs.tar.gz</span></p>
             <span style="">&nbsp;</span>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">※
-                หาก BOOT.BIN ไม่ได้รวม bitstream เข้าไปด้วย ให้สร้าง BOOT.BIN
-                อีกครั้งด้วยวิธีต่อไปนี้</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">รัน
-                petalinux-config แล้วไปที่ FPGA Manager -&gt; FPGA Manager
-                ตั้งค่าเป็น Disable จากนั้นบิวด์ Petalinux อีกครั้ง แล้วรัน
-                petalinux-package --boot --force --fsbl
-                images/linux/zynq_fsbl.elf --fpga images/linux/*.bit --u-boot
-                (อาจมีข้อผิดพลาดเกิดขึ้นระหว่างการบิวด์ แต่สามารถข้ามไปได้)</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">* หมายเหตุ: หากไฟล์ BOOT.BIN ยังไม่ได้รวมบิตสตรีม (.bit) เข้าไปด้วย ให้สร้าง BOOT.BIN ใหม่อีกครั้งตามขั้นตอนต่อไปนี้:</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">รันคำสั่ง petalinux-config แล้วไปที่ FPGA Manager -&gt; ตั้งค่า FPGA Manager เป็น Disable จากนั้นสั่ง petalinux-build อีกครั้ง แล้วรันคำสั่ง petalinux-package เพื่อรวมบิตสตรีมเข้ากับ BOOT.BIN ดังนี้:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style=""><br>
               </span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">สถานะ
-                ที่ BOOT.BIN ยังไม่ได้รวม bitstream</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">ขนาดของไฟล์เมื่อ BOOT.BIN ยังไม่ได้รวม bitstream:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image013.png" border="0" height="39" width="569"></p>
             <span style="">&nbsp;</span>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">สถานะ
-                ที่ BOOT.BIN รวม bitstream แล้ว (ขนาดจะประมาณ system.bit +
-                u-boot.bin)</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">ขนาดของไฟล์เมื่อ BOOT.BIN รวม bitstream แล้ว (ขนาดไฟล์จะประมาณ system.bit + u-boot.bin):</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image014.png" border="0" height="40" width="569"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
             <h3 style="margin-left:35.45pt;text-indent:-35.45pt"><a name="_Toc208827162"><span
                   style="">1.2.3.<span style="font:7.0pt &quot;Times New Roman&quot;">
-                  </span></span><span style="">การสร้าง YOLO เพื่อรันบน DPU ของ
-                  Xilinx</span></a></h3>
+                  </span></span><span style="">การคอมไพล์โมเดล YOLO เพื่อรันบน DPU ของ Xilinx</span></a></h3>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                เตรียมสภาพแวดล้อม</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">ติด
-                ตั้ง Anaconda</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐ เตรียมสภาพแวดล้อม Python และติดตั้ง Anaconda:</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">ดาวน์โหลดและติดตั้ง Anaconda:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 cd ~/</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
@@ -599,8 +524,7 @@ project-spec/meta-user/recipes-kernel/linux/linux-xlnx/devtool-fragment.cfg</spa
 https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_64.sh</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 bash Anaconda3-2020.02-Linux-x86_64.sh</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">จาก
-                นั้น รีสตาร์ท PC</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">จากนั้น ให้รีสตาร์ทเครื่อง PC แล้วสร้าง Conda Environment:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 conda create -n decent pip python=3.6</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
@@ -622,14 +546,12 @@ https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_64.sh</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 sudo apt-get install graphviz</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                ติดตั้ง DNNDK</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐ ติดตั้งเครื่องมือ DNNDK (Deep Neural Network Development Kit):</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 cd Downloads/xilinx_dnndk_v3.1/host_x86</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 gedit install.sh</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">เพิ่ม
-                PynqZ2</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">เพิ่มการรองรับบอร์ด PynqZ2 ในไฟล์ install.sh:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">support_board=(ZCU102
                 ZCU104 ZedBoard Ultra96 PynqZ2)</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
@@ -637,35 +559,28 @@ https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_64.sh</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 sudo ./install.sh PynqZ2</span></p>
             <br>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                แปลงไฟล์รันของ YOLO ให้อยู่ในรูปแบบที่ FPGA ของ Xilinx
-                สามารถรันได้</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐ ขั้นตอนการแปลงโมเดล YOLO ให้อยู่ในรูปแบบที่ DPU บน FPGA สามารถประมวลผลได้:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 6" src="pynq-z2-ai_th_files/image015.jpg" alt="A screenshot of a computer
 Description automatically generated" border="0" height="237" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                แปลงจาก Darknet เป็น Keras</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">เข้า
-                ไปที่เวป</span> <a href="https://pjreddie.com/darknet/yolo/"><span
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">1. แปลงไฟล์น้ำหนักจาก Darknet (.weights) ไปเป็นโมเดล Keras (.h5):</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">เข้าไปที่เว็บไซต์</span> <a href="https://pjreddie.com/darknet/yolo/"><span
                   style="">https://pjreddie.com/darknet/yolo/</span></a><span style="">
-                แล้วดาว์นโหลด yolov3.weights<span lang="JA"></span></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">copy
-                to ~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/model_conversion </span></p>
+                แล้วดาวน์โหลดไฟล์ yolov3.weights</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">คัดลอกไฟล์ yolov3.weights ไปไว้ที่ ~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/model_conversion </span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 cd ~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/model_conversion</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 python convert.py yolov3.cfg yolov3.weights
 ~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/model_conversion/model_data/yolo.h5</span></p>
             <br>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                แปลงจาก Keras เป็น Tensorflow</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">2. แปลงจากโมเดล Keras (.h5) ไปเป็นโมเดล TensorFlow Frozen Graph (.pb):</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 python keras_to_tensorflow.py
 --input_model=/home/hong/Desktop/YOLO-on-PYNQ-Z2/DNNDK/model_conversion/model_data/yolo.h5
 --output_model=/home/hong/Desktop/YOLO-on-PYNQ-Z2/DNNDK/model_conversion/model_data/yolo.pb</span></p>
             <br>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                ทำ Quantization</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">3. ทำ Quantization เพื่อลดทอนขนาดโมเดลเป็น INT8:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 cp ./model_data/yolo.pb
                 /home/hong/Desktop/YOLO-on-PYNQ-Z2/DNNDK/quantization</span></p>
@@ -675,8 +590,7 @@ Description automatically generated" border="0" height="237" width="624"></p>
                 cd /home/hong/Desktop/YOLO-on-PYNQ-Z2/DNNDK/model_conversion</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 decent_q inspect --input_frozen_graph=model_data/yolo.pb</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">จด
-                บันทึกเนื้อหาต่อไปนี้ (จะใช้ในภายหลัง)</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">ตรวจสอบ Input และ Output Node Name ของโครงข่าย และจดบันทึกค่าไว้ (จะต้องนำไปใช้ในไฟล์สคริปต์):</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style=";background:yellow">Found
                 1 possible inputs: (name=input_1,
                 type=float(1), shape=[?,?,?,3]) </span></p>
@@ -687,45 +601,36 @@ Description automatically generated" border="0" height="237" width="624"></p>
                 (name=conv2d_75/BiasAdd, op=BiasAdd)</span><span style="">
               </span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                เตรียม COCO dataset</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">ดาวน์
-                โหลด COCO dataset จากเว็บไซต์ต่อไปนี้</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">4. เตรียมชุดข้อมูล COCO Dataset (ใช้สำหรับการทำ Calibration ในขั้นตอน Quantization):</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">ดาวน์โหลดชุดข้อมูล COCO dataset จากลิงก์ต่อไปนี้:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">http://images.cocodataset.org/zips/train2017.zip</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">http://images.cocodataset.org/annotations/annotations_trainval2017.zip</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">สร้าง
-                ไดเรกทอรีต่อไปนี้ และแตกไฟล์ COCO dataset ที่ดาวน์โหลดมา</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">สร้างไดเรกทอรีและแตกไฟล์ชุดข้อมูล COCO dataset ดังนี้:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 mkdir
 /home/hong/Desktop/YOLO-on-PYNQ-Z2/DNNDK/quantization/yolo_dataset</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">จาก
-                นั้น เปลี่ยนชื่อโฟลเดอร์ดังนี้</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">จากนั้น เปลี่ยนชื่อโฟลเดอร์ตามลำดับ:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">train2017
                 -&gt; images</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">annotations_trainval2017
                 -&gt; labels</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                แก้ไขสคริปต์การแปลง</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">5. แก้ไขพาธในสคริปต์ graph_input_fn.py:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 gedit
 /home/hong/Desktop/YOLO-on-PYNQ-Z2/DNNDK/quantization/graph_input_fn.py</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">แก้ไข
-                path</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">กำหนดพาธของรูปภาพให้ถูกต้อง:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">path
                 =
 "/home/hong/Desktop/YOLO-on-PYNQ-Z2/DNNDK/quantization/yolo_dataset/images/"</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                ทำ Quantization</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">6. รันคำสั่ง Quantization ด้วยสคริปต์ quant.sh:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 cd /home/hong/Desktop/YOLO-on-PYNQ-Z2/DNNDK/quantization</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 gedit quant.sh</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">ใน
-                ส่วนของ --output_nodes ให้ระบุเนื้อหาที่ได้จากการตรวจสอบด้วย
-                "decent_q inspect"</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">ในส่วนของพารามิเตอร์ --output_nodes ให้ระบุชื่อ Output Node ที่ได้จากการตรวจสอบด้วย decent_q inspect ก่อนหน้านี้:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">echo
                 "#####################################"</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">echo
@@ -755,12 +660,10 @@ Description automatically generated" border="0" height="237" width="624"></p>
                 chmod +x quant.sh</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 ./quant.sh</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">ไฟล์
-                ที่ผ่านการทำ Quantization แล้วจะถูกสร้างไว้ที่</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">ไฟล์ผลลัพธ์ที่ผ่านการทำ Quantization แล้วจะถูกบันทึกไว้ที่:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/quantization/quantize_results/quantize_eval_model.pb</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                คอมไพล์สำหรับ DPU</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">7. ทำการคอมไพล์โมเดลให้อยู่ในฟอร์แมตคำสั่งของ DPU Core (ไฟล์ .elf):</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 cd ~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/quantization</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
@@ -783,9 +686,7 @@ Description automatically generated" border="0" height="237" width="624"></p>
                 ~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/compilation/pynqz2_dpu.dcf</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 sh compile.sh</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">ไฟล์
-                ที่คอมไพล์แล้วจะถูกสร้างไว้ที่นี่ (การคอมไพล์ใช้เวลานาน
-                จากการทดลองบน PC Core i5-13500 ใช้เวลาประมาณ 12 ชั่วโมง)</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">ไฟล์ผลลัพธ์ที่คอมไพล์เสร็จแล้วจะได้ไฟล์ dpu_yolo.elf (หมายเหตุ: การคอมไพล์โมเดลค่อนข้างใช้เวลานาน จากการทดสอบบนเครื่อง PC Intel Core i5-13500 ใช้เวลาประมาณ 12 ชั่วโมง)</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">(decent)
 hong@ubuntu:~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/compilation/compile$
                 ls</span></p>
@@ -795,25 +696,18 @@ hong@ubuntu:~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/compilation/compile$
               </span></p>
             <h3 style="margin-left:35.45pt;text-indent:-35.45pt"><a name="_Toc208827163"><span
                   style="">1.2.4.<span style="font:7.0pt &quot;Times New Roman&quot;">
-                  </span></span><span style="">ทดสอบบนอุปกรณ์จริง</span></a></h3>
+                  </span></span><span style="">การทดสอบบนบอร์ดฮาร์ดแวร์จริง (Deployment on PYNQ-Z2)</span></a></h3>
             <p class="MsoNormal" style="text-align:left" align="left"><span style=""><br>
               </span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">การ
-                ทดสอบบนอุปกรณ์จริงจำเป็นต้องสร้างโปรแกรม
-                แต่ครั้งนี้จะใช้โปรแกรมที่เตรียมไว้ในเอกสารอ้างอิง</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;‐
-                การสร้าง SD Card</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">สร้าง
-                พาร์ติชันต่อไปนี้ด้วย gparted</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Partition1<span
-                  lang="JA">：</span>fat32</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Partition2<span
-                  lang="JA">：</span>ext4</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">การทดสอบบนบอร์ดจริงจำเป็นต้องเขียนโปรแกรมควบคุม DPU ขึ้นมา โดยในการทดลองนี้เราจะใช้โปรแกรมตัวอย่างที่เตรียมไว้ในเอกสารอ้างอิง</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;‐ ขั้นตอนการเตรียม MicroSD Card:</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">สร้างพาร์ติชันบน MicroSD Card ด้วยโปรแกรม GParted ดังนี้:</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Partition 1: FAT32 (สำหรับไฟล์ Boot)</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Partition 2: EXT4 (สำหรับ Root Filesystem)</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image016.png" alt="A screenshot of a computer
 Description automatically generated" border="0" height="221" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">คัด
-                ลอก Uboot, linux และอื่นๆ ไปยัง SD Card</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">คัดลอกไฟล์ U-Boot, Kernel Image และ Root Filesystem ลงใน SD Card:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 sudo mkdir /mnt/sdb1</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
@@ -845,10 +739,7 @@ Description automatically generated" border="0" height="221" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 sudo umount /mnt/sdb2</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                สิ่งที่เตรียมไว้ในเอกสารอ้างอิงมีไฟล์ .cpp, makefile และอื่นๆ
-                เราจะใช้ไฟล์เหล่านั้นตามเดิม แต่จะแทนที่เฉพาะไฟล์ YOLO
-                ที่คอมไพล์แล้ว</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐ ในโฟลเดอร์โปรเจกต์ Deployment จะมีไฟล์ซอร์สโค้ด .cpp และ Makefile เตรียมไว้แล้ว ให้เรานำไฟล์โมเดล YOLO (dpu_yolo.elf) ที่เพิ่งคอมไพล์ได้ไปวางแทนที่:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
                 cd ~/Desktop/YOLO-on-PYNQ-Z2/DNNDK/compilation/compile</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">$
@@ -861,29 +752,22 @@ Description automatically generated" border="0" height="221" width="624"></p>
                 cp yolo_kernel.info
                 ~/Desktop/YOLO-on-PYNQ-Z2/Deployment/yolo_pynqz2/info/.</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                เสียบ SD Card เข้าไปใน Pynq-Z2 แล้วเปิดเครื่อง รอจนกว่า Linux
-                จะบูตเสร็จ ตรวจสอบให้แน่ใจว่า DPU ถูกรวมเข้าไปอย่างถูกต้อง
-                โดยใช้คำสั่ง devmem เพื่ออ่านค่าบางอย่าง (รันบนบอร์ด Pynq-Z2)</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐ นำ MicroSD Card เสียบเข้ากับบอร์ด PYNQ-Z2 แล้วเปิดสวิตช์เปิดเครื่อง รอจนกระทั่งระบบปฏิบัติการ Linux บูตเสร็จสมบูรณ์ จากนั้นทดสอบตรวจสอบการเข้าถึงรีจิสเตอร์ของ DPU ด้วยคำสั่ง devmem (รันบนบอร์ด PYNQ-Z2):</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image017.png" border="0" height="35" width="348"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                ล็อกอินด้วย MobaXterm โดย user คือ "root" และ pass คือ "root"</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐ เชื่อมต่อเทอร์มินัลหรือล็อกอินผ่าน SSH (เช่น ใช้โปรแกรม MobaXterm) โดยมี Username: "root" และ Password: "root"</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 src="pynq-z2-ai_th_files/image018.png" alt="A screenshot of a computer
 Description automatically generated" border="0" height="250" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                ติดตั้ง DNNDK (รันบนบอร์ด Pynq-Z2)</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐ ติดตั้งรันไทม์ DNNDK บนบอร์ด PYNQ-Z2:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">root@pynqz2_dpu:~#
                 cd zynq7020_dnndk_v3.1/</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">root@pynqz2_dpu:~/zynq7020_dnndk_v3.1#
                 sh install.sh</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                คัดลอกไฟล์ cpp, makefile และอื่นๆ (ทั้งโฟลเดอร์ yolo_pynqz2)
-                ไปยังบอร์ด Pynq-Z2 (สามารถลากและวางใน MobaXterm ได้)</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐ คัดลอกโฟลเดอร์โปรแกรมแอปพลิเคชัน (yolo_pynqz2) ไปยังบอร์ด PYNQ-Z2 (สามารถลากและวางไฟล์ผ่านหน้าต่าง SFTP ใน MobaXterm ได้):</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="position:
 absolute;z-index:251667456;margin-left:117px;margin-top:168px;width:309px;height:83px"><img
@@ -892,30 +776,24 @@ absolute;z-index:251667456;margin-left:117px;margin-top:168px;width:309px;height
                 alt="A screenshot of a computer
 Description automatically generated" border="0" height="355" width="624"></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐
-                บิวด์และรันแอปพลิเคชัน (รันบนบอร์ด Pynq-Z2)</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">‐ คอมไพล์และรันแอปพลิเคชันตรวจจับวัตถุ (รันบนบอร์ด PYNQ-Z2):</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">root@pynqz2_dpu:~/yolo_pynqz2#
                 make</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><span style="">root@pynqz2_dpu:~/yolo_pynqz2#
                 ./yolo_image dog.jpg</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">เมื่อ
-                รันสำเร็จ จะแสดงวัตถุที่ตรวจจับได้ดังภาพด้านล่าง</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">เมื่อโปรแกรมประมวลผลเสร็จสมบูรณ์ จะแสดงผลลัพธ์การตรวจจับวัตถุบนภาพตัวอย่าง (dog.jpg) ดังรูปด้านล่าง</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
                 id="Picture 1" src="pynq-z2-ai_th_files/image021.png" alt="A screenshot of a computer
 Description automatically generated" border="0" height="356" width="624"></p>
             <span style="">&nbsp;</span>
             <h2 style="margin-left:28.35pt;text-indent:-28.35pt"><a name="_Toc208827164"><span
                   style="">1.3.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
-                  </span></span><span style="">อ้างอิง</span></a></h2>
+                  </span></span><span style="">เอกสารอ้างอิง</span></a></h2>
             <span style="">&nbsp;</span>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">เอกสาร
-                อ้างอิง:</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">เอกสารอ้างอิง:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><a href="https://andre-araujo.gitbook.io/yolo-on-pynq-z2/deployment-on-pynq-z2/execute-yolov3"><span
                   style="">https://andre-araujo.gitbook.io/yolo-on-pynq-z2/deployment-on-pynq-z2/execute-yolov3</span></a></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">เนื่อง
-                จาก DPU IP เวอร์ชันล่าสุดไม่รองรับ Zynq-7000 แล้ว
-                จึงไม่สามารถดาวน์โหลดจากเว็บไซต์ของ Xilinx ได้
-                แต่สามารถดาวน์โหลดได้จากลิงก์ด้านล่าง</span></p>
+            <p class="MsoNormal" style="text-align:left" align="left"><span style="">เนื่องจาก DPU IP เวอร์ชันล่าสุดไม่รองรับชิปตระกูล Zynq-7000 แล้ว จึงไม่มีให้ดาวน์โหลดบนเว็บไซต์ทางการของ Xilinx แต่สามารถดาวน์โหลดแพ็กเกจ DPU TRD เวอร์ชันที่รองรับได้จากลิงก์ด้านล่าง:</span></p>
             <p class="MsoNormal" style="text-align:left" align="left"><a href="https://drive.google.com/file/d/1-Ajpk6HIDHIkwDHdUJaB92HN5g_S0Bam/view"><span
                   style="">https://drive.google.com/file/d/1-Ajpk6HIDHIkwDHdUJaB92HN5g_S0Bam/view</span></a></p>
             <span style="font-size:10.5pt;"><br style="page-break-before:always"
