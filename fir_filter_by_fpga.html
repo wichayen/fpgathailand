@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>กรณีศึกษา: การประเมินการทำ FIR Filter บน FPGA | FPGATHAILAND</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { padding-top: 56px; }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 0.5rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        .figure-caption {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
+        pre { background-color: #f8f9fa; padding: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
+        blockquote {
+            border-left: 4px solid #ccc;
+            padding-left: 1rem;
+            color: #666;
+        }
+        .callout-box {
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            margin: 1.75rem 0;
+            border-left: 4px solid;
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+        .callout-question {
+            border-left-color: #8b5cf6;
+            background: #faf5ff;
+        }
+        .callout-info {
+            border-left-color: #0284c7;
+            background: #f0f9ff;
+        }
+        .callout-tip {
+            border-left-color: #10b981;
+            background: #f0fdf4;
+        }
+        .callout-warning {
+            border-left-color: #f59e0b;
+            background: #fffbeb;
+        }
+        .callout-title {
+            font-weight: 700;
+            color: #0f172a;
+            font-size: 1.05rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+        .callout-content {
+            color: #334155;
+            font-size: 0.98rem;
+            line-height: 1.75;
+        }
+        .callout-content p:last-child,
+        .callout-content ul:last-child {
+            margin-bottom: 0;
+        }
+        .table-responsive {
+            margin: 1.75rem 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar navbar-expand-lg fixed-top site-nav">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <span class="navbar-brand-icon"><i class="bi bi-cpu"></i></span>
+                <span>FPGATHAILAND</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+                    <li class="nav-item"><a class="nav-link" href="index.html#work">ผลงานเด่น</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#articles">บทความและแล็บ</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBoards" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            แล็บบอร์ด
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownBoards">
+                            <li><a class="dropdown-item" href="coursecontent/chapter1-introduction-to-fpga.html"><i class="bi bi-book me-2"></i>คอร์สเรียน FPGA พื้นฐาน</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">PYNQ-Z2</h6></li>
+                            <li><a class="dropdown-item" href="pynq-z2-vivado_th.html"><i class="bi bi-cpu me-2"></i>Vivado Setup</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-hls_th.html"><i class="bi bi-lightning-charge me-2"></i>HLS Acceleration</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-ai_th.html"><i class="bi bi-robot me-2"></i>AI (DPU IP)</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-modelsim_th.html"><i class="bi bi-activity me-2"></i>Modelsim</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1.html"><i class="bi bi-display me-2"></i>LVGL ตอนที่ 1</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2.html"><i class="bi bi-display me-2"></i>LVGL ตอนที่ 2</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvlg_special_ep.html"><i class="bi bi-stars me-2"></i>Special: AI Agent</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">ARIES PCI Board</h6></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep1.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 1: ออกแบบโปรเจค</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep2.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 2: Version A.1</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep3.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 3: ออกแบบ FPGA</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep4.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 4: Linux PCI Driver</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep5.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 5: Windows PCI Driver</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">บอร์ดและเครื่องมืออื่นๆ</h6></li>
+                            <li><a class="dropdown-item" href="EZUSB_FPGA.html"><i class="bi bi-usb-symbol me-2"></i>EZUSB + FPGA</a></li>
+                            <li><a class="dropdown-item" href="GeminiBoard_Beaglebone_Frambuffer.html"><i class="bi bi-display me-2"></i>GeminiBoard Framebuffer</a></li>
+                            <li><a class="dropdown-item" href="Sigasi.html"><i class="bi bi-code-square me-2"></i>Sigasi for VS Code</a></li>
+                            <li><a class="dropdown-item" href="UVVM.html"><i class="bi bi-check2-circle me-2"></i>UVVM Verification</a></li>
+                            <li><a class="dropdown-item" href="AI_hardware.html"><i class="bi bi-robot me-2"></i>AI Hardware Control with MCP</a></li>
+                            <li><a class="dropdown-item" href="vhdl_code_coverage.html"><i class="bi bi-bar-chart-steps me-2"></i>VHDL Code Coverage</a></li>
+                            <li><a class="dropdown-item active" href="fir_filter_by_fpga.html"><i class="bi bi-soundwave me-2"></i>FIR Filter on FPGA</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-info" href="index.html#articles"><i class="bi bi-grid-3x3-gap me-2"></i>ดูบทความทั้งหมด</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#contact">ติดต่อ</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto article-content">
+                <h1 class="mb-3">กรณีศึกษา: การประเมินการทำ FIR Filter บน FPGA</h1>
+                <hr>
+
+                <p>เวลามีคนถามว่า “ใช้ FPGA คำนวณยังไง” หรือเวลาต้องอธิบายแนวคิดการออกแบบวงจรให้คนอื่นฟัง มักพบว่าการอธิบายด้วยคำพูดอย่างเดียวทำได้ยากพอสมควร</p>
+
+                <p>บทความนี้จึงใช้กรณีศึกษาง่าย ๆ เพื่อไล่ดูแนวคิดการออกแบบ FIR filter บน FPGA ตั้งแต่การกำหนด requirement การแบ่ง block ไปจนถึงการประเมินว่าออกแบบนี้จะทำงานแบบ real-time ได้หรือไม่ โดยยังไม่ลงรายละเอียด RTL code</p>
+
+                <hr>
+
+                <h1>1 เกริ่นนำ</h1>
+
+                <p>สมมติว่าเราต้องทำ FIR filter สำหรับสัญญาณเสียงแบบ real-time รับเสียงจาก input ผ่าน filter แล้วส่งผลลัพธ์ออกไปยังลำโพงทันที</p>
+
+                <figure class="my-4 text-center">
+                    <img src="fir_filter_by_fpga_files/image001.png" alt="ภาพรวมระบบ FIR filter บน FPGA" class="img-fluid">
+                    <figcaption class="figure-caption">รูปที่ 1-1 — ภาพรวมเส้นทางสัญญาณ: WM8731 (ADC) → FPGA (FIR) → WM8731 (DAC)</figcaption>
+                </figure>
+
+                <p>โจทย์แบบนี้มีแนวทางหลัก ๆ อยู่สองแบบ:</p>
+                <ol>
+                    <li><strong>ใช้ software</strong> — รับข้อมูลเสียงเข้า PC หรือ MCU แล้วคำนวณก่อนส่ง output ออกมา</li>
+                    <li><strong>ใช้ FPGA</strong> — สร้าง datapath สำหรับคำนวณใน hardware แล้วส่ง output ออกมา</li>
+                </ol>
+
+                <div class="callout-box callout-info">
+                    <div class="callout-title"><i class="bi bi-info-circle-fill text-primary me-2"></i>Note: ทางเลือกอื่นในการประมวลผล</div>
+                    <div class="callout-content">
+                        <p>ในทางปฏิบัติยังมีตัวเลือกอย่าง DSP chip หรือ ASIC ด้วย แต่บทความนี้จะโฟกัสการเปรียบเทียบระหว่าง general-purpose processor กับ FPGA เท่านั้น</p>
+                    </div>
+                </div>
+
+                <p>ด้วยเงื่อนไข real-time ดังนั้นข้อกำหนดของสองแนวทางจะเหมือนกัน คือการคำนวณของแต่ละ sample ต้องเสร็จก่อนที่ sample ถัดไปจะมาถึง สำหรับ sample rate 44.1 kHz เวลาต่อ sample คือ การคำนวณต้องเสร็จภายใน <code>1 / 44,100 ≈ 22.68 µs</code> เพราะว่า ถ้าประมวลผล sample ปัจจุบันไม่ทัน ก็จะเริ่มรับ sample ถัดไปไม่ทันตามไปด้วย ใน PC ทั่วไป งานระดับนี้มักไม่ใช่ปัญหา แต่ MCU ขนาดเล็กหรือระบบที่มีงานอื่นทำพร้อมกันอาจต้องดูดีๆ ส่วนกรณีศึกษานี้จะเลือกเดินสาย FPGA ดังนั้น spec เราจะเป็น</p>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 30%;">รายการ</th>
+                                <th>ค่า</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Audio codec</td>
+                                <td>Wolfson WM8731</td>
+                            </tr>
+                            <tr>
+                                <td>Filter</td>
+                                <td>FIR, 128 taps</td>
+                            </tr>
+                            <tr>
+                                <td>Numeric format</td>
+                                <td>IEEE 754 single-precision floating point (float32)</td>
+                            </tr>
+                            <tr>
+                                <td>Sample rate</td>
+                                <td>44.1 kHz</td>
+                            </tr>
+                            <tr>
+                                <td>Channels</td>
+                                <td>Stereo, Left/Right</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <hr>
+
+                <h1>2 Design Requirements</h1>
+
+                <p>ระบบตัวอย่างเป็น digital audio filter โดย FPGA รับข้อมูลจาก WM8731 ซึ่งเป็น audio CODEC ที่มีทั้ง ADC และ DAC จากนั้นจะทำการคำนวณ FIR แยกสำหรับช่อง Left และ Right ในกรณีนี้จะใช้ flow แบบ <code>fixed-point → float32 → FIR → fixed-point</code> (แม้ว่า fixed-point จะเป็นตัวเลือกที่พบได้บ่อยกว่าใน audio DSP จริงก็ตาม)</p>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>หมวด</th>
+                                <th>รายการ</th>
+                                <th>ค่า/ข้อกำหนด</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td rowspan="4" class="align-middle">Digital audio I/O</td>
+                                <td>Resolution</td>
+                                <td>24-bit</td>
+                            </tr>
+                            <tr>
+                                <td>จำนวนช่องสัญญาณ</td>
+                                <td>2 channels (Left / Right)</td>
+                            </tr>
+                            <tr>
+                                <td>Sample rate</td>
+                                <td>44.1 kHz</td>
+                            </tr>
+                            <tr>
+                                <td>รูปแบบข้อมูล</td>
+                                <td>Stereo</td>
+                            </tr>
+                            <tr>
+                                <td>WM8731 clock</td>
+                                <td>MCLK</td>
+                                <td>11.2896 MHz (= 256 × Fs)</td>
+                            </tr>
+                            <tr>
+                                <td>WM8731 control</td>
+                                <td>Control interface</td>
+                                <td>I²C</td>
+                            </tr>
+                            <tr>
+                                <td>WM8731 audio</td>
+                                <td>Digital audio interface</td>
+                                <td>เลือกใช้ DSP/PCM mode</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="3" class="align-middle">FIR</td>
+                                <td>Structure</td>
+                                <td>Direct-form convolution</td>
+                            </tr>
+                            <tr>
+                                <td>จำนวน taps</td>
+                                <td>128</td>
+                            </tr>
+                            <tr>
+                                <td>Numeric format</td>
+                                <td>IEEE 754 single-precision floating point, 32-bit</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <figure class="my-4 text-center">
+                    <img src="fir_filter_by_fpga_files/image002.png" alt="โครงสร้างตัวกรอง FIR ที่อ้างอิงในตารางข้อกำหนด" class="img-fluid">
+                    <figcaption class="figure-caption">รูปที่ 2-1 — โครงสร้างตัวกรอง FIR</figcaption>
+                </figure>
+
+                <hr>
+
+                <h1>3 การออกแบบ</h1>
+
+                <h2>3.1 Overview</h2>
+
+                <p>จาก requirement ด้านบน เราสามารถแบ่งระบบออกเป็น 3 block หลัก:</p>
+
+                <figure class="my-4 text-center">
+                    <img src="fir_filter_by_fpga_files/image003.png" alt="บล็อกไดอะแกรมรวมของระบบ" class="img-fluid">
+                    <figcaption class="figure-caption">รูปที่ 3.1-1 — Block diagram รวมของระบบ</figcaption>
+                </figure>
+
+                <ol>
+                    <li><strong>CODEC Interface</strong> — จัดการ I²C สำหรับตั้งค่า register ตอนเริ่มระบบ และจัดการ digital audio interface สำหรับรับ/ส่ง sample (สัญญาณเสียง)</li>
+                    <li><strong>Fixed-point ⇔ Floating-point Conversion</strong> — แปลง sample จาก CODEC เป็น float32 ก่อนเข้า FIR และแปลงกลับเป็น fixed-point ก่อนส่งให้ DAC</li>
+                    <li><strong>FIR Calculation</strong> — คำนวณ FIR 128 taps โดยมี Datapath ของ Left และ Right แยกกัน</li>
+                </ol>
+
+                <h2>3.2 Clock domain</h2>
+
+                <p>ในที่นี้จะให้ FPGA ใช้ system clock 50 MHz และใช้ PLL สร้าง clock สำหรับ CODEC ดังนี้:</p>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Clock domain</th>
+                                <th class="text-end">ความถี่</th>
+                                <th>ใช้งานกับ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>System clock</td>
+                                <td class="text-end">50 MHz</td>
+                                <td>Conversion และ FIR core</td>
+                            </tr>
+                            <tr>
+                                <td>CODEC MCLK</td>
+                                <td class="text-end">11.2896 MHz</td>
+                                <td>Master clock/reference ของ WM8731</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <figure class="my-4 text-center">
+                    <img src="fir_filter_by_fpga_files/image004.png" alt="แผนภาพสัญญาณนาฬิกาของ FPGA" class="img-fluid">
+                    <figcaption class="figure-caption">รูปที่ 3.2-1 — การกระจาย clock จาก PLL ไปยังแต่ละ block</figcaption>
+                </figure>
+
+                <pre><code>11.2896 MHz / 256 = 44.1 kHz</code></pre>
+
+                <p>อัตราส่วน 256 × Fs เป็นหนึ่งใน clocking configuration ที่ WM8731 รองรับสำหรับ 44.1 kHz</p>
+
+                <h2>3.3 CODEC Interface (WM8731)</h2>
+
+                <p>ในตัวอย่างนี้ให้ WM8731 ทำหน้าที่เป็น ADC/DAC:</p>
+                <ul>
+                    <li>ฝั่ง ADC แปลงสัญญาณ analog จาก <code>LLINEIN</code>/<code>RLINEIN</code> เป็น digital sample</li>
+                    <li>ฝั่ง DAC แปลง digital sample จาก FPGA กลับเป็น analog ที่ <code>LOUT</code>/<code>ROUT</code></li>
+                </ul>
+
+                <p>WM8731 มี interface ที่เกี่ยวข้องอยู่สองส่วน:</p>
+                <ul>
+                    <li><strong>I²C control interface</strong> — ใช้เขียน/อ่าน register เพื่อกำหนดค่า เช่น audio format, word length, sample-rate mode และ master/slave mode โดยทั่วไปจะทำตอน startup</li>
+                    <li><strong>Digital audio interface</strong> — ใช้รับส่งข้อมูล audio sample ระหว่าง WM8731 กับ FPGA อย่างต่อเนื่อง โดยมีสัญญาณ clock และ frame-sync ที่เกี่ยวข้อง เช่น <code>BCLK</code>, <code>ADCLRC</code>/<code>DACLRC</code> และ <code>ADCDAT</code>/<code>DACDAT</code></li>
+                </ul>
+
+                <figure class="my-4 text-center">
+                    <img src="fir_filter_by_fpga_files/image005.png" alt="Control Interface ของ WM8731" class="img-fluid">
+                    <figcaption class="figure-caption">รูปที่ 3.3-1 — Control Interface (I²C) สำหรับตั้งค่า register ของ WM8731</figcaption>
+                </figure>
+
+                <figure class="my-4 text-center">
+                    <img src="fir_filter_by_fpga_files/image006.png" alt="Digital Audio Interface timing ของ WM8731" class="img-fluid">
+                    <figcaption class="figure-caption">รูปที่ 3.3-2 — Digital Audio Interface สำหรับส่งข้อมูลเสียงต่อเนื่อง</figcaption>
+                </figure>
+
+                <h2>3.4 Fixed-point ⇔ Floating-point conversion</h2>
+
+                <p>ด้วย spec WM8731 นั้นจะส่งข้อมูล audio เป็น signed fixed-point 24-bit ส่วน FIR core ในตัวอย่างนี้ใช้ float32 จึงต้องมีการแปลงจาก fixed-point 24-bit ไปเป็น floating point ก่อน และแน่นอนตอนส่งกลับไปที่ WM8731 ก็ต้องแปลงกลับไปเป็น fixed-point 24-bit เช่นกัน<br>
+                ในที่นี้จะทำแบบ fixed-point 24-bit → fixed-point 64-bit (integer 32-bit, fractional 32-bit) → floating point</p>
+
+                <figure class="my-4 text-center">
+                    <img src="fir_filter_by_fpga_files/image007.png" alt="แผนภาพการแปลง Fixed เป็น Floating point" class="img-fluid">
+                    <figcaption class="figure-caption">รูปที่ 3.4-1 — Fixed → Float ก่อนเข้า FIR</figcaption>
+                </figure>
+
+                <figure class="my-4 text-center">
+                    <img src="fir_filter_by_fpga_files/image008.png" alt="แผนภาพการแปลง Floating point เป็น Fixed" class="img-fluid">
+                    <figcaption class="figure-caption">รูปที่ 3.4-2 — Float → Fixed หลังออกจาก FIR ก่อนส่ง DAC</figcaption>
+                </figure>
+
+                <h2>3.5 FIR Calculation</h2>
+
+                <p>FIR filter นั้นสามารถคำนวณได้ตามสมการ:</p>
+
+                <pre><code>y[n] = Σ(k=0..127) a[k] × s[n-k]</code></pre>
+
+                <p>โดย <code>a[k]</code> คือ coefficient และ <code>s[n-k]</code> คือ sample ปัจจุบันกับ sample ก่อนหน้า</p>
+
+                <p>จากสูตรนี้ เราแบ่งการคำนวณออกเป็นสองขั้น คือ <strong>คูณให้เสร็จทั้งหมดก่อน แล้วค่อยนำผลมาบวกรวมทีหลัง</strong> เหตุผลคือการคูณ <code>a × s</code> ของแต่ละ tap เป็นงานอิสระต่อกัน จึงสามารถนำ multiplier มาต่อเป็น pipeline ได้ ในทางกลับกัน adder แบบสะสมผลต้องรอผลรวมก่อนหน้าเสมอ</p>
+
+                <p>ถ้าคูณแล้วบวกสะสมไปทีละคู่ เราจะต้องรอผลรวมจากรอบก่อนหน้าทุกครั้ง ทำให้ pipeline ทำงานได้ไม่เต็มที่ ดังนั้นในกรณีนี้จึงเลือกคำนวณผลคูณของทุก tap ให้ครบก่อน แล้วค่อยนำผลลัพธ์มารวมในขั้นถัดไป</p>
+
+                <pre><code>a0*s0            = result1
+result1 + a1*s1  = result2   ← ต้องรอ result1 ก่อน (เสียเวลารอผล)</code></pre>
+
+                <figure class="my-4 text-center">
+                    <img src="fir_filter_by_fpga_files/image009.png" alt="โครงสร้างการคำนวณ FIR" class="img-fluid">
+                    <figcaption class="figure-caption">รูปที่ 3.5-1 — โครงสร้างการคำนวณ FIR</figcaption>
+                </figure>
+
+                <p>กลับมาที่โครงสร้าง block design เราสามารถแบ่งออกเป็น block หลักได้แก่ Delay, Multiplier และ Adder และจะใช้ Block RAM ใน FPGA ไว้เก็บ sample, coefficient รวมถึงผลการคูณระหว่างทาง <code>(s[n-k] × a[k])</code></p>
+
+                <p>ทั้ง Left และ Right ใช้โครงสร้างเดียวกัน โดยมีส่วนหลักดังนี้:</p>
+                <ul>
+                    <li><strong>Delay line (<code>SAMP_RAM</code>)</strong> — เก็บ sample ย้อนหลัง <code>s[n]</code> ถึง <code>s[n-127]</code> ด้วย circular buffer</li>
+                    <li><strong>Coefficient storage</strong> — เก็บค่า <code>a[0]</code> ถึง <code>a[127]</code> ใน ROM หรือ RAM ตามความต้องการ</li>
+                    <li><strong>Multiply</strong> — คำนวณ <code>s[n-k] × a[k]</code> โดยในกรณีนี้ใช้ multiplier แบบ pipeline 1 ชุด และ reuse multiplier นี้กับทุก tap</li>
+                    <li><strong>Accumulation</strong> — รวมผลคูณทั้งหมดให้ได้ <code>y[n]</code></li>
+                </ul>
+
+                <p>ผลคูณที่ได้จะถูกเก็บแยกเป็น 2 กลุ่ม กลุ่มละ 64 ค่า จากนั้นใช้ accumulator สองสายคำนวณผลรวมของแต่ละกลุ่มแบบขนาน แล้วนำผลรวมทั้งสองมาบวกกันเป็น output สุดท้าย วิธีนี้ช่วยลดจำนวน multiplier และ DSP block เมื่อเทียบกับการสร้าง multiplier ครบ 128 ชุด ขณะเดียวกันก็ยังแบ่งงาน accumulation ให้ทำงานขนานกันได้</p>
+
+                <figure class="my-4 text-center">
+                    <img src="fir_filter_by_fpga_files/image010.png" alt="บล็อกไดอะแกรมแกนคำนวณ FIR" class="img-fluid">
+                    <figcaption class="figure-caption">รูปที่ 3.5-2 — Block ภายใน: SAMP_RAM, coefficient RAM, multiplier และ adder</figcaption>
+                </figure>
+
+                <h2>3.6 ประเมินความสามารถด้าน real-time</h2>
+
+                <p>ในระบบนี้เราใช้ system clock ที่ 50 MHz ดังนั้นเมื่อรับ sample เข้ามาแล้ว การคำนวณ FIR ต้องทำให้เสร็จภายในเวลา <code>1 / 44,100 ≈ 22.68 µs</code> ซึ่งเมื่อแปลงเป็นจำนวน clock cycle จะได้</p>
+
+                <pre><code>50,000,000 / 44,100 ≈ 1,133.8 cycles</code></pre>
+
+                <p>ดังนั้นในการประเมินแบบคร่าว ๆ เราจะกำหนด timing budget ให้การคำนวณของแต่ละ sample ต้องเสร็จภายใน <strong>1,133 clock cycles</strong> เพื่อให้ทันก่อน sample ถัดไปเข้ามา ดังนั้นเราสามารถประเมินแบบคร่าวๆ ได้ดังนี้:</p>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ขั้นตอน</th>
+                                <th class="text-end">Latency โดยประมาณ</th>
+                                <th>หมายเหตุ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Multiplier 128 taps</td>
+                                <td class="text-end">133 cycles</td>
+                                <td>128 cycles สำหรับป้อนข้อมูล + pipeline drain 5 cycles</td>
+                            </tr>
+                            <tr>
+                                <td>Adder</td>
+                                <td class="text-end">576 cycles</td>
+                                <td>64 × 9 cycles โดยใช้ Adder 2 สายขนาน</td>
+                            </tr>
+                            <tr>
+                                <td>Final add + control overhead</td>
+                                <td class="text-end">20 cycles</td>
+                                <td>ตอนนี้เผื่อ overhead ไปก่อน ของจริงอาจจะต้องดู final design อีกที</td>
+                            </tr>
+                            <tr class="table-info font-weight-bold">
+                                <td><strong>รวม</strong></td>
+                                <td class="text-end"><strong>729 cycles</strong></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>จากการประเมินบนกระดาษ ขั้นตอนคำนวณทั้งหมดน่าจะใช้ประมาณ <strong>729 cycles</strong> ซึ่งอยู่ภายใน timing budget ที่กำหนดไว้ <strong>1,133 cycles ต่อ sample</strong> ดังนั้น เราสรุปได้ว่า design นี้น่าจะทำงานแบบ real-time ได้</p>
+
+                <figure class="my-4 text-center">
+                    <img src="fir_filter_by_fpga_files/image011.png" alt="ภาพรวม Timing ของการคำนวณ FIR" class="img-fluid">
+                    <figcaption class="figure-caption">รูปที่ 3.6-1 — ภาพรวม data flow ตามเวลา</figcaption>
+                </figure>
+
+                <figure class="my-4 text-center">
+                    <img src="fir_filter_by_fpga_files/image012.png" alt="Timing แบบละเอียดของการคำนวณ FIR" class="img-fluid">
+                    <figcaption class="figure-caption">รูปที่ 3.6-2 — Timing แบบละเอียดของแต่ละขั้นตอน</figcaption>
+                </figure>
+
+                <div class="callout-box callout-warning">
+                    <div class="callout-title"><i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>เรื่อง latency ของ floating-point IP</div>
+                    <div class="callout-content">
+                        <p>ค่า latency 5 และ 9 cycles ในตัวอย่างเป็นค่าที่สมมติขึ้นเพื่อสาธิตวิธีประเมินเท่านั้น ใน hardware จริง latency และ initiation interval ของ floating-point multiplier/adder ขึ้นอยู่กับ IP core, target frequency, FPGA family และการตั้งค่า pipeline</p>
+                    </div>
+                </div>
+
+                <h2>3.7 สรุป</h2>
+
+                <p>จากการประเมินบนกระดาษ การทำ FIR filter 128 taps ที่ 44.1 kHz บน FPGA มีความเป็นไปได้ เพราะ system clock 50 MHz มีประมาณ 1,133 cycles ต่อ sample และ estimate เบื้องต้นใช้ประมาณ 729 cycles แน่นอนว่านี่เป็นแค่การประเมินบนกระดาษ ขั้นตอนที่เหลือคือต้องลงลึกในการ coding จริง และเมื่อ code เสร็จแล้วต้องกลับมาตรวจสอบอีกครั้งว่า FPGA resource ที่ใช้จริงเพียงพอหรือไม่</p>
+
+                <p>เมื่อลงมือ implement บน FPGA แล้ว เรายังต้องตรวจสอบรายละเอียดต่อไปนี้อีกครั้ง:</p>
+                <ul>
+                    <li>latency และ initiation interval ของ floating-point IP</li>
+                    <li>จำนวน DSP block, RAM และ logic ที่ใช้</li>
+                    <li>timing closure หลัง synthesis และ place-and-route</li>
+                    <li>การอ่านข้อมูลจาก RAM และการจัดการ circular buffer</li>
+                    <li>CDC ระหว่าง system clock กับ CODEC interface</li>
+                    <li>rounding, saturation และ clipping ตอนแปลงกลับเป็น 24-bit fixed-point</li>
+                </ul>
+
+                <h2>3.8 หมายเหตุ</h2>
+
+                <p><strong>ทำไมเลือกคำนวณด้วย floating-point :</strong><br>
+                การเลือก float32 มีเหตุผลหลักคือทำให้การเปรียบเทียบกับ reference model ใน C หรือ Python ตรงไปตรงมา และไม่ต้องอธิบาย fixed-point scaling ในบทความนี้มากเกินไป อย่างไรก็ตามการใช้ floating point ไม่ได้แปลว่าจะมี precision ดีกว่า fixed-point เสมอไป จุดเด่นหลักของ float คือมี dynamic range กว้างและจัดการค่าที่มี scale ต่างกันได้ง่ายกว่า ส่วน hardware cost, latency, power และ resource usage มักสูงกว่า fixed-point ดังนั้นงานจริงควรเปรียบเทียบทั้งสองแบบก่อนตัดสินใจ</p>
+
+                <p><strong>แนวทางเร่งความเร็วเพิ่มเติมด้วย adder tree :</strong><br>
+                ในบทความนี้เลือกใช้ accumulator สองสายบวกสะสมทีละตัว (serial accumulate) เพื่อความเรียบง่ายของ control logic แต่ในทางปฏิบัติยังมีอีกแนวทางที่เร็วกว่า คือจัดกลุ่มผลคูณเป็นคู่ ๆ แล้วบวกแบบขนานในคราวเดียว เช่น <code>(s0×a0)+(s1×a1)</code>, <code>(s2×a2)+(s3×a3)</code>, ... เพราะแต่ละคู่เป็นอิสระต่อกัน ไม่ต้องรอผลจากคู่อื่นก่อน ซึ่งช่วยลดเวลาคำนวณของขั้นตอนบวกลงได้มากเมื่อเทียบกับ serial accumulate ที่ใช้ในตัวอย่างนี้</p>
+
+                <hr>
+
+                <h1>4 เพิ่มเติม : เมื่อไหร่ถึงจำเป็นต้องใช้ FPGA</h1>
+
+                <p>กรณีศึกษาข้างต้นเป็นเพียงตัวอย่างประกอบเท่านั้น แต่ในงานจริง ก่อนจะตัดสินใจใช้ FPGA ในการคำนวณ ควรประเมิน workload, deadline, resource, power และความซับซ้อนของระบบก่อนเสมอ เพื่อตอบคำถามว่า “ใช้ได้ไหม” และ “ควรใช้ไหม” โดย</p>
+
+                <ul>
+                    <li><strong>งานที่ไม่มีข้อจำกัดด้าน real-time</strong> เช่น การแปลงไฟล์แบบโยนเข้าไปแล้วรอผลลัพธ์ (batch/offline processing) — ไม่จำเป็นต้องใช้ FPGA เพราะไม่มีเส้นตายเชิงเวลาต่อหน่วยข้อมูลที่ต้องรับประกัน</li>
+                    <li><strong>งานที่ต้องทำให้เสร็จภายในเวลาที่กำหนดต่อเนื่อง</strong> (deterministic deadline ต่อ sample/event เช่นกรณี FIR filter ข้างต้น) — เป็นลักษณะงานที่ควรประเมินสถาปัตยกรรมระดับ block-level แบบนี้ก่อนเริ่มออกแบบ เพราะการรับประกันความแน่นอนของเวลาเป็นจุดเด่นของการใช้ FPGA มาคำนวณ</li>
+                    <li><strong>งานที่ต้องทำหลาย operation พร้อมกัน</strong> — FPGA อาจเหมาะเมื่อสามารถใช้ parallelism และ pipeline เพื่อลดเวลาต่อข้อมูลได้จริง</li>
+                    <li><strong>งานที่ต้องเชื่อมต่อกับ I/O เฉพาะทาง</strong> — FPGA อาจช่วยรวม interface และ datapath ไว้ใน hardware เดียว แต่ก็ต้องชั่งน้ำหนักกับ resource และเวลาในการพัฒนา</li>
+                </ul>
+
+                <div class="callout-box callout-info">
+                    <div class="callout-title"><i class="bi bi-lightbulb-fill text-info me-2"></i>ข้อสังเกต: Hardware กับ Software</div>
+                    <div class="callout-content">
+                        <p>จะเห็นได้ว่าการใช้ FPGA ออกแบบงานลักษณะเดียวกันมักยุ่งยากกว่า software อยู่พอสมควร เพราะต้องคิดทั้งเรื่อง timing, FPGA resources, การจัดวางและการ route ของวงจร รวมถึงเส้นทางการเคลื่อนที่ของข้อมูลระหว่าง memory, datapath และ interface ต่าง ๆ จะเห็นได้ว่าการใช้ hardware คำนวณนั้น ไม่ได้จบแค่การเขียนสูตรคำนวณ แต่ต้องออกแบบว่าแต่ละส่วนจะทำงานเมื่อไหร่ ใช้ resource อะไร และส่งข้อมูลต่อกันอย่างไรด้วย</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center p-4 mt-5" style="background-color: #f8f9fa;">
+        <div class="container">
+            <p class="mb-0">Contact: <a href="https://www.facebook.com/wichayen.hong" target="_blank">Wichayen Hong on Facebook</a> | <a href="https://github.com/wichayen" target="_blank">GitHub</a> | <a href="https://www.linkedin.com/in/wichayen-luangsopapan-404133202/" target="_blank">LinkedIn</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

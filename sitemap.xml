@@ -41,11 +41,11 @@
 </url>
 <url>
 <loc>https://wichayen.github.io/fpgathailand/</loc>
-<lastmod>2026-09-07T07:42:00+07:00</lastmod>
+<lastmod>2026-09-18T14:00:00+07:00</lastmod>
 </url>
 <url>
 <loc>https://wichayen.github.io/fpgathailand/index.html</loc>
-<lastmod>2026-09-07T07:42:00+07:00</lastmod>
+<lastmod>2026-09-18T14:00:00+07:00</lastmod>
 </url>
 <url>
 <loc>https://wichayen.github.io/fpgathailand/pynq-z2-ai_th.html</loc>
@@ -77,7 +77,7 @@
 </url>
 <url>
 <loc>https://wichayen.github.io/fpgathailand/index_th.html</loc>
-<lastmod>2026-09-07T07:42:00+07:00</lastmod>
+<lastmod>2026-09-18T14:00:00+07:00</lastmod>
 </url>
 <url>
 <loc>https://wichayen.github.io/fpgathailand/index_en.html</loc>
@@ -170,5 +170,13 @@
 <url>
 <loc>https://wichayen.github.io/fpgathailand/coursecontent/chapter5-basic-simulation.html</loc>
 <lastmod>2026-09-07T07:31:14+07:00</lastmod>
+</url>
+<url>
+<loc>https://wichayen.github.io/fpgathailand/vhdl_code_coverage.html</loc>
+<lastmod>2026-09-18T14:00:00+07:00</lastmod>
+</url>
+<url>
+<loc>https://wichayen.github.io/fpgathailand/fir_filter_by_fpga.html</loc>
+<lastmod>2026-09-18T14:00:00+07:00</lastmod>
 </url>
 </urlset>
