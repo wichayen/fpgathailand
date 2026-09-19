@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mini2440 + FPGA: บันทึกการพัฒนา Embedded Linux, Debian, Qt และ Local Bus Interface</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            padding-top: 56px;
+        }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 0.5rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 6px;
+        }
+        pre {
+            background-color: #f8fafc;
+            padding: 16px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            border: 1px solid #e2e8f0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.92rem;
+            line-height: 1.5;
+            color: #1e293b;
+        }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 24px 0;
+            border-radius: 8px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        blockquote {
+            border-left: 4px solid #0284c7;
+            padding: 12px 18px;
+            color: #334155;
+            background-color: #f1f5f9;
+            border-radius: 4px;
+        }
+        .table-responsive {
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar navbar-expand-lg fixed-top site-nav">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <span class="navbar-brand-icon"><i class="bi bi-cpu"></i></span>
+                <span>FPGATHAILAND</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+                    <li class="nav-item"><a class="nav-link" href="index.html#work">ผลงานเด่น</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#articles">บทความและแล็บ</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBoards" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            แล็บบอร์ด
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownBoards">
+                            <li><a class="dropdown-item" href="coursecontent/chapter1-introduction-to-fpga.html"><i class="bi bi-book me-2"></i>คอร์สเรียน FPGA พื้นฐาน</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">PYNQ-Z2</h6></li>
+                            <li><a class="dropdown-item" href="pynq-z2-vivado_th.html"><i class="bi bi-cpu me-2"></i>Vivado Setup</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-hls_th.html"><i class="bi bi-lightning-charge me-2"></i>HLS Acceleration</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-ai_th.html"><i class="bi bi-robot me-2"></i>AI (DPU IP)</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-modelsim_th.html"><i class="bi bi-activity me-2"></i>Modelsim</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1.html"><i class="bi bi-display me-2"></i>LVGL ตอนที่ 1</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2.html"><i class="bi bi-display me-2"></i>LVGL ตอนที่ 2</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvlg_special_ep.html"><i class="bi bi-stars me-2"></i>Special: AI Agent</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">ARIES PCI Board</h6></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep1.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 1: ออกแบบโปรเจค</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep2.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 2: Version A.1</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep3.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 3: ออกแบบ FPGA</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep4.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 4: Linux PCI Driver</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep5.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 5: Windows PCI Driver</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">บอร์ดและเครื่องมืออื่นๆ</h6></li>
+                            <li><a class="dropdown-item" href="mini2440_th.html"><i class="bi bi-cpu me-2"></i>mini2440 + FPGA</a></li>
+                            <li><a class="dropdown-item" href="EZUSB_FPGA.html"><i class="bi bi-usb-symbol me-2"></i>EZUSB + FPGA</a></li>
+                            <li><a class="dropdown-item" href="GeminiBoard_Beaglebone_Frambuffer.html"><i class="bi bi-display me-2"></i>GeminiBoard Framebuffer</a></li>
+                            <li><a class="dropdown-item" href="Sigasi.html"><i class="bi bi-code-square me-2"></i>Sigasi for VS Code</a></li>
+                            <li><a class="dropdown-item" href="UVVM.html"><i class="bi bi-check2-circle me-2"></i>UVVM Verification</a></li>
+                            <li><a class="dropdown-item" href="AI_hardware.html"><i class="bi bi-robot me-2"></i>AI Hardware Control with MCP</a></li>
+                            <li><a class="dropdown-item" href="vhdl_code_coverage.html"><i class="bi bi-bar-chart-steps me-2"></i>VHDL Code Coverage</a></li>
+                            <li><a class="dropdown-item" href="fir_filter_by_fpga.html"><i class="bi bi-soundwave me-2"></i>FIR Filter on FPGA</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-info" href="index.html#articles"><i class="bi bi-grid-3x3-gap me-2"></i>ดูบทความทั้งหมด</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#contact">ติดต่อ</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto article-content">
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">หน้าแรก</a></li>
+                        <li class="breadcrumb-item"><a href="index.html#articles">บทความและแล็บ</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">mini2440 + FPGA</li>
+                    </ol>
+                </nav>
+
+                <h1 class="mb-3 text-dark fw-bold">mini2440 + FPGA: บันทึกการพัฒนา Embedded Linux, Debian, Qt และ Local Bus Interface</h1>
+                <p class="text-muted"><i class="bi bi-calendar-event me-2"></i>แล็บบันทึกการทดลองฮาร์ดแวร์และการพัฒนา Embedded System</p>
+                <hr class="mb-4">
+
+                <figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_051.jpg" alt="Picture 1">
+    
+</figure>
+<p class="mb-3">นานมาแล้ว ผู้เขียนเคยซื้อบอร์ด <strong>mini2440</strong> มาเล่น และนำไปต่อกับ FPGA ผ่าน Local bus ของบอร์ด โดยลงมือทำตั้งแต่ต้นจนจบ ทั้งการคอมไพล์ Linux kernel, ติดตั้ง Debian, port Qt ไปจนถึงเขียนโปรแกรมควบคุม FPGA และเขียนลอจิกฝั่ง FPGA เอง</p>
+<p class="mb-3">ปัจจุบันการสร้าง Embedded Linux ส่วนใหญ่หันไปใช้ Yocto กันแล้ว แต่ผู้เขียนเห็นว่าเนื้อหาชุดนี้ยังมีประโยชน์ ในแง่ความเข้าใจพื้นฐานว่าแต่ละชิ้นส่วนประกอบกันอย่างไร อีกอย่างคืออยากเก็บสิ่งที่เคยทำไว้ในที่ที่เปิดดูได้ง่าย จะได้ไม่ต้องไปรื้อหาในเครื่องตัวเองทุกครั้งที่อยากย้อนดูวิธีเก่า ๆ</p>
+<div class="alert alert-warning my-3 shadow-sm" role="alert">
+<div class="d-flex align-items-start">
+  <i class="bi bi-exclamation-triangle-fill me-2 fs-5 mt-1"></i>
+  <div class="w-100">
+<p class="mb-2">คำเตือน</p>
+<p class="mb-2">เนื้อหาในเอกสารนี้ค่อนข้างเก่า (Ubuntu 8.10, Debian lenny, Qt 4.6 ฯลฯ) อาจนำไปอ้างอิงกับงานปัจจุบันไม่ได้แล้ว</p>
+  </div>
+</div>
+</div>
+<p class="mb-3">นอกเรื่องผู้เขียนจำได้ว่าเคยนำ Android ลงบน mini2440 แล้วควบคุม FPGA ได้ด้วย แต่โน้ตวิธีทำหายไปแล้ว เหลือเพียงคลิปนี้ ^_^</p>
+<div class="video-container my-4 shadow-sm">
+    <iframe src="https://www.youtube.com/embed/020V84HB-E8" title="mini2440 FPGA Video Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+<p class="mb-3">เอาละครับ มาเริ่มกันเลย</p>
+<hr class="my-5">
+<h2 class="mt-5 mb-3 pt-2 text-primary border-bottom pb-2 fw-bold">1 การเตรียมสภาพแวดล้อม</h2>
+<p class="mb-3">การพัฒนาครั้งนี้ใช้ <strong>Ubuntu 8.10</strong> บน Windows สามารถรันได้ผ่านโปรแกรม <strong>VirtualBox</strong></p>
+<p class="mb-3"><strong>⚠️ หมายเหตุ</strong> — ความหมายของสัญลักษณ์ <code>$</code> และ <code>#</code> บน Ubuntu</p>
+<div class="table-responsive my-3"><table class="table table-bordered table-striped table-hover align-middle">
+  <thead class="table-dark">
+    <tr>
+      <th scope="col">Prompt</th>
+      <th scope="col">ผู้ใช้</th>
+      <th scope="col">ความหมายของ <code>~/</code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>$</code></td>
+      <td>user ทั่วไป</td>
+      <td><code>/home/<ชื่อผู้ใช้></code></td>
+    </tr>
+    <tr>
+      <td><code>#</code></td>
+      <td>root</td>
+      <td><code>/root/</code></td>
+    </tr>
+  </tbody>
+</table></div>
+<p class="mb-3">เมื่อพิมพ์คำสั่งต่อไปนี้ ให้สังเกตสัญลักษณ์ที่ระบุในเอกสารนี้ให้ดี</p>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">1.1 สร้างผู้ใช้ root บน Ubuntu</h3>
+<p class="mb-3">ต้องใช้ผู้ใช้ root ตอนสร้าง Debian file system เปิด Ubuntu แล้วคลิก Application &rarr; Accessories &rarr; Terminal จะได้ console จากนั้นสร้างรหัสผ่าน root ด้วยคำสั่งต่อไปนี้</p>
+<pre><code class="language-console">$ sudo passwd root
+[sudo] password for mini2440:      ← ป้อนรหัสผ่านที่ตั้งตอนติดตั้ง
+Enter new UNIX password:           ← ตั้งรหัสผ่านของ root
+Retype new UNIX password:
+passwd: password updated successfully</code></pre>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">1.2 ติดตั้งแพ็กเกจ apt-get ที่จำเป็น</h3>
+<p class="mb-3">ติดตั้งแพ็กเกจ apt-get ต่อไปนี้ใน console</p>
+<pre><code class="language-bash">sudo apt-get update
+sudo apt-get install build-essential
+sudo apt-get install git-core
+sudo apt-get install zlib1g-dev
+sudo apt-get install libsdl-console-dev
+sudo apt-get install debootstrap
+sudo apt-get install cvs
+sudo apt-get install cvsnt
+sudo apt-get install libtool
+sudo apt-get install automake</code></pre>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">1.3 ติดตั้ง cross compiler</h3>
+<p class="mb-3">mini2440 ใช้ชิป ARM จึงต้องมี cross compiler เปิด console พิมพ์ <code>su</code> แล้วใส่รหัสผ่าน root จากนั้นพิมพ์คำสั่งต่อไปนี้</p>
+<pre><code class="language-console">$ su
+Password:
+
+# cd /opt
+# wget http://qtextended.org/downloads/toolchains/arm920t-eabi.tgz    → ดาวน์โหลด cross compiler
+# tar xzvf arm920t-eabi.tgz -C /</code></pre>
+<p class="mb-3">กด <code>Ctrl+D</code> เพื่อออกจาก root แล้วเพิ่ม PATH ด้วย user ปกติ</p>
+<pre><code class="language-bash">echo &quot;export PATH=$PATH:/opt/toolchains/arm920t-eabi/bin&quot; &gt;&gt; .bashrc</code></pre>
+<p class="mb-3">จากนั้นปิด console แล้วเปิดใหม่ พิมพ์ <code>arm-angstrom-linux-gnueabi-gcc -v</code> ถ้าแสดงผลดังภาพด้านล่างถือว่าใช้ได้</p>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_004.png" alt="Picture 49">
+    
+</figure>
+<hr class="my-5">
+<h2 class="mt-5 mb-3 pt-2 text-primary border-bottom pb-2 fw-bold">2 การคอมไพล์ U-boot และการเขียนลงบอร์ด</h2>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">2.1 ดาวน์โหลด source ของ U-boot</h3>
+<pre><code class="language-bash">cd ~/
+mkdir uboot
+cd uboot
+git clone git://repo.or.cz/u-boot-openmoko/mini2440.git</code></pre>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">2.2 คอมไพล์ U-boot</h3>
+<pre><code class="language-bash">export CROSS_COMPILE=arm-angstrom-linux-gnueabi-
+cd mini2440
+make mini2440_config
+make all</code></pre>
+<p class="mb-3">จะได้ไฟล์ <code>u-boot.bin</code></p>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_005.png" alt="Picture 48">
+    
+</figure>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">2.3 เขียน U-boot ลง mini2440</h3>
+<div class="d-flex align-items-start mb-2 mt-3">
+    <span class="badge bg-primary me-2 mt-1 px-2 py-1">1</span>
+    <div>ตั้ง baud rate ของ Tera Term เป็น <strong>115200</strong> และตั้ง boot mode ของ mini2440 เป็น <strong>NOR flash</strong></div>
+</div>
+<div class="d-flex align-items-start mb-2 mt-3">
+    <span class="badge bg-primary me-2 mt-1 px-2 py-1">2</span>
+    <div>ต่อพอร์ต USB device ของ mini2440 เข้ากับพีซี แล้วเปิดเครื่อง</div>
+</div>
+<div class="d-flex align-items-start mb-2 mt-3">
+    <span class="badge bg-primary me-2 mt-1 px-2 py-1">3</span>
+    <div>เมื่อขึ้น <code>Enter your selection:</code> ให้กด <code>q</code></div>
+</div>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_006.png" alt="Picture 47">
+    
+</figure>
+<div class="d-flex align-items-start mb-2 mt-3">
+    <span class="badge bg-primary me-2 mt-1 px-2 py-1">4</span>
+    <div>ใน Tera Term พิมพ์คำสั่งด้านล่าง (<code>240500</code> คือขนาดไฟล์ ให้ใส่ค่าที่ตรงกับไฟล์ของตนเอง)</div>
+</div>
+<pre><code class="language-console">   Supervivi&gt; load flash 0 240500 u      → 240500 คือขนาดไฟล์ ให้ใส่ค่าที่ตรงกับไฟล์ของตนเอง</code></pre>
+<div class="d-flex align-items-start mb-2 mt-3">
+    <span class="badge bg-primary me-2 mt-1 px-2 py-1">5</span>
+    <div>บนพีซี Windows เปิด <code>DNW.exe</code> แล้วเลือก USB Port &rarr; Transmit/Restore เพื่อส่งไฟล์ <code>u-boot.bin</code> ที่คอมไพล์ไว้</div>
+</div>
+<p class="mb-3">(ดาวน์โหลด <code>DNW.exe</code> ได้ที่ <a href="http://www.csun.co.jp/hpgen/HPB/entries/1.html" target="_blank" rel="noopener noreferrer">http://www.csun.co.jp/hpgen/HPB/entries/1.html</a>)</p>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_007.png" alt="Picture 46">
+    
+</figure>
+<div class="d-flex align-items-start mb-2 mt-3">
+    <span class="badge bg-primary me-2 mt-1 px-2 py-1">6</span>
+    <div>เมื่อส่งเสร็จ ปิดเครื่อง แล้วตั้ง boot mode เป็น <strong>NAND Flash</strong></div>
+</div>
+<div class="d-flex align-items-start mb-2 mt-3">
+    <span class="badge bg-primary me-2 mt-1 px-2 py-1">7</span>
+    <div>ใช้คำสั่ง <code>nand scrub</code> และ <code>nand createbbt</code> เพื่อสร้าง bbt (Bad Block Table)</div>
+</div>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_008.png" alt="Picture 45">
+    
+</figure>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_009.png" alt="Picture 44">
+    
+</figure>
+<div class="alert alert-warning my-3 shadow-sm" role="alert">
+<div class="d-flex align-items-start">
+  <i class="bi bi-exclamation-triangle-fill me-2 fs-5 mt-1"></i>
+  <div class="w-100">
+<p class="mb-2"><strong>⚠️ ข้อควรระวัง</strong> — การรัน <code>nand scrub</code> และ <code>nand createbbt</code> จะ<strong>ลบข้อมูลใน NAND Flash ทั้งหมด</strong> จึงต้องตั้ง boot mode เป็น NOR Flash อีกครั้ง แล้วเขียน <code>u-boot.bin</code> ใหม่ จากนั้นจึงเปลี่ยน boot mode กลับเป็น NAND Flash</p>
+  </div>
+</div>
+</div>
+<div class="d-flex align-items-start mb-2 mt-3">
+    <span class="badge bg-primary me-2 mt-1 px-2 py-1">8</span>
+    <div>เพื่อให้เก็บพารามิเตอร์ได้ ให้พิมพ์ดังนี้</div>
+</div>
+<pre><code class="language-console">   MINI2440 # dynenv set 40000
+   MINI2440 # saveenv</code></pre>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_010.png" alt="Picture 43">
+    
+</figure>
+<hr class="my-5">
+<h2 class="mt-5 mb-3 pt-2 text-primary border-bottom pb-2 fw-bold">3 การคอมไพล์ Linux kernel (uImage)</h2>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">3.1 ดาวน์โหลด source ของ kernel</h3>
+<pre><code class="language-bash">cd ~/
+mkdir kernel
+cd kernel
+git clone git://repo.or.cz/linux-2.6/mini2440.git
+cd mini2440</code></pre>
+<p class="mb-3">source ของ kernel มีบั๊ก ให้เปิดไฟล์ <code>drivers/video/fbmem.c</code> แล้วเพิ่ม <code>return 0;</code> ต่อจาก <code>case FBIOPUT_VSCREENINFO:</code></p>
+<pre><code class="language-bash">gedit drivers/video/fbmem.c</code></pre>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_011.png" alt="Picture 42">
+    
+</figure>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">3.2 คอมไพล์ kernel</h3>
+<p class="mb-3">คอมไพล์ kernel ใน console</p>
+<pre><code class="language-bash">cd ~/kernel/mini2440
+mkdir -p ../kernel-bin
+CROSS_COMPILE=arm-angstrom-linux-gnueabi- ARCH=arm make O=../kernel-bin/ mini2440_defconfig
+CROSS_COMPILE=arm-angstrom-linux-gnueabi- ARCH=arm make O=../kernel-bin/</code></pre>
+<p class="mb-3">จากนั้นสร้าง lib modules (ใช้ตอนสร้าง Debian file system)</p>
+<pre><code class="language-bash">mkdir -p ../kernel-modules
+CROSS_COMPILE=arm-angstrom-linux-gnueabi- ARCH=arm make O=../kernel-bin/ INSTALL_MOD_PATH=../kernel-modules modules_install</code></pre>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">3.3 แปลงเป็น uImage</h3>
+<p class="mb-3">kernel ที่คอมไพล์ได้เป็น <code>zImage</code> แต่การใช้งานร่วมกับ u-boot ต้องแปลงเป็น <code>uImage</code></p>
+<pre><code class="language-bash">~/uboot/mini2440/tools/mkimage -A arm -O linux -T kernel -C none -a 0x30008000 -e 0x30008000 -d ../kernel-bin/arch/arm/boot/zImage uImage</code></pre>
+<hr class="my-5">
+<h2 class="mt-5 mb-3 pt-2 text-primary border-bottom pb-2 fw-bold">4 การสร้าง Debian file system</h2>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">4.1 เตรียม SD card</h3>
+<p class="mb-3">ใช้ SD card ขนาด 2GB และฟอร์แมตดังนี้</p>
+<div class="table-responsive my-3"><table class="table table-bordered table-striped table-hover align-middle">
+  <thead class="table-dark">
+    <tr>
+      <th scope="col">Partition</th>
+      <th scope="col">File system</th>
+      <th scope="col">ขนาด</th>
+      <th scope="col">ใช้เก็บ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>FAT32</td>
+      <td>512MB</td>
+      <td>uImage</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>ext3</td>
+      <td>1GB</td>
+      <td>root file system</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>linux-swap</td>
+      <td>ส่วนที่เหลือ</td>
+      <td>swap</td>
+    </tr>
+  </tbody>
+</table></div>
+<div class="d-flex align-items-start mb-2 mt-3">
+    <span class="badge bg-primary me-2 mt-1 px-2 py-1">1</span>
+    <div>ในการตั้งค่า VirtualBox ที่หัวข้อ USB คลิก "เพิ่มตัวกรองเปล่า" จะปรากฏ "ตัวกรองใหม่ 1"</div>
+</div>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_012.jpg" alt="Picture 41">
+    
+</figure>
+<div class="d-flex align-items-start mb-2 mt-3">
+    <span class="badge bg-primary me-2 mt-1 px-2 py-1">2</span>
+    <div>เปิด Ubuntu แล้วเสียบ SD card เข้าพีซีจะมองเห็น SD card (ถ้าไม่เห็น ให้ปิดโปรแกรมแล้วให้ Windows จดจำก่อน จากนั้นให้ Ubuntu จดจำอีกครั้ง) คลิกขวาแล้วเลือก "Unmount Volume"</div>
+</div>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_013.jpg" alt="Picture 40">
+    
+</figure>
+<div class="d-flex align-items-start mb-2 mt-3">
+    <span class="badge bg-primary me-2 mt-1 px-2 py-1">3</span>
+    <div>ติดตั้ง Partition Editor เพื่อแบ่งพาร์ติชันของ SD card</div>
+</div>
+<pre><code class="language-bash">   sudo apt-get install gparted</code></pre>
+<div class="d-flex align-items-start mb-2 mt-3">
+    <span class="badge bg-primary me-2 mt-1 px-2 py-1">4</span>
+    <div>คลิก System &rarr; Administration &rarr; Partition Editor เลือก <code>/dev/sdd</code> (แตกต่างกันไปตามเครื่อง ให้เลือกอุปกรณ์ของ SD card ตนเอง)</div>
+</div>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_014.png" alt="Picture 39">
+    
+</figure>
+<div class="d-flex align-items-start mb-2 mt-3">
+    <span class="badge bg-primary me-2 mt-1 px-2 py-1">5</span>
+    <div>คลิก Device &rarr; Create partition table เพื่อฟอร์แมต SD card จากนั้นคลิก New เพื่อสร้าง Partition 1</div>
+</div>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_015.png" alt="Picture 38">
+    
+</figure>
+<div class="d-flex align-items-start mb-2 mt-3">
+    <span class="badge bg-primary me-2 mt-1 px-2 py-1">6</span>
+    <div>ตั้ง "New Size" เป็น 512 และ Filesystem เป็น fat32 แล้วคลิก "Add"</div>
+</div>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_016.png" alt="Picture 37">
+    
+</figure>
+<div class="d-flex align-items-start mb-2 mt-3">
+    <span class="badge bg-primary me-2 mt-1 px-2 py-1">7</span>
+    <div>คลิก "Apply"</div>
+</div>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_017.png" alt="Picture 36">
+    
+</figure>
+<div class="d-flex align-items-start mb-2 mt-3">
+    <span class="badge bg-primary me-2 mt-1 px-2 py-1">8</span>
+    <div>สร้าง Partition 2 และ 3 ด้วยวิธีเดียวกัน</div>
+</div>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_018.png" alt="Picture 35">
+    
+</figure>
+<div class="alert alert-warning my-3 shadow-sm" role="alert">
+<div class="d-flex align-items-start">
+  <i class="bi bi-exclamation-circle-fill me-2 fs-5 mt-1"></i>
+  <div class="w-100">
+<p class="mb-2"><strong>⚠️ หมายเหตุ</strong> — SD card แบบ <strong>SDHC ยังไม่รองรับ</strong> หากต้องการใช้ SDHC ต้องใช้ patch ของ u-boot โดยก่อนรัน <code>make all</code> ในขั้นตอนคอมไพล์ u-boot ให้ทำดังนี้</p>
+<pre><code class="language-bash">patch -p1 &lt; s3c24xx_mci_SDHC.patch
+make all</code></pre>
+  </div>
+</div>
+</div>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">4.2 ติดตั้ง file system</h3>
+<p class="mb-3"><strong>ดาวน์โหลด Debian file system</strong></p>
+<pre><code class="language-bash">mkdir ~/armel-rootfs
+sudo debootstrap --arch=armel --include=ifupdown,udev,procps,netbase,vim-tiny,module-init-tools,wget,openssh-server,screen,apmd --foreign lenny ~/armel-rootfs http://ftp.de.debian.org/debian
+cd ~/armel-rootfs
+tar cfjv ../armel-rootfs.tar.bz2 *
+cd ..</code></pre>
+<p class="mb-3"><strong>สร้างจุด mount</strong></p>
+<pre><code class="language-bash">sudo mkdir /mnt/sdb1
+sudo mkdir /mnt/sdb2</code></pre>
+<p class="mb-3"><strong>คัดลอก uImage ไปที่ Partition 1 ของ SD card (Windows FAT32)</strong></p>
+<pre><code class="language-bash">sudo mount /dev/sdd1 /mnt/sdb1
+sudo cp ~/kernel/mini2440/uImage /mnt/sdb1
+sync</code></pre>
+<p class="mb-3"><strong>คัดลอก armel-rootfs ที่ดาวน์โหลดไว้ไปที่ Partition 2 (Linux ext3)</strong></p>
+<pre><code class="language-bash">sudo mount /dev/sdd2 /mnt/sdb2
+cd /mnt/sdb2
+sudo tar -xpjvf ~/armel-rootfs.tar.bz2
+sync</code></pre>
+<p class="mb-3"><strong>คัดลอก lib modules ไปที่ Partition 2 (Linux ext3)</strong></p>
+<pre><code class="language-bash">sudo cp -Rp ~/kernel/kernel-modules/lib/* /mnt/sdb2/lib
+sync
+cd /</code></pre>
+<p class="mb-3"><strong>ตั้งค่าสภาพแวดล้อมด้วยคำสั่งต่อไปนี้</strong></p>
+<pre><code class="language-console">$ su
+# cd /mnt/sdb2
+# echo &quot;proc /proc proc none 0 0&quot; &gt;&gt; etc/fstab
+# echo &quot;mini2440&quot; &gt; etc/hostname
+# echo &#x27;127.0.0.1 localhost.localdomain localhost&#x27; &gt; etc/hosts
+# mknod dev/console c 5 1
+# echo &#x27;deb http://ftp.de.debian.org/debian lenny main&#x27; &gt; etc/apt/sources.list
+# cd /
+
+# umount /mnt/sdb1
+# umount /mnt/sdb2</code></pre>
+<p class="mb-3">ถอด SD card แล้วเสียบเข้า mini2440 เปิดเครื่อง แล้วตั้งค่าใน Tera Term ดังนี้</p>
+<pre><code class="language-console">MINI2440 # setenv bootcmd &#x27;mmcinit ; fatload mmc 0:1 0x31000000 uimage ; bootm 0x31000000&#x27;
+MINI2440 # setenv bootargs &#x27;console=ttySAC0,115200 noinitrd root=/dev/mmcblk0p2 rootwait=4 rw ip=dhcp init=/bin/sh&#x27;
+MINI2440 # boot</code></pre>
+<p class="mb-3">Linux จะบูตขึ้นมา รอจนขึ้น <code>sh-3.2#</code> แล้วพิมพ์คำสั่งต่อไปนี้</p>
+<pre><code class="language-console">sh-3.2# mount /proc /proc -t proc
+sh-3.2# export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+sh-3.2# /debootstrap/debootstrap --second-stage
+
+I: Installing core packages...
+I: Unpacking required packages...
+I: Unpacking libacl1...
+I: Unpacking libattr1...
+..................
+..................
+
+sh-3.2#          ← รอจนกลับมาที่ prompt นี้</code></pre>
+<p class="mb-3">ปิดเครื่อง mini2440 แล้วเสียบ SD card เข้าพีซีอีกครั้ง</p>
+<pre><code class="language-console">$ sudo mount /dev/sdd2 /mnt/sdb2
+$ su
+# cd /mnt/sdb2
+
+# mknod dev/ttySAC0 c 204 64
+# echo ttySAC0 &gt;&gt; etc/securetty
+# printf &quot;T0:123:respawn:/sbin/getty 115200 ttySAC0\n&quot; &gt;&gt; etc/inittab
+# printf &quot;auto eth0\niface eth0 inet dhcp\n&quot; &gt;&gt; etc/network/interfaces
+
+# printf &quot;nameserver 192.168.1.1&quot; &gt;&gt; etc/resolv.conf
+
+# cd /
+
+# umount /mnt/sdb2</code></pre>
+<p class="mb-3">ถอด SD card จากพีซีแล้วเสียบกลับเข้า mini2440 เปิดเครื่อง แล้วตั้งค่าพารามิเตอร์ของ u-boot ดังนี้</p>
+<pre><code class="language-console">MINI2440 # setenv bootcmd &#x27;mmcinit ; fatload mmc 0:1 0x31000000 uimage ; bootm 0x31000000&#x27;
+MINI2440 # setenv bootargs &#x27;console=ttySAC0,115200n8 rootdelay=3 root=/dev/mmcblk0p2 rw rootfstype=ext3 rootwait=4&#x27;
+MINI2440 # saveenv      → บันทึกพารามิเตอร์
+MINI2440 # boot         → บูต</code></pre>
+<p class="mb-3">รอจนขึ้นข้อความด้านล่าง แล้วล็อกอินด้วย <code>root</code> ก็จะใช้งาน Linux ได้</p>
+<pre><code class="language-text">...................................................
+
+Debian GNU/Linux 5.0 mini2440 ttySAC0
+
+mini2440 login:</code></pre>
+<p class="mb-3"><strong>กรณีขึ้นคำเตือน <code>.udev/ already exists on the static /dev! (warning).</code> ตอนบูต</strong></p>
+<p class="mb-3">เสียบ SD card เข้าพีซี แล้วรันคำสั่งต่อไปนี้บน Ubuntu คำเตือนจะหายไป</p>
+<pre><code class="language-bash">sudo mount /dev/sdd2 /mnt/sdb2
+sudo rm -Rf /mnt/sdb2/dev/.udev
+sudo umount /mnt/sdb2</code></pre>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_019.jpg" alt="Picture 34">
+    
+</figure>
+<p class="mb-3"><strong>ตรวจสอบ Swap</strong></p>
+<p class="mb-3">ใช้คำสั่ง <code>free</code> ตรวจสอบว่ามี Swap หรือไม่</p>
+<pre><code class="language-console">mini2440:~# free</code></pre>
+<p class="mb-3">ถ้าไม่มี Swap ให้หา partition swap ของ SD card ด้วย <code>fdisk -l</code> แล้วเปิดใช้งาน Swap</p>
+<pre><code class="language-console">mini2440:~# fdisk -l
+mini2440:~# mkswap /dev/mmcblk0p3      → สร้าง Swap
+mini2440:~# swapon /dev/mmcblk0p3      → เปิดใช้งาน Swap
+mini2440:~# free                       → ตรวจสอบ Swap อีกครั้ง</code></pre>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_020.jpg" alt="Picture 33">
+    
+</figure>
+<hr class="my-5">
+<h2 class="mt-5 mb-3 pt-2 text-primary border-bottom pb-2 fw-bold">5 บูตจากเครือข่าย (Network boot)</h2>
+<p class="mb-3">ระหว่างพัฒนา การบูตจากเครือข่ายได้จะสะดวกมาก ดังนั้นในที่นี้จะติดตั้ง <strong>TFTP server</strong> และ <strong>NFS server</strong> แล้วให้ดาวน์โหลด uImage และ file system จากเซิร์ฟเวอร์เพื่อบูต</p>
+<p class="mb-3">ก่อนอื่น เปลี่ยนการตั้งค่าเครือข่ายของ VirtualBox เป็น "<strong>Bridged Adapter</strong>" (ตัวแปลงบริดจ์)</p>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_021.jpg" alt="Picture 32">
+    
+</figure>
+<p class="mb-3">หลังเปลี่ยนแล้ว ให้ตรวจสอบ IP address ด้วย <code>ifconfig</code></p>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_022.png" alt="Picture 31">
+    
+</figure>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">4.3 ติดตั้ง tftp server</h3>
+<p class="mb-3">ใน console ของ Ubuntu</p>
+<pre><code class="language-bash">sudo apt-get install xinetd tftpd tftp</code></pre>
+<p class="mb-3">สร้างไฟล์ <code>/etc/xinetd.d/tftp</code> (<code>sudo gedit /etc/xinetd.d/tftp</code>) แล้วเขียนเนื้อหาดังนี้</p>
+<pre><code class="language-text">service tftp
+{
+    protocol        = udp
+    port            = 69
+    socket_type     = dgram
+    wait            = yes
+    user            = nobody
+    server          = /usr/sbin/in.tftpd
+    server_args     = /tftpboot
+    disable         = no
+}</code></pre>
+<p class="mb-3">สร้างไดเรกทอรี <code>/tftpboot</code> แล้วคัดลอก uImage ไปไว้ที่นั่น</p>
+<pre><code class="language-bash">sudo mkdir /tftpboot
+sudo chmod -R 777 /tftpboot
+sudo chown -R nobody /tftpboot
+
+cp ~/kernel/mini2440/uImage /tftpboot/</code></pre>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">4.4 ติดตั้ง nfs server</h3>
+<p class="mb-3">ใน console ของ Ubuntu</p>
+<pre><code class="language-bash">sudo apt-get install nfs-kernel-server nfs-common portmap</code></pre>
+<p class="mb-3">สร้างไดเรกทอรี <code>/nfs/home</code> แล้วคัดลอก Debian file system ไปไว้ที่นั่น</p>
+<pre><code class="language-bash">sudo mkdir -p /nfs/home
+sudo chown nobody:nogroup /nfs/home
+sudo chmod 777 /nfs
+sudo chmod 777 /nfs/home</code></pre>
+<p class="mb-3">เพิ่มบรรทัดต่อไปนี้ลงในไฟล์ <code>/etc/exports</code> (<code>sudo gedit /etc/exports</code>)</p>
+<pre><code class="language-text">/nfs/home     192.168.1.0/255.255.255.0(rw,sync,no_root_squash,no_subtree_check)</code></pre>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_023.png" alt="Picture 30">
+    
+</figure>
+<pre><code class="language-bash">sudo exportfs -a</code></pre>
+<p class="mb-3">คัดลอก Debian file system จาก SD card ไปที่ <code>/nfs/home</code></p>
+<pre><code class="language-bash">sudo mount /dev/sdd2 /mnt/sdb2
+cd /mnt/sdb2
+sudo cp -Rpf * /nfs/home/</code></pre>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">4.5 ตั้งค่าการบูตจากเครือข่าย</h3>
+<p class="mb-3">แก้ไขไฟล์ <code>/nfs/home/etc/network/interfaces</code> (<code>sudo gedit /nfs/home/etc/network/interfaces</code>) ดังนี้</p>
+<pre><code class="language-text">auto eth0
+#iface eth0 inet dhcp
+iface eth0 inet manual</code></pre>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_024.png" alt="Picture 29">
+    
+</figure>
+<p class="mb-3">เริ่มการทำงานของ TFTP และ NFS server</p>
+<pre><code class="language-bash">sudo /etc/init.d/xinetd restart</code></pre>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_025.png" alt="Picture 28">
+    
+</figure>
+<p class="mb-3">ตรวจสอบ IP address ของ Ubuntu ด้วย <code>ifconfig</code> แล้วตั้งพารามิเตอร์ network boot ของ u-boot</p>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_026.png" alt="Picture 27">
+    
+</figure>
+<p class="mb-3">เปิดเครื่อง mini2440 แล้วตั้งพารามิเตอร์ดังนี้ (เปลี่ยน IP address ให้ตรงกับของตนเอง)</p>
+<pre><code class="language-console">MINI2440 # setenv ipaddr 192.168.1.15      → ระบุ IP ของ mini2440 (ให้ตรวจสอบล่วงหน้าว่า IP นี้ยังไม่ถูกใช้)
+MINI2440 # setenv gatewayip 192.168.1.1
+MINI2440 # setenv bootcmd &#x27;tftpboot 0x31000000 192.168.1.6:uImage ; bootm 0x31000000&#x27;
+MINI2440 # setenv bootargs &#x27;console=ttySAC0,115200 noinitrd init=/sbin/init mini2440=0tb root=/dev/nfs rw nfsroot=192.168.1.6:/nfs/home ip=dhcp&#x27;
+MINI2440 # saveenv
+MINI2440 # boot</code></pre>
+<p class="mb-3">uImage จะถูกดาวน์โหลดจาก TFTP server ส่วน file system จะถูกดาวน์โหลดจาก NFS</p>
+<p class="mb-3">โครงสร้างการตั้งค่าปัจจุบันเป็นดังนี้</p>
+<hr class="my-5">
+<h2 class="mt-5 mb-3 pt-2 text-primary border-bottom pb-2 fw-bold">5 การ port Qt</h2>
+<p class="mb-3">ตั้งแต่หัวข้อนี้จนจบเอกสาร จะใช้ TFTP และ NFS server เพื่อให้พัฒนาได้สะดวก ดังนั้น root ของ mini2440 คือ <code>/nfs/home</code> บน Ubuntu</p>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">5.1 ติดตั้งไลบรารี touch panel</h3>
+<p class="mb-3">เปิดเครื่อง mini2440 แล้วพิมพ์คำสั่งต่อไปนี้ใน Tera Term</p>
+<p class="mb-3">ตรวจสอบ <code>sources.list</code> ว่ามีบรรทัด <code>deb http://ftp.de.debian.org/debian lenny main</code> หรือไม่</p>
+<pre><code class="language-console">mini2440:~# cat /etc/apt/sources.list</code></pre>
+<p class="mb-3">ถ้ายังไม่มีบรรทัดดังกล่าว ให้เพิ่มด้วยคำสั่งนี้</p>
+<pre><code class="language-console">mini2440:~# echo &#x27;deb http://ftp.de.debian.org/debian lenny main&#x27; &gt;&gt; /etc/apt/sources.list</code></pre>
+<p class="mb-3">จากนั้นติดตั้งไลบรารี touch ด้วยคำสั่งต่อไปนี้</p>
+<pre><code class="language-console">mini2440:~# apt-get update
+mini2440:~# apt-get install xserver-xorg-input-tslib
+mini2440:~# apt-get install libts-bin</code></pre>
+<p class="mb-3">เมื่อเสร็จแล้วให้รีบูต หนึ่งครั้ง แล้วพิมพ์คำสั่งต่อไปนี้เพื่อทดสอบ touch panel</p>
+<pre><code class="language-console">mini2440:~# export TSLIB_TSEVENTTYPE=input
+mini2440:~# export TSLIB_CONSOLEDEVICE=none
+mini2440:~# export TSLIB_FBDEVICE=/dev/fb0
+mini2440:~# export TSLIB_TSDEVICE=/dev/input/event1
+mini2440:~# export TSLIB_CALIBFILE=/etc/pointercal
+mini2440:~# export TSLIB_CONFFILE=/etc/ts.conf
+mini2440:~# export TSLIB_PLUGINDIR=/usr/lib/ts
+
+mini2440:~# ts_calibrate</code></pre>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_006.png" alt="Picture 26">
+    
+</figure>
+<p class="mb-3">ถ้าใช้คำสั่ง <code>ts_calibrate</code> ได้แล้ว ให้เพิ่มเนื้อหาของ <code>export</code> ข้างต้นลงในไฟล์ <code>/etc/profile</code> เพื่อให้ใช้ <code>ts_calibrate</code> ได้โดยไม่ต้อง export ทุกครั้ง</p>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_027.png" alt="Picture 25">
+    
+</figure>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">5.2 ดาวน์โหลดและคอมไพล์ Qt</h3>
+<p class="mb-3">การคอมไพล์ Qt ต้องมีไลบรารี touch ก่อน ให้ดาวน์โหลดและคอมไพล์ <strong>tslib</strong></p>
+<p class="mb-3">(ตัวที่คอมไพล์ในขั้นตอนนี้ไม่ได้ถูกนำไปใช้งานจริง แต่จำเป็นตอนคอมไพล์ Qt ส่วนไลบรารี touch ที่ใช้งานจริงคือตัวที่ติดตั้งด้วย <code>apt-get install xserver-xorg-input-tslib</code> และ <code>apt-get install libts-bin</code>)</p>
+<pre><code class="language-console">$ cd ~/
+$ mkdir tslib
+$ cd tslib
+$ export CVSROOT=:pserver:anoncvs@cvs.handhelds.org:/cvs
+$ cvs login                 ← รหัสผ่านคือ anoncvs
+$ cvs co apps/tslib
+
+$ export ac_cv_func_malloc_0_nonnull=yes
+
+$ cd ~/tslib/apps/tslib
+$ ./autogen.sh
+$ CC=arm-angstrom-linux-gnueabi-gcc CXX=arm-angstrom-linux-gnueabi-g++ ./configure --build=i386-linux --host=arm-linux --target=arm --disable-inputapi --prefix=$PWD/build
+$ make
+$ make install</code></pre>
+<p class="mb-3"><strong>ดาวน์โหลด source ของ Qt</strong></p>
+<pre><code class="language-bash">cd ~/
+mkdir qt4.6
+cd qt4.6
+wget http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.6.0.tar.gz
+tar xvzf qt-everywhere-opensource-src-4.6.0.tar.gz
+cd qt-everywhere-opensource-src-4.6.0</code></pre>
+<p class="mb-3">ตั้งค่าพารามิเตอร์ในไฟล์ <code>mkspecs/qws/linux-arm-g++/qmake.conf</code> ดังนี้</p>
+<pre><code class="language-makefile">QMAKE_CC                = arm-angstrom-linux-gnueabi-gcc
+QMAKE_CXX               = arm-angstrom-linux-gnueabi-g++
+QMAKE_LINK              = arm-angstrom-linux-gnueabi-g++
+QMAKE_LINK_SHLIB        = arm-angstrom-linux-gnueabi-g++
+QMAKE_AR                = arm-angstrom-linux-gnueabi-ar cqs
+QMAKE_OBJCOPY           = arm-angstrom-linux-gnueabi-objcopy
+QMAKE_STRIP             = arm-angstrom-linux-gnueabi-strip
+QMAKE_INCDIR            = /home/hong/tslib/apps/tslib/build/include   # แก้ให้ตรงกับตำแหน่ง tslib ของตนเอง
+QMAKE_LIBDIR            = /home/hong/tslib/apps/tslib/build/lib       # แก้ให้ตรงกับตำแหน่ง tslib ของตนเอง
+LIBS                    += -lts</code></pre>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_028.png" alt="Picture 24">
+    
+</figure>
+<p class="mb-3"><strong>คอมไพล์ Qt</strong></p>
+<pre><code class="language-bash">cd ~/qt4.6/qt-everywhere-opensource-src-4.6.0
+
+./configure -embedded arm -xplatform qws/linux-arm-g++ -prefix /usr/local/Qt -qt-mouse-tslib -little-endian -qt-gfx-transformed -qt-gfx-linuxfb -qt-gfx-vnc -qt-kbd-linuxinput</code></pre>
+<p class="mb-3">ระบบจะถามคำถามต่อไปนี้</p>
+<pre><code class="language-text">Type &#x27;c&#x27; if you want to use the Commercial Edition.
+Type &#x27;o&#x27; if you want to use the Open Source Edition</code></pre>
+<p class="mb-3">ตอบ <code>o</code> จากนั้นจะถามต่อ</p>
+<pre><code class="language-text">Type &#x27;3&#x27; to view the GNU General Public License version 3.
+Type &#x27;L&#x27; to view the Lesser GNU General Public License version 2.1.
+Type &#x27;yes&#x27; to accept this license offer.
+Type &#x27;no&#x27; to decline this license offer.
+
+Do you accept the terms of either license?</code></pre>
+<p class="mb-3">ตอบ <code>yes</code></p>
+<pre><code class="language-console">$ make                 → ใช้เวลานาน (ประมาณ 3 ชั่วโมง)
+$ sudo make install</code></pre>
+<p class="mb-3">ผลลัพธ์ที่คอมไพล์แล้วจะถูกติดตั้งไว้ที่ <code>/usr/local/Qt</code></p>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">5.3 ติดตั้ง Qt ลง Debian</h3>
+<pre><code class="language-bash">export MINI2440FS=&quot;/nfs/home&quot;
+sudo cp -Rpf /usr/local/Qt $MINI2440FS/usr/local/Qt
+sudo cp -p /opt/toolchains/arm920t-eabi/arm-angstrom-linux-gnueabi/lib/libstdc++.so* $MINI2440FS/usr/local/Qt/lib</code></pre>
+<p class="mb-3">เพิ่มบรรทัดต่อไปนี้ลงในไฟล์ <code>$MINI2440FS/etc/profile</code></p>
+<pre><code class="language-bash">export QWS_MOUSE_PROTO=tslib:/dev/input/event1
+export QTDIR=/usr/local/Qt</code></pre>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_029.png" alt="Picture 23">
+    
+</figure>
+<p class="mb-3">เริ่มการทำงานของ TFTP และ NFS server บน Ubuntu (<code>sudo /etc/init.d/xinetd restart</code>) เปิดเครื่อง mini2440 ตั้งพารามิเตอร์ boot จากเครือข่ายไว้ แล้วบูต จากนั้นพิมพ์ใน Tera Term</p>
+<pre><code class="language-console">mini2440:~# cd /usr/local/Qt/demos/embedded/fluidlauncher
+mini2440:/usr/local/Qt/demos/embedded/fluidlauncher# ./fluidlauncher -qws</code></pre>
+<p class="mb-3">จะแสดงหน้าจอดังภาพด้านล่าง</p>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_030.jpg" alt="Picture 22">
+    
+</figure>
+<hr class="my-5">
+<h2 class="mt-5 mb-3 pt-2 text-primary border-bottom pb-2 fw-bold">6 สื่อสารกับ FPGA ผ่าน Local bus (Memory Controller) บน Linux</h2>
+<p class="mb-3">ก่อนอื่นสร้างโฟลเดอร์สำหรับทดสอบ ใน console ของ Ubuntu</p>
+<pre><code class="language-bash">mkdir /nfs/home/test</code></pre>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">6.1 แสดง Hello world</h3>
+<p class="mb-3">สร้างไฟล์ <code>hello.c</code> โดยมีเนื้อหาดังนี้</p>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+int main(void) {
+    printf(&quot;hello, FriendlyARM!\n&quot;);
+}</code></pre>
+<p class="mb-3">คอมไพล์ไฟล์ใน console</p>
+<pre><code class="language-bash">arm-angstrom-linux-gnueabi-gcc -o hello hello.c</code></pre>
+<p class="mb-3">จะได้ไฟล์ <code>hello</code> ให้คัดลอกไปยังโฟลเดอร์ทดสอบบน NFS server</p>
+<pre><code class="language-bash">cp hello /nfs/home/test/</code></pre>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_031.png" alt="Picture 21">
+    
+</figure>
+<p class="mb-3">เปิดเครื่อง mini2440</p>
+<pre><code class="language-console">mini2440 login: root      → รหัสผ่าน root คือ root
+mini2440:~# cd /test
+mini2440:/test# ./hello</code></pre>
+<p class="mb-3">จะแสดงข้อความ <code>hello, FriendlyARM!</code></p>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_032.jpg" alt="Picture 20">
+    
+</figure>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">6.2 ลอจิกฝั่ง FPGA สำหรับ Local bus</h3>
+<p class="mb-3">Local bus ที่ใช้ได้คือ <strong>nGCS1, nGCS2, nGCS3 และ nGCS5</strong> ครั้งนี้ใช้ <strong>nGCS2</strong> และสื่อสารข้อมูลแบบ <strong>8 บิต</strong> สัญญาณที่เชื่อมต่อคือ</p>
+<div class="table-responsive my-3"><table class="table table-bordered table-striped table-hover align-middle">
+  <thead class="table-dark">
+    <tr>
+      <th scope="col">สัญญาณ</th>
+      <th scope="col">รายละเอียด</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>LADDR6 – LADDR1</td>
+      <td>address</td>
+    </tr>
+    <tr>
+      <td>LDATA7 – LDATA0</td>
+      <td>data (8 บิต)</td>
+    </tr>
+    <tr>
+      <td>nGCS2</td>
+      <td>chip select</td>
+    </tr>
+    <tr>
+      <td>LnWE</td>
+      <td>write enable</td>
+    </tr>
+  </tbody>
+</table></div>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_033.png" alt="Picture 19">
+    
+</figure>
+<p class="text-center text-muted"><small><em>แผนที่ memory map ของ CPU s3c2440 บน mini2440</em></small></p>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_034.png" alt="Picture 18">
+    
+</figure>
+<p class="text-center text-muted"><small><em>หมายเลขขาของ connector 5 บน mini2440</em></small></p>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_035.png" alt="Picture 17">
+    
+</figure>
+<p class="text-center text-muted"><small><em>timing diagram ของ Local bus บน CPU s3c2440</em></small></p>
+<p class="mb-3"><strong>โค้ด VHDL ฝั่ง FPGA</strong> (โค้ดอย่างง่าย)</p>
+<pre><code class="language-vhdl">library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+---- Uncomment the following library declaration if instantiating
+---- any Xilinx primitives in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity MINI2440 is
+  Port (
+    -- system-------------------------------------------
+    CLK      : in    std_logic;
+    RESET_L  : in    std_logic;
+    -- bus interface -----------------------------------
+    DATA     : inout std_logic_vector(7 downto 0);
+    ADDR     : in    std_logic_vector(6 downto 1);
+    nGCS2    : in    std_logic;
+    nOE      : in    std_logic;
+    nWE      : in    std_logic;
+    nRESET   : in    std_logic;
+    nWAIT    : inout std_logic;
+    -- LED ---------------------------------------------
+    LED      : out   std_logic_vector(7 downto 0)
+    ----------------------------------------------------
+  );
+end MINI2440;
+
+architecture Behavioral of MINI2440 is
+  signal wLEDDATA0       : std_logic_vector(15 downto 0) := x&quot;0000&quot;;
+  signal wREAD_OUT       : std_logic_vector(15 downto 0);
+  signal wWRITE_EN_DELAY : std_logic_vector(1 downto 0);
+begin
+
+  process(RESET_L, CLK)
+  begin
+    if (RESET_L = &#x27;0&#x27;) then
+      wWRITE_EN_DELAY &lt;= &quot;00&quot;;
+    elsif (CLK&#x27;event and CLK = &#x27;1&#x27;) then
+      if (nGCS2 = &#x27;0&#x27;) then
+        if (nWE = &#x27;0&#x27;) then
+          wWRITE_EN_DELAY &lt;= wWRITE_EN_DELAY(0) &amp; &#x27;1&#x27;;
+          if (wWRITE_EN_DELAY = &quot;01&quot;) then
+            case ADDR is
+              when &quot;000000&quot; =&gt; wLEDDATA0(7 downto 0) &lt;= DATA; --0x1000_0000
+              when others   =&gt;
+            end case;
+            wWRITE_EN_DELAY &lt;= &quot;00&quot;;
+          end if;
+        else
+          wWRITE_EN_DELAY &lt;= &quot;00&quot;;
+        end if;
+      else
+        wWRITE_EN_DELAY &lt;= &quot;00&quot;;
+      end if;
+    end if;
+  end process;
+
+  DATA  &lt;= wREAD_OUT(7 downto 0) when ((nGCS2 = &#x27;0&#x27;) and (nWE = &#x27;1&#x27;)) else (others =&gt; &#x27;Z&#x27;);
+  nWAIT &lt;= &#x27;Z&#x27;;
+  LED   &lt;= wLEDDATA0(7 downto 0);
+
+end Behavioral;</code></pre>
+<p class="mb-3"><strong>ไฟล์ UCF</strong></p>
+<pre><code class="language-ucf">#PACE: Start of Constraints generated by PACE
+#PACE: Start of PACE I/O Pin Assignments
+NET &quot;CLK&quot; IOSTANDARD = LVCMOS33;
+NET &quot;CLK&quot; LOC = P184;
+NET &quot;RESET_L&quot; IOSTANDARD = LVCMOS33;
+NET &quot;RESET_L&quot; LOC = P54;
+NET &quot;DATA[7]&quot; LOC = P50;
+NET &quot;DATA[6]&quot; LOC = P48;
+NET &quot;DATA[5]&quot; LOC = P45;
+NET &quot;DATA[4]&quot; LOC = P42;
+NET &quot;DATA[3]&quot; LOC = P40;
+NET &quot;DATA[2]&quot; LOC = P36;
+NET &quot;DATA[1]&quot; LOC = P34;
+NET &quot;DATA[0]&quot; LOC = P30;
+NET &quot;ADDR[6]&quot; LOC = P32;
+NET &quot;ADDR[5]&quot; LOC = P28;
+NET &quot;ADDR[4]&quot; LOC = P25;
+NET &quot;ADDR[3]&quot; LOC = P23;
+NET &quot;ADDR[2]&quot; LOC = P20;
+NET &quot;ADDR[1]&quot; LOC = P18;
+NET &quot;nGCS2&quot; LOC = P4;
+NET &quot;nOE&quot; LOC = P6;
+NET &quot;nWE&quot; LOC = P9;
+NET &quot;nRESET&quot; IOSTANDARD = LVTTL;
+NET &quot;nRESET&quot; LOC = P15;
+NET &quot;nWAIT&quot; IOSTANDARD = LVTTL;
+NET &quot;nWAIT&quot; LOC = P12;
+NET &quot;LED[0]&quot; IOSTANDARD = LVTTL;
+NET &quot;LED[0]&quot; LOC = P193;
+NET &quot;LED[1]&quot; IOSTANDARD = LVTTL;
+NET &quot;LED[1]&quot; LOC = P192;
+NET &quot;LED[2]&quot; IOSTANDARD = LVTTL;
+NET &quot;LED[2]&quot; LOC = P190;
+NET &quot;LED[3]&quot; IOSTANDARD = LVTTL;
+NET &quot;LED[3]&quot; LOC = P189;
+NET &quot;LED[4]&quot; IOSTANDARD = LVTTL;
+NET &quot;LED[4]&quot; LOC = P187;
+NET &quot;LED[5]&quot; IOSTANDARD = LVTTL;
+NET &quot;LED[5]&quot; LOC = P186;
+NET &quot;LED[6]&quot; IOSTANDARD = LVTTL;
+NET &quot;LED[6]&quot; LOC = P185;
+NET &quot;LED[7]&quot; IOSTANDARD = LVTTL;
+NET &quot;LED[7]&quot; LOC = P181;
+#PACE: Start of PACE Area Constraints
+#PACE: Start of PACE Prohibit Constraints
+#PACE: End of Constraints generated by PACE
+NET &quot;DATA[7]&quot; IOSTANDARD = LVTTL;
+NET &quot;DATA[6]&quot; IOSTANDARD = LVTTL;
+NET &quot;DATA[5]&quot; IOSTANDARD = LVTTL;
+NET &quot;DATA[4]&quot; IOSTANDARD = LVTTL;
+NET &quot;DATA[3]&quot; IOSTANDARD = LVTTL;
+NET &quot;DATA[2]&quot; IOSTANDARD = LVTTL;
+NET &quot;DATA[1]&quot; IOSTANDARD = LVTTL;
+NET &quot;DATA[0]&quot; IOSTANDARD = LVTTL;
+NET &quot;ADDR[6]&quot; IOSTANDARD = LVTTL;
+NET &quot;ADDR[5]&quot; IOSTANDARD = LVTTL;
+NET &quot;ADDR[4]&quot; IOSTANDARD = LVTTL;
+NET &quot;ADDR[3]&quot; IOSTANDARD = LVTTL;
+NET &quot;ADDR[2]&quot; IOSTANDARD = LVTTL;
+NET &quot;ADDR[1]&quot; IOSTANDARD = LVTTL;
+NET &quot;nGCS2&quot; IOSTANDARD = LVTTL;
+NET &quot;nOE&quot; IOSTANDARD = LVTTL;
+NET &quot;nWE&quot; IOSTANDARD = LVTTL;</code></pre>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">6.3 สื่อสารกับ FPGA ผ่าน Local bus</h3>
+<p class="mb-3">การสื่อสารกับ FPGA ต้องเข้าถึง physical address โดยตรง ลำดับการเข้าถึง physical address มีดังนี้</p>
+<div class="d-flex align-items-start mb-2 mt-3">
+    <span class="badge bg-primary me-2 mt-1 px-2 py-1">1</span>
+    <div><code>open</code> ไฟล์ <code>/dev/mem</code></div>
+</div>
+<div class="d-flex align-items-start mb-2 mt-3">
+    <span class="badge bg-primary me-2 mt-1 px-2 py-1">2</span>
+    <div>เข้าถึง physical address ด้วยฟังก์ชัน <code>mmap</code></div>
+</div>
+<div class="d-flex align-items-start mb-2 mt-3">
+    <span class="badge bg-primary me-2 mt-1 px-2 py-1">3</span>
+    <div>คืนการ mapping ของ physical address ด้วย <code>munmap</code></div>
+</div>
+<div class="d-flex align-items-start mb-2 mt-3">
+    <span class="badge bg-primary me-2 mt-1 px-2 py-1">4</span>
+    <div><code>close</code> ไฟล์ <code>/dev/mem</code></div>
+</div>
+<p class="mb-3">ลองเขียนโค้ดอย่างง่าย สร้างไฟล์ <code>memtest.c</code> โดยมีเนื้อหาดังนี้</p>
+<pre><code class="language-c">#include&lt;stdio.h&gt;
+#include&lt;stdlib.h&gt;
+#include&lt;unistd.h&gt;
+#include&lt;fcntl.h&gt;
+#include&lt;sys/types.h&gt;
+#include&lt;sys/mman.h&gt;
+#include&lt;sys/stat.h&gt;
+#include&lt;asm/page.h&gt;
+#include&lt;asm/types.h&gt;
+#include &lt;sys/mman.h&gt;
+
+int main(char data)
+{
+    int fd;
+    char buff[128];
+    unsigned char *madr;
+
+    fd = open(&quot;/dev/mem&quot;, O_RDWR);
+    madr = mmap(0, 0x1, PROT_WRITE|PROT_READ, MAP_SHARED, fd, 0x10000000);
+    buff[0] = *madr;
+    printf(&quot;data: %x \n&quot;, *buff);
+
+    if (data == 1)
+    {
+        *madr = 0x00;
+    } else
+    {
+        *madr = 0xff;
+    }
+
+    munmap(madr, 0x1);
+    close(fd);
+    return 0;
+}</code></pre>
+<p class="mb-3">คอมไพล์</p>
+<pre><code class="language-bash">arm-angstrom-linux-gnueabi-gcc -o memtest memtest.c</code></pre>
+<p class="mb-3">รันบน mini2440</p>
+<pre><code class="language-console">mini2440:~# cd /test
+mini2440:/test# ./memtest 1      → LED ติด
+mini2440:/test# ./memtest        → LED ดับ</code></pre>
+<hr class="my-5">
+<h2 class="mt-5 mb-3 pt-2 text-primary border-bottom pb-2 fw-bold">7 สื่อสารกับ FPGA ผ่าน Local bus (Memory Controller) บน Qt</h2>
+<p class="mb-3">ตั้งค่า PATH เพื่อคอมไพล์ Qt บน Ubuntu</p>
+<pre><code class="language-console">hong@hong-desktop:~$ echo &quot;export PATH=$PATH:~/qt4.6/qt-everywhere-opensource-src-4.6.0/bin&quot; &gt;&gt; .bashrc</code></pre>
+<p class="mb-3">ตรวจสอบว่า PATH ถูกเพิ่มเรียบร้อย</p>
+<pre><code class="language-console">hong@hong-desktop:~$ echo $PATH
+/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/opt/toolchains/arm920t-eabi/bin:/home/hong/qt4.6/qt-everywhere-opensource-src-4.6.0/bin</code></pre>
+<p class="mb-3">ถ้ามี path ของ qt อยู่ท้ายสุด (<code>.../qt-everywhere-opensource-src-4.6.0/bin</code>) ถือว่าใช้ได้</p>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">7.1 แสดง Hello world บน Qt</h3>
+<p class="mb-3">สร้างไฟล์ <code>main.cpp</code> โดยมีเนื้อหาดังนี้</p>
+<pre><code class="language-cpp">#include &lt;QApplication&gt;
+#include &lt;QPushButton&gt;
+
+int main(int argc, char *argv[])
+{
+    printf(&quot;Hello word is runing....&quot;);
+    QApplication app(argc, argv);
+    QPushButton hello(&quot;Hello world!&quot;);
+    hello.resize(200, 60);
+    hello.show();
+    return app.exec();
+}</code></pre>
+<p class="mb-3">ปิดไฟล์ แล้วรันใน console</p>
+<pre><code class="language-bash">qmake -project
+qmake
+make</code></pre>
+<p class="mb-3">จะได้ไฟล์ <code>hello</code> ให้คัดลอกไปยังโฟลเดอร์ทดสอบบน NFS server</p>
+<pre><code class="language-bash">cp hello /nfs/home/test/</code></pre>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_036.png" alt="Picture 16">
+    
+</figure>
+<p class="mb-3">เปิดเครื่อง mini2440 แล้วพิมพ์ใน Tera Term</p>
+<pre><code class="language-console"># cd /test
+# ./hello -qws</code></pre>
+<p class="mb-3">จะแสดงปุ่ม "Hello world" ตัวอักษรค่อนข้างเล็ก ถ้าเพิ่ม <code>-fn unifont</code> ตัวอักษรจะใหญ่ขึ้น</p>
+<pre><code class="language-console"># ./hello -qws -fn unifont</code></pre>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_037.jpg" alt="Picture 15">
+    
+</figure>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">7.2 สื่อสารกับ FPGA ผ่าน Local bus บน Qt</h3>
+<p class="mb-3">การเข้าถึง physical address บน Qt ทำงานเหมือนบน Linux แต่ Qt ควบคุมไฟล์ด้วย <code>QFile</code> โค้ดมี 3 ไฟล์ ได้แก่ <code>ledsetting.h</code>, <code>ledsetting.cpp</code> และ <code>main.cpp</code></p>
+<p class="mb-3">สร้างโฟลเดอร์ <code>led</code> ก่อน แล้วสร้าง <code>ledsetting.h</code>, <code>ledsetting.cpp</code>, <code>main.cpp</code> ไว้ข้างในดังนี้</p>
+<p class="mb-3"><strong>ledsetting.h</strong></p>
+<pre><code class="language-cpp">//ledsetting.h
+#ifndef LEDSETTING_H
+#define LEDSETTING_H
+
+#include &lt;QWidget&gt;
+
+class LEDsetting : public QWidget
+{
+    Q_OBJECT
+public:
+    LEDsetting(QWidget *parent = 0);
+public slots:
+    void setLED();
+    void clearLED();
+};
+
+#endif</code></pre>
+<p class="mb-3"><strong>ledsetting.cpp</strong></p>
+<pre><code class="language-cpp">//ledsetting.cpp
+#include &lt;QFile&gt;
+#include &quot;ledsetting.h&quot;
+
+LEDsetting::LEDsetting(QWidget *parent)
+    : QWidget(parent)
+{
+}
+
+void LEDsetting::setLED()
+{
+    uchar *madr;
+    qint64 addr_map = 0x10000000;
+    qint64 size_map = 0x1;
+    QFile fd(&quot;/dev/mem&quot;);
+    fd.open(QIODevice::ReadWrite);
+    madr = fd.map(addr_map, size_map);
+    *madr = 0xff;
+    fd.unmap(madr);
+    fd.close();
+}
+
+void LEDsetting::clearLED()
+{
+    uchar *madr;
+    qint64 addr_map = 0x10000000;
+    qint64 size_map = 0x1;
+    QFile fd(&quot;/dev/mem&quot;);
+    fd.open(QIODevice::ReadWrite);
+    madr = fd.map(addr_map, size_map);
+    *madr = 0x00;
+    fd.unmap(madr);
+    fd.close();
+}</code></pre>
+<p class="mb-3"><strong>main.cpp</strong></p>
+<pre><code class="language-cpp">//main.cpp
+#include &lt;QApplication&gt;
+#include &lt;QPushButton&gt;
+#include &lt;QFont&gt;
+#include &lt;QVBoxLayout&gt;
+#include &quot;ledsetting.h&quot;
+
+class MyWidget : public QWidget
+{
+public:
+    MyWidget(QWidget *parent = 0);
+};
+
+MyWidget::MyWidget(QWidget *parent)
+    : QWidget(parent)
+{
+    QPushButton *quit = new QPushButton(tr(&quot;Quit&quot;));
+    quit-&gt;setFont(QFont(&quot;Times&quot;, 100, QFont::Bold));
+
+    QPushButton *set = new QPushButton(tr(&quot;Set&quot;));
+    set-&gt;setFont(QFont(&quot;Times&quot;, 100, QFont::Bold));
+
+    QPushButton *clear = new QPushButton(tr(&quot;Clear&quot;));
+    clear-&gt;setFont(QFont(&quot;Times&quot;, 100, QFont::Bold));
+
+    LEDsetting *ledSetting = new LEDsetting;
+
+    connect(quit, SIGNAL(clicked()), qApp, SLOT(quit()));
+    connect(set, SIGNAL(clicked()), ledSetting, SLOT(setLED()));
+    connect(clear, SIGNAL(clicked()), ledSetting, SLOT(clearLED()));
+
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout-&gt;addWidget(quit);
+    layout-&gt;addWidget(set);
+    layout-&gt;addWidget(clear);
+    setLayout(layout);
+}
+
+int main(int argc, char *argv[])
+{
+    QApplication app(argc, argv);
+    MyWidget widget;
+    widget.show();
+    widget.showFullScreen();
+    return app.exec();
+}</code></pre>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_038.jpg" alt="Picture 14">
+    
+</figure>
+<p class="mb-3">ภาพด้านล่างเป็นตัวอย่าง Qt ที่ปรับแต่งเพิ่มเติมเล็กน้อย หากเขียนทับด้วย <code>ledbutton6</code> ใน <code>Qtmini2440.zip</code> ที่แนบมา และไฟล์ <code>mcs</code> ใน <code>FPGAmini2440.zip</code> จะสามารถควบคุม LED และอ่านค่าจากสวิตช์ได้</p>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_039.jpg" alt="Picture 13">
+    
+</figure>
+<hr class="my-5">
+<h2 class="mt-5 mb-3 pt-2 text-primary border-bottom pb-2 fw-bold">8 ติดตั้ง Web server</h2>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">8.1 ติดตั้ง apache2, mysql, php</h3>
+<p class="mb-3">เปิดเครื่อง mini2440 แล้วพิมพ์คำสั่งต่อไปนี้ใน Tera Term</p>
+<pre><code class="language-console">mini2440:~# apt-get update
+mini2440:~# apt-get install apache2
+mini2440:~# apt-get install libapache2-mod-auth-mysql
+mini2440:~# apt-get install libapache2-mod-php5
+mini2440:~# apt-get install mysql-client-5.0
+mini2440:~# apt-get install mysql-server-5.0
+mini2440:~# apt-get install php5
+mini2440:~# apt-get install php5-mysql
+mini2440:~# apt-get install phpmyadmin</code></pre>
+<p class="mb-3">สร้างไฟล์ <code>/nfs/home/var/www/info.php</code> บน Ubuntu โดยมีเนื้อหาดังนี้</p>
+<pre><code class="language-php">&lt;?php
+
+phpinfo();
+
+?&gt;</code></pre>
+<p class="mb-3">จากนั้นรีบูต mini2440 ตรวจสอบ IP ด้วย <code>ifconfig</code> แล้วเข้าถึง IP นั้นจากพีซี จะแสดงหน้าจอดังภาพ (ตัวอย่าง: <a href="http://192.168.1.4/info.php" target="_blank" rel="noopener noreferrer">http://192.168.1.4/info.php</a>)</p>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_040.jpg" alt="Picture 12">
+    
+</figure>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_041.jpg" alt="Picture 11">
+    
+</figure>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">8.2 ควบคุม LED ด้วย PHP</h3>
+<p class="mb-3">ในตัวอย่างนี้ PHP จะเขียนค่า LED ลงใน <code>led.txt</code> ส่วนฝั่ง Qt จะตรวจสอบ <code>led.txt</code> ทุก 1 วินาที แล้วตั้งค่านั้นให้ LED</p>
+<p class="mb-3"><strong>ขั้นตอนที่ 1: สร้างโค้ด PHP</strong></p>
+<pre><code class="language-bash">cd /nfs/home/var/www</code></pre>
+<p class="mb-3">สร้างไฟล์ <code>led.php</code> โดยมีเนื้อหาดังนี้</p>
+<pre><code class="language-php">&lt;?php
+if (isset($_POST[&quot;quantity&quot;])) {
+    $qty = $_POST[&quot;quantity&quot;];
+    settype($qty, &quot;integer&quot;);
+    $f = fopen(&quot;led.txt&quot;, &quot;w+&quot;);
+    fwrite($f, &quot;$qty\n&quot;);
+    fclose($f);
+}
+else {
+    $qty = 1;
+}
+?&gt;
+
+&lt;form action=&quot;&lt;?php echo $_SERVER[&#x27;PHP_SELF&#x27;]; ?&gt;&quot; method=&quot;POST&quot;&gt;
+Set led to:
+&lt;input type=&quot;text&quot; name=&quot;quantity&quot; size=&quot;2&quot; value=&quot;&lt;?php echo $qty?&gt;&quot;&gt;
+&lt;input type=&quot;submit&quot; value=&quot;Enter&quot;&gt;
+&lt;/form&gt;</code></pre>
+<p class="mb-3">สร้างไฟล์ <code>led.txt</code> เปล่า แล้วตั้งสิทธิ์</p>
+<pre><code class="language-bash">sudo chmod 777 led.txt</code></pre>
+<p class="mb-3">จากพีซี เข้า <a href="http://192.168.1.4/led.php" target="_blank" rel="noopener noreferrer">http://192.168.1.4/led.php</a> ใส่ <code>123</code> แล้วกด Enter จากนั้นตรวจสอบเนื้อหาของ <code>/nfs/home/var/www/led.txt</code> จะพบว่ามีค่า <code>123</code> ถูกเขียนไว้</p>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_042.jpg" alt="Picture 10">
+    
+</figure>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_043.png" alt="Picture 9">
+    
+</figure>
+<p class="mb-3"><strong>ขั้นตอนที่ 2: แก้ฝั่ง Qt</strong></p>
+<p class="mb-3">ในตัวอย่างหัวข้อ 8.2 ให้เปลี่ยนเนื้อหาของ <code>ledsetting.h</code> และ <code>ledsetting.cpp</code> ดังนี้ ส่วน <code>main.cpp</code> ใช้ตัวเดิม</p>
+<p class="mb-3"><strong>ledsetting.h</strong></p>
+<pre><code class="language-cpp">//ledsetting.h
+#ifndef LEDSETTING_H
+#define LEDSETTING_H
+
+#include &lt;QWidget&gt;
+#include &lt;QTimer&gt;
+
+class LEDsetting : public QWidget
+{
+    Q_OBJECT
+public:
+    LEDsetting(QWidget *parent = 0);
+public slots:
+    void setLED();
+    void clearLED();
+    void setLEDNet();
+private:
+    QTimer *autoUpdate;
+};
+
+#endif</code></pre>
+<p class="mb-3"><strong>ledsetting.cpp</strong></p>
+<pre><code class="language-cpp">//ledsetting.cpp
+#include &lt;QFile&gt;
+#include &lt;QVariant&gt;
+#include &quot;ledsetting.h&quot;
+
+LEDsetting::LEDsetting(QWidget *parent)
+    : QWidget(parent)
+{
+    autoUpdate = new QTimer(this);
+    connect(autoUpdate, SIGNAL(timeout()), this, SLOT(setLEDNet()));
+    autoUpdate-&gt;start(1000);
+}
+
+void LEDsetting::setLED()
+{
+    uchar *madr;
+    qint64 addr_map = 0x10000000;
+    qint64 size_map = 0x1;
+    QFile fd(&quot;/dev/mem&quot;);
+    fd.open(QIODevice::ReadWrite);
+    madr = fd.map(addr_map, size_map);
+    *madr = 0xff;
+    fd.unmap(madr);
+    fd.close();
+}
+
+void LEDsetting::clearLED()
+{
+    uchar *madr;
+    qint64 addr_map = 0x10000000;
+    qint64 size_map = 0x1;
+    QFile fd(&quot;/dev/mem&quot;);
+    fd.open(QIODevice::ReadWrite);
+    madr = fd.map(addr_map, size_map);
+    *madr = 0x00;
+    fd.unmap(madr);
+    fd.close();
+}
+
+void LEDsetting::setLEDNet()
+{
+    uchar *madr;
+    qint64 addr_map = 0x10000000;
+    qint64 size_map = 0x1;
+    char buf[8];
+    QFile fd(&quot;/dev/mem&quot;);
+    fd.open(QIODevice::ReadWrite);
+    QFile fd_led(&quot;/var/www/led.txt&quot;);
+    fd_led.open(QIODevice::ReadWrite);
+    // read ASCII textfile
+    fd_led.readLine(buf, sizeof(buf));
+    QVariant v;
+    v = buf;
+    int vdata = v.toInt();
+    madr = fd.map(addr_map, size_map);
+    *madr = vdata;
+    fd.unmap(madr);
+    fd.close();
+    fd_led.close();
+}</code></pre>
+<hr class="my-5">
+<h2 class="mt-5 mb-3 pt-2 text-primary border-bottom pb-2 fw-bold">10 อื่น ๆ</h2>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">8.3 Auto login</h3>
+<p class="mb-3">เปิดเครื่อง mini2440 แล้วติดตั้ง <code>mingetty</code> ใน Tera Term</p>
+<pre><code class="language-console">mini2440:~# apt-get install mingetty</code></pre>
+<p class="mb-3">แก้ไขเนื้อหาของไฟล์ <code>/nfs/home/etc/inittab</code> ให้เป็นบรรทัดต่อไปนี้</p>
+<pre><code class="language-text">T0:123:respawn:/sbin/mingetty --autologin root ttySAC0</code></pre>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_044.png" alt="Picture 8">
+    
+</figure>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">8.4 รันแอปพลิเคชันอัตโนมัติ</h3>
+<p class="mb-3">สร้างไฟล์ <code>/nfs/home/etc/init.d/program</code> โดยมีเนื้อหาดังนี้</p>
+<pre><code class="language-bash">#!/bin/bash
+case $1 in
+start)
+    cd /test
+    ./hello -qws
+    ;;
+stop)
+    ;;
+esac</code></pre>
+<pre><code class="language-bash">cd /nfs/home/etc/init.d/
+sudo chmod +x program</code></pre>
+<p class="mb-3">เปิดไฟล์ <code>/nfs/home/etc/profile</code> แล้วเพิ่มบรรทัดต่อไปนี้ไว้ท้ายไฟล์</p>
+<pre><code class="language-bash">/etc/init.d/program start</code></pre>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_045.png" alt="Picture 7">
+    
+</figure>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">8.5 เปลี่ยนโลโก้ตอนบูต</h3>
+<p class="mb-3">ติดตั้ง <code>netpbm</code> บน Ubuntu</p>
+<pre><code class="language-bash">sudo apt-get install netpbm</code></pre>
+<p class="mb-3">เปลี่ยนชื่อไฟล์ภาพที่ต้องการใช้เป็นโลโก้เป็น <code>logo.jpg</code> แล้วรันใน console ของ Ubuntu</p>
+<pre><code class="language-bash">jpegtopnm logo.jpg | ppmquant 224 | pnmtoplainpnm &gt; logo_linux_clut224.ppm</code></pre>
+<p class="mb-3">จะได้ไฟล์ <code>logo_linux_clut224.ppm</code> ให้เขียนทับที่ <code>/drivers/video/logo/</code> แล้วคอมไพล์ kernel ใหม่ และแทนที่ uImage</p>
+<pre><code class="language-bash">cp logo_linux_clut224.ppm ~/kernel/mini2440/drivers/video/logo/
+
+cd ~/kernel/mini2440
+CROSS_COMPILE=arm-angstrom-linux-gnueabi- ARCH=arm make O=../kernel-bin/
+~/uboot/mini2440/tools/mkimage -A arm -O linux -T kernel -C none -a 0x30008000 -e 0x30008000 -d ../kernel-bin/arch/arm/boot/zImage uImage
+cp uImage /tftpboot/</code></pre>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">8.6 ใช้คีย์บอร์ดบน Qt</h3>
+<div class="d-flex align-items-start mb-2 mt-3">
+    <span class="badge bg-primary me-2 mt-1 px-2 py-1">1</span>
+    <div>ตรวจสอบ <code>/dev/input</code> ใน Tera Term</div>
+</div>
+<div class="d-flex align-items-start mb-2 mt-3">
+    <span class="badge bg-primary me-2 mt-1 px-2 py-1">2</span>
+    <div>เสียบคีย์บอร์ด USB เข้า mini2440 แล้วดู input device อีกครั้ง จะมี <code>event2</code> เพิ่มขึ้นมา (ในสภาพแวดล้อมอื่นอาจไม่ใช่ <code>event2</code>)</div>
+</div>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_046.jpg" alt="Picture 6">
+    
+</figure>
+<div class="d-flex align-items-start mb-2 mt-3">
+    <span class="badge bg-primary me-2 mt-1 px-2 py-1">3</span>
+    <div>เพิ่มบรรทัด <code>export QWS_KEYBOARD=linuxinput:/dev/input/event2</code> ลงในไฟล์ <code>/nfs/home/etc/profile</code> แล้วรีบูต mini2440 ก็จะใช้คีย์บอร์ด USB ได้</div>
+</div>
+<p class="mb-3">เนื้อหาที่เกี่ยวข้องใน <code>/etc/profile</code> ทั้งหมดเป็นดังนี้</p>
+<pre><code class="language-bash">export TSLIB_TSEVENTTYPE=input
+export TSLIB_CONSOLEDEVICE=none
+export TSLIB_FBDEVICE=/dev/fb0
+export TSLIB_TSDEVICE=/dev/input/event1
+export TSLIB_CALIBFILE=/etc/pointercal
+export TSLIB_CONFFILE=/etc/ts.conf
+export TSLIB_PLUGINDIR=/usr/lib/ts
+export QWS_MOUSE_PROTO=tslib:/dev/input/event1
+export QWS_KEYBOARD=linuxinput:/dev/input/event2
+export QTDIR=/usr/local/Qt</code></pre>
+<div class="alert alert-info my-3 shadow-sm" role="alert">
+<div class="d-flex align-items-start">
+  <i class="bi bi-pin-angle-fill me-2 fs-5 mt-1"></i>
+  <div class="w-100">
+<p class="mb-2"><strong>📌 หมายเหตุ</strong> — ถ้าต้องการใช้เฉพาะเมาส์ ให้ใส่แค่ <code>export QTDIR=/usr/local/Qt</code> (ไม่ต้องใส่ TSLIB ฯลฯ)</p>
+  </div>
+</div>
+</div>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">8.7 ตัวอย่าง Qt/Embedded widgets</h3>
+<p class="mb-3">ดาวน์โหลด <code>qt_embedded-widgets-1.1.0.tar.gz</code> จากเว็บไซต์ <a href="http://qt.nokia.com/files/embedded-widget-demos/qt-embedded-widgets-source-and-documentation/view" target="_blank" rel="noopener noreferrer">http://qt.nokia.com/files/embedded-widget-demos/qt-embedded-widgets-source-and-documentation/view</a> แล้วทำดังนี้</p>
+<pre><code class="language-bash">tar xvzf qt_embedded-widgets-1.1.0.tar.gz
+cd embedded-widgets-1.1.0
+qmake
+make
+sudo cp ./examples/catalog/catalog /nfs/home/test/</code></pre>
+<p class="mb-3">รันใน Tera Term</p>
+<pre><code class="language-console">mini2440:~# cd /test
+mini2440:/test# ./catalog -qws -fn fixed -display &quot;transformed:rot90&quot;    → ตั้งฟอนต์ และหมุนหน้าจอ 90 องศา</code></pre>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_047.jpg" alt="Picture 5">
+    
+</figure>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">8.8 ตัวอย่าง Qt อื่น ๆ</h3>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">8.9 แสดงภาษาญี่ปุ่นบน Qt</h3>
+<p class="mb-3"><strong>main.cpp</strong></p>
+<pre><code class="language-cpp">#include &lt;QApplication&gt;
+#include &lt;QPushButton&gt;
+#include &lt;QFont&gt;
+#include &lt;QVBoxLayout&gt;
+#include &lt;QtGui&gt;
+#include &quot;ledsetting.h&quot;
+
+class MyWidget : public QWidget
+{
+public:
+    MyWidget(QWidget *parent = 0);
+};
+
+MyWidget::MyWidget(QWidget *parent)
+    : QWidget(parent)
+{
+    QByteArray encodedString = &quot;終了(Quit)&quot;;
+    QTextCodec *codec = QTextCodec::codecForName(&quot;Shift-JIS&quot;);
+    QString decodedStr = codec-&gt;toUnicode(encodedString);
+
+    QLineEdit *editnihon = new QLineEdit;
+    editnihon-&gt;insert(decodedStr);
+
+    QLabel *label = new QLabel;
+    label-&gt;setText(decodedStr);
+
+    QPushButton *quit = new QPushButton;
+    quit-&gt;setText(decodedStr);
+    quit-&gt;setFont(QFont(&quot;Times&quot;, 20, QFont::Bold));
+
+    encodedString = &quot;セット(Set)&quot;;
+    decodedStr = codec-&gt;toUnicode(encodedString);
+    QPushButton *set = new QPushButton;
+    set-&gt;setText(decodedStr);
+    set-&gt;setFont(QFont(&quot;Times&quot;, 20, QFont::Bold));
+
+    encodedString = &quot;クリア(Clear)&quot;;
+    decodedStr = codec-&gt;toUnicode(encodedString);
+    QPushButton *clear = new QPushButton;
+    clear-&gt;setText(decodedStr);
+    clear-&gt;setFont(QFont(&quot;Times&quot;, 20, QFont::Bold));
+
+    LEDsetting *ledSetting = new LEDsetting;
+
+    connect(quit, SIGNAL(clicked()), qApp, SLOT(quit()));
+    connect(set, SIGNAL(clicked()), ledSetting, SLOT(setLED()));
+    connect(clear, SIGNAL(clicked()), ledSetting, SLOT(clearLED()));
+
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout-&gt;addWidget(quit);
+    layout-&gt;addWidget(set);
+    layout-&gt;addWidget(clear);
+    layout-&gt;addWidget(editnihon);
+    layout-&gt;addWidget(label);
+    setLayout(layout);
+}
+
+int main(int argc, char *argv[])
+{
+    QApplication app(argc, argv);
+    MyWidget widget;
+    widget.show();
+    widget.showFullScreen();
+    return app.exec();
+}</code></pre>
+<p class="mb-3"><strong>ledsetting.cpp</strong></p>
+<pre><code class="language-cpp">#include &lt;QFile&gt;
+#include &quot;ledsetting.h&quot;
+
+LEDsetting::LEDsetting(QWidget *parent)
+    : QWidget(parent)
+{
+}
+
+void LEDsetting::setLED()
+{
+    uchar *madr;
+    qint64 addr_map = 0x10000000;
+    qint64 size_map = 0x1;
+    QFile fd(&quot;/dev/mem&quot;);
+    fd.open(QIODevice::ReadWrite);
+    madr = fd.map(addr_map, size_map);
+    *madr = 0xff;
+    fd.unmap(madr);
+    fd.close();
+}
+
+void LEDsetting::clearLED()
+{
+    uchar *madr;
+    qint64 addr_map = 0x10000000;
+    qint64 size_map = 0x1;
+    QFile fd(&quot;/dev/mem&quot;);
+    fd.open(QIODevice::ReadWrite);
+    madr = fd.map(addr_map, size_map);
+    *madr = 0x00;
+    fd.unmap(madr);
+    fd.close();
+}</code></pre>
+<p class="mb-3"><strong>ledsetting.h</strong></p>
+<pre><code class="language-cpp">//ledsetting.h
+#ifndef LEDSETTING_H
+#define LEDSETTING_H
+
+#include &lt;QWidget&gt;
+
+class LEDsetting : public QWidget
+{
+    Q_OBJECT
+public:
+    LEDsetting(QWidget *parent = 0);
+public slots:
+    void setLED();
+    void clearLED();
+};
+
+#endif</code></pre>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_048.jpg" alt="Picture 4">
+    
+</figure>
+<h3 class="mt-4 mb-3 text-secondary fw-semibold">8.10 สื่อสารผ่าน TCP/IP ด้วย Qt</h3>
+<p class="mb-3"><strong>main.cpp</strong></p>
+<pre><code class="language-cpp">#include &lt;QApplication&gt;
+#include &quot;client.h&quot;
+
+int main(int argc, char *argv[])
+{
+    QApplication app(argc, argv);
+    Client client;
+    client.show();
+    return client.exec();
+}</code></pre>
+<p class="mb-3"><strong>client.cpp</strong></p>
+<pre><code class="language-cpp">#include &lt;QtGui&gt;
+#include &lt;QtNetwork&gt;
+#include &quot;client.h&quot;
+
+Client::Client(QWidget *parent)
+    : QDialog(parent)
+{
+    led2Value = 0;
+
+    hostLabel = new QLabel(tr(&quot;&amp;Server name:&quot;));
+    portLabel = new QLabel(tr(&quot;S&amp;erver port:&quot;));
+
+    hostLineEdit = new QLineEdit;
+    portLineEdit = new QLineEdit;
+    portLineEdit-&gt;setValidator(new QIntValidator(1, 65535, this));
+
+    hostLineEdit-&gt;setText(&quot;192.168.1.19&quot;);
+    portLineEdit-&gt;setText(&quot;50001&quot;);
+
+    hostLabel-&gt;setBuddy(hostLineEdit);
+    portLabel-&gt;setBuddy(portLineEdit);
+
+    quitButton = new QPushButton(tr(&quot;Quit&quot;));
+    netConnect = new QPushButton(tr(&quot;Connect&quot;));
+    netClose = new QPushButton(tr(&quot;Close&quot;));
+    netSendSC10 = new QPushButton(tr(&quot;SC10&quot;));
+    netSendSC11 = new QPushButton(tr(&quot;SC11&quot;));
+    led2 = new QPushButton(tr(&quot;LED2&quot;));
+    lcdDisplay = new QPushButton(tr(&quot;lcdDisplay&quot;));
+
+    rcvLineEdit = new QLineEdit;
+    rcvLineEdit-&gt;clear();
+
+    lcdLabel = new QLabel(tr(&quot;LCD Message:&quot;));
+    lcdLineEdit = new QLineEdit;
+    lcdLineEdit-&gt;clear();
+
+    tcpSocket = new QTcpSocket(this);
+
+    connect(quitButton, SIGNAL(clicked()), this, SLOT(close()));
+    connect(netConnect, SIGNAL(clicked()), this, SLOT(tcpConnect()));
+    connect(netClose, SIGNAL(clicked()), this, SLOT(tcpClose()));
+    connect(netSendSC10, SIGNAL(clicked()), this, SLOT(tcpSendSC10()));
+    connect(netSendSC11, SIGNAL(clicked()), this, SLOT(tcpSendSC11()));
+    connect(led2, SIGNAL(clicked()), this, SLOT(tcpLED2()));
+    connect(lcdDisplay, SIGNAL(clicked()), this, SLOT(tcpLcdDisplay()));
+    connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(tcpRead()));
+
+    QGridLayout *mainLayout = new QGridLayout;
+    mainLayout-&gt;addWidget(hostLabel, 0, 0);
+    mainLayout-&gt;addWidget(hostLineEdit, 0, 1);
+    mainLayout-&gt;addWidget(portLabel, 1, 0);
+    mainLayout-&gt;addWidget(portLineEdit, 1, 1);
+    mainLayout-&gt;addWidget(netConnect, 3, 0);
+    mainLayout-&gt;addWidget(netClose, 3, 1);
+    mainLayout-&gt;addWidget(netSendSC10, 4, 0);
+    mainLayout-&gt;addWidget(netSendSC11, 4, 1);
+    mainLayout-&gt;addWidget(led2, 5, 0, 1, 2);
+    mainLayout-&gt;addWidget(lcdLabel, 6, 0);
+    mainLayout-&gt;addWidget(lcdLineEdit, 6, 1);
+    mainLayout-&gt;addWidget(lcdDisplay, 7, 0, 1, 2);
+    mainLayout-&gt;addWidget(rcvLineEdit, 8, 0, 1, 2);
+    mainLayout-&gt;addWidget(quitButton, 9, 0, 1, 2);
+    setLayout(mainLayout);
+
+    setWindowTitle(tr(&quot;PIC-UIO TCP Client&quot;));
+    portLineEdit-&gt;setFocus();
+
+    netClose-&gt;setEnabled(false);
+    netSendSC10-&gt;setEnabled(false);
+    netSendSC11-&gt;setEnabled(false);
+    led2-&gt;setEnabled(false);
+}
+
+void Client::tcpConnect()
+{
+    blockSize = 0;
+    netConnect-&gt;setPalette(QPalette(Qt::red));
+    netConnect-&gt;setEnabled(false);
+    netClose-&gt;setEnabled(true);
+    netSendSC10-&gt;setEnabled(true);
+    netSendSC11-&gt;setEnabled(true);
+    led2-&gt;setEnabled(true);
+    tcpSocket-&gt;abort();
+    tcpSocket-&gt;connectToHost(hostLineEdit-&gt;text(), portLineEdit-&gt;text().toInt());
+}
+
+void Client::tcpClose()
+{
+    netConnect-&gt;setEnabled(true);
+    netClose-&gt;setEnabled(false);
+    netSendSC10-&gt;setEnabled(false);
+    netSendSC11-&gt;setEnabled(false);
+    led2-&gt;setEnabled(false);
+    tcpSocket-&gt;close();
+}
+
+void Client::tcpSendSC10()
+{
+    tcpSocket-&gt;write(&quot;SC10&quot;);
+}
+
+void Client::tcpSendSC11()
+{
+    tcpSocket-&gt;write(&quot;SC11&quot;);
+}
+
+void Client::tcpLED2()
+{
+    if (led2Value == 0)
+    {
+        led2Value = 1;
+    } else
+    {
+        led2Value = 0;
+    }
+
+    switch (led2Value)
+    {
+    case 0:
+        // change button color
+        led2-&gt;setAutoFillBackground(true);
+        led2-&gt;setStyleSheet(&quot;background-color: rgb(255, 0, 0); color: rgb(255, 255, 255)&quot;);
+        tcpSocket-&gt;write(&quot;SC20&quot;);
+        break;
+    case 1:
+        // change button color
+        led2-&gt;setAutoFillBackground(true);
+        led2-&gt;setStyleSheet(&quot;background-color: rgb(0, 255, 0); color: rgb(255, 255, 255)&quot;);
+        tcpSocket-&gt;write(&quot;SC21&quot;);
+        break;
+    default:
+        break;
+    }
+}
+
+void Client::tcpLcdDisplay()
+{
+    QString temp = &quot;SD&quot;;
+    temp.append(lcdLineEdit-&gt;text());
+    QByteArray lcdMessage = temp.toAscii();
+    tcpSocket-&gt;write(lcdMessage);
+}
+
+void Client::tcpRead()
+{
+    rcvLineEdit-&gt;clear();
+    char rcvBuf[200];
+    tcpSocket-&gt;read(rcvBuf, sizeof(rcvBuf));
+    QString temp = QString(QLatin1String(rcvBuf));
+    rcvLineEdit-&gt;setText(temp);
+}</code></pre>
+<p class="mb-3"><strong>client.h</strong></p>
+<pre><code class="language-cpp">#ifndef CLIENT_H
+#define CLIENT_H
+
+#include &lt;QDialog&gt;
+#include &lt;QTcpSocket&gt;
+
+QT_BEGIN_NAMESPACE
+class QDialogButtonBox;
+class QLabel;
+class QLineEdit;
+class QPushButton;
+class QTcpSocket;
+QT_END_NAMESPACE
+
+class Client : public QDialog
+{
+    Q_OBJECT
+
+public:
+    Client(QWidget *parent = 0);
+
+private slots:
+    void tcpConnect();
+    void tcpClose();
+    void tcpSendSC10();
+    void tcpSendSC11();
+    void tcpLED2();
+    void tcpLcdDisplay();
+    void tcpRead();
+
+private:
+    unsigned char led2Value;
+    quint16 blockSize;
+    QLabel *hostLabel;
+    QLabel *portLabel;
+    QLabel *lcdLabel;
+    QLineEdit *hostLineEdit;
+    QLineEdit *portLineEdit;
+    QLineEdit *rcvLineEdit;
+    QLineEdit *lcdLineEdit;
+    QPushButton *quitButton;
+    QPushButton *netConnect;
+    QPushButton *netClose;
+    QPushButton *netSendSC10;
+    QPushButton *netSendSC11;
+    QPushButton *lcdDisplay;
+    QPushButton *led2;
+    QTcpSocket *tcpSocket;
+};
+
+#endif</code></pre>
+<figure class="figure d-block text-center my-4">
+    <img class="figure-img img-fluid rounded shadow-sm mx-auto d-block" src="mini2440_th_files/image_049.jpg" alt="Picture 3">
+    
+</figure>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center p-4 mt-5" style="background-color: #f8f9fa;">
+        <div class="container">
+            <p class="mb-0">Contact: <a href="https://www.facebook.com/wichayen.hong" target="_blank">Wichayen Hong on Facebook</a> | <a href="https://github.com/wichayen" target="_blank">GitHub</a> | <a href="https://www.linkedin.com/in/wichayen-luangsopapan-404133202/" target="_blank">LinkedIn</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
