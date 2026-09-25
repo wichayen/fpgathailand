@@ -3,8 +3,9 @@
   <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vivado</title>
+    <title>Vivado - Creating Custom AXI IP and Using with Zynq</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="styles.css">
     <style>
         body { padding-top: 56px; }
@@ -16,8 +17,25 @@
             margin-left: auto;
             margin-right: auto;
             border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
-        pre { background-color: #f8f9fa; padding: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
+        pre { 
+            background-color: #1e1e2e; 
+            color: #cdd6f4;
+            padding: 15px; 
+            border-radius: 8px; 
+            white-space: pre-wrap; 
+            word-wrap: break-word; 
+            font-size: 0.92rem;
+            margin: 1rem 0;
+        }
+        code {
+            color: #d63384;
+            font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+        pre code {
+            color: inherit;
+        }
         .video-container {
             position: relative;
             padding-bottom: 56.25%; /* 16:9 */
@@ -36,21 +54,19 @@
             height: 100%;
         }
         blockquote {
-            border-left: 4px solid #ccc;
+            border-left: 4px solid #0d6efd;
             padding-left: 1rem;
-            color: #666;
+            color: #495057;
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 0 5px 5px 0;
         }
-        /* Styles for code blocks from MS Word */
-        p.MsoNormal, li.MsoNormal, div.MsoNormal {
-            margin-bottom: 0.4rem;
-            line-height: 1.25;
-            font-size: 1rem;
+        .table {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
         }
-        /* Normalize spacing inside WordSection content to align with site style */
-        .WordSection1 p {
-            margin-bottom: 0.4rem;
-            line-height: 1.25;
-            font-size: 1rem;
+        .table thead th {
+            background-color: #f1f5f9;
         }
     </style>
   </head>
@@ -77,7 +93,7 @@
                             <li><a class="dropdown-item" href="coursecontent/chapter1-introduction-to-fpga.html"><i class="bi bi-book me-2"></i>FPGA Fundamentals</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><h6 class="dropdown-header">PYNQ-Z2</h6></li>
-                            <li><a class="dropdown-item" href="pynq-z2-vivado_en.html"><i class="bi bi-cpu me-2"></i>Vivado Setup</a></li>
+                            <li><a class="dropdown-item active" href="pynq-z2-vivado_en.html"><i class="bi bi-cpu me-2"></i>Vivado Setup</a></li>
                             <li><a class="dropdown-item" href="pynq-z2-hls_en.html"><i class="bi bi-lightning-charge me-2"></i>HLS Acceleration</a></li>
                             <li><a class="dropdown-item" href="pynq-z2-ai_en.html"><i class="bi bi-robot me-2"></i>AI (DPU IP)</a></li>
                             <li><a class="dropdown-item" href="pynq-z2-modelsim_en.html"><i class="bi bi-activity me-2"></i>Modelsim</a></li>
@@ -115,692 +131,358 @@
     <div class="container mt-5">
       <div class="row">
         <div class="col-lg-8 mx-auto article-content">
-          <h1>Vivado</h1>
-          <div class="WordSection1" style="layout-grid:18.0pt">
-            <h1 style="margin-left:21.0pt;text-align:left;text-indent:-21.0pt" align="left"><a
-                name="_Toc208827131"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">1.<span
-                    style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;
-                  </span></span><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">Vivado</span></a></h1>
-            <span style=""> </span><span style=""><br>
-            </span>
-            <h2 style="margin-left:28.35pt;text-align:left;text-indent:-28.35pt"
-              align="left"><a name="_Ref120004158"></a><a name="_Ref120004175"></a><a
-                name="_Toc208827132"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">1.1.<span
-                    style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
-                  </span></span><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">Creating your own AXI IP</span></a></h2>
-            <span style="">&nbsp;</span>
-            <p class="MsoListParagraph" style="margin-left:21.0pt;text-align:left;
-text-indent:-21.0pt" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">1.<span
-                  style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">Open Vivado and create a project. In this example, we will create a project named project_1.</span><span
-                style="">&nbsp;</span>
-            </p>
-            <p class="MsoListParagraph" style="margin-left:21.0pt;text-align:left;
-text-indent:-21.0pt" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">2.<span
-                  style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">Create IP</span></p>
-            <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">Click on Tools -&gt;
-                Create and Package New IP</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 1" src="pynq-z2-vivado_th_files/image_004.png" alt="Graphical user interface, text, application
-Description automatically generated" height="212" width="482"></p>
-            <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">Select Create a new
-                AXI4 peripheral</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 5" src="pynq-z2-vivado_th_files/image_005.png" alt="Graphical user interface, text, application, email
-Description automatically generated" height="424" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">Set an appropriate IP name. In this case, it will be </span> myip
-              </span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 6" src="pynq-z2-vivado_th_files/image_006.png" alt="Graphical user interface, text, application, email
-Description automatically generated" height="385" width="567"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                You can add an AXI interface in the Interface section and set the number of registers. This time, we will create a simple IP using this setting (AXI lite)</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 7" src="pynq-z2-vivado_th_files/image_007.png" alt="Graphical user interface, application
-Description automatically generated" height="310" width="567"></p>
-            <span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"><br
-                style="page-break-before:always" clear="all">
-            </span>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span><span
-                style=""></span><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                If Verify Peripheral IP using AXI4 VIP is selected, the system will automatically generate a simulation environment.</span>
-            </p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 8" src="pynq-z2-vivado_th_files/image_008.png" alt="Graphical user interface, text, application
-Description automatically generated" height="341" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><br>
-            </p>
-            <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">Once the environment is configured, the simulation will be created as shown in the image below.</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 9" src="pynq-z2-vivado_th_files/image_009.png" alt="Graphical user interface, application
-Description automatically generated" height="351" width="624"></p>
-            <span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"><br
-                style="page-break-before:always" clear="all">
-            </span>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">Then </span> myip_v1.0<span lang="JA"> will be added to the IP Catalog.</span></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 11" src="pynq-z2-vivado_th_files/image_010.png" alt="Graphical user interface, text, application
-Description automatically generated" height="200" width="624"></p>
-            <span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"><br
-                style="page-break-before:always" clear="all">
-            </span>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif" lang="JA">※ To change the IP for simulation, right-click the simulation file under Simulation Source in Sources and select Set as Top. Then right-click Sim_1 in Sources and select Run Simulation -&gt; Run Behavioral Simulation.</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 20" src="pynq-z2-vivado_th_files/image_011.png" alt="Graphical user interface, text, application, email
-Description automatically generated" height="345" width="576"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 21" src="pynq-z2-vivado_th_files/image_012.png" alt="Graphical user interface, text, application, email
-Description automatically generated" height="224" width="624"></p>
-            <span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"></span><span
-              style="">&nbsp;</span>
-            <h2 style="margin-left:28.35pt;text-align:left;text-indent:-28.35pt"
-              align="left"><a name="_Toc208827133"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">1.2.<span
-                    style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span><span
-                  style="font-family:&quot;ＭＳ 明朝&quot;,serif">Editing the created IP</span></a></h2>
-            <p><br>
-            </p>
-            <p class="MsoNormal" style="margin-left:42.0pt;text-align:left" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">The HDL file of the automatically created IP will be saved at ./ip_repo/myip_1.0/hdl</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 10" src="pynq-z2-vivado_th_files/image_013.png" alt="Graphical user interface, text, application, email
-Description automatically generated" height="150" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">As an example, we will add an output port </span>myip_out<span
-                  lang="JA"> by adding an output in the </span>myip_v1_0_S00_AXI.v<span
-                  lang="JA"> module as follows:</span></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 12" src="pynq-z2-vivado_th_files/image_014.png" alt="Graphical user interface, application, table
-Description automatically generated" height="124" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif"
-                lang="JA">※ The HDL language generated will vary depending on the vivado project settings. It can be set at Settings -&gt; General -&gt; Target language</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 31" src="pynq-z2-vivado_th_files/image_015.png" alt="Graphical user interface, text, application, email
-Description automatically generated" height="243" width="516"></p>
-            <span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"><br
-                style="page-break-before:always" clear="all">
-            </span>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span><span
-                style=""></span><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">Then, add the </span>myip_out<span
-                  lang="JA"> output port in the </span>myip_v1_0.v<span lang="JA">
-                  module as follows:</span></span>
-            </p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 16" src="pynq-z2-vivado_th_files/image_016.png" alt="Graphical user interface, text
-Description automatically generated" height="567" width="624"></p>
-            <br>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                In the IP catalog, right-click myip_v1.0 and select Edit in IP Packager</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 13" src="pynq-z2-vivado_th_files/image_017.png" alt="Graphical user interface, text
-Description automatically generated" height="425" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                </span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">Just click </span>OK</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 14" src="pynq-z2-vivado_th_files/image_018.png" alt="Graphical user interface, text, application
-Description automatically generated" height="249" width="224"></p>
-            <span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"><br
-                style="page-break-before:always" clear="all">
-            </span>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">Then, another </span>vivado<span lang="JA"> window will open automatically. Click on Ports and Interface and click on Merge change from Ports and Interface Wizard</span></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 17" src="pynq-z2-vivado_th_files/image_019.png" alt="Graphical user interface, text, application
-Description automatically generated" height="243" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                Click on Review and Package, then click Re-Package IP to update the IP. After that, close the Vivado used for editing the IP and return to the main Vivado project.</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 18" src="pynq-z2-vivado_th_files/image_020.png" alt="Graphical user interface, text, application
-Description automatically generated" height="278" width="624"><span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">Double-click </span>myip_1_0_bfm_1_i<span lang="JA"> in the Sources of Block design.</span></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 32" src="pynq-z2-vivado_th_files/image_021.png" alt="Graphical user interface, text, application, email
-Description automatically generated" height="190" width="419"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                Click Show IP Status and perform Upgrade for myip_v1_0_bfm_1</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 23" src="pynq-z2-vivado_th_files/image_022.png" alt="Graphical user interface, application, Word
-Description automatically generated" height="362" width="623"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">Then the </span>myip_out<span lang="JA"> port will be added. Right-click </span>myip_out<span lang="JA"> and select Make External.</span></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 24" src="pynq-z2-vivado_th_files/image_023.png" alt="Graphical user interface
-Description automatically generated" height="197" width="503"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                </span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">To restart the simulation, right-click </span>sim_1<span
-                  lang="JA"> in Sources and select </span>Run Simulation -&gt; Run Behavioral Simulation.</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 33" src="pynq-z2-vivado_th_files/image_012.png" alt="Graphical user interface, text, application, email
-Description automatically generated" height="224" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span lang="JA">Then </span>myip_out<span lang="JA"> will be added to </span>myip_v1_0_bfm<span lang="JA"> of the DUT.</span></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 28" src="pynq-z2-vivado_th_files/image_024.png" alt="Graphical user interface
-Description automatically generated" height="191" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <h2 style="margin-left:28.35pt;text-align:left;text-indent:-28.35pt"
-              align="left"><a name="_Toc208827134"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">1.3.<span
-                    style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span><span
-                  style="font-family:&quot;ＭＳ 明朝&quot;,serif">Editing the Testbench</span></a></h2>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif"
-                lang="JA">The simulation Testbench is written in </span><span style="">project_1\project_1.srcs\sim_1\imports\bfm_design\myip_v1_0_tb.sv<span
-                  lang="JA">. If you add the following Read and Write commands to the file, you can modify the simulation sequence.</span></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">mst_agent_0.AXI4LITE_WRITE_BURST(32'h00000000,
-                0, 32'h12345678,
-                mtestBresp ); </span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">mst_agent_0.AXI4LITE_READ_BURST(32'h00000000,
-                0, mtestRDataL,
-                mtestRresp );&nbsp; </span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 30" src="pynq-z2-vivado_th_files/image_025.png" alt="Graphical user interface, text, application, email
-Description automatically generated" height="260" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 29" src="pynq-z2-vivado_th_files/image_026.png" alt="Graphical user interface
-Description automatically generated" height="183" width="624"></p>
-            <span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"><br
-                style="page-break-before:always" clear="all">
-            </span>
-            <h2 style="margin-left:28.35pt;text-align:left;text-indent:-28.35pt"
-              align="left"><a name="_Toc208827135"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">1.4.<span
-                    style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span><span
-                  style="font-family:&quot;ＭＳ 明朝&quot;,serif">Connecting to Zynq</span></a></h2>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left;text-indent:28.35pt" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">Click on IP INTEGRATOR -&gt; Create Block Design</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 2" src="pynq-z2-vivado_th_files/image_027.png" alt="Graphical user interface, text, application, email
-Description automatically generated" height="316" width="538"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">Name the Block design. In this case, we will name it design_1</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 3" src="pynq-z2-vivado_th_files/image_028.png" alt="Graphical user interface, application
-Description automatically generated" height="168" width="235"><span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"></span></p>
-            <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">Click ADD IP and add zynq</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 15" src="pynq-z2-vivado_th_files/image_029.png" alt="Graphical user interface, text, application
-Description automatically generated" height="332" width="400"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">Click ADD IP and add myip</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 19" src="pynq-z2-vivado_th_files/image_030.png" alt="Text
-Description automatically generated with medium confidence" height="260" width="494"></p>
-            <span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"><br
-                style="page-break-before:always" clear="all">
-            </span>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span><span
-                style=""></span><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">Connect Blocks (If you click Run Connection Automation, the system will connect automatically, but you should verify again after connection)</span>
-            </p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 22" src="pynq-z2-vivado_th_files/image_031.png" alt="Graphical user interface, text
-Description automatically generated" height="381" width="476"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 26" src="pynq-z2-vivado_th_files/image_032.png" alt="Diagram
-Description automatically generated with medium confidence" height="327" width="624"></p>
-            <span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"><br
-                style="page-break-before:always" clear="all">
-            </span>
-            <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">In the myip Block, right-click myip_out and select Make External. The system will automatically create an external port out of the Block.</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 34" src="pynq-z2-vivado_th_files/image_033.png" alt="Diagram
-Description automatically generated with medium confidence" height="250" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">Define the address space of myip in the Address Editor</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 39" src="pynq-z2-vivado_th_files/image_034.png" alt="Graphical user interface, text, application
-Description automatically generated" height="117" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">In Design Sources of Sources, right-click design_1 and select Create HDL Wrapper to automatically create a wrapper of the Block design.</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 27" src="pynq-z2-vivado_th_files/image_035.png" alt="Graphical user interface, text, application
-Description automatically generated" height="251" width="624"></p>
-            <span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"><br
-                style="page-break-before:always" clear="all">
-            </span>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span><span
-                style=""></span><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">Create a TOP file of the FPGA and connect it to the wrapped Block design. In this case, we will create the file prj_top.v as the TOP file</span>
-            </p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 4" src="pynq-z2-vivado_th_files/image_036.png" alt="Table
-Description automatically generated" height="502" width="332"><span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"></span></p>
-            <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">Add prj_top.v to Vivado, then in Sources -&gt; Design Sources -&gt; prj_top, right-click and select Set as Top</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 37" src="pynq-z2-vivado_th_files/image_037.png" alt="Graphical user interface, text, application
-Description automatically generated" height="463" width="431"></p>
-            <span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"><br
-                style="page-break-before:always" clear="all">
-            </span>
-            <h2 style="margin-left:28.35pt;text-align:left;text-indent:-28.35pt"
-              align="left"><a name="_Toc208827136"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">1.5.<span
-                    style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span><span
-                  style="font-family:&quot;ＭＳ 明朝&quot;,serif">Simulating IP using Zynq VIP</span></a></h2>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Create Testbench using zynq_tb.v (please refer to the attached example.zip)</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">The operation of Zynq VIP is</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">When writing data from Zynq to IP</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">ใช้
-                xxx.inst.write_data(32'h43C0_0000,4, 32'h12345678, resp);</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">When reading data from IP to Zynq</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">ใช้
-                xxx.inst.read_data(32'h43C0_0000,4,read_data,resp);</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">(xxx will change depending on the design hierarchy. In this design it is</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">tb.prj_top_u.design_1_wrapper_u.design_1_i.processing_system7_0 )</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 25" src="pynq-z2-vivado_th_files/image_038.png" alt="Graphical user interface, text, application
-Description automatically generated" height="173" width="623"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 40" src="pynq-z2-vivado_th_files/image_039.png" alt="Graphical user interface
-Description automatically generated" height="288" width="624"></p>
-            <span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"><br
-                style="page-break-before:always" clear="all">
-            </span>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <h2 style="margin-left:28.35pt;text-align:left;text-indent:-28.35pt"
-              align="left"><a name="_Toc208827137"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">1.6.<span
-                    style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span><span
-                  style="font-family:&quot;ＭＳ 明朝&quot;,serif">Debugging on real device</span></a></h2>
-            <span style="">&nbsp;</span>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Vitis
-                IDE</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">Actually, when doing 1.1 Creating your own AXI IP, Vivado will automatically generate the following example source code</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 78" src="pynq-z2-vivado_th_files/image_040.png" alt="Graphical user interface, text, application
-Description automatically generated" height="145" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 79" src="pynq-z2-vivado_th_files/image_041.png" alt="Graphical user interface, text, application, email
-Description automatically generated" height="408" width="483"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span><span
-                style=""></span><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                Select Include bitstream</span>
-            </p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif"><img class="img-fluid rounded mx-auto d-block" id="Picture 75"
-                  src="pynq-z2-vivado_th_files/image_042.png" alt="Graphical user interface, text, application, email
-Description automatically generated" height="528" width="624"></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style=""><br>
-              </span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 81" src="pynq-z2-vivado_th_files/image_043.png" alt="Graphical user interface, text, application
-Description automatically generated" height="410" width="511"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                Set Workspace</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 82" src="pynq-z2-vivado_th_files/image_044.png" alt="Graphical user interface, text, application, email
-Description automatically generated" height="276" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif"></span><span style=""></span><span
-                style="">&nbsp;</span>
-              <span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 83" src="pynq-z2-vivado_th_files/image_045.png" alt="Graphical user interface, application
-Description automatically generated" height="257" width="616"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">Just click Next</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 84" src="pynq-z2-vivado_th_files/image_046.png" alt="Graphical user interface
-Description automatically generated" height="495" width="624"><span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Click on Create a new platform from hardware(XSA) and use Browse to select the previously created .xsa file. Then click Next</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 86" src="pynq-z2-vivado_th_files/image_047.png" alt="Graphical user interface, application
-Description automatically generated" height="497" width="624"><span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"></span></p>
-            <p class="MsoNormal"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">Specify the application name, then click Next</span></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 87" src="pynq-z2-vivado_th_files/image_048.png" alt="Graphical user interface, application
-Description automatically generated" height="495" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">Just click Next</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 88" src="pynq-z2-vivado_th_files/image_049.png" alt="Graphical user interface
-Description automatically generated" height="495" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">This time it is a simple register operation, so select Empty Application(C)</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 89" src="pynq-z2-vivado_th_files/image_050.png" alt="Graphical user interface, table
-Description automatically generated" height="495" width="624"><span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 90" src="pynq-z2-vivado_th_files/image_051.png" alt="Graphical user interface, application
-Description automatically generated" height="159" width="553"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 92" src="pynq-z2-vivado_th_files/image_052.png" alt="Graphical user interface, text, application
-Description automatically generated" height="593" width="511"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 80" src="pynq-z2-vivado_th_files/image_053.png" alt="Graphical user interface, text, application
-Description automatically generated" height="259" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 85" src="pynq-z2-vivado_th_files/image_054.png" alt="Graphical user interface, text, application
-Description automatically generated" height="260" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 91" src="pynq-z2-vivado_th_files/image_055.png" alt="Graphical user interface, text, application
-Description automatically generated" height="290" width="623"></p>
-            <p class="MsoNormal" style="text-align:left;text-autospace:none" align="left"><span
-                style="">&nbsp;</span><span style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:#3F7F5F">#INCLUDEFILES=*.h</span></p>
-            <p class="MsoNormal" style="text-align:left;text-autospace:none" align="left"><span
-                style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:#3F7F5F">#LIBSOURCES=*.c</span></p>
-            <p class="MsoNormal" style="text-align:left;text-autospace:none" align="left"><span
-                style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:#3F7F5F">#OUTS
-                = *.o</span></p>
-            <p class="MsoNormal" style="text-align:left;text-autospace:none" align="left"><span
-                style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif">&nbsp;</span><b><span
-                  style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:#4E76D6">INCLUDEFILES</span></b><span
-                style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:black">=</span><b><span
-                  style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:#D00F3F">$(wildcard</span></b><span
-                style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:black">
-                *.h</span><b><span style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:#D00F3F">)</span></b></p>
-            <p class="MsoNormal" style="text-align:left;text-autospace:none" align="left"><b><span
-                  style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:#4E76D6">LIBSOURCES</span></b><span
-                style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:black">=</span><b><span
-                  style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:#D00F3F">$(wildcard</span></b><span
-                style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:black">
-                *.c *.cpp</span><b><span style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:#D00F3F">)</span></b></p>
-            <p class="MsoNormal" style="text-align:left;text-autospace:none" align="left"><b><span
-                  style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:#4E76D6">OUTS
-                  </span></b><span style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:black">=
-              </span><b><span style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:#D00F3F">$(addsuffix</span></b><span
-                style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:black">
-                .o, </span><b><span style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:#D00F3F">$(basename</span></b><span
-                style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:black">
-              </span><b><span style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:#D00F3F">$(wildcard</span></b><span
-                style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:black">
-                *.c</span><b><span style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:#D00F3F">)))</span></b></p>
-            <p class="MsoNormal" style="text-align:left;text-autospace:none" align="left"><b><span
-                  style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:#4E76D6">OBJECTS
-                  </span></b><span style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:black">=
-              </span><b><span style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:#D00F3F">$(addsuffix</span></b><span
-                style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:black">
-                .o, </span><b><span style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:#D00F3F">$(basename</span></b><span
-                style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:black">
-              </span><b><span style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:#D00F3F">$(wildcard</span></b><span
-                style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:black">
-                *.c *.cpp</span><b><span style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:#D00F3F">)))</span></b></p>
-            <p class="MsoNormal" style="text-align:left;text-autospace:none" align="left"><b><span
-                  style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:#4E76D6">ASSEMBLY_OBJECTS
-                </span></b><span style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:black">=
-              </span><b><span style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:#D00F3F">$(addsuffix</span></b><span
-                style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:black">
-                .o, </span><b><span style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:#D00F3F">$(basename</span></b><span
-                style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:black">
-              </span><b><span style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:#D00F3F">$(wildcard</span></b><span
-                style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:black">
-                *.S</span><b><span style="font-size:10.0pt;font-family:&quot;ＭＳ 明朝&quot;,serif;color:#D00F3F">)))</span></b></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 95" src="pynq-z2-vivado_th_files/image_056.png" alt="Graphical user interface, text, application
-Description automatically generated" height="415" width="508"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 93" src="pynq-z2-vivado_th_files/image_057.png" alt="Graphical user interface, text, application
-Description automatically generated" height="406" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 94" src="pynq-z2-vivado_th_files/image_058.png" alt="Graphical user interface, text, application
-Description automatically generated" height="318" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style=""></span><span
-                style=""></span><span style="">&nbsp;</span>
-            </p>
-            <h2 style="margin-left:28.35pt;text-align:left;text-indent:-28.35pt"
-              align="left"><a name="_Toc208827138"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">1.7.<span
-                    style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span><span
-                  style="font-family:&quot;ＭＳ 明朝&quot;,serif">Verifying IP with Chipscope</span></a></h2>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">Run SYNTHESIS once</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 36" src="pynq-z2-vivado_th_files/image_059.png" alt="Graphical user interface, text, application, email
-Description automatically generated" height="255" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">Then, click SYNTHESIS -&gt; Open Synthesized Design -&gt; Set Up Debug</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 35" src="pynq-z2-vivado_th_files/image_060.png" alt="Graphical user interface, text, application
-Description automatically generated" height="195" width="220"></p>
-            <span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"><br
-                style="page-break-before:always" clear="all">
-            </span>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Click Find Nets to Add, search for the signals to capture, and register them</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 44" src="pynq-z2-vivado_th_files/image_061.png" alt="Graphical user interface, text, application
-Description automatically generated" height="308" width="519"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-size:14.0pt;font-family:&quot;Cordia New&quot;,sans-serif">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 42" src="pynq-z2-vivado_th_files/image_062.png" alt="Graphical user interface, text, application, email
-Description automatically generated" height="351" width="516"><span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">In the Clock Domain column of each signal, right-click and select Sampling Clock</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 41" src="pynq-z2-vivado_th_files/image_063.png" alt="Graphical user interface, text, application
-Description automatically generated" height="193" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-size:14.0pt;font-family:&quot;Cordia New&quot;,sans-serif">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 43" src="pynq-z2-vivado_th_files/image_064.png" alt="Graphical user interface, text, application
-Description automatically generated" height="384" width="515"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style=""><br>
-              </span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">Then, run until Run Implementation and Generate Bitstream</span></p>
-            <span style="">&nbsp;</span><span style="">Click Open Target, then click Auto Connect</span>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 46" src="pynq-z2-vivado_th_files/image_065.png" alt="Graphical user interface, application, Word
-Description automatically generated" height="165" width="253"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span><span
-                style="">Click Program device to configure the FPGA on the PL side of Zynq</span>
-            </p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 47" src="pynq-z2-vivado_th_files/image_066.png" alt="Graphical user interface, application
-Description automatically generated" height="211" width="392"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 48" src="pynq-z2-vivado_th_files/image_067.png" alt="Graphical user interface, text, application
-Description automatically generated" height="215" width="408"><span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">Set up Trigger setup just like a Logic Analyzer</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 49" src="pynq-z2-vivado_th_files/image_068.png" alt="Graphical user interface, application
-Description automatically generated" height="328" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Perform Run. When a Trigger is detected, the waveform will be displayed as shown below</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 50" src="pynq-z2-vivado_th_files/image_069.png" height="283"
-                width="623"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <h2 style="margin-left:28.35pt;text-align:left;text-indent:-28.35pt"
-              align="left"><a name="_Toc208827139"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">1.8.<span
-                    style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span><span
-                  style="font-family:&quot;ＭＳ 明朝&quot;,serif">Advanced trigger</span></a><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif"> </span></h2>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">[FPGA Verification Tips] Try making good use of Vivado™ Logic Analyzer (How to use Advanced trigger) ~Preparation and Overview Edition~</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><a href="https://www.paltek.co.jp/techblog/techinfo/231127_01"><span
-                  style="font-family:&quot;ＭＳ 明朝&quot;,serif">https://www.paltek.co.jp/techblog/techinfo/231127_01</span></a></p>
-            <span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"><br
-                style="page-break-before:always" clear="all">
-            </span>
-            <p class="MsoNormal"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <h2 style="margin-left:28.35pt;text-align:left;text-indent:-28.35pt"
-              align="left"><a name="_Toc208827140"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">1.9.<span
-                    style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span><span
-                  style="font-family:&quot;ＭＳ 明朝&quot;,serif">Introducing Jupyter environment for debugging custom IP on real device</span></a></h2>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">Debugging a custom IP on a real device requires U-Boot or debugging software, but creating debugging software requires a lot of preparation. Here, we will introduce a simple debugging method using the Jupyter environment</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif;color:black;background:white">"Jupyter Notebook" is an environment where software can be developed on a web browser (mostly on the PC side). However, in the case of Zynq devices, there is a project called PYNQ which is a framework for using FPGA with Python. Linux will run on the processor (PS) side of Zynq and Jupyter will run on it, allowing you to configure the FPGA (PL) side with Python via a web browser.</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 54" src="pynq-z2-vivado_th_files/image_070.png" alt="Diagram
-Description automatically generated" border="0" height="129" width="364"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Boards that support the PYNQ environment are listed at </span><a
-                href="http://www.pynq.io/board.html"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">http://www.pynq.io/board.html</span></a></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">The environment setup is as follows: Place the board to be debugged (Zynq) on the same network as the PC via a router. Then connect the JTAG debugger from the PC via USB to the debug pins of the Zynq device, and connect the Linux console to the PC via UART.</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                src="pynq-z2-vivado_th_files/image069.png" border="0" height="269"
-                width="470"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style=""><br>
-              </span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">Debugging method</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">1. Power on the board to be debugged, then wait until Linux finishes booting. Then type ifconfig to check the IP of the Zynq (Example: You will get an IP like 192.168.1.55)</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 63" src="pynq-z2-vivado_th_files/image_073.png" alt="Text
-Description automatically generated" border="0" height="184" width="478"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">2. Open a browser on the PC and enter the received IP (to access Zynq). The initial screen will ask for a password; enter "xilinx"</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 64" src="pynq-z2-vivado_th_files/image_074.png" alt="Graphical user interface, text, application
-Description automatically generated" border="0" height="124" width="429"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">3. Return to Vivado and click Program device to configure the FPGA on the PL side of Zynq</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 65" src="pynq-z2-vivado_th_files/image_066.png" alt="Graphical user interface, application
-Description automatically generated" border="0" height="211" width="392"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">4. Return to the Jupyter screen and click New → Python3</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 62" src="pynq-z2-vivado_th_files/image_075.png" alt="Table
-Description automatically generated with medium confidence" border="0" height="111"
-                width="429"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">5. Enter the following script so you can freely access the registers on the FPGA (PL) side</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 61" src="pynq-z2-vivado_th_files/image_076.png" alt="Graphical user interface, text, application, email
-Description automatically generated" border="0" height="166" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Mmio = pynq.MMIO is used to set the address and access space of the register</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">mmio.write is accessing the register to write data</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">mmio.read is accessing the register to read data</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">※ You can check the waveform with chipscope to see if the register is actually being accessed</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 66" src="pynq-z2-vivado_th_files/image_077.png" alt="Graphical user interface
-Description automatically generated" border="0" height="223" width="536"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">※ In case of developing the board yourself, it is necessary to port in order to use the Jupyter environment, which takes time. However, if successful, you can freely access the registers with a Python script according to the method introduced above, making hardware debugging much more convenient.</span></p>
-            <span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"><br
-                style="page-break-before:always" clear="all">
-            </span>
-            <h2 style="margin-left:28.35pt;text-align:left;text-indent:-28.35pt"
-              align="left"><a name="_Toc208827141"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">1.10.<span
-                    style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span><span
-                  style="font-family:&quot;ＭＳ 明朝&quot;,serif">Others 1: Routing AXI bus outside Block design</span></a></h2>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left;text-indent:42.0pt" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">To add a port for the AXI master bus, increase the number of Master Interfaces of the AXI Interconnect (change from 1 to 2)</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 51" src="pynq-z2-vivado_th_files/image_078.png" alt="Graphical user interface, text, application
-Description automatically generated" border="0" height="416" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                </span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                This time, in order to get AXI Lite, we will add a conversion from AXI to AXI Lite using AXI Protocol Converter</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 45" src="pynq-z2-vivado_th_files/image_079.png" alt="A picture containing graphical user interface
-Description automatically generated" border="0" height="230" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                Double-click the AXI Protocol Converter and set the Address width. This time it will be set to 12bit</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img
-                class="img-fluid rounded mx-auto d-block" id="Picture 68" src="pynq-z2-vivado_th_files/image_080.png"
-                alt="Graphical user interface, application
-Description automatically generated" border="0" height="354" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                Right-click on M_AXI of AXI Protocol Converter and select Make External</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="position:
-relative;z-index:251663360"></span><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 67" src="pynq-z2-vivado_th_files/image_081.png" alt="Graphical user interface, application
-Description automatically generated" border="0" height="148" width="274"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                Then, the M_AXI_0 bus will output signals outside the Block design</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 52" src="pynq-z2-vivado_th_files/image_082.png" alt="Diagram
-Description automatically generated" border="0" height="130" width="624"></p>
-            <span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"><br
-                style="page-break-before:always" clear="all">
-            </span>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                Configure the Address Map for the AXI bus (M_AXI_0) to be output outside in the Address Editor</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="position:
-relative;z-index:251661312"></span><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 53" src="pynq-z2-vivado_th_files/image_083.png" alt="Graphical user interface, text, application
-Description automatically generated" border="0" height="136" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                </span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                To route CLK and reset signals outside the Block design along with the AXI bus, create CLK and reset signals by right-clicking on the Block design screen and selecting Create Port</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="position:
-relative;z-index:251659264"></span><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 57" src="pynq-z2-vivado_th_files/image_084.png" alt="Graphical user interface
-Description automatically generated" border="0" height="500" width="624"><span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                Configure the CLK and reset signals as follows</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 55" src="pynq-z2-vivado_th_files/image_085.png" alt="Graphical user interface, application
-Description automatically generated" border="0" height="315" width="379"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 56" src="pynq-z2-vivado_th_files/image_086.png" alt="Graphical user interface, application, email
-Description automatically generated" border="0" height="314" width="378"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                When Validate Design is clicked, an error will occur as shown in the picture (the error states that bus M_AXI_0 does not have an associated CLK)</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 58" src="pynq-z2-vivado_th_files/image_087.png" alt="Graphical user interface
-Description automatically generated" border="0" height="413" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                To fix the error, click on M_CLK_0_CLK and in the CONFIG section of Properties, specify M_AXI_0 in ASSOCIATED_BUSIF. Then when you perform Validate Design again, the error will disappear.</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 59" src="pynq-z2-vivado_th_files/image_088.png" alt="Diagram
-Description automatically generated with low confidence" border="0" height="239"
-                width="572"><span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"></span></p>
-            <p class="MsoNormal" style="text-indent:42.0pt"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">Right-click on design_1_i and select Create HDL Wrapper</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 60" src="pynq-z2-vivado_th_files/image_089.png" alt="Graphical user interface, text, application
-Description automatically generated" border="0" height="368" width="624"></p>
-            <p class="MsoNormal"><span style="font-family:&quot;ＭＳ 明朝&quot;,serif">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                Then, the A_AXI_0 bus signal will appear as follows</span></p>
-            <p class="MsoNormal" style="text-align:center" align="center"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 76" src="pynq-z2-vivado_th_files/image_090.png" alt="Graphical user interface, text
-Description automatically generated" border="0" height="339" width="430"><span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"></span></p>
-            <p class="MsoNormal" style="margin-left:42.0pt;text-align:left" align="left"><span
-                style="font-family:&quot;ＭＳ 明朝&quot;,serif">Connect to your custom AXI IP in the project's top file</span></p>
-            <p class="MsoNormal" style="text-align:center" align="center"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 74" src="pynq-z2-vivado_th_files/image_091.png" alt="Table
-Description automatically generated" border="0" height="411" width="260"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                Add read/write access in the simulation Testbench to the location mapped by M_AXI_0<img class="img-fluid rounded mx-auto d-block"
-                  id="Picture 77" src="pynq-z2-vivado_th_files/image_092.png" alt="Graphical user interface, text, application, email
-Description automatically generated" border="0" height="225" width="624"></span></p>
-            <span style="font-size:10.5pt;font-family:&quot;ＭＳ 明朝&quot;,serif"><br
-                style="page-break-before:always" clear="all">
-            </span>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                When simulating, you will be able to verify the custom AXI IP</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 69" src="pynq-z2-vivado_th_files/image_093.png" alt="Graphical user interface
-Description automatically generated" border="0" height="283" width="625"></p>
-          </div>
+            <h1 class="mb-4">Vivado: Creating Custom AXI IP and Integrating with Zynq</h1>
+            <p>Xilinx Vivado Design Suite is a comprehensive FPGA/SoC design environment covering HDL authoring, simulation, synthesis, implementation, all the way to on-board hardware debugging. In this article, we walk through an end-to-end tutorial on <strong>creating a custom AXI IP core from scratch and integrating it with Zynq</strong>.</p>
+            <h2 class="mt-4 mb-3">1. Creating a Custom AXI IP</h2>
+            <p>Launch Vivado and create a new project. In this example, we create a project named <code>project_1</code>.</p>
+            <p>Create an IP by clicking <strong>Tools -&gt; Create and Package New IP</strong>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_004.png" alt="Create and Package New IP"></div>
+            <p>Select <strong>Create a new AXI4 peripheral</strong>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_005.png" alt="Create AXI4 Peripheral"></div>
+            <p>Name the IP as desired. In this example, name it <code>myip</code>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_006.png" alt="IP Name"></div>
+            <p>In the Interfaces configuration, you can add AXI interfaces and configure the number of registers. For this simple example, we keep the default settings (AXI4-Lite).</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_007.png" alt="Interface Configuration"></div>
+            <p>If you select <strong>Verify Peripheral IP using AXI4 VIP</strong>, the system will automatically generate a simulation testbench.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_008.png" alt="Verify Peripheral IP"></div>
+            <p>Once generated, you can run the simulation as shown below.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_009.png" alt="Simulation Waveform"></div>
+            <p>Additionally, <code>myip_v1.0</code> will be added to the IP Catalog.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_010.png" alt="IP Catalog"></div>
+            <p><strong>Note:</strong> To change which IP to simulate, right-click the target module under <strong>Simulation Sources</strong> in the Sources window and select <strong>Set as Top</strong>. Then right-click <code>sim_1</code> in Sources and select <strong>Run Simulation -&gt; Run Behavioral Simulation</strong>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_011.png" alt="Set as Top"></div>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_012.png" alt="Run Behavioral Simulation"></div>
+            <h2 class="mt-4 mb-3">2. Modifying the Generated IP</h2>
+            <p>The automatically generated HDL source files for the IP are stored in <code>./ip_repo/myip_1.0/hdl</code>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_013.png" alt="HDL Directory"></div>
+            <p>Example: Adding an output port <code>myip_out</code> by declaring the output port in the <code>myip_v1_0_S00_AXI.v</code> module as shown below.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_014.png" alt="Edit AXI Slave HDL"></div>
+            <p><strong>Note:</strong> The generated HDL language depends on your Vivado project settings. You can configure this at <strong>Settings -&gt; General -&gt; Target language</strong>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_015.png" alt="Target Language Settings"></div>
+            <p>Next, also add the output port <code>myip_out</code> in the top-level module <code>myip_v1_0.v</code>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_016.png" alt="Edit Top Module HDL"></div>
+            <p>In the IP Catalog pane, right-click <code>myip_v1.0</code> and select <strong>Edit in IP Packager</strong>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_017.png" alt="Edit in IP Packager"></div>
+            <p>Click <strong>OK</strong> with the default settings.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_018.png" alt="IP Packager Dialog"></div>
+            <p>A separate Vivado window will open automatically. Click <strong>Ports and Interfaces</strong>, then click <strong>Merge changes from Ports and Interfaces Wizard</strong>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_019.png" alt="Merge Ports and Interfaces"></div>
+            <p>Click <strong>Review and Package</strong>, then click <strong>Re-Package IP</strong> to update the IP. Close the IP Packager Vivado window and return to the main project.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_020.png" alt="Re-Package IP"></div>
+            <p>Double-click <code>myip_1_0_bfm_1_i</code> in the Block Design sources.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_021.png" alt="BFM Block Design"></div>
+            <p>Click <strong>Show IP Status</strong> and upgrade <code>myip_v1_0_bfm_1</code>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_022.png" alt="Upgrade IP"></div>
+            <p>The <code>myip_out</code> port will now appear on the block. Right-click <code>myip_out</code> and select <strong>Make External</strong>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_023.png" alt="Make External"></div>
+            <p>Right-click <code>sim_1</code> in Sources and select <strong>Run Simulation -&gt; Run Behavioral Simulation</strong> to restart simulation.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_012.png" alt="Run Simulation Again"></div>
+            <p>The <code>myip_out</code> port is now added to <code>myip_v1_0_bfm</code>, which acts as the DUT.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_024.png" alt="DUT Port Added"></div>
+            <h2 class="mt-4 mb-3">3. Modifying the Testbench</h2>
+            <p>The testbench for simulation is located at <code>project_1\project_1.srcs\sim_1\imports\bfm_design\myip_v1_0_tb.sv</code>. By adding the following Read and Write tasks to this file, you can customize the simulation sequence.</p>
+            <pre><code class="language-systemverilog">// Write value 0x12345678 to address 0x0 (Register 0 of myip)
+mst_agent_0.AXI4LITE_WRITE_BURST(32&#x27;h00000000, 0, 32&#x27;h12345678, mtestBresp );
+
+// Read back from address 0x0 (Read data is stored in mtestRDataL)
+mst_agent_0.AXI4LITE_READ_BURST(32&#x27;h00000000, 0, mtestRDataL, mtestRresp );
+</code></pre>
+            <p>Arguments in order: <code>address</code>, <code>protection type</code> (<code>prot</code>), <code>data</code>, <code>response</code> (<code>mtestBresp</code> / <code>mtestRresp</code>).</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_025.png" alt="Testbench Code"></div>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_026.png" alt="Simulation Results"></div>
+            <h2 class="mt-4 mb-3">4. Connecting with Zynq</h2>
+            <p>Click <strong>IP INTEGRATOR -&gt; Create Block Design</strong>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_027.png" alt="Create Block Design"></div>
+            <p>Name the Block Design. In this example, name it <code>design_1</code>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_028.png" alt="Block Design Name"></div>
+            <p>Click <strong>ADD IP (+)</strong> and add the <strong>ZYNQ7 Processing System</strong> IP.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_029.png" alt="Add Zynq IP"></div>
+            <p>Click <strong>ADD IP (+)</strong> and add <code>myip</code>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_030.png" alt="Add myip"></div>
+            <p>Connect the blocks together (Clicking <strong>Run Connection Automation</strong> will automatically wire up the interfaces, but always verify the connections afterwards).</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_031.png" alt="Connection Automation"></div>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_032.png" alt="Connected Block Design"></div>
+            <p>Right-click <code>myip_out</code> in the <code>myip</code> block and click <strong>Make External</strong>. The port will be routed outside the block design automatically.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_033.png" alt="Make External Port"></div>
+            <p>Assign the base address for <code>myip</code> in the <strong>Address Editor</strong> tab.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_034.png" alt="Address Editor"></div>
+            <p>Right-click <code>design_1</code> under Design Sources in the Sources window and select <strong>Create HDL Wrapper</strong> to generate the wrapper for the Block Design automatically.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_035.png" alt="Create HDL Wrapper"></div>
+            <p>Create a top-level FPGA file and instantiate the Block Design wrapper. In this example, create a top-level file named <code>prj_top.v</code>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_036.png" alt="Top-level Source"></div>
+            <p>Add <code>prj_top.v</code> to Vivado, right-click <strong>Sources -&gt; Design Sources -&gt; prj_top</strong>, and select <strong>Set as Top</strong>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_037.png" alt="Set Top Level"></div>
+            <h2 class="mt-4 mb-3">5. Simulating IP with Zynq VIP</h2>
+            <p>Create a testbench named <code>zynq_tb.v</code> with the following code (adjust the <code>TODO</code> sections according to your design; refer to the Zynq-7000 VIP documentation (DS940) or Vivado example designs for the PS VIP reset sequence):</p>
+            <pre><code class="language-verilog">`timescale 1ns / 1ps
+module tb;
+    reg [31:0] read_data;
+    reg [1:0]  resp;
+
+    // TODO: Instantiate prj_top (Section 5) as prj_top_u
+    //       and drive the PS clock/reset according to DS940 example
+
+    initial begin
+        // TODO: Complete the PS VIP reset sequence before issuing commands
+
+        // Write from Zynq (PS) -&gt; myip
+        tb.prj_top_u.design_1_wrapper_u.design_1_i.processing_system7_0.inst.write_data(32&#x27;h43C0_0000, 4, 32&#x27;h12345678, resp);
+        // Read from myip -&gt; Zynq (PS)
+        tb.prj_top_u.design_1_wrapper_u.design_1_i.processing_system7_0.inst.read_data(32&#x27;h43C0_0000, 4, read_data, resp);
+
+        $display(&quot;read_data = %h, resp = %b&quot;, read_data, resp);
+        $finish;
+    end
+endmodule
+</code></pre>
+            <p><strong>Using Zynq VIP:</strong></p>
+            <p>For Write transactions (Zynq PS &rarr; IP):</p>
+            <p><code>xxx.inst.write_data(32'h43C0_0000, 4, 32'h12345678, resp);</code></p>
+            <p>For Read transactions (IP &rarr; Zynq PS):</p>
+            <p><code>xxx.inst.read_data(32'h43C0_0000, 4, read_data, resp);</code></p>
+            <div class="table-responsive my-3">
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Argument</th>
+                  <th scope="col">Meaning</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>Target memory address (must match Address Editor)</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Data size in bytes (4 = 32 bits)</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Data to write / Variable receiving read data</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>Response status (<code>resp</code>)</td>
+                </tr>
+              </tbody>
+            </table>
+            </div>
+            <p>(The hierarchy <code>xxx</code> depends on your design structure. In this design it is: <code>tb.prj_top_u.design_1_wrapper_u.design_1_i.processing_system7_0</code>)</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_038.png" alt="Zynq VIP Simulation Setup"></div>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_039.png" alt="Zynq VIP Waveform"></div>
+            <h2 class="mt-4 mb-3">6. On-Board Hardware Debugging</h2>
+            <p>This section uses Vitis IDE to write a C program running on the PS (ARM) processor to access the registers of <code>myip</code> on the physical board. Workflow overview:</p>
+            <div class="table-responsive my-3">
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Step</th>
+                  <th scope="col">Environment</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>Vivado</td>
+                  <td>Run <strong>Generate Bitstream</strong>, then <strong>File -&gt; Export -&gt; Export Hardware</strong> and select <strong>Include bitstream</strong> (generates <code>.xsa</code> file)</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Vitis</td>
+                  <td>Set Workspace and create a Platform Project from the <code>.xsa</code> file</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Vitis</td>
+                  <td>Create an Application Project using the <strong>Empty Application (C)</strong> template</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>Vitis</td>
+                  <td>Add C source code, build the application, and run on the board via JTAG</td>
+                </tr>
+              </tbody>
+            </table>
+            </div>
+            <p>When you created the custom AXI IP in Section 1, Vivado automatically generated sample driver source files as shown below.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_040.png" alt="Sample Driver Source"></div>
+            <p>Start with <strong>Export Hardware</strong> in Vivado.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_041.png" alt="Export Hardware Dialog"></div>
+            <p>Select <strong>Include bitstream</strong>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_042.png" alt="Include Bitstream Option"></div>
+            <p>Then open <strong>Vitis IDE</strong>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_043.png" alt="Launch Vitis IDE"></div>
+            <p>Select the Workspace directory.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_044.png" alt="Workspace Launcher"></div>
+            <p>Click <strong>New -&gt; Application Project</strong>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_045.png" alt="New Application Project"></div>
+            <p>Click <strong>Next</strong> with default settings.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_046.png" alt="Application Project Wizard"></div>
+            <p>Click <strong>Create a new platform from hardware (XSA)</strong>, browse and select the <code>.xsa</code> file exported earlier, then click <strong>Next</strong>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_047.png" alt="Select XSA File"></div>
+            <p>Enter the project application name, then click <strong>Next</strong>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_048.png" alt="Project Name"></div>
+            <p>Click <strong>Next</strong> with default settings.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_049.png" alt="Domain Settings"></div>
+            <p>Since we are performing basic register operations, select <strong>Empty Application (C)</strong>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_050.png" alt="Select Empty Application"></div>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_051.png" alt="Application Structure"></div>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_052.png" alt="Add Source Files"></div>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_053.png" alt="Vitis Project Explorer"></div>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_054.png" alt="Edit Code"></div>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_055.png" alt="Makefile Configuration"></div>
+            <p>Example Makefile modification to automatically gather all <code>.c</code>, <code>.cpp</code>, and <code>.S</code> files in the directory using wildcards (the three lines starting with <code>#</code> are the original commented-out lines):</p>
+            <pre><code class="language-makefile">#INCLUDEFILES=*.h
+
+#LIBSOURCES=*.c
+
+#OUTS = *.o
+
+INCLUDEFILES=$(wildcard *.h)
+
+LIBSOURCES=$(wildcard *.c *.cpp)
+
+OUTS = $(addsuffix .o, $(basename $(wildcard *.c)))
+
+OBJECTS = $(addsuffix .o, $(basename $(wildcard *.c *.cpp)))
+
+ASSEMBLY_OBJECTS = $(addsuffix .o, $(basename $(wildcard *.S)))
+</code></pre>
+            <p>Build the Project.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_056.png" alt="Build Project"></div>
+            <p>Debug on real hardware via <strong>Run As -&gt; Run Configurations</strong>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_057.png" alt="Run Configuration"></div>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_058.png" alt="Debug Target"></div>
+            <h3 class="mt-3 mb-2">6.1 Sample C Code Accessing myip Registers</h3>
+            <p>A simple <code>main.c</code> example for Empty Application (C) that writes to and reads back from the <code>myip</code> register (the base address must match the one specified in the Address Editor in Section 5; here assumed as <code>0x43C00000</code>):</p>
+            <pre><code class="language-c">#include &quot;xil_io.h&quot;
+#include &quot;xil_printf.h&quot;
+
+#define MYIP_BASEADDR 0x43C00000 /* Must match Address Editor */
+
+int main(void)
+{
+    u32 rd;
+
+    Xil_Out32(MYIP_BASEADDR + 0x00, 0x12345678); /* Write register 0 */
+    rd = Xil_In32(MYIP_BASEADDR + 0x00);         /* Read back */
+    xil_printf(&quot;reg0 = 0x%08x\r\n&quot;, rd);
+
+    return 0;
+}
+</code></pre>
+            <ul><li>The sample driver file generated by Vivado (<code>myip.h</code>) provides helper macros for writing/reading registers that can be used instead of <code>Xil_Out32</code> / <code>Xil_In32</code> (macro names depend on the IP name).</li></ul>
+            <ul><li>Run the program by right-clicking the project -&gt; <strong>Run As -&gt; Launch on Hardware (System Debugger)</strong> and open a serial terminal to view the <code>xil_printf</code> output.</li></ul>
+            <h2 class="mt-4 mb-3">7. Verifying IP with Chipscope (ILA)</h2>
+            <div class="alert alert-info my-3" role="alert"><i class="bi bi-info-circle-fill me-2"></i><strong>Note:</strong><br>Chipscope was the tool name in the ISE era. In Vivado, this built-in logic analyzer core and viewer is named <strong>ILA (Integrated Logic Analyzer)</strong>.</div>
+            <p>Run <strong>SYNTHESIS</strong> once.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_059.png" alt="Run Synthesis"></div>
+            <p>Then click <strong>SYNTHESIS -&gt; Open Synthesized Design -&gt; Set Up Debug</strong>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_060.png" alt="Set Up Debug"></div>
+            <p>Click <strong>Find Nets to Add</strong>, search for the internal signals you wish to monitor, and register them.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_061.png" alt="Find Nets to Add"></div>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_062.png" alt="Select Nets"></div>
+            <p>Right-click the <strong>Clock Domain</strong> column for each signal and assign the appropriate sampling clock.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_063.png" alt="Select Clock Domain"></div>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_064.png" alt="Clock Domain Assigned"></div>
+            <p>Next, click <strong>Run Implementation</strong> followed by <strong>Generate Bitstream</strong>.</p>
+            <p>In Hardware Manager, click <strong>Open Target</strong> and select <strong>Auto Connect</strong>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_065.png" alt="Auto Connect Target"></div>
+            <p>Click <strong>Program device</strong> to download the FPGA bitstream into the PL side of Zynq.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_066.png" alt="Program Device"></div>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_067.png" alt="Program Dialog"></div>
+            <p>Configure the <strong>Trigger setup</strong> just as you would with a hardware logic analyzer.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_068.png" alt="Trigger Setup"></div>
+            <p>Click <strong>Run</strong>. When the trigger condition occurs, the waveform will be captured and displayed as shown below.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_069.png" alt="Captured ILA Waveform"></div>
+            <h2 class="mt-4 mb-3">8. Advanced Trigger</h2>
+            <p>Basic trigger setup evaluates signal values against a single condition. However, complex triggering sequences—such as "trigger when a signal goes HIGH and then transitions LOW in sequence"—require an <strong>Advanced Trigger</strong>, which expresses conditions as a <em>Trigger State Machine (TSM)</em> program executed by the ILA in hardware.</p>
+            <p><strong>How to Use:</strong></p>
+            <p class="mb-2"><strong>1.</strong> The ILA core must be configured to support Advanced Triggering during core generation/insertion (in Set Up Debug or the ILA IP customization GUI).</p>
+            <p class="mb-2"><strong>2.</strong> In Hardware Manager, set the Trigger mode in the ILA Properties pane to <code>ADVANCED_ONLY</code> (or <code>ADVANCED_OR_TRIG_IN</code>).</p>
+            <p class="mb-2"><strong>3.</strong> The Basic Trigger Setup tab is replaced by the Trigger State Machine editor. Click <strong>Create new trigger state machine</strong> (generates a <code>.tsm</code> file).</p>
+            <p class="mb-2"><strong>4.</strong> Write your TSM script and click <strong>Run Trigger</strong> (the TSM is recompiled whenever Run is clicked, or you can click the Compile button to check syntax without arming the ILA).</p>
+            <p>Example: Trigger when <code>myip_out</code> rises to 1 and subsequently falls back to 0 (use probe names as shown in the ILA dashboard):</p>
+            <pre><code>state s0:
+  if (myip_out == 1&#x27;b1) then
+    goto s1;
+  else
+    goto s0;
+  endif
+
+state s1:
+  if (myip_out == 1&#x27;b0) then
+    trigger;
+  else
+    goto s1;
+  endif
+</code></pre>
+            <p>For complete details on the TSM language syntax (counters, flags, state transitions), refer to <strong>UG908: Vivado Design Suite User Guide - Programming and Debugging</strong> (Trigger State Machine Language Description chapter).</p>
+            <p>Additional Reference (Japanese): 【FPGA Verification Knowledge】Making Vivado™ Logic Analyzer More Convenient (Using Advanced Trigger) - Preparation & Overview:</p>
+            <p><a href="https://www.paltek.co.jp/techblog/techinfo/231127_01" target="_blank" rel="noopener noreferrer">https://www.paltek.co.jp/techblog/techinfo/231127_01</a></p>
+            <h2 class="mt-4 mb-3">9. Jupyter Environment for On-Board Custom IP Debugging</h2>
+            <p>Debugging custom IP on actual hardware typically requires U-Boot or custom bare-metal/Linux debug firmware. However, preparing custom debug firmware involves many prerequisites. Here we introduce a convenient, interactive debugging approach using Jupyter Notebook.</p>
+            <p><strong>Jupyter Notebook</strong> is a web-based interactive development environment (traditionally used on PC). For Zynq devices, the open-source PYNQ framework enables developers to interact with and control FPGA logic using Python. The Zynq processor (PS) runs embedded Linux hosting the Jupyter server, allowing you to configure and interact with the FPGA (PL) through Python scripts in your browser.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_070.png" alt="PYNQ Architecture"></div>
+            <p>Boards supported by the PYNQ framework are listed at <a href="http://www.pynq.io/board.html" target="_blank" rel="noopener noreferrer">http://www.pynq.io/board.html</a></p>
+            <p><strong>Debugging Steps:</strong></p>
+            <p class="mb-2"><strong>1.</strong> Power on the target board and wait for Linux to finish booting. Run <code>ifconfig</code> in serial terminal to find the Zynq board's IP address (e.g. <code>192.168.1.55</code>).</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_073.png" alt="ifconfig IP Address"></div>
+            <p class="mb-2"><strong>2.</strong> Open a web browser on your PC and enter the IP address to connect to Zynq. Enter the login password (default is <code>xilinx</code>).</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_074.png" alt="Jupyter Login"></div>
+            <p class="mb-2"><strong>3.</strong> Switch back to Vivado and click <strong>Program device</strong> to configure the FPGA bitstream onto the Zynq PL.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_066.png" alt="Program FPGA"></div>
+            <p class="mb-2"><strong>4.</strong> In the Jupyter dashboard, click <strong>New &rarr; Python 3</strong>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_075.png" alt="New Python Notebook"></div>
+            <p class="mb-2"><strong>5.</strong> Enter the script below to read and write FPGA (PL) registers interactively:</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_076.png" alt="Jupyter Python Script"></div>
+            <pre><code class="language-python">from pynq import MMIO
+
+MYIP_BASE = 0x43C00000          # Must match Address Editor
+mmio = MMIO(MYIP_BASE, 0x1000)  # (base address, memory span)
+
+mmio.write(0x00, 0x12345678)    # Write to register 0
+print(hex(mmio.read(0x00)))     # Read back register 0
+</code></pre>
+            <p><code>pynq.MMIO(base_addr, length)</code> defines the memory mapped address space and byte range for access.</p>
+            <p><code>mmio.write(offset, data)</code> performs a 32-bit register write.</p>
+            <p><code>mmio.read(offset)</code> performs a 32-bit register read.</p>
+            <p><strong>Note:</strong> You can simultaneously observe signal waveforms with Chipscope/ILA in Vivado to verify register access transactions in real time.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_077.png" alt="ILA Waveform Capture from Jupyter"></div>
+            <h2 class="mt-4 mb-3">10. Additional Topic: Exposing the AXI Bus Outside the Block Design</h2>
+            <p>To add an AXI master bus port, increase the number of Master Interfaces on the AXI Interconnect (e.g. increase from 1 to 2).</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_078.png" alt="AXI Interconnect Configuration"></div>
+            <p>In this example, we want to bring out an AXI-Lite bus, so we add an <strong>AXI Protocol Converter</strong> to convert full AXI &rarr; AXI-Lite.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_079.png" alt="Add AXI Protocol Converter"></div>
+            <p>Double-click the AXI Protocol Converter and configure the Address Width (set to 12 bits in this example).</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_080.png" alt="Address Width Configuration"></div>
+            <p>Right-click <code>M_AXI</code> on the AXI Protocol Converter and select <strong>Make External</strong>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_081.png" alt="Make External M_AXI"></div>
+            <p>The <code>M_AXI_0</code> bus interface is now exposed outside the Block Design.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_082.png" alt="M_AXI_0 Bus Port"></div>
+            <p>Assign the address space for the external AXI bus (<code>M_AXI_0</code>) in the <strong>Address Editor</strong> tab.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_083.png" alt="Address Editor for M_AXI_0"></div>
+            <p>To route the CLK and reset signals outside the Block Design along with the AXI bus, right-click on the Block Design canvas and choose <strong>Create Port</strong>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_084.png" alt="Create Port"></div>
+            <p>Configure the CLK and reset port properties as shown below.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_085.png" alt="Clock Port Properties"></div>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_086.png" alt="Reset Port Properties"></div>
+            <p>When clicking <strong>Validate Design</strong>, an error may occur as shown below (indicating that <code>M_AXI_0</code> has no associated clock).</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_087.png" alt="Validation Error"></div>
+            <p>To resolve this error, select <code>M_CLK_0_CLK</code>, go to the <strong>Properties -&gt; CONFIG</strong> section, and enter <code>M_AXI_0</code> into <code>ASSOCIATED_BUSIF</code>. Then run <strong>Validate Design</strong> again—the warning/error will disappear.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_088.png" alt="ASSOCIATED_BUSIF Fix"></div>
+            <p>Right-click <code>design_1_i</code> and select <strong>Create HDL Wrapper</strong>.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_089.png" alt="Update HDL Wrapper"></div>
+            <p>The <code>M_AXI_0</code> bus signals are now brought out to the top level as shown.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_090.png" alt="Top-level Wrapper Signals"></div>
+            <p>Connect the bus to your custom AXI IP at the top level of the project.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_091.png" alt="Top-level Custom IP Connection"></div>
+            <p>Add read and write operations to the memory locations mapped for <code>M_AXI_0</code> in the simulation testbench.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_092.png" alt="Simulation Testbench Transactions"></div>
+            <p>Running behavioral simulation allows you to verify your custom AXI IP module functionality.</p>
+            <div class="text-center my-3"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-vivado_th_files/image_093.png" alt="Verification Simulation Waveform"></div>
         </div>
       </div>
     </div>

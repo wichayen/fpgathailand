@@ -3,9 +3,9 @@
   <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulation with Modelsim</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet">
+    <title>ModelSim Simulation with Vivado</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="styles.css">
     <style>
         body { padding-top: 56px; }
@@ -17,8 +17,25 @@
             margin-left: auto;
             margin-right: auto;
             border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
-        pre { background-color: #f8f9fa; padding: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
+        pre { 
+            background-color: #1e1e2e; 
+            color: #cdd6f4;
+            padding: 15px; 
+            border-radius: 8px; 
+            white-space: pre-wrap; 
+            word-wrap: break-word; 
+            font-size: 0.92rem;
+            margin: 1rem 0;
+        }
+        code {
+            color: #d63384;
+            font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+        pre code {
+            color: inherit;
+        }
         .video-container {
             position: relative;
             padding-bottom: 56.25%; /* 16:9 */
@@ -37,21 +54,19 @@
             height: 100%;
         }
         blockquote {
-            border-left: 4px solid #ccc;
+            border-left: 4px solid #0d6efd;
             padding-left: 1rem;
-            color: #666;
+            color: #495057;
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 0 5px 5px 0;
         }
-        /* Styles for code blocks from MS Word */
-        p.MsoNormal, li.MsoNormal, div.MsoNormal {
-            margin-bottom: 0.4rem;
-            line-height: 1.25;
-            font-size: 1rem;
+        .table {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
         }
-        /* Normalize spacing inside WordSection content to align with site style */
-        .WordSection1 p {
-            margin-bottom: 0.4rem;
-            line-height: 1.25;
-            font-size: 1rem;
+        .table thead th {
+            background-color: #f1f5f9;
         }
     </style>
   </head>
@@ -81,7 +96,7 @@
                             <li><a class="dropdown-item" href="pynq-z2-vivado_en.html"><i class="bi bi-cpu me-2"></i>Vivado Setup</a></li>
                             <li><a class="dropdown-item" href="pynq-z2-hls_en.html"><i class="bi bi-lightning-charge me-2"></i>HLS Acceleration</a></li>
                             <li><a class="dropdown-item" href="pynq-z2-ai_en.html"><i class="bi bi-robot me-2"></i>AI (DPU IP)</a></li>
-                            <li><a class="dropdown-item" href="pynq-z2-modelsim_en.html"><i class="bi bi-activity me-2"></i>Modelsim</a></li>
+                            <li><a class="dropdown-item active" href="pynq-z2-modelsim_en.html"><i class="bi bi-activity me-2"></i>Modelsim</a></li>
                             <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1_en.html"><i class="bi bi-display me-2"></i>LVGL Part 1</a></li>
                             <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2_en.html"><i class="bi bi-display me-2"></i>LVGL Part 2</a></li>
                             <li><a class="dropdown-item" href="pynq_z2_lvlg_special_ep_en.html"><i class="bi bi-stars me-2"></i>Special: AI Agent</a></li>
@@ -113,298 +128,206 @@
             </div>
         </div>
     </nav>
+
     <div class="container mt-5">
       <div class="row">
         <div class="col-lg-8 mx-auto article-content">
-          <h1>Simulation with Modelsim</h1>
-          <div class="WordSection1" style="layout-grid:18.0pt">
-            <h1 style="margin-left:.25in;text-align:left;text-indent:-.25in" align="left"><a
-                name="_Toc208827173"><span style="">1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
-                    </span></span><span style="">Simulation with Modelsim</span></a></h1>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Normally,
-                Vivado uses xsim as the default simulation tool,
-                but there is also a way to simulate with Modelsim. The steps for simulation with
-                Modelsim are as follows:</span></p>
-            <p class="MsoListParagraph" style="margin-left:.25in;text-align:left;
-text-indent:-.25in" align="left"><span style="">1．<span style="font:7.0pt &quot;Times New Roman&quot;">
-                </span></span><span style="">Compile Xilinx library with
-                Modelsim</span></p>
-            <p class="MsoListParagraph" style="margin-left:.25in;text-align:left;
-text-indent:-.25in" align="left"><span style="">2．<span style="font:7.0pt &quot;Times New Roman&quot;">
-                </span></span><span style="">Create simulation script on Vivado</span></p>
-            <p class="MsoListParagraph" style="margin-left:.25in;text-align:left;
-text-indent:-.25in" align="left"><span style="">3．<span style="font:7.0pt &quot;Times New Roman&quot;">
-                </span></span><span style="">Open Modelsim and run the simulation</span></p>
-            <p class="MsoListParagraph" style="margin-left:.25in;text-align:left;
-text-indent:-.25in" align="left"><span style="">4．<span style="font:7.0pt &quot;Times New Roman&quot;">
-                </span></span><span style="">Edit/Create </span><span style="">
-                test_bench <span lang="JA">based on step ③ and run the simulation</span></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">※
-                Since AXI Verification IP requires a license,
-                an error will occur when simulating with Modelsim <span style="background:yellow">（Without
-                  a paid Modelsim </span></span><span style="background:yellow">license<span
-                  lang="JA">, it is not possible to simulate </span>AXI
-                Verification IP<span lang="JA">）</span></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;
-                <br></span></p>
-            <h2 style="margin-left:28.35pt;text-indent:-28.35pt"><a name="_Toc208827174"><span
-                  style="">1.1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
-                  </span></span><span style="">Compiling Xilinx Library with
-                  Vivado</span></a></h2>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Open
-                Vivado and click on Tool　→　Compile Simulation Libraries</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                src="pynq-z2-modelsim_th_files/image001.png" alt="A screenshot of a computer\n\nAI-generated content may be incorrect."
-                height="163" width="265"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Specify
-                the Compiled library location<span lang="JA">　and　</span>Simulator
-                executable
-                path<span lang="JA">　then click</span> 「Compile」</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style=""
-                lang="TH"><img class="img-fluid rounded mx-auto d-block" src="pynq-z2-modelsim_th_files/image011.png"
-                  alt="A screenshot of a computer\n\nAI-generated content may be incorrect."
-                  height="350" width="464"></span></p>
-            <span style="font-size:10.5pt;"><br style="page-break-before:always"
-                clear="all">
-            </span>
-            <p class="MsoNormal"><span style="">When compilation is complete,
-                a modelsim.ini file will also be created
-                (this is the initialization script to load the Xilinx library when Modelsim opens).</span></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
-                src="pynq-z2-modelsim_th_files/image012.png" alt="A screenshot of a computer\n\nAI-generated content may be incorrect."
-                height="164" width="527"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">※
-                1. Compiling all Xilinx IPs takes a long time (about 1 hour).</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">※
-                2. From testing with Modelsim 10.5b (Quartus 17.1) and Vivado
-                2022.1, it was found that 4 modules failed to compile. If the design in Vivado
-                does not use those modules, it shouldn't be a problem.</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                src="pynq-z2-modelsim_th_files/image013.png" alt="A screenshot of a computer error\n\nAI-generated content may be incorrect."
-                height="147" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                src="pynq-z2-modelsim_th_files/image014.png" height="54" width="624"><span
-                style="font-size:10.5pt;"></span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">※
-                3. Screen in case of specifying the GCC Path</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                src="pynq-z2-modelsim_th_files/image015.png" alt="A screenshot of a computer\n\nAI-generated content may be incorrect."
-                height="356" width="523"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><br>
-            </p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">※
-                4. If there is no AXI BFM license, there will be an error like this<br>
-              </span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                src="pynq-z2-modelsim_th_files/image016.png" alt="A blue and white text\n\nAI-generated content may be incorrect."
-                height="125" width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <span style="font-size:10.5pt;"></span> <br>
-            <h2 style="margin-left:28.35pt;text-indent:-28.35pt"><a name="_Toc208827175"><span
-                  style="">1.2.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
-                  </span></span><span style="">Simulation with Modelsim
-                  (for designs without Xilinx VIP)</span></a></h2>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoListParagraph" style="margin-left:.25in;text-align:left;
-text-indent:-.25in" align="left"><span style="">1．<span style="font:7.0pt &quot;Times New Roman&quot;">
-                </span></span><span style="">Export simulation on Vivado</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Create
-                a filter named 「sim」 in the project, then click 「Export Simulation」 in
-                Vivado</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                src="pynq-z2-modelsim_th_files/image017.png" alt="A screenshot of a computer\n\nAI-generated content may be incorrect."
-                height="252" width="306"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                src="pynq-z2-modelsim_th_files/image018.png" alt="A screenshot of a computer\n\nAI-generated content may be incorrect."
-                height="328" width="505"></p>
-            <br>
-            <p class="MsoListParagraph" style="margin-left:.25in;text-align:left;
-text-indent:-.25in" align="left"><span style="">2．<span style="font:7.0pt &quot;Times New Roman&quot;">
-                </span></span><span style="">Simulation Setup</span></p>
-            <p class="MsoNormal"><span style="">Under 「sim」</span></p>
-            <p class="MsoNormal"><span style="">do compile.do</span></p>
-            <p class="MsoNormal"><span style="">do simulate.do</span></p>
-            <p class="MsoNormal"><span style="">※ To prevent Modelsim from
-                closing automatically after simulation finishes, add a comment in front of the quit
-                -force command</span></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
-                src="pynq-z2-modelsim_th_files/image019.png" alt="A screenshot of a computer\n\nAI-generated content may be incorrect."
-                height="52" width="240"></p>
-            <p class="MsoNormal"><span style="">※ If it's a design with Xilinx VIP,
-                an error like the image below will occur and simulation cannot be performed.</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                src="pynq-z2-modelsim_th_files/image020.png" alt="A computer screen with a message\n\nAI-generated content may be incorrect."
-                height="358" width="624"></p>
-            <span style="font-size:10.5pt;"><br style="page-break-before:always"
-                clear="all">
-            </span>
-            <h2 style="margin-left:28.35pt;text-indent:-28.35pt"><a name="_Toc208827176"><span
-                  style="">1.3.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
-                  </span></span><span style="">Running Simulation with UVVM +
-                  Modelsim</span></a></h2>
-            <p class="MsoNormal"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                src="pynq-z2-modelsim_th_files/image021.png" alt="A screenshot of a computer\n\nAI-generated content may be incorrect."
-                height="283" width="450"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                src="pynq-z2-modelsim_th_files/image022.png" alt="A close-up of a computer screen\n\nAI-generated content may be incorrect."
-                height="27" width="508"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                src="pynq-z2-modelsim_th_files/image023.png" alt="A green and black text\n\nAI-generated content may be incorrect."
-                height="35" width="450"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                src="pynq-z2-modelsim_th_files/image024.png" height="27" width="419"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">xil_defaultlib
-                uvvm_util.tb_axs_iomap xil_defaultlib.glbl</span><span style=""></span><span
-                style="">&nbsp;</span>
-            </p>
-            <p class="MsoNormal"><span style="">cd
-                d:/xilinx/modelsim/AXI_Basics_3/UVVM_Light-master/sim/</span></p>
-            <p class="MsoNormal"><span style="">do
-                ./compile_and_run_demo_tb.do</span></p>
-            <p class="MsoNormal"><span style="">do ./sim.do</span></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
-                src="pynq-z2-modelsim_th_files/image025.png" alt="A screenshot of a computer\n\nAI-generated content may be incorrect."
-                height="545" width="624"></p>
-            <span style="font-size:10.5pt;"><br style="page-break-before:always"
-                clear="all">
-            </span>
-            <p class="MsoNormal"><span style="">&nbsp;</span></p>
-            <h2 style="margin-left:28.35pt;text-indent:-28.35pt"><a name="_Toc208827177"><span
-                  style="">1.4.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
-                  </span></span><span style="">How to Simulate Designs with Zynq using
-                  UVVM + Modelsim</span></a></h2>
-            <p class="MsoNormal"><span style="">&nbsp;</span></p>
-            <p class="MsoListParagraph" style="margin-left:.25in;text-align:left;
-text-indent:-.25in" align="left"><span style="">1．<span style="font:7.0pt &quot;Times New Roman&quot;">
-                </span></span><span style="">Download UVVM source code</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                src="pynq-z2-modelsim_th_files/image026.png" alt="A screenshot of a computer\n\nAI-generated content may be incorrect."
-                height="133" width="413"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Copy
-                the modelsim.ini file (for loading Xilinx libraries) to
-                UVVM_Light-master\sim</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                src="pynq-z2-modelsim_th_files/image027.png" alt="A screenshot of a computer\n\nAI-generated content may be incorrect."
-                height="99" width="408"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoListParagraph" style="margin-left:.25in;text-align:left;
-text-indent:-.25in" align="left"><span style="">2．<span style="font:7.0pt &quot;Times New Roman&quot;">
-                </span></span><span style="">Export simulation on Vivado</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Create
-                a filter named 「sim」 in the project, then click 「Export Simulation」 in
-                Vivado</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                src="pynq-z2-modelsim_th_files/image028.png" alt="A screenshot of a computer\n\nAI-generated content may be incorrect."
-                height="251" width="267"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                src="pynq-z2-modelsim_th_files/image029.png" alt="A screenshot of a computer\n\nAI-generated content may be incorrect."
-                height="257" width="381"></p>
-            <span style="">&nbsp;</span>
-            <p class="MsoListParagraph" style="margin-left:.25in;text-align:left;
-text-indent:-.25in" align="left"><span style="">3．<span style="font:7.0pt &quot;Times New Roman&quot;">
-                </span></span><span style="">Edit the source code</span></p>
-            <p class="MsoListParagraph" style="margin-left:.25in;text-align:left;
-text-indent:-.25in" align="left"><span style="">- <span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;
-                  </span></span><span style="">Pynq-Z2\sim\compile.do</span></p>
-            <p class="MsoListParagraph" style="margin-left:44.0pt;text-align:left;
-text-indent:-22.0pt" align="left"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;
-                  </span></span><span style="">Add vlib modelsim_lib</span></p>
-            <p class="MsoListParagraph" style="margin-left:44.0pt;text-align:left;
-text-indent:-22.0pt" align="left"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;
-                  </span></span><span style="">Remove the include vip section</span></p>
-            <p class="MsoListParagraph" style="margin-left:44.0pt;text-align:left;
-text-indent:-22.0pt" align="left"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;
-                  </span></span><span style="">Remove the compile section of base_ps7_0_0
-                (we will use the custom built version (with UVVM) instead)</span></p>
-            <p class="MsoListParagraph" style="margin-left:44.0pt;text-align:left;
-text-indent:-22.0pt" align="left"><span style="font-family:Wingdings">Ø<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;
-                  </span></span><span style="">Edit tb_prj_top.v and glbl.v
-                as follows</span></p>
-            <p class="MsoListParagraph" style="margin-left:.25in;text-align:left;
-text-indent:24.0pt" align="left"><span style="">"../../UVVM_Light-master/tb/tb_prj_top.v"
-                </span></p>
-            <p class="MsoListParagraph" style="margin-left:.25in;text-align:left;
-text-indent:24.0pt" align="left"><span style="">"../../sim/modelsim/glbl.v"</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">In
-                the case of simulation with Vivado (Xsim), the tb_prj_top.v file uses Xilinx
-                VIP to control the AXI bus. But this time we will use UVVM for control.
-                Therefore, comment out the entire Xilinx VIP section.</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                src="pynq-z2-modelsim_th_files/image030.png" alt="A screenshot of a computer\n\nAI-generated content may be incorrect."
-                height="272" width="513"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><br>
-            </p>
-            <p class="MsoListParagraph" style="margin-left:.25in;text-align:left;
-text-indent:-.25in" align="left"><span style="">- <span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;
-                  </span></span><span style="">Pynq-Z2\UVVM_Light-master\sim\</span><span
-                style=""> </span><span style="">compile_and_run_demo_tb.do</span></p>
-            <p class="MsoListParagraph" style="margin-left:.25in;text-align:left"
-              align="left"><span style="">Add the following content</span></p>
-            <p class="MsoNormal" style="text-align:left;text-indent:.25in" align="left"><span
-                style="">do ../../sim/modelsim/compile.do</span></p>
-            <p class="MsoNormal" style="text-align:left;text-indent:.25in" align="left"><span
-                style="">vlib uvvm_util</span></p>
-            <p class="MsoNormal" style="text-align:left;text-indent:.25in" align="left"><span
-                style="">eval vcom $compdirectives -work
-                xil_defaultlib ../tb/base_ps7_0_0.vhd</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                src="pynq-z2-modelsim_th_files/image031.png" alt="A screenshot of a computer program\n\nAI-generated content may be incorrect."
-                height="232" width="387"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">※
-                In the base_ps7_0_0.vhd file itself, there is logic for UVVM control.</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">※
-                Place the base_ps7_0_0.vhd and tb_prj_top.v files in
-                Pynq-Z2\UVVM_Light-master\tb\</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><img class="img-fluid rounded mx-auto d-block"
-                src="pynq-z2-modelsim_th_files/image032.png" alt="A screenshot of a computer\n\nAI-generated content may be incorrect."
-                height="170" width="433"></p>
-            <span style="font-size:10.5pt;"><br style="page-break-before:always"
-                clear="all">
-            </span>
-            <p class="MsoListParagraph" style="margin-left:.25in;text-align:left;
-text-indent:-.25in" align="left"><span style="">- <span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;
-                  </span></span><span style="">Create sim.do file in
-                Pynq-Z2\UVVM_Light-master\sim</span></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style="">Copy
-                the vsim command written in Pynq-Z2\sim\simulate.do, then remove the
-                library containing vip, and save to
-                Pynq-Z2\UVVM_Light-master\sim\sim.do</span></p>
-            <p class="MsoNormal"><span style="">※ If you include the vip library as well,
-                it will cause an error because we don't have a license.<br>
-              </span></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
-                src="pynq-z2-modelsim_th_files/image033.png" alt="A screenshot of a computer\n\nAI-generated content may be incorrect."
-                height="158" width="624"></p>
-            <p class="MsoNormal"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal"><img class="img-fluid rounded mx-auto d-block"
-                id="Picture 1" src="pynq-z2-modelsim_th_files/image034.png" height="72"
-                width="624"></p>
-            <p class="MsoNormal" style="text-align:left" align="left"><span style=""><br>
-              </span></p>
-            <p class="MsoListParagraph" style="margin-left:.25in;text-align:left;
-text-indent:-.25in" align="left"><span style="">4．<span style="font:7.0pt &quot;Times New Roman&quot;">
-                </span></span><span style="">Simulation with Modelsim</span></p>
-            <p class="MsoNormal"><span style="">Open Modelsim</span></p>
-            <p class="MsoNormal"><span style="">cd
-                d:/xilinx/modelsim/Pynq-Z2/UVVM_Light-master/sim/</span></p>
-            <p class="MsoNormal"><span style="">do
-                ./compile_and_run_demo_tb.do</span></p>
-            <p class="MsoNormal"><span style="">do ./sim.do</span></p>
-            <p class="MsoNormal"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal"><span style="">&nbsp;</span></p>
-            <p class="MsoNormal"><span style="">&nbsp;</span></p>
-          </div>
+            <h1 class="mb-4">Simulation with ModelSim (ModelSim Simulation with Vivado)</h1>
+            <p>By default, Vivado uses <strong>xsim</strong> as its built-in simulation engine. However, you can also use <strong>ModelSim</strong> to simulate designs created in Vivado. This article outlines the step-by-step process—from compiling Xilinx simulation libraries and exporting simulation scripts from Vivado, to running simulations and inspecting waveforms in ModelSim.</p>
+
+            <div class="alert alert-warning border-start border-warning border-4 my-4" role="alert">
+                <div class="d-flex">
+                    <i class="bi bi-exclamation-triangle-fill fs-4 me-2"></i>
+                    <div>
+                        <strong>Caution:</strong> If your design uses IP cores that require Xilinx simulation licenses (such as the AXI Verification IP / AXI VIP), running simulation in ModelSim requires a paid ModelSim edition with encryption license support; otherwise license errors will occur during simulation.
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="mt-4 mb-3">Workflow Overview</h3>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover my-3">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 10%;">Step</th>
+                            <th style="width: 45%;">Task</th>
+                            <th style="width: 45%;">Frequency</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center">1</td>
+                            <td>Compile Xilinx simulation libraries with Vivado</td>
+                            <td>Once per (Vivado version &times; ModelSim version)</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">2</td>
+                            <td>Export simulation scripts from the Vivado project</td>
+                            <td>Whenever design files or IP cores change</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">3</td>
+                            <td>Apply minor adjustments to exported scripts</td>
+                            <td>Once per export</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">4</td>
+                            <td>Run <code>compile.do</code> and <code>simulate.do</code> in ModelSim</td>
+                            <td>Every simulation run</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 id="sec1" class="mt-5 mb-3">1. Compiling Xilinx Simulation Libraries with Vivado</h2>
+            <p>Designs utilizing Xilinx primitives or IP cores (e.g., <code>unisim</code>, <code>unimacro</code>, <code>secureip</code>, Clocking Wizard, FIFO Generator) require pre-compiled simulation libraries targeted for ModelSim.</p>
+            <p>Open Vivado and click <strong>Tools &rarr; Compile Simulation Libraries</strong>.</p>
+            <div class="text-center my-3">
+                <img class="img-fluid rounded mx-auto d-block" src="pynq-z2-modelsim_th_files/image_212.png" alt="Compile Simulation Libraries Menu">
+            </div>
+            <p>Specify the <strong>Compiled library location</strong> and <strong>Simulator executable path</strong>, then click <strong>"Compile"</strong>.</p>
+            <div class="text-center my-3">
+                <img class="img-fluid rounded mx-auto d-block" src="pynq-z2-modelsim_th_files/modelsim-6.png" alt="Compile Simulation Libraries Settings">
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover my-3">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 40%;">Option</th>
+                            <th style="width: 60%;">Setting</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Simulator</td>
+                            <td>ModelSim Simulator</td>
+                        </tr>
+                        <tr>
+                            <td>Language / Library</td>
+                            <td>All</td>
+                        </tr>
+                        <tr>
+                            <td>Family</td>
+                            <td>All (or specific FPGA families used)</td>
+                        </tr>
+                        <tr>
+                            <td>Simulator executable path</td>
+                            <td>Folder containing <code>vsim.exe</code>, <code>vlog.exe</code></td>
+                        </tr>
+                        <tr>
+                            <td>Compiled library location</td>
+                            <td>Writable target directory</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>When compilation completes, a <code>modelsim.ini</code> file is generated (which maps library logical names to their compiled physical directories when ModelSim starts up).</p>
+            <div class="text-center my-3">
+                <img class="img-fluid rounded mx-auto d-block" src="pynq-z2-modelsim_th_files/image_214.png" alt="modelsim.ini Output">
+            </div>
+
+            <div class="alert alert-info border-start border-info border-4 my-4" role="alert">
+                <div class="d-flex">
+                    <i class="bi bi-info-circle-fill fs-4 me-2"></i>
+                    <div>
+                        <strong>Notes:</strong>
+                        <ol class="mb-0 mt-2 ps-3">
+                            <li>Compiling all Xilinx IP libraries is compute-intensive and can take up to an hour.</li>
+                            <li>When testing with ModelSim 10.5b (Quartus 17.1) and Vivado 2020.1, 4 module compilation errors occurred. As long as your specific Vivado design does not instantiate those specific modules, simulation proceeds normally.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center my-3">
+                <img class="img-fluid rounded mx-auto d-block" src="pynq-z2-modelsim_th_files/image_215.png" alt="Compile Log 1">
+            </div>
+            <div class="text-center my-3">
+                <img class="img-fluid rounded mx-auto d-block" src="pynq-z2-modelsim_th_files/image_216.png" alt="Compile Log 2">
+            </div>
+
+            <h2 id="sec2" class="mt-5 mb-3">2. Exporting Simulation Scripts</h2>
+            <p>Before executing in ModelSim, verify that the design simulates cleanly in Vivado's built-in <strong>xsim</strong> (confirming that the testbench functions as expected) to separate testbench/design issues from ModelSim configuration problems.</p>
+            <div class="text-center my-3">
+                <img class="img-fluid rounded mx-auto d-block" src="pynq-z2-modelsim_th_files/modelsim-1.png" alt="Run Simulation in Vivado">
+            </div>
+            <p>If there are no issues, simulation results will display in the xsim waveform viewer.</p>
+            <div class="text-center my-3">
+                <img class="img-fluid rounded mx-auto d-block" src="pynq-z2-modelsim_th_files/modelsim-2.png" alt="XSim Simulation Result">
+            </div>
+            <p>Next, navigate to <strong>File &rarr; Export &rarr; Export Simulation</strong>.</p>
+            <div class="text-center my-3">
+                <img class="img-fluid rounded mx-auto d-block" src="pynq-z2-modelsim_th_files/modelsim-3.png" alt="File Export Simulation">
+            </div>
+            <p>Configure the export settings as follows:</p>
+            <div class="text-center my-3">
+                <img class="img-fluid rounded mx-auto d-block" src="pynq-z2-modelsim_th_files/modelsim-4.png" alt="Export Simulation Settings">
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover my-3">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 35%;">Option</th>
+                            <th style="width: 65%;">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Simulator</td>
+                            <td>Select <strong>ModelSim Simulator</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Compiled library location</td>
+                            <td>Path where libraries were compiled in <a href="#sec1">Section 1</a></td>
+                        </tr>
+                        <tr>
+                            <td>Export directory</td>
+                            <td>Target directory where Vivado exports ModelSim scripts</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>Clicking <strong>OK</strong> generates a <code>modelsim</code> directory containing execution scripts tailored for ModelSim.</p>
+            <div class="text-center my-3">
+                <img class="img-fluid rounded mx-auto d-block" src="pynq-z2-modelsim_th_files/modelsim-7.png" alt="Exported modelsim script files">
+            </div>
+
+            <h2 id="sec3" class="mt-5 mb-3">3. Editing the Exported Scripts</h2>
+            <p><strong>3.1 <code>simulate.do</code></strong> &mdash; Comment out <code>quit -force</code>; otherwise ModelSim will close immediately upon completing the simulation run, preventing you from inspecting waveforms.</p>
+            <div class="text-center my-3">
+                <img class="img-fluid rounded mx-auto d-block" src="pynq-z2-modelsim_th_files/modelsim-8.png" alt="Edit simulate.do">
+            </div>
+            <p><strong>3.2 <code>compile.do</code></strong> &mdash; Add <code>vlib modelsim_lib</code> before the lines that create sub-libraries (in some environments, sub-library creation fails if the parent library directory does not yet exist).</p>
+            <div class="text-center my-3">
+                <img class="img-fluid rounded mx-auto d-block" src="pynq-z2-modelsim_th_files/modelsim-9.png" alt="Edit compile.do">
+            </div>
+
+            <div class="alert alert-secondary border-start border-secondary border-4 my-4" role="alert">
+                <div class="d-flex">
+                    <i class="bi bi-info-circle-fill fs-4 me-2"></i>
+                    <div>
+                        <strong>Note:</strong> These two edits must be reapplied whenever you re-export simulation from Vivado, as the script files will be overwritten.
+                    </div>
+                </div>
+            </div>
+
+            <h2 id="sec4" class="mt-5 mb-3">4. Running Simulation in ModelSim</h2>
+            <p>Launch ModelSim and change directory (<strong>File &rarr; Change Directory</strong>) to the exported <code>modelsim</code> folder. Then execute the following commands in the Transcript window:</p>
+            <pre><code>do compile.do
+do simulate.do</code></pre>
+            <p>ModelSim will compile all design units and display the simulation waveforms.</p>
+            <div class="text-center my-3">
+                <img class="img-fluid rounded mx-auto d-block" src="pynq-z2-modelsim_th_files/modelsim-10.png" alt="ModelSim Waveform Output">
+            </div>
+
         </div>
       </div>
     </div>
+
     <footer class="text-center p-4 mt-5" style="background-color: #f8f9fa;">
         <div class="container">
             <p class="mb-0">Contact: <a href="https://www.facebook.com/wichayen.hong" target="_blank">Wichayen Hong on Facebook</a> | <a href="https://github.com/wichayen" target="_blank">GitHub</a> | <a href="https://www.linkedin.com/in/wichayen-luangsopapan-404133202/" target="_blank">LinkedIn</a></p>
@@ -412,7 +335,5 @@ text-indent:-.25in" align="left"><span style="">4．<span style="font:7.0pt &quo
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true, theme: 'default'});</script>
   </body>
 </html>
