@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pynq-Z2 FM Radio: FM Demodulation with FPGA + RTL-SDR | FPGATHAILAND</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { padding-top: 56px; }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 0.5rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        .figure-caption {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
+        pre {
+            background-color: #0f172a;
+            color: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.92rem;
+        }
+        pre.mermaid {
+            background-color: #ffffff;
+            color: inherit;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            display: flex;
+            justify-content: center;
+        }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        .callout-box {
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            margin: 1.75rem 0;
+            border-left: 4px solid;
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+        .callout-info {
+            border-left-color: #0284c7;
+            background: #f0f9ff;
+        }
+        .callout-tip {
+            border-left-color: #10b981;
+            background: #f0fdf4;
+        }
+        .callout-warning {
+            border-left-color: #f59e0b;
+            background: #fffbeb;
+        }
+        .callout-title {
+            font-weight: 700;
+            color: #0f172a;
+            font-size: 1.05rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+        .callout-content {
+            color: #334155;
+            font-size: 0.98rem;
+            line-height: 1.75;
+        }
+        .callout-content p:last-child,
+        .callout-content ul:last-child {
+            margin-bottom: 0;
+        }
+        .table-responsive {
+            margin: 1.75rem 0;
+        }
+        .image-gallery img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            border-radius: 6px;
+            transition: transform 0.2s ease-in-out;
+        }
+        .image-gallery img:hover {
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar navbar-expand-lg fixed-top site-nav">
+        <div class="container">
+            <a class="navbar-brand" href="index_en.html">
+                <span class="navbar-brand-icon"><i class="bi bi-cpu"></i></span>
+                <span>FPGATHAILAND</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+                    <li class="nav-item"><a class="nav-link" href="index_en.html#work">Showcase</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index_en.html#articles">Articles & Labs</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownBoards" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Lab Boards
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownBoards">
+                            <li><h6 class="dropdown-header">PYNQ-Z2</h6></li>
+                            <li><a class="dropdown-item" href="pynq-z2-vivado_en.html"><i class="bi bi-cpu me-2"></i>Vivado Setup</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-hls_en.html"><i class="bi bi-lightning-charge me-2"></i>HLS Acceleration</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-ai_en.html"><i class="bi bi-robot me-2"></i>AI (DPU IP)</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-modelsim_en.html"><i class="bi bi-activity me-2"></i>Modelsim</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1_en.html"><i class="bi bi-display me-2"></i>LVGL Part 1</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2_en.html"><i class="bi bi-display me-2"></i>LVGL Part 2</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvlg_special_ep_en.html"><i class="bi bi-stars me-2"></i>Special: AI Agent</a></li>
+                            <li><a class="dropdown-item active" href="Pynq_z2_FM_Radio_en.html"><i class="bi bi-broadcast-pin me-2"></i>FM Radio (RTL-SDR)</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">ARIES PCI Board</h6></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep1_en.html"><i class="bi bi-motherboard me-2"></i>Part 1: Architecture</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep2_en.html"><i class="bi bi-motherboard me-2"></i>Part 2: Revision A.1</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep3_en.html"><i class="bi bi-motherboard me-2"></i>Part 3: FPGA Logic</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep4_en.html"><i class="bi bi-motherboard me-2"></i>Part 4: Linux PCI Driver</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep5_en.html"><i class="bi bi-motherboard me-2"></i>Part 5: Windows PCI Driver</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">Other Boards & Tools</h6></li>
+                            <li><a class="dropdown-item" href="EZUSB_FPGA_en.html"><i class="bi bi-usb-symbol me-2"></i>EZUSB + FPGA</a></li>
+                            <li><a class="dropdown-item" href="GeminiBoard_Beaglebone_Frambuffer_en.html"><i class="bi bi-display me-2"></i>GeminiBoard Framebuffer</a></li>
+                            <li><a class="dropdown-item" href="Sigasi_en.html"><i class="bi bi-code-square me-2"></i>Sigasi for VS Code</a></li>
+                            <li><a class="dropdown-item" href="UVVM_en.html"><i class="bi bi-check2-circle me-2"></i>UVVM Verification</a></li>
+                            <li><a class="dropdown-item" href="AI_hardware_en.html"><i class="bi bi-robot me-2"></i>AI Hardware Control (MCP)</a></li>
+                            <li><a class="dropdown-item" href="vhdl_code_coverage.html"><i class="bi bi-bar-chart-steps me-2"></i>VHDL Code Coverage</a></li>
+                            <li><a class="dropdown-item" href="fir_filter_by_fpga.html"><i class="bi bi-soundwave me-2"></i>FIR Filter on FPGA</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-info" href="index_en.html#articles"><i class="bi bi-grid-3x3-gap me-2"></i>View All Articles</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="index_en.html#contact">Contact</a></li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="lang-switch-btn" href="Pynq_z2_FM_Radio.html" title="เปลี่ยนเป็นภาษาไทย">
+                            <i class="bi bi-translate"></i> TH
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto article-content">
+                <h1 class="mb-3">1 Pynq-Z2 FM Radio: FM Demodulation with FPGA + RTL-SDR</h1>
+                <hr>
+
+                <p>I recently came across an intriguing open-source project: <a href="https://github.com/hyojun01/PYNQ_Z2_FM_Radio" target="_blank" rel="noopener noreferrer">PYNQ_Z2_FM_Radio</a> and decided to replicate it. This project offloads <strong>FM demodulation to an FPGA</strong>: receiving raw RF signals from an inexpensive RTL-SDR USB dongle and letting the FPGA execute the entire DSP pipeline to output crystal-clear FM audio. It serves as a fantastic real-world example of <strong>FPGA-accelerated Software Defined Radio (SDR)</strong>.</p>
+
+                <p><strong>Hardware and Software Tools Used:</strong></p>
+                <ul>
+                    <li><strong>Hardware:</strong> PYNQ-Z2 Board, RTL-SDR USB dongle</li>
+                    <li><strong>Toolchain:</strong> Vitis HLS + Vivado 2022.1</li>
+                    <li><strong>PYNQ Image:</strong> Version 2.7</li>
+                </ul>
+
+                <p>The RTL-SDR USB dongle can be easily purchased online (e.g. Shopee / AliExpress) — it is the generic DVB-T USB tuner dongle.</p>
+
+                <!-- 2x2 Gallery Grid -->
+                <div class="row g-3 my-4 image-gallery">
+                    <div class="col-md-6">
+                        <img src="pynq_z2_fm_radio_files/fr_2309.jpg" alt="RTL-SDR USB dongle and antenna" class="img-fluid">
+                    </div>
+                    <div class="col-md-6">
+                        <img src="pynq_z2_fm_radio_files/fr_2308.jpg" alt="PYNQ-Z2 connected with RTL-SDR" class="img-fluid">
+                    </div>
+                    <div class="col-md-6">
+                        <img src="pynq_z2_fm_radio_files/fr_2307.jpg" alt="Complete experimental setup" class="img-fluid">
+                    </div>
+                    <div class="col-md-6">
+                        <img src="pynq_z2_fm_radio_files/image05.png" alt="RTL-SDR internal circuit" class="img-fluid" style="object-fit: contain; background: #fff;">
+                    </div>
+                </div>
+
+                <hr>
+
+                <h1>2 System Architecture & Concept</h1>
+
+                <p>The system partitions tasks between the ARM CPU (Python on PYNQ) and the FPGA fabric as follows:</p>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 10%;" class="text-center">Step</th>
+                                <th style="width: 60%;">Description</th>
+                                <th style="width: 30%;" class="text-center">Executed On</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center font-monospace">1</td>
+                                <td>RTL-SDR captures FM RF signals and converts them to <strong>IQ samples</strong>; CPU pulls data via USB</td>
+                                <td class="text-center"><span class="badge bg-primary">CPU (Jupyter Notebook)</span></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center font-monospace">2</td>
+                                <td>CPU (Python) reads raw bytes from USB and writes into <strong>DDR memory</strong></td>
+                                <td class="text-center"><span class="badge bg-primary">CPU (Jupyter Notebook)</span></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center font-monospace">3</td>
+                                <td>FPGA reads IQ buffer from DDR via <strong>AXI DMA (MM2S)</strong> into <code>fir_decimation</code></td>
+                                <td class="text-center"><span class="badge bg-success">FPGA</span></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center font-monospace">4</td>
+                                <td>Hardware DSP chain: FIR decimation → Quadrature demodulation → Low-pass filter 1 → Low-pass filter 2</td>
+                                <td class="text-center"><span class="badge bg-success">FPGA</span></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center font-monospace">5</td>
+                                <td>Demodulated audio stream is streamed back into DDR via <strong>AXI DMA (S2MM)</strong></td>
+                                <td class="text-center"><span class="badge bg-success">FPGA</span></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center font-monospace">6</td>
+                                <td>CPU reads audio buffer from DDR and plays back sound</td>
+                                <td class="text-center"><span class="badge bg-primary">CPU (Jupyter Notebook)</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="callout-box callout-info">
+                    <div class="callout-title"><i class="bi bi-info-circle-fill text-primary me-2"></i>Note: What is Decimation?</div>
+                    <div class="callout-content">
+                        <p><strong>Decimation</strong> is the process of reducing the sampling rate by keeping only every N-th sample and discarding the rest (÷N). For example, ÷5 keeps 1 out of 5 samples, decreasing the sample rate by 5x. In this project, decimation downsamples the stream from 1.92 MS/s down to the standard audio rate of 48 kHz.</p>
+                    </div>
+                </div>
+
+                <figure class="my-4">
+                    <pre class="mermaid">
+flowchart TB
+
+    RTL["USB RTL-SDR"]
+    CPU["CPU / Python"]
+
+    DDR[("DDR")]
+
+    DMA["AXI DMA<br/>Vivado Block Design"]
+
+    FIR_I["FIR Decimation I"]
+    FIR_Q["FIR Decimation Q"]
+    DEMOD["Quadrature Demodulate"]
+    LPF1["Low Pass Filter 1"]
+    LPF2["Low Pass Filter 2"]
+
+    RTL -->|"USB / USB driver"| CPU
+
+    CPU -->|"CPU writes IQ buffer"| DDR
+
+    DDR -->|"MM2S"| DMA
+
+    DMA --> FIR_I
+    DMA --> FIR_Q
+
+    FIR_I --> DEMOD
+    FIR_Q --> DEMOD
+
+    DEMOD --> LPF1
+    LPF1 --> LPF2
+
+    LPF2 -->|"AXI4-Stream"| DMA
+
+    DMA -->|"S2MM"| DDR
+
+    DDR -->|"CPU reads audio buffer"| CPU
+
+    classDef ext fill:#fff3e0,stroke:#fb8c00,stroke-width:2px,color:#000
+    classDef cpu fill:#e3f2fd,stroke:#1e88e5,stroke-width:2px,color:#000
+    classDef mem fill:#ede7f6,stroke:#7e57c2,stroke-width:2px,color:#000
+    classDef fpga fill:#e8f5e9,stroke:#43a047,stroke-width:2px,color:#000
+
+    class RTL ext
+    class CPU cpu
+    class DDR mem
+    class DMA,FIR_I,FIR_Q,DEMOD,LPF1,LPF2 fpga
+                    </pre>
+                    <figcaption class="figure-caption">Dataflow diagram between RTL-SDR, ARM CPU, DDR RAM, and FPGA HLS IP cores</figcaption>
+                </figure>
+
+                <h2>2.1 Sample Rate at Each Processing Stage</h2>
+
+                <p>The RTL-SDR dongle transmits IQ samples at 1.92 MS/s. The pipeline decimates the rate down to 48 kHz (total 40x decimation factor):</p>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="text-center">Stage</th>
+                                <th class="text-center">Decimation</th>
+                                <th class="text-center">Output Sample Rate</th>
+                                <th>Interface</th>
+                                <th>Function</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center"><strong>RTL-SDR (input)</strong></td>
+                                <td class="text-center">-</td>
+                                <td class="text-center">1.92 MS/s</td>
+                                <td>8-bit IQ</td>
+                                <td>Captures RF signal and streams 8-bit IQ samples to CPU via USB</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center"><strong>FIR Decimation Filter</strong></td>
+                                <td class="text-center"><span class="badge bg-secondary">÷5</span></td>
+                                <td class="text-center">384 kHz</td>
+                                <td>AXI4-Stream 8-bit → 32-bit</td>
+                                <td>Low-pass filters out-of-band noise and decimates rate by 5x</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center"><strong>Quadrature Demod</strong></td>
+                                <td class="text-center"><span class="badge bg-secondary">÷1</span></td>
+                                <td class="text-center">384 kHz</td>
+                                <td>2× AXI4-Stream (I, Q) → 1 stream</td>
+                                <td>Performs FM demodulation (extracts baseband audio from IQ)</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center"><strong>Low Pass Filter 1st</strong></td>
+                                <td class="text-center"><span class="badge bg-secondary">÷4</span></td>
+                                <td class="text-center">96 kHz</td>
+                                <td>AXI4-Stream 32-bit fixed-point</td>
+                                <td>Low-pass audio filtering and decimates rate by 4x</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center"><strong>Low Pass Filter 2nd</strong></td>
+                                <td class="text-center"><span class="badge bg-secondary">÷2</span></td>
+                                <td class="text-center">48 kHz</td>
+                                <td>AXI4-Stream 32-bit → 16-bit</td>
+                                <td>Final low-pass audio stage, decimates by 2x to 48 kHz and converts to 16-bit</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h2>2.2 Division of Responsibilities</h2>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 25%;" class="text-center">Subsystem</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center"><strong>CPU (ARM Cortex-A9)</strong></td>
+                                <td>Reads IQ data from RTL-SDR over USB (<code>pyrtlsdr</code>), writes to DDR, configures DMA, plays audio</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center"><strong>FPGA (AXI DMA)</strong></td>
+                                <td>MM2S: DDR → FPGA input stream / S2MM: FPGA output stream → DDR</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center"><strong>FPGA (HLS Cores)</strong></td>
+                                <td>FIR decimation → Demodulation → LPF1 → LPF2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="callout-box callout-tip">
+                    <div class="callout-title"><i class="bi bi-lightning-charge-fill text-success me-2"></i>Performance Insight</div>
+                    <div class="callout-content">
+                        <p>The heaviest DSP computational burden (filtering 1.92 MS/s continuous stream) is offloaded entirely to FPGA hardware logic in real-time, leaving the CPU completely free from heavy mathematical workloads.</p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <h1>3 Implementation Walkthrough</h1>
+
+                <p>The development workflow consists of two primary stages: synthesizing C++ algorithms into IP cores with Vitis HLS, and assembling them in Vivado Block Design to generate the bitstream.</p>
+
+                <h2>3.1 High-Level Synthesis (Vitis HLS)</h2>
+
+                <p>Open the Vitis HLS command prompt and execute <code>vitis_hls</code> TCL scripts to synthesize C++ code into hardware IP cores.</p>
+
+                <p>The repository contains 4 distinct HLS IP modules inside the <code>hls/</code> directory:</p>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Directory</th>
+                                <th>Generated IP Core</th>
+                                <th>Function</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>fir_decimation_filter</code></td>
+                                <td>FIR Decimation</td>
+                                <td>Low-pass filter + Decimate ÷5</td>
+                            </tr>
+                            <tr>
+                                <td><code>quadrature_demodulator</code></td>
+                                <td>Quadrature Demodulator</td>
+                                <td>FM Demodulation</td>
+                            </tr>
+                            <tr>
+                                <td><code>low_pass_filter_first</code></td>
+                                <td>LPF 1st</td>
+                                <td>Audio LPF + Decimate ÷4</td>
+                            </tr>
+                            <tr>
+                                <td><code>low_pass_filter_second</code></td>
+                                <td>LPF 2nd</td>
+                                <td>Audio LPF + Decimate ÷2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>Synthesis command execution snippet for <code>fir_decimation_filter</code>:</p>
+                <pre><code>===============================
+== Vitis HLS Command Prompt
+== Available commands:
+== vitis_hls,apcc,gcc,g++,make
+===============================
+Microsoft Windows [Version 10.0.22631.6199]
+(c) Microsoft Corporation. All rights reserved.
+
+D:\>cd xilinx\SDR\PYNQ_Z2_FM_Radio_2022_1\hls\fir_decimation_filter
+D:\xilinx\SDR\PYNQ_Z2_FM_Radio_2022_1\hls\fir_decimation_filter>vitis_hls fir_decimation_filter.tcl
+
+****** Vitis HLS - High-Level Synthesis from C, C++ and OpenCL v2022.1 (64-bit)
+  **** SW Build 3526262 on Mon Apr 18 15:48:16 MDT 2022
+  **** IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+
+source C:/Xilinx/Vitis_HLS/2022.1/scripts/vitis_hls/hls.tcl -notrace
+...</code></pre>
+
+                <p>Upon completion, reviewing the synthesis report reveals hardware resource utilization (BRAM, DSP48E, FF, LUT):</p>
+
+                <figure class="my-4 text-center">
+                    <img src="pynq_z2_fm_radio_files/image02.png" alt="Vitis HLS Synthesis Resource Usage Report" class="img-fluid">
+                    <figcaption class="figure-caption">Synthesis Resource Utilization Report in Vitis HLS</figcaption>
+                </figure>
+
+                <p>Exported packaged IP cores reside in <code>solution1 → impl → ip</code>, ready for Vivado integration.</p>
+
+                <figure class="my-4 text-center">
+                    <img src="pynq_z2_fm_radio_files/image03.png" alt="Vitis HLS IP Export Directory" class="img-fluid">
+                    <figcaption class="figure-caption">Exported IP core files located in solution1/impl/ip</figcaption>
+                </figure>
+
+                <h2>3.2 Vivado Block Design</h2>
+
+                <p>Add the custom HLS IP repository into the Vivado IP Catalog:</p>
+
+                <figure class="my-4 text-center">
+                    <img src="pynq_z2_fm_radio_files/image04.png" alt="Adding custom IP catalog in Vivado" class="img-fluid">
+                    <figcaption class="figure-caption">Adding custom HLS IP repositories in Vivado</figcaption>
+                </figure>
+
+                <p>Create a Block Design and interconnect the following modules:</p>
+
+                <ul>
+                    <li><strong>ZYNQ7 Processing System</strong></li>
+                    <li><strong>AXI Direct Memory Access (DMA)</strong> (MM2S & S2MM enabled)</li>
+                    <li><strong>4 HLS IP Cores</strong> chained via AXI4-Stream according to the architecture diagram</li>
+                </ul>
+
+                <p>Connect the block design as shown below:</p>
+
+                <figure class="my-4 text-center">
+                    <a href="pynq_z2_fm_radio_files/base.pdf" target="_blank" title="Click to open high-resolution schematic PDF">
+                        <img src="pynq_z2_fm_radio_files/base.png" alt="Vivado Block Design Schematic" class="img-fluid">
+                    </a>
+                    <figcaption class="figure-caption">Complete Vivado Block Design (Click image to open high-res PDF schematic)</figcaption>
+                </figure>
+
+                <p>Run <code>Synthesis -> Implementation -> Generate Bitstream</code>, then copy the resulting <code>.bit</code> and <code>.hwh</code> overlay files to the PYNQ board.</p>
+
+                <hr>
+
+                <h1>4 Testing and Verification</h1>
+
+                <h2>4.1 Software Setup on PYNQ-Z2</h2>
+
+                <p>Before running RTL-SDR, install necessary drivers and Python libraries in the PYNQ Linux terminal:</p>
+
+                <pre><code>sudo apt-get update
+sudo apt-get install librtlsdr-dev rtl-sdr
+echo "blacklist dvb_usb_rtl28xxu" | sudo tee /etc/modprobe.d/blacklist-rtl.conf
+sudo pip3 install "pyrtlsdr<3"
+sudo reboot</code></pre>
+
+                <ul>
+                    <li>The <code>blacklist</code> prevents default DVB-T TV kernel drivers (<code>dvb_usb_rtl28xxu</code>) from monopolizing the USB dongle.</li>
+                    <li>Version constraint <code>pyrtlsdr&lt;3</code> ensures full compatibility with PYNQ v2.7 Python 3.6 environment.</li>
+                </ul>
+
+                <h2>4.2 Hardware Loopback Test with Test Data</h2>
+
+                <p>Verify that the FPGA DSP pipeline functions correctly by streaming synthetic test vectors into the FPGA DMA and evaluating the response using this Jupyter Notebook:</p>
+
+                <p><a href="https://github.com/wichayen/pynq_z2/blob/main/RTL_USB_FM_demodulation/test-1.ipynb" target="_blank" rel="noopener noreferrer"><i class="bi bi-journal-code me-1"></i>test-1.ipynb on GitHub</a></p>
+
+                <p>The resulting FFT spectrum and time-domain signal output:</p>
+
+                <figure class="my-4 text-center">
+                    <img src="pynq_z2_fm_radio_files/image06.png" alt="Test Data Demodulation and Spectrum Analysis" class="img-fluid">
+                    <figcaption class="figure-caption">Demodulated audio spectrum and FFT analysis with test data</figcaption>
+                </figure>
+
+                <h2>4.3 Live FM Reception with RTL-SDR</h2>
+
+                <p>Once hardware verification is confirmed, stream live over-the-air RF data from RTL-SDR directly into the FPGA demodulator using:</p>
+
+                <p><a href="https://github.com/wichayen/pynq_z2/blob/main/RTL_USB_FM_demodulation/pynq_fm_test.ipynb" target="_blank" rel="noopener noreferrer"><i class="bi bi-journal-code me-1"></i>pynq_fm_test.ipynb on GitHub</a></p>
+
+                <p>Live capture results:</p>
+
+                <figure class="my-4 text-center">
+                    <img src="pynq_z2_fm_radio_files/image07.png" alt="Live FM broadcast signal demodulation" class="img-fluid">
+                    <figcaption class="figure-caption">Live FM broadcast capture and FPGA demodulation waveform</figcaption>
+                </figure>
+
+                <p>For real-time continuous streaming audio playback, run the streaming notebook:</p>
+                <p><a href="https://github.com/wichayen/pynq_z2/blob/main/RTL_USB_FM_demodulation/pynq_fm_streaming.ipynb" target="_blank" rel="noopener noreferrer"><i class="bi bi-journal-code me-1"></i>pynq_fm_streaming.ipynb on GitHub</a></p>
+
+                <div class="video-container">
+                    <iframe
+                        src="https://www.youtube.com/embed/RttKLKxerQA"
+                        title="PYNQ-Z2 FM Radio Demonstration Video"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+
+                <hr>
+
+                <h1>5 Frequency Capabilities & Tuner Information</h1>
+
+                <p>Inspecting the connected RTL-SDR USB dongle reveals the Fitipower FC0012 tuner chip:</p>
+
+                <pre><code>Found 1 device(s):
+  0:  Realtek, RTL2838UHIDIR, SN: 00000001
+Using device 0: Generic RTL2832U OEM
+Found Fitipower FC0012 tuner
+Supported gain values (5): -9.9 -4.0 7.1 17.9 19.2
+Sampling at 2048000 S/s.
+No E4000 tuner found, aborting.</code></pre>
+
+                <p>According to the <a href="https://osmocom.org/projects/rtl-sdr/wiki/Rtl-sdr" target="_blank" rel="noopener noreferrer">Osmocom RTL-SDR Wiki</a>, the FC0012 tuner operates across approximately 22–948.6 MHz:</p>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="text-center" style="width: 25%;">Approx. Frequency</th>
+                                <th style="width: 45%;">Signal Type</th>
+                                <th class="text-center" style="width: 30%;">RF Tuner Support</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center">88–108 MHz</td>
+                                <td><strong>FM Broadcast</strong></td>
+                                <td class="text-center"><span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Supported</span></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">118–137 MHz</td>
+                                <td><strong>Aircraft / Airband</strong></td>
+                                <td class="text-center"><span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Supported</span></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">144–148 MHz</td>
+                                <td><strong>2m Amateur Radio</strong></td>
+                                <td class="text-center"><span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Supported</span></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">150–174 MHz</td>
+                                <td>VHF communication</td>
+                                <td class="text-center"><span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Supported</span></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">162 MHz</td>
+                                <td><strong>AIS Marine Tracking</strong></td>
+                                <td class="text-center"><span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Supported</span></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">174–240 MHz</td>
+                                <td><strong>DAB / DAB+ Band III</strong></td>
+                                <td class="text-center"><span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Supported</span></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">400–470 MHz</td>
+                                <td>UHF radio</td>
+                                <td class="text-center"><span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Supported</span></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">433 MHz</td>
+                                <td><strong>IoT / Remote / Sensors</strong></td>
+                                <td class="text-center"><span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Supported</span></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">868 MHz</td>
+                                <td>LoRa / IoT Europe</td>
+                                <td class="text-center"><span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Supported</span></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">915 MHz</td>
+                                <td>LoRa / ISM US</td>
+                                <td class="text-center"><span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Supported</span></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">948.6 MHz</td>
+                                <td>Tuner Upper Limit</td>
+                                <td class="text-center"><span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i>Edge Limit</span></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">1090 MHz</td>
+                                <td><strong>ADS-B Flight Tracking</strong></td>
+                                <td class="text-center"><span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i>Out of Band</span></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">1575 MHz</td>
+                                <td>GPS L1</td>
+                                <td class="text-center"><span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i>Out of Band</span></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">2.4 GHz</td>
+                                <td>Wi-Fi / Bluetooth</td>
+                                <td class="text-center"><span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i>Out of Band</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>Note: When using the bundled small telescopic antenna, RF reception sensitivity is mostly optimal for strong local FM broadcast stations.</p>
+
+                <hr>
+
+                <h1>6 Summary & Conclusion</h1>
+
+                <p>This experiment demonstrates the power of heterogeneous FPGA-SoC architectures: high-throughput DSP filtering (1.92 MS/s) is accelerated in FPGA hardware fabric in real-time, while Python on the ARM core orchestrates high-level I/O via PYNQ. Combining a budget RTL-SDR dongle with PYNQ-Z2 yields a highly capable, flexible SDR receiver platform.</p>
+
+                <div class="callout-box callout-tip">
+                    <div class="callout-title"><i class="bi bi-github me-2"></i>Project Source Code</div>
+                    <div class="callout-content">
+                        <p>Access the full project source files, notebooks, and bitstreams here: <a href="https://github.com/wichayen/pynq_z2/tree/main/RTL_USB_FM_demodulation" target="_blank" rel="noopener noreferrer">https://github.com/wichayen/pynq_z2/tree/main/RTL_USB_FM_demodulation</a></p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <h1>7 References</h1>
+
+                <ul>
+                    <li><strong>PYNQ_Z2_FM_Radio:</strong> <a href="https://github.com/hyojun01/PYNQ_Z2_FM_Radio" target="_blank" rel="noopener noreferrer">https://github.com/hyojun01/PYNQ_Z2_FM_Radio</a></li>
+                    <li><strong>fm-demod-rtlsdr-pynqz2:</strong> <a href="https://github.com/hfwang132/fm-demod-rtlsdr-pynqz2" target="_blank" rel="noopener noreferrer">https://github.com/hfwang132/fm-demod-rtlsdr-pynqz2</a></li>
+                    <li><strong>PYNQ Project:</strong> <a href="http://www.pynq.io/" target="_blank" rel="noopener noreferrer">http://www.pynq.io/</a></li>
+                    <li><strong>RTL-SDR Community:</strong> <a href="https://www.rtl-sdr.com/" target="_blank" rel="noopener noreferrer">https://www.rtl-sdr.com/</a></li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center p-4 mt-5" style="background-color: #f8f9fa;">
+        <div class="container">
+            <p class="mb-0">Contact: <a href="https://www.facebook.com/wichayen.hong" target="_blank">Wichayen Hong on Facebook</a> | <a href="https://github.com/wichayen" target="_blank">GitHub</a> | <a href="https://www.linkedin.com/in/wichayen-luangsopapan-404133202/" target="_blank">LinkedIn</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true, theme: 'default'});</script>
+</body>
+</html>
