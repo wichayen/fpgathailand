@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 410" width="900" height="410" font-family="Tahoma, 'Noto Sans Thai', Arial, sans-serif">
+  <rect width="900" height="410" fill="#ffffff"/>
+  <text x="450" y="26" text-anchor="middle" font-size="18" font-weight="bold" fill="#222">กรณี Setup time ไม่ met: D เปลี่ยนใกล้ขอบ clock เกินไป</text>
+
+  <!-- windows -->
+  <rect x="340" y="50" width="110" height="330" fill="#ffb74d" opacity="0.30"/>
+  <rect x="450" y="50" width="80" height="330" fill="#64b5f6" opacity="0.30"/>
+  <line x1="450" y1="50" x2="450" y2="380" stroke="#444" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="450" y="45" text-anchor="middle" font-size="13" fill="#444">ขอบ clock (sampling edge)</text>
+
+  <!-- labels -->
+  <text x="30" y="92" font-size="16" font-weight="bold" fill="#222">CLK</text>
+  <text x="30" y="200" font-size="16" font-weight="bold" fill="#222">D</text>
+  <text x="30" y="312" font-size="16" font-weight="bold" fill="#222">Q</text>
+
+  <!-- CLK -->
+  <path d="M100,110 H150 V60 H300 V110 H450 V60 H600 V110 H750 V60 H850" fill="none" stroke="#1565c0" stroke-width="3"/>
+  <!-- D changes at x=400 (inside tSU window) -->
+  <path d="M100,220 H400 V170 H850" fill="none" stroke="#2e7d32" stroke-width="3"/>
+  <line x1="400" y1="160" x2="400" y2="230" stroke="#d32f2f" stroke-width="2.5" stroke-dasharray="5 3"/>
+  <text x="400" y="154" text-anchor="middle" font-size="13" font-weight="bold" fill="#d32f2f">D เปลี่ยนในช่วง tSU</text>
+
+  <!-- Q: metastable after tCO, then settles -->
+  <path d="M100,330 H510" fill="none" stroke="#6a1b9a" stroke-width="3"/>
+  <polyline points="510,330 510,305 530,292 555,318 580,296 605,312 625,302 640,305" fill="none" stroke="#6a1b9a" stroke-width="3"/>
+  <path d="M640,305 V280 H850" fill="none" stroke="#6a1b9a" stroke-width="3"/>
+  <path d="M640,305 V330 H850" fill="none" stroke="#6a1b9a" stroke-width="2" stroke-dasharray="6 4" opacity="0.6"/>
+  <text x="575" y="268" text-anchor="middle" font-size="13" font-weight="bold" fill="#6a1b9a">metastable (ระดับกลาง / สั่น)</text>
+  <text x="700" y="324" text-anchor="start" font-size="12" fill="#6a1b9a">หรือ settle เป็น 0 (ไม่แน่นอน)</text>
+
+  <!-- tSU / tH arrows -->
+  <line x1="340" y1="250" x2="450" y2="250" stroke="#e65100" stroke-width="2"/>
+  <polygon points="340,250 349,245 349,255" fill="#e65100"/>
+  <polygon points="450,250 441,245 441,255" fill="#e65100"/>
+  <text x="395" y="243" text-anchor="middle" font-size="14" font-weight="bold" fill="#e65100">tSU</text>
+  <line x1="450" y1="250" x2="530" y2="250" stroke="#1565c0" stroke-width="2"/>
+  <polygon points="450,250 459,245 459,255" fill="#1565c0"/>
+  <polygon points="530,250 521,245 521,255" fill="#1565c0"/>
+  <text x="490" y="243" text-anchor="middle" font-size="14" font-weight="bold" fill="#1565c0">tH</text>
+
+  <!-- actual stable time -->
+  <line x1="400" y1="268" x2="450" y2="268" stroke="#d32f2f" stroke-width="2"/>
+  <polygon points="400,268 408,264 408,272" fill="#d32f2f"/>
+  <polygon points="450,268 442,264 442,272" fill="#d32f2f"/>
+  <text x="450" y="287" text-anchor="end" font-size="12" fill="#d32f2f">D นิ่งก่อนขอบไม่ถึง tSU</text>
+
+  <!-- tMET -->
+  <line x1="510" y1="358" x2="640" y2="358" stroke="#6a1b9a" stroke-width="2"/>
+  <polygon points="510,358 519,353 519,363" fill="#6a1b9a"/>
+  <polygon points="640,358 631,353 631,363" fill="#6a1b9a"/>
+  <text x="575" y="350" text-anchor="middle" font-size="14" font-weight="bold" fill="#6a1b9a">tMET (settling time)</text>
+
+  <text x="450" y="400" text-anchor="middle" font-size="13" font-weight="bold" fill="#222">Q ผ่าน tCO แล้วยังไม่นิ่ง และจะ settle เป็น 0 หรือ 1 ก็ได้</text>
+</svg>

@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 440" width="1180" height="440" font-family="Tahoma, 'Noto Sans Thai', Arial, sans-serif">
+  <rect width="1180" height="440" fill="#ffffff"/>
+
+  <text x="590" y="28" text-anchor="middle" font-size="18" font-weight="bold" fill="#222">D flip-flop และ Setup time (tSU) / Hold time (tH) (ทำงานที่ขอบขาขึ้นของ CLK)</text>
+
+  <!-- ================= Left: flip-flop symbol ================= -->
+  <rect x="90" y="130" width="120" height="130" fill="#e3f2fd" stroke="#1565c0" stroke-width="3"/>
+
+  <line x1="60" y1="170" x2="90" y2="170" stroke="#2e7d32" stroke-width="3"/>
+  <text x="52" y="176" text-anchor="end" font-size="18" font-weight="bold" fill="#2e7d32">D</text>
+  <text x="100" y="176" font-size="16" fill="#222">D</text>
+
+  <line x1="60" y1="230" x2="90" y2="230" stroke="#1565c0" stroke-width="3"/>
+  <polyline points="90,216 108,230 90,244" fill="none" stroke="#1565c0" stroke-width="3"/>
+  <text x="52" y="236" text-anchor="end" font-size="18" font-weight="bold" fill="#1565c0">CLK</text>
+
+  <line x1="210" y1="170" x2="270" y2="170" stroke="#6a1b9a" stroke-width="3"/>
+  <text x="198" y="176" text-anchor="end" font-size="16" fill="#222">Q</text>
+  <text x="276" y="176" font-size="18" font-weight="bold" fill="#6a1b9a">Q</text>
+
+  <text x="150" y="290" text-anchor="middle" font-size="12" fill="#444">สามเหลี่ยมที่ขา CLK</text>
+  <text x="150" y="307" text-anchor="middle" font-size="12" fill="#444">= ทำงานที่ขอบสัญญาณ</text>
+  <text x="150" y="324" text-anchor="middle" font-size="12" fill="#444">Q รับค่า D ที่ขอบขาขึ้น</text>
+
+  <line x1="300" y1="55" x2="300" y2="425" stroke="#bbb" stroke-width="1" stroke-dasharray="4 4"/>
+
+  <!-- ================= Right: waveform ================= -->
+  <g transform="translate(300,0)">
+    <rect x="340" y="50" width="110" height="350" fill="#ffb74d" opacity="0.30"/>
+    <rect x="450" y="50" width="80" height="350" fill="#64b5f6" opacity="0.30"/>
+
+    <line x1="450" y1="50" x2="450" y2="400" stroke="#444" stroke-width="1.5" stroke-dasharray="6 4"/>
+    <text x="450" y="45" text-anchor="middle" font-size="13" fill="#444">ขอบ clock (sampling edge)</text>
+
+    <text x="30" y="102" font-size="16" font-weight="bold" fill="#222">CLK</text>
+    <text x="30" y="222" font-size="16" font-weight="bold" fill="#222">D</text>
+    <text x="30" y="332" font-size="16" font-weight="bold" fill="#222">Q</text>
+
+    <path d="M100,120 H150 V70 H300 V120 H450 V70 H600 V120 H750 V70 H850" fill="none" stroke="#1565c0" stroke-width="3"/>
+    <path d="M100,240 H250 V190 H640 V240 H850" fill="none" stroke="#2e7d32" stroke-width="3"/>
+    <path d="M100,350 H510 V300 H810 V350 H850" fill="none" stroke="#6a1b9a" stroke-width="3"/>
+
+    <line x1="395" y1="180" x2="395" y2="250" stroke="#d32f2f" stroke-width="2.5" stroke-dasharray="5 3"/>
+    <text x="395" y="168" text-anchor="middle" font-size="13" font-weight="bold" fill="#d32f2f">ถ้า D เปลี่ยนตรงนี้ = violation</text>
+    <text x="395" y="264" text-anchor="middle" font-size="12" fill="#d32f2f">(เสี่ยง metastability)</text>
+
+    <line x1="450" y1="325" x2="510" y2="325" stroke="#6a1b9a" stroke-width="1.5"/>
+    <polygon points="450,325 458,321 458,329" fill="#6a1b9a"/>
+    <polygon points="510,325 502,321 502,329" fill="#6a1b9a"/>
+    <text x="480" y="318" text-anchor="middle" font-size="12" fill="#6a1b9a">tCO</text>
+
+    <line x1="340" y1="385" x2="450" y2="385" stroke="#e65100" stroke-width="2"/>
+    <polygon points="340,385 349,380 349,390" fill="#e65100"/>
+    <polygon points="450,385 441,380 441,390" fill="#e65100"/>
+    <text x="395" y="377" text-anchor="middle" font-size="15" font-weight="bold" fill="#e65100">tSU</text>
+
+    <line x1="450" y1="385" x2="530" y2="385" stroke="#1565c0" stroke-width="2"/>
+    <polygon points="450,385 459,380 459,390" fill="#1565c0"/>
+    <polygon points="530,385 521,380 521,390" fill="#1565c0"/>
+    <text x="490" y="377" text-anchor="middle" font-size="15" font-weight="bold" fill="#1565c0">tH</text>
+
+    <text x="395" y="410" text-anchor="middle" font-size="12" fill="#444">setup: D ต้องนิ่งก่อนขอบ clock</text>
+    <text x="560" y="410" text-anchor="start" font-size="12" fill="#444">hold: D ต้องนิ่งต่อหลังขอบ clock</text>
+    <text x="450" y="432" text-anchor="middle" font-size="13" font-weight="bold" fill="#222">D ต้องไม่เปลี่ยนค่าตลอดช่วง tSU + tH รอบขอบ clock</text>
+  </g>
+</svg>
