@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1060 360" width="1060" height="360" font-family="Arial, Helvetica, sans-serif" font-size="16">
+  <title>Edge detector with 2-FF synchronizer</title>
+  <rect width="1060" height="360" fill="#ffffff"/>
+
+  <g>
+    <text x="10" y="24" fill="#222222" font-size="18" font-weight="bold">2-FF synchronizer + edge detect</text>
+
+    <line x1="378" y1="40" x2="378" y2="330" stroke="#999999" stroke-width="1.5" stroke-dasharray="6 5"/>
+    <text x="240" y="335" text-anchor="middle" fill="#777777" font-size="14">Clock A domain</text>
+    <text x="620" y="335" text-anchor="middle" fill="#777777" font-size="14">Clock B domain</text>
+
+    <g stroke="#222222" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="75" y1="130" x2="110" y2="130"/>
+      <line x1="75" y1="175" x2="110" y2="175"/>
+      <line x1="190" y1="130" x2="237" y2="130"/>
+      <line x1="363" y1="130" x2="405" y2="130"/>
+      <line x1="485" y1="130" x2="535" y2="130"/>
+      <line x1="615" y1="130" x2="695" y2="130"/>
+      <polyline points="650,130 650,45 840,45"/>
+      <line x1="775" y1="130" x2="840" y2="130"/>
+      <line x1="940" y1="110" x2="985" y2="110"/>
+      <line x1="75" y1="290" x2="890" y2="290"/>
+      <polyline points="392,290 392,175 405,175"/>
+      <polyline points="522,290 522,175 535,175"/>
+      <polyline points="682,290 682,175 695,175"/>
+      <line x1="890" y1="290" x2="890" y2="210"/>
+    </g>
+    <g fill="#222222">
+      <circle cx="650" cy="130" r="4"/>
+      <circle cx="392" cy="290" r="4"/>
+      <circle cx="522" cy="290" r="4"/>
+      <circle cx="682" cy="290" r="4"/>
+    </g>
+
+    <!-- FF0 (Clock A) -->
+    <rect x="110" y="95" width="80" height="100" fill="#ffd0d0" stroke="#333333" stroke-width="2"/>
+    <text x="120" y="136" fill="#222222">D</text>
+    <text x="180" y="136" text-anchor="end" fill="#222222">Q</text>
+    <polygon points="110,165 122,175 110,185" fill="#ffffff" stroke="#333333" stroke-width="2"/>
+    <text x="128" y="181" fill="#222222">C</text>
+
+    <!-- cloud -->
+    <path transform="translate(-45,0)" d="M300,150 C285,150 280,125 300,120 C295,95 325,88 338,102 C345,85 380,88 385,108 C405,105 412,135 395,145 C405,165 375,172 362,160 C350,175 318,172 315,158 C308,160 302,156 300,150 Z"
+          fill="#fff176" stroke="#666666" stroke-width="2"/>
+
+    <!-- FF1 (sync stage 1) -->
+    <rect x="405" y="95" width="80" height="100" fill="#00ffcc" stroke="#333333" stroke-width="2"/>
+    <text x="415" y="136" fill="#222222">D</text>
+    <text x="475" y="136" text-anchor="end" fill="#222222">Q</text>
+    <polygon points="405,165 417,175 405,185" fill="#ffffff" stroke="#333333" stroke-width="2"/>
+    <text x="423" y="181" fill="#222222">C</text>
+    <text x="500" y="120" fill="#222222">Q1</text>
+
+    <!-- FF2 (sync stage 2) -->
+    <rect x="535" y="95" width="80" height="100" fill="#00ffcc" stroke="#333333" stroke-width="2"/>
+    <text x="545" y="136" fill="#222222">D</text>
+    <text x="605" y="136" text-anchor="end" fill="#222222">Q</text>
+    <polygon points="535,165 547,175 535,185" fill="#ffffff" stroke="#333333" stroke-width="2"/>
+    <text x="553" y="181" fill="#222222">C</text>
+    <text x="625" y="120" fill="#222222">Q2</text>
+
+    <!-- FF3 (register NOT Q2) -->
+    <rect x="695" y="95" width="80" height="100" fill="#00ffcc" stroke="#333333" stroke-width="2"/>
+    <text x="705" y="136" fill="#222222">D</text>
+    <text x="765" y="136" text-anchor="end" fill="#222222">Q</text>
+    <polygon points="695,165 707,175 695,185" fill="#ffffff" stroke="#333333" stroke-width="2"/>
+    <text x="713" y="181" fill="#222222">C</text>
+    <text x="792" y="120" fill="#222222">Q3</text>
+    <rect x="714" y="145" width="44" height="20" fill="#4472c4"/>
+    <text x="736" y="160" text-anchor="middle" fill="#ffffff">not</text>
+    <text x="660" y="85" fill="#222222" font-size="14">Q3 = register(NOT Q2)</text>
+
+    <!-- AND (clocked) -->
+    <rect x="840" y="30" width="100" height="180" fill="#4472c4" stroke="#333333" stroke-width="2"/>
+    <text x="890" y="128" text-anchor="middle" fill="#ffffff" font-size="26">AND</text>
+    <polygon points="878,210 890,196 902,210" fill="none" stroke="#ffffff" stroke-width="2"/>
+    <text x="945" y="98" fill="#4472c4" font-size="16">Edge detect</text>
+
+    <!-- 2-FF synchronizer bracket -->
+    <g stroke="#0F6E56" stroke-width="1.5" fill="none">
+      <line x1="405" y1="75" x2="615" y2="75"/>
+      <line x1="405" y1="75" x2="405" y2="85"/>
+      <line x1="615" y1="75" x2="615" y2="85"/>
+    </g>
+    <text x="510" y="64" text-anchor="middle" fill="#0F6E56" font-size="14">2-FF synchronizer</text>
+
+    <text x="10" y="135" fill="#222222">Data</text>
+    <text x="10" y="180" fill="#222222">Clock A</text>
+    <text x="10" y="295" fill="#222222">Clock B</text>
+  </g>
+</svg>
