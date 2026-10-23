@@ -108,6 +108,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownBoards">
                             <li><a class="dropdown-item" href="coursecontent/chapter1-introduction-to-fpga.html"><i class="bi bi-book me-2"></i>คอร์สเรียน FPGA พื้นฐาน</a></li>
+                            <li><a class="dropdown-item" href="coursecontent/chapter-sp1.html"><i class="bi bi-stars me-2"></i>Special: Debounce & CDC (SP1)</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><h6 class="dropdown-header">PYNQ-Z2</h6></li>
                             <li><a class="dropdown-item" href="pynq-z2-vivado_th.html"><i class="bi bi-cpu me-2"></i>Vivado Setup</a></li>
@@ -117,6 +118,7 @@
                             <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1.html"><i class="bi bi-display me-2"></i>LVGL ตอนที่ 1</a></li>
                             <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2.html"><i class="bi bi-display me-2"></i>LVGL ตอนที่ 2</a></li>
                             <li><a class="dropdown-item" href="pynq_z2_lvlg_special_ep.html"><i class="bi bi-stars me-2"></i>Special: AI Agent</a></li>
+                            <li><a class="dropdown-item" href="Pynq_z2_FM_Radio.html"><i class="bi bi-broadcast-pin me-2"></i>FM Radio (RTL-SDR)</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><h6 class="dropdown-header">ARIES PCI Board</h6></li>
                             <li><a class="dropdown-item" href="AriesBoard_ep1.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 1: ออกแบบโปรเจค</a></li>
@@ -135,7 +137,7 @@
                             <li><a class="dropdown-item" href="vhdl_code_coverage.html"><i class="bi bi-bar-chart-steps me-2"></i>VHDL Code Coverage</a></li>
                             <li><a class="dropdown-item" href="fir_filter_by_fpga.html"><i class="bi bi-soundwave me-2"></i>FIR Filter on FPGA</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-info" href="index.html#articles"><i class="bi bi-grid-3x3-gap me-2"></i>ดูบทความทั้งหมด (25 บทความ)</a></li>
+                            <li><a class="dropdown-item text-info" href="index.html#articles"><i class="bi bi-grid-3x3-gap me-2"></i>ดูบทความทั้งหมด (27 บทความ)</a></li>
                         </ul>
                     </li>
                     <li class="nav-item"><a class="nav-link" href="#contact">ติดต่อ</a></li>
@@ -263,7 +265,7 @@
                     </div>
                     <div class="mt-3 mt-md-0">
                         <a href="#articles" class="btn btn-outline-info btn-sm px-3">
-                            ดูบทความทั้งหมด (24 บทความ) <i class="bi bi-arrow-right ms-1"></i>
+                            ดูบทความทั้งหมด (27 บทความ) <i class="bi bi-arrow-right ms-1"></i>
                         </a>
                     </div>
                 </div>
@@ -367,9 +369,9 @@
                         </div>
                         <div class="col-lg-7">
                             <div class="filter-pills-bar" id="categoryFilterGroup">
-                                <button type="button" class="filter-pill-btn active" data-filter="all">ทั้งหมด (25)</button>
-                                <button type="button" class="filter-pill-btn" data-filter="basics">FPGA Basics (5)</button>
-                                <button type="button" class="filter-pill-btn" data-filter="pynq">PYNQ-Z2 / Zynq (7)</button>
+                                <button type="button" class="filter-pill-btn active" data-filter="all">ทั้งหมด (27)</button>
+                                <button type="button" class="filter-pill-btn" data-filter="basics">FPGA Basics (6)</button>
+                                <button type="button" class="filter-pill-btn" data-filter="pynq">PYNQ-Z2 / Zynq (8)</button>
                                 <button type="button" class="filter-pill-btn" data-filter="aries">ARIES PCI Board (5)</button>
                                 <button type="button" class="filter-pill-btn" data-filter="tools">Tools & Protocols (8)</button>
                             </div>
@@ -379,7 +381,7 @@
 
                 <!-- Articles Grid -->
                 <div class="articles-grid-modern" id="articlesContainer">
-                    <!-- Basics (5) -->
+                    <!-- Basics (6) -->
                     <a class="article-row-card" href="coursecontent/chapter1-introduction-to-fpga.html" data-category="basics" data-keywords="fpga intro introduction architecture clb lut basic พื้นฐาน">
                         <div class="article-card-meta">
                             <span class="article-category-tag"><i class="bi bi-journal-text me-1"></i> FPGA Basics</span>
@@ -427,6 +429,16 @@
                         </div>
                         <h4 class="article-card-name">Chapter 5: Basic Simulation</h4>
                         <p class="article-card-desc">เปรียบเทียบเครื่องมือจำลองการทำงาน FPGA แต่ละค่าย (Vivado XSim, ModelSim, Questa, GHDL, Verilator) และเวิร์กโฟลว์การจำลองการทำงานด้วย ModelSim GUI & Script</p>
+                        <span class="article-read-btn">อ่านบทเรียน <i class="bi bi-arrow-right"></i></span>
+                    </a>
+
+                    <a class="article-row-card" href="coursecontent/chapter-sp1.html" data-category="basics" data-keywords="debounce switch debouncing flip flop latch metastability cdc clock domain crossing synchronizer สวิตช์ ซิงโครไนเซอร์ ดีเลย์">
+                        <div class="article-card-meta">
+                            <span class="article-category-tag"><i class="bi bi-journal-text me-1"></i> FPGA Basics</span>
+                            <span class="article-level-tag">Special</span>
+                        </div>
+                        <h4 class="article-card-name">Chapter SP1: Switch Debouncing, Metastability & CDC</h4>
+                        <p class="article-card-desc">เจาะลึกปัญหา Contact Bounce พร้อมการแก้ด้วย Logic Debounce, ความเข้าใจ D Flip-Flop vs Latch, ภาวะ Metastability และการจัดการ Clock Domain Crossing (CDC)</p>
                         <span class="article-read-btn">อ่านบทเรียน <i class="bi bi-arrow-right"></i></span>
                     </a>
 
@@ -498,6 +510,16 @@
                         </div>
                         <h4 class="article-card-name">Special Episode: AI Agent Hardware</h4>
                         <p class="article-card-desc">การนำ AI Agent มาเชื่อมต่อควบคุมฮาร์ดแวร์ PYNQ-Z2 อัตโนมัติและการสร้าง Automation Workflow</p>
+                        <span class="article-read-btn">อ่านบทความ <i class="bi bi-arrow-right"></i></span>
+                    </a>
+
+                    <a class="article-row-card" href="Pynq_z2_FM_Radio.html" data-category="pynq" data-keywords="pynq z2 fm radio rtl-sdr sdr dsp hls vivado decimation dma demodulate วิทยุ">
+                        <div class="article-card-meta">
+                            <span class="article-category-tag"><i class="bi bi-cpu me-1"></i> PYNQ / Zynq</span>
+                            <span class="article-level-tag">Advanced</span>
+                        </div>
+                        <h4 class="article-card-name">PYNQ-Z2 FM Radio: FPGA + RTL-SDR Demodulator</h4>
+                        <p class="article-card-desc">ทำ FM Demodulation ด้วย FPGA ร่วมกับ RTL-SDR USB dongle ประมวลผล DSP และ FIR Decimation Filter บนฮาร์ดแวร์แบบ Real-time</p>
                         <span class="article-read-btn">อ่านบทความ <i class="bi bi-arrow-right"></i></span>
                     </a>
 
