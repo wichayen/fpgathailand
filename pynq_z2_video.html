@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PYNQ-Z2 Video Out: ต่อภาพออกจอ HDMI ด้วย Linux DRM/KMS + Framebuffer บน PetaLinux 2022.1 | FPGATHAILAND</title>
+    <meta name="title" content="PYNQ-Z2 Video Out: ต่อภาพออกจอ HDMI ด้วย Linux DRM/KMS + Framebuffer บน PetaLinux 2022.1 | FPGATHAILAND">
+    <meta name="description" content="คู่มือการสร้าง Video Pipeline แสดงผลภาพออกพอร์ต HDMI บนบอร์ด PYNQ-Z2 (Zynq-7000) ด้วย PetaLinux 2022.1 เชื่อมต่อไดรเวอร์ Linux DRM/KMS (/dev/dri/card0) และจำลอง Framebuffer (/dev/fb0)">
+    <meta name="keywords" content="PYNQ-Z2, HDMI, Video Pipeline, AXI VDMA, DRM, KMS, Framebuffer, fbdev, PetaLinux 2022.1, Digilent HDMI, axi_dynclk, rgb2dvi, Zynq-7000, Xilinx, FPGA Thailand">
+    <meta name="author" content="Wichayen">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://wichayen.github.io/fpgathailand/pynq_z2_video.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://wichayen.github.io/fpgathailand/pynq_z2_video.html">
+    <meta property="og:title" content="PYNQ-Z2 Video Out: ต่อภาพออกจอ HDMI ด้วย Linux DRM/KMS + Framebuffer บน PetaLinux 2022.1">
+    <meta property="og:description" content="แชร์วิธีสร้าง Display Controller Pipeline บน FPGA เชื่อม AXI VDMA กับ PetaLinux 2022.1 เพื่อต่อภาพออกจอ HDMI บน PYNQ-Z2">
+    <meta property="og:image" content="https://wichayen.github.io/fpgathailand/pynq_z2_video_files/image02.jpg">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://wichayen.github.io/fpgathailand/pynq_z2_video.html">
+    <meta name="twitter:title" content="PYNQ-Z2 Video Out: ต่อภาพออกจอ HDMI ด้วย Linux DRM/KMS + Framebuffer บน PetaLinux 2022.1">
+    <meta name="twitter:description" content="แชร์วิธีสร้าง Display Controller Pipeline บน FPGA เชื่อม AXI VDMA กับ PetaLinux 2022.1 เพื่อต่อภาพออกจอ HDMI บน PYNQ-Z2">
+    <meta name="twitter:image" content="https://wichayen.github.io/fpgathailand/pynq_z2_video_files/image02.jpg">
+
+    <!-- Bootstrap 5 CSS & Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { padding-top: 56px; }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 0.5rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        .figure-caption {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
+        pre {
+            background-color: #0f172a;
+            color: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+        pre code {
+            color: inherit;
+            background: none;
+            padding: 0;
+            font-size: inherit;
+        }
+        pre.mermaid {
+            background-color: #ffffff;
+            color: inherit;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            display: flex;
+            justify-content: center;
+        }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        .callout-box {
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            margin: 1.75rem 0;
+            border-left: 4px solid;
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+        .callout-info {
+            border-left-color: #0284c7;
+            background: #f0f9ff;
+        }
+        .callout-tip {
+            border-left-color: #10b981;
+            background: #f0fdf4;
+        }
+        .callout-warning {
+            border-left-color: #f59e0b;
+            background: #fffbeb;
+        }
+        .callout-title {
+            font-weight: 700;
+            color: #0f172a;
+            font-size: 1.05rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+        .callout-content {
+            color: #334155;
+            font-size: 0.98rem;
+            line-height: 1.75;
+        }
+        .callout-content p:last-child,
+        .callout-content ul:last-child {
+            margin-bottom: 0;
+        }
+        .table-responsive {
+            margin: 1.75rem 0;
+        }
+        .article-content h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+        .article-content h2 {
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-top: 1.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .article-content h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #334155;
+            margin-top: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+        .article-post-meta {
+            display: flex;
+            gap: 1.5rem;
+            color: #64748b;
+            font-size: 0.92rem;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar navbar-expand-lg fixed-top site-nav">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <span class="navbar-brand-icon"><i class="bi bi-cpu"></i></span>
+                <span>FPGATHAILAND</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+                    <li class="nav-item"><a class="nav-link" href="index.html#course"><i class="bi bi-mortarboard me-1"></i>คอร์สเรียน</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#work">ผลงานเด่น</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#articles">บทความและแล็บ</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownBoards" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            แล็บบอร์ด
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownBoards">
+                            <li><h6 class="dropdown-header text-info">คอร์สเรียนพื้นฐาน (Course)</h6></li>
+                            <li><a class="dropdown-item" href="coursecontent/chapter1-introduction-to-fpga.html"><i class="bi bi-book me-2"></i>คอร์สเรียน FPGA พื้นฐาน</a></li>
+                            <li><a class="dropdown-item" href="coursecontent/chapter-sp1.html"><i class="bi bi-stars me-2"></i>Special: Debounce & CDC (SP1)</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">PYNQ-Z2</h6></li>
+                            <li><a class="dropdown-item" href="pynq-z2-vivado_th.html"><i class="bi bi-cpu me-2"></i>Vivado Setup</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-hls_th.html"><i class="bi bi-lightning-charge me-2"></i>HLS Acceleration</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-ai_th.html"><i class="bi bi-robot me-2"></i>AI (DPU IP)</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-modelsim_th.html"><i class="bi bi-activity me-2"></i>Modelsim</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1.html"><i class="bi bi-display me-2"></i>LVGL ตอนที่ 1</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2.html"><i class="bi bi-display me-2"></i>LVGL ตอนที่ 2</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvlg_special_ep.html"><i class="bi bi-stars me-2"></i>Special: AI Agent</a></li>
+                            <li><a class="dropdown-item" href="Pynq_z2_FM_Radio.html"><i class="bi bi-broadcast-pin me-2"></i>FM Radio (RTL-SDR)</a></li>
+                            <li><a class="dropdown-item active" href="pynq_z2_video.html"><i class="bi bi-display me-2"></i>HDMI Video Out (Linux DRM)</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">ARIES PCI Board</h6></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep1.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 1: ออกแบบโปรเจค</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep2.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 2: Version A.1</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep3.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 3: ออกแบบ FPGA</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep4.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 4: Linux PCI Driver</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep5.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 5: Windows PCI Driver</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">บอร์ดและเครื่องมืออื่นๆ</h6></li>
+                            <li><a class="dropdown-item" href="mini2440_th.html"><i class="bi bi-cpu me-2"></i>mini2440 + FPGA</a></li>
+                            <li><a class="dropdown-item" href="EZUSB_FPGA.html"><i class="bi bi-usb-symbol me-2"></i>EZUSB + FPGA</a></li>
+                            <li><a class="dropdown-item" href="GeminiBoard_Beaglebone_Frambuffer.html"><i class="bi bi-display me-2"></i>GeminiBoard Framebuffer</a></li>
+                            <li><a class="dropdown-item" href="Sigasi.html"><i class="bi bi-code-square me-2"></i>Sigasi for VS Code</a></li>
+                            <li><a class="dropdown-item" href="UVVM.html"><i class="bi bi-check2-circle me-2"></i>UVVM Verification</a></li>
+                            <li><a class="dropdown-item" href="AI_hardware.html"><i class="bi bi-robot me-2"></i>AI Hardware Control with MCP</a></li>
+                            <li><a class="dropdown-item" href="vhdl_code_coverage.html"><i class="bi bi-bar-chart-steps me-2"></i>VHDL Code Coverage</a></li>
+                            <li><a class="dropdown-item" href="fir_filter_by_fpga.html"><i class="bi bi-soundwave me-2"></i>FIR Filter on FPGA</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-info" href="index.html#articles"><i class="bi bi-grid-3x3-gap me-2"></i>ดูบทความทั้งหมด (22 บทความ)</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#contact">ติดต่อ</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4 mb-5">
+        <div class="row">
+            <div class="col-lg-9 mx-auto article-content">
+                <!-- Breadcrumbs -->
+                <nav aria-label="breadcrumb" class="mb-3">
+                    <ol class="breadcrumb small">
+                        <li class="breadcrumb-item"><a href="index.html"><i class="bi bi-house-door me-1"></i>หน้าแรก</a></li>
+                        <li class="breadcrumb-item"><a href="index.html#articles">บทความ</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">PYNQ-Z2 Video Out (Linux DRM)</li>
+                    </ol>
+                </nav>
+
+                <h1 class="mb-3 border-0 pb-0">PYNQ-Z2 Video Out: ต่อภาพออกจอ HDMI ด้วย Linux DRM/KMS + Framebuffer บน PetaLinux 2022.1</h1>
+                <div class="article-post-meta">
+                    <span><i class="bi bi-calendar3 me-1"></i> เผยแพร่เมื่อ: 4 พฤศจิกายน 2026</span>
+                    <span><i class="bi bi-person me-1"></i> โดย Wichayen</span>
+                    <span><i class="bi bi-tag me-1"></i> PYNQ-Z2 / Linux Display Driver</span>
+                </div>
+                <hr>
+
+                <!-- 1 บทนำ -->
+                <h1>1 บทนำ</h1>
+                <p>บทความนี้จะมาแชร์วิธีทำให้ระบบปฏิบัติการ <strong>Linux (PetaLinux 2022.1)</strong> บนบอร์ด <strong>PYNQ-Z2</strong> (ชิป Xilinx Zynq-7000 / XC7Z020) สามารถต่อภาพออกจอ <strong>HDMI</strong> ได้เหมือนเครื่องคอมพิวเตอร์ทั่วไปครับ โดยระบบจะมองเห็นทั้งไดรเวอร์การ์ดจอแบบมาตรฐาน <code>/dev/dri/card0</code> (DRM/KMS) และจำลอง <code>/dev/fb0</code> (Framebuffer) ขึ้นมาให้เราใช้งานได้ทันที</p>
+
+                <p>หลายคนที่เคยเล่น Zynq-7000 คงทราบดีว่าในชิปมันไม่มีฮาร์ดแวร์ GPU สำหรับประมวลผลกราฟิกติดมาด้วย แล้วเราจะเอาภาพออกจอได้ยังไง? คำตอบคือเราจะใช้ความยืดหยุ่นของฝั่ง <strong>PL (FPGA)</strong> มาสร้างเป็น <strong>Display Controller Pipeline</strong> ขึ้นมาเองเลยครับ โดยให้ตัว AXI VDMA คอยวิ่งไปดูดข้อมูลภาพจากแรม DDR3 แล้วแปลงเป็นสัญญาณ HDMI ยิงออกจอตรงๆ เลย</p>
+
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/i8UG72to5fA?si=HGTL9cOPfDav7tYM" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+
+                <hr>
+
+                <!-- 2 อุปกรณ์และภาพรวมการทำงาน (Overview) -->
+                <h1>2 อุปกรณ์และภาพรวมการทำงาน (Overview)</h1>
+
+                <h2>2.1 สเปกและเครื่องมือที่ใช้ในการทดลอง</h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 25%;">รายการ</th>
+                                <th style="width: 35%;">สเปก / เวอร์ชันที่ใช้</th>
+                                <th style="width: 40%;">รายละเอียด</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>บอร์ดทดลอง</strong></td>
+                                <td><span class="badge bg-primary">PYNQ-Z2</span></td>
+                                <td>ชิป Zynq-7020 (XC7Z020-1CLG400C)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Vivado</strong></td>
+                                <td>2022.1</td>
+                                <td>ใช้ต่อบล็อกไดอะแกรมและสังเคราะห์ฮาร์ดแวร์ฝั่ง FPGA</td>
+                            </tr>
+                            <tr>
+                                <td><strong>PetaLinux</strong></td>
+                                <td>2022.1</td>
+                                <td>ตามเอกสาร Xilinx แนะนำรันบน Ubuntu 20.04.3 LTS</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Host ที่ใช้จริง</strong></td>
+                                <td>Ubuntu 22.04 LTS</td>
+                                <td>รัน PetaLinux 2022.1 ได้เหมือนกัน</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Linux Kernel</strong></td>
+                                <td>5.15 LTS (Digilent Rebase)</td>
+                                <td>สาขา <code>digilent_rebase_v5.15_LTS_2022.1</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Pixel format</strong></td>
+                                <td><code>RG24</code> = <code>DRM_FORMAT_RGB888</code></td>
+                                <td>24 bpp (3 ไบต์ต่อ 1 พิกเซล: แดง, เขียว, น้ำเงิน)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h2>2.2 ภาพจากโปรแกรมวิ่งไปถึงจอ HDMI ได้ยังไง? (Data Transfer Flow)</h2>
+                <p>เวลาเราสั่งรันโปรแกรมบน Linux ข้อมูลภาพจะไหลผ่านฮาร์ดแวร์ตามลำดับนี้ครับ:</p>
+
+                <ol class="lh-lg">
+                    <li><strong>แอปพลิเคชัน &rarr; แรม DDR3 (Framebuffer):</strong><br>
+                    โปรแกรมใน Userspace หรือไดรเวอร์ใน Kernel จะเขียนข้อมูลสีของแต่ละพิกเซลลงในพื้นที่แรม DDR3 ซึ่งเราจองพื้นที่ส่วนนี้ไว้ล่วงหน้า</li>
+                    <li><strong>แรม DDR3 &rarr; AXI VDMA (ผ่าน AXI HP Port):</strong><br>
+                    บล็อก <code>AXI VDMA</code> ใน FPGA จะทำหน้าที่ดึงข้อมูลภาพจากแรม DDR3 อัตโนมัติผ่านพอร์ตความเร็วสูง <strong>AXI HP0 (High Performance)</strong> แบบ Memory-Mapped</li>
+                    <li><strong>AXI VDMA &rarr; วงจรแปลงสตรีม (ผ่าน AXI4-Stream):</strong><br>
+                    VDMA จะเปลี่ยนรูปแบบข้อมูลจากในแรมมาเป็นสายข้อมูลต่อเนื่อง (<strong>AXI4-Stream: MM2S</strong>) ส่งต่อไปยัง <code>axis_subset_converter</code> และ <code>v_axi4s_vid_out</code></li>
+                    <li><strong>Video Out Block &rarr; ตัวเข้ารหัสสัญญาณ (<code>rgb2dvi</code>):</strong><br>
+                    บล็อก <code>v_axi4s_vid_out</code> จะเอาข้อมูลพิกเซลมาซิงค์เข้ากับจังหวะเวลา (HSync, VSync, Data Enable) ที่สร้างขึ้นจาก <code>v_tc</code> และรับ Pixel Clock จาก <code>axi_dynclk</code> กลายเป็นสัญญาณภาพขนาน <strong>Parallel RGB + Sync Signals</strong></li>
+                    <li><strong>TMDS Encoder &rarr; พอร์ต HDMI &rarr; จอภาพ:</strong><br>
+                    บล็อก <code>rgb2dvi</code> จะรับสัญญาณภาพขนานพร้อมสัญญาณนาฬิกา (Pixel Clock และ Serial Clock ความถี่ 5 เท่า) มาเข้ารหัสเป็นสัญญาณดิจิทัลแรงดันต่ำแบบต่างระดับ <strong>TMDS</strong> ยิงออกพอร์ต HDMI ของบอร์ดเข้าสู่หน้าจอครับ</li>
+                </ol>
+
+                <pre class="mermaid">
+graph TD
+    subgraph US["1. Linux Userspace"]
+        APP["Applications / GUI<br/>(fbdev / DRM apps)"]
+    end
+
+    subgraph KS["2. Linux Kernel"]
+        DRM["DRM Subsystem & fbdev Emulation<br/>(xlnx-drm + Digilent Drivers)"]
+    end
+
+    DDR[("DDR3 RAM<br/>(CMA Framebuffer)")]
+
+    subgraph PL["3. PL Video Pipeline (FPGA)"]
+        VDMA["AXI VDMA<br/>(ดึงภาพจากแรมเป็นสตรีม)"]
+        CONV["Format Converter<br/>(axis_subset_converter)"]
+        VOUT["Video Out Bridge<br/>(v_axi4s_vid_out)"]
+        DVI["rgb2dvi<br/>(TMDS Encoder)"]
+        
+        CTRL["Timing & Clock Blocks<br/>(v_tc + axi_dynclk)"]
+    end
+
+    HDMI["4. จอภาพ HDMI Monitor"]
+
+    %% Data Flow (เส้นหนาสีส้ม)
+    APP ==>|"1. เขียนภาพลงบัฟเฟอร์"| DDR
+    DDR ==>|"2. VDMA ดึงภาพผ่าน AXI HP0"| VDMA
+    VDMA ==>|"3. ส่งต่อเป็น AXI4-Stream"| CONV
+    CONV ==>|"RGB Stream"| VOUT
+    VOUT ==>|"4. สัญญาณภาพขนาน RGB + Sync"| DVI
+    DVI ==>|"5. สัญญาณ TMDS"| HDMI
+
+    %% Control Flow (เส้นประ)
+    APP -.->|"mmap / ioctl"| DRM
+    DRM -.->|"คุม VDMA ผ่าน AXI-Lite"| VDMA
+    DRM -.->|"สั่งปรับ Clock และ Timing"| CTRL
+    CTRL -.->|"Pixel Clock & H/V Sync"| VOUT
+    CTRL -.->|"Serial Clock (5x)"| DVI
+
+    classDef mainData stroke:#e8590c,stroke-width:3px;
+    classDef ctrlFlow stroke:#888,stroke-dasharray: 3 3;
+                </pre>
+
+                <hr>
+
+                <!-- 3 การออกแบบฮาร์ดแวร์ฝั่ง FPGA (Vivado) -->
+                <h1>3 การออกแบบฮาร์ดแวร์ฝั่ง FPGA (Vivado)</h1>
+                <p>ในส่วนของ FPGA (PL) เราจะต่อ IP Core ต่างๆ เข้าด้วยกันตามรูปด้านล่าง</p>
+                <p>อันนี้คือส่วนที่เป็น video framebuffer:</p>
+
+                <pre class="mermaid">
+graph LR
+    subgraph PS["1. ฝั่งชิปประมวลผล (PS)"]
+        DDR[("DDR3 RAM<br/>(Framebuffer)")]
+        I2C["I2C0<br/>(อ่าน EDID จากจอ)"]
+    end
+
+    subgraph PL["2. ฝั่งวงจร FPGA (PL - Hierarchy: video)"]
+        VDMA["AXI VDMA<br/>(axi_vdma_0)"]
+        CONV["Format Converter<br/>(axis_subset_converter)"]
+        VOUT["Video Out Bridge<br/>(v_axi4s_vid_out_0)"]
+        DVI["TMDS Encoder<br/>(rgb2dvi_0)"]
+        
+        VTC["Timing Controller<br/>(v_tc_0)"]
+        DYN["Dynamic Clock<br/>(axi_dynclk)"]
+    end
+
+    HDMI["3. หน้าจอ<br/>(พอร์ต HDMI TX)"]
+
+    %% Data Flow
+    DDR ==>|"1. อ่านข้อมูลภาพ (AXI HP)"| VDMA
+    VDMA ==>|"2. AXI4-Stream"| CONV
+    CONV ==>|"3. จัดสายข้อมูล RGB"| VOUT
+    VOUT ==>|"4. Parallel RGB"| DVI
+    DVI ==>|"5. สัญญาณ TMDS"| HDMI
+
+    %% Control & Timing
+    I2C -.->|"อ่าน EDID (DDC)"| HDMI
+    DYN -.->|"Pixel Clock"| VTC
+    DYN -.->|"Pixel & 5x Serial Clock"| DVI
+    VTC -.->|"สัญญาณซิงค์ H/V Sync"| VOUT
+
+    classDef mainFlow stroke:#e8590c,stroke-width:3px;
+    classDef ctrlFlow stroke:#888,stroke-dasharray: 3 3;
+                </pre>
+
+                <p>ภาพรวมของทั้งโปรเจกต์จะเป็นแบบนี้:</p>
+                <figure class="text-center my-4">
+                    <a href="pynq_z2_video_files/base_fit.pdf" target="_blank" title="คลิกเพื่อเปิดไฟล์ PDF ความละเอียดสูง">
+                        <img src="pynq_z2_video_files/base_fit.png" alt="ภาพรวม Vivado Block Design สำหรับระบบ Video Framebuffer" class="img-fluid border shadow-sm">
+                    </a>
+                    <figcaption class="figure-caption mt-2">
+                        <i class="bi bi-file-earmark-pdf me-1"></i>ภาพรวม Vivado Block Design (<a href="pynq_z2_video_files/base_fit.pdf" target="_blank">คลิกที่รูปเพื่อเปิดดูไฟล์ PDF ความละเอียดสูง</a>)
+                    </figcaption>
+                </figure>
+
+                <div class="callout-box callout-info">
+                    <div class="callout-title"><i class="bi bi-info-circle-fill text-primary me-2"></i>เทคนิคสำคัญตอนต่อ Block Design</div>
+                    <div class="callout-content">
+                        <p>แนะนำให้รวมบล็อกที่เกี่ยวกับระบบวิดีโอทั้งหมดไว้ใน <strong>Hierarchy ชื่อ <code>video</code></strong> นะครับ เพราะเวลา PetaLinux สร้าง Device Tree มันจะเอาชื่อ Hierarchy นี้ไปตั้งชื่อ Label ให้เราอัตโนมัติ เช่น <code>video_axi_vdma_0</code>, <code>video_axi_dynclk_0</code>, <code>video_v_tc_0</code> ซึ่งทำให้เราเขียนไฟล์ Device Tree ในขั้นตอนถัดไปได้ง่ายและตรงกันพอดีครับ</p>
+                    </div>
+                </div>
+
+                <p class="fw-semibold">หน้าที่ของแต่ละตัวใน Video Pipeline:</p>
+                <ul class="lh-lg">
+                    <li><strong>DDR3 RAM (Framebuffer):</strong> แรมหลักของระบบ ใช้เก็บข้อมูลพิกเซลที่โปรแกรมหรือระบบปฏิบัติการเขียนลงมา</li>
+                    <li><strong>AXI VDMA (<code>axi_vdma_0</code>):</strong> ตัวช่วยดึงข้อมูลภาพจากแรม (Direct Memory Access) ในโหมด MM2S (Memory-Mapped to Stream) เพื่อแปลงข้อมูลเป็นสายข้อมูลสตรีม AXI4-Stream</li>
+                    <li><strong>Format Converter (<code>axis_subset_converter</code>):</strong> ตัวจัดระเบียบสายข้อมูลสตรีม เช่น ปรับเรียงลำดับบิตสี R, G, B หรือใช้ตัดไบต์ที่ไม่ใช้ออก (ในกรณีส่งมาแบบ 32 บิต)</li>
+                    <li><strong>Timing Controller (<code>v_tc_0</code>):</strong> ตัวสร้างสัญญาณจังหวะเวลามาตรฐานของจอภาพ (Video Timing) ได้แก่ สัญญาณซิงค์แนวนอน (HSync), สัญญาณซิงค์แนวตั้ง (VSync) และ Data Enable (DE)</li>
+                    <li><strong>Dynamic Clock Generator (<code>axi_dynclk</code> - IP จาก Digilent):</strong> ช่วยปรับความถี่สัญญาณนาฬิกา (Pixel Clock และ Serial Clock 5 เท่า)</li>
+                    <li><strong>Video Out Bridge (<code>v_axi4s_vid_out_0</code>):</strong> ตัวแปลงสัญญาณภาพจาก <strong>AXI4-Stream</strong> ไปเป็นสัญญาณภาพแบบขนาน (<strong>Parallel RGB</strong>) โดยทำหน้าที่นำข้อมูลสีของแต่ละพิกเซลมาจับคู่เข้ากับจังหวะการกวาดหน้าจอ (HSync, VSync, Data Enable) ที่ได้จาก <code>v_tc</code> ให้ตรงตามรอบสัญญาณนาฬิกา (Pixel Clock) เพื่อเตรียมส่งต่อไปยังตัวแปลงสัญญาณ HDMI</li>
+                    <li><strong>TMDS Encoder (<code>rgb2dvi_0</code> - IP จาก Digilent):</strong> ตัวแปลงสัญญาณภาพขนาน Parallel RGB ให้กลายเป็นสัญญาณดิจิทัลแรงดันต่ำแบบต่างระดับ <strong>TMDS</strong> ส่งตรงเข้าพอร์ต HDMI ของบอร์ด</li>
+                </ul>
+
+                <hr>
+
+                <!-- 4 สร้างระบบ Linux ด้วย PetaLinux 2022.1 -->
+                <h1>4 สร้างระบบ Linux ด้วย PetaLinux 2022.1</h1>
+
+                <h2>4.1 สร้างโปรเจกต์ PetaLinux</h2>
+                <p>เริ่มจากเปิดเทอร์มินัลแล้วสร้างโปรเจกต์ใหม่ จากนั้นอิมพอร์ตไฟล์ฮาร์ดแวร์ (<code>.xsa</code>) ที่ได้จาก Vivado เข้ามา:</p>
+
+                <pre><code>source ~/petalinux_2022_1/settings.sh
+cd ~/
+
+# สร้างโปรเจกต์สำหรับชิป Zynq
+petalinux-create --type project --template zynq --name pynq_z2
+cd pynq_z2/
+
+# ชี้ไปยังโฟลเดอร์ที่มีไฟล์ .xsa ของเรา
+petalinux-config --get-hw-description=/home/hong/Desktop/pynq_z2/</code></pre>
+
+                <p>พอหน้าต่างคอนฟิกสีฟ้าขึ้นมา ให้ตั้งค่าหลักๆ 3 จุดนี้ครับ:</p>
+                <ol class="lh-lg">
+                    <li><strong>DTG Settings &rarr; Kernel Bootargs</strong>
+                        <ul>
+                            <li>ติ๊กเอาเครื่องหมายถูกหน้า <em>generate boot args automatically</em> ออก</li>
+                            <li>เลือกที่ <em>user set kernel bootargs</em> แล้วใส่ข้อความนี้ลงไป:
+                                <pre class="mt-2"><code>console=ttyPS0,115200 root=/dev/mmcblk0p2 rw earlyprintk quiet rootfstype=ext4 rootwait cma=256M</code></pre>
+                            </li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <div class="callout-box callout-warning">
+                    <div class="callout-title"><i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>จุดนี้สำคัญมาก! ทำไมต้องใส่ <code>cma=256M</code>?</div>
+                    <div class="callout-content">
+                        <p>จากที่ทดลองเล่นดู ถ้าเราไม่จองหน่วยความจำแบบต่อเนื่อง (CMA) ไว้เยอะพอ เวลาโปรแกรมสั่งทำ Double Buffering ผ่าน DRM มันจะฟ้อง error ทันทีตอนสร้าง dumb buffer ครับ เพราะภาพความละเอียดสูงต้องใช้พื้นที่แรมก้อนใหญ่ที่เรียงติดกันแบบต่อเนื่องเพื่อให้ VDMA อ่านข้อมูลได้ไม่สะดุด</p>
+                    </div>
+                </div>
+
+                <ol start="2" class="lh-lg">
+                    <li><strong>Image Packaging Configuration &rarr; Root filesystem type</strong><br>
+                    เลือกเป็น <strong>EXT4 (SD/eMMC/SATA/USB)</strong></li>
+                    <li>ปิดตัวเลือก <em>Copy final images to tftpboot</em> ออกได้เลยครับ เพราะรอบนี้เราบูตตรงผ่าน SD Card</li>
+                </ol>
+
+                <h2>4.2 เพิ่มไดรเวอร์ Digilent HDMI เข้าไปในเคอร์เนล</h2>
+                <p>เราจะใช้ไดรเวอร์จาก Digilent (<code>linux-digilent</code> สาขา <code>digilent_rebase_v5.15_LTS_2022.1</code>) เพื่อควบคุมตัวสร้าง Clock และตัวส่งสัญญาณ HDMI:</p>
+
+                <pre><code># สร้างโครงไดรเวอร์ในโปรเจกต์
+petalinux-create -t modules --name clk-dglnt-dynclk --enable
+petalinux-create -t modules --name digilent-hdmi --enable
+
+# ก๊อปปี้ไฟล์ซอร์สโค้ดไดรเวอร์เข้าไปทับ
+cp ~/Desktop/pynq_z2/clk-dglnt-dynclk.c ~/pynq_z2/project-spec/meta-user/recipes-modules/clk-dglnt-dynclk/files/clk-dglnt-dynclk.c
+cp ~/Desktop/pynq_z2/digilent-hdmi.c    ~/pynq_z2/project-spec/meta-user/recipes-modules/digilent-hdmi/files/digilent-hdmi.c</code></pre>
+
+                <div class="callout-box callout-info">
+                    <div class="callout-title"><i class="bi bi-info-circle-fill text-primary me-2"></i>ข้อมูลเพิ่มเติมเกี่ยวกับไดรเวอร์ Digilent</div>
+                    <div class="callout-content">
+                        <p>ไฟล์ไดรเวอร์ต้นฉบับสามารถดาวน์โหลดได้จาก GitHub ของ Digilent ครับ:</p>
+                        <ul>
+                            <li><a href="https://github.com/Digilent/linux-digilent/blob/digilent_rebase_v5.15_LTS_2022.1/drivers/clk/clk-dglnt-dynclk.c" target="_blank" rel="noopener noreferrer"><code>clk-dglnt-dynclk.c</code></a></li>
+                            <li><a href="https://github.com/Digilent/linux-digilent/blob/digilent_rebase_v5.15_LTS_2022.1/drivers/gpu/drm/xlnx/digilent_hdmi.c" target="_blank" rel="noopener noreferrer"><code>digilent-hdmi.c</code></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 30%;">ชื่อไดรเวอร์</th>
+                                <th style="width: 70%;">หน้าที่การทำงาน</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>clk-dglnt-dynclk</code></td>
+                                <td>ไดรเวอร์ Common Clock Framework ทำหน้าที่คุยกับ <code>axi_dynclk</code> ผ่าน DRP เพื่อสั่งปรับความถี่ Pixel Clock ตามความละเอียดจอ</td>
+                            </tr>
+                            <tr>
+                                <td><code>digilent-hdmi</code></td>
+                                <td>ไดรเวอร์ DRM Encoder/Connector สำหรับ HDMI ทำหน้าที่อ่านค่า EDID ผ่านบัส I2C0 เพื่อเช็กว่าจอรองรับโหมดไหนบ้าง แล้วสั่งตั้งค่า Clock ให้อัตโนมัติ</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h2>4.3 แก้ไข Device Tree (<code>system-user.dtsi</code>)</h2>
+                <p>เปิดไฟล์ <code>project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi</code> แล้วใส่โค้ดชุดนี้ลงไป เพื่อบอกให้ Linux รู้จักฮาร์ดแวร์จอภาพที่เราต่อไว้ในฝั่ง FPGA:</p>
+
+                <pre><code>/include/ "system-conf.dtsi"
+
+#include &lt;dt-bindings/gpio/gpio.h&gt;
+
+/* เปิดบัส I2C0 เพื่อให้อ่านค่า EDID จากจอภาพผ่านสาย HDMI ได้ */
+&i2c0 {
+    clock-frequency = &lt;100000&gt;;
+    status = "okay";
+};
+
+&amba_pl {
+    /* ตัวแปลงสัญญาณ HDMI ฝั่ง DRM */
+    digilent_hdmi {
+        compatible = "digilent,hdmi";
+
+        clocks = &lt;&video_axi_dynclk_0&gt;;
+        clock-names = "clk";
+
+        digilent,edid-i2c = &lt;&i2c0&gt;;
+        digilent,fmax = &lt;142000&gt;;
+
+        port@0 {
+            hdmi_ep: endpoint {
+                remote-endpoint = &lt;&pl_disp_ep&gt;;
+            };
+        };
+    };
+
+    /* ไดรเวอร์คุมการแสดงผลของฝั่ง PL (DRM Controller) */
+    xlnx_pl_disp {
+        compatible = "xlnx,pl-disp";
+
+        dmas = &lt;&video_axi_vdma_0 0&gt;;
+        dma-names = "dma0";
+
+        xlnx,vformat = "RG24"; /* ถ้าใช้ XRGB8888 32 bpp ให้เปลี่ยนเป็น "XR24" */
+        xlnx,bridge = &lt;&video_v_tc_0&gt;;
+
+        port@0 {
+            pl_disp_ep: endpoint {
+                remote-endpoint = &lt;&hdmi_ep&gt;;
+            };
+        };
+    };
+};
+
+/* กำหนดช่วง Address ให้กับ VDMA */
+&video_axi_vdma_0 {
+    dma-ranges = &lt;0x00000000 0x00000000 0x40000000&gt;;
+};
+
+/* ไดรเวอร์ตัวสร้าง Dynamic Clock */
+&video_axi_dynclk_0 {
+    compatible = "dglnt,axi-dynclk";
+
+    #clock-cells = &lt;0&gt;;
+    clocks = &lt;&clkc 15&gt;;
+};
+
+/* บริดจ์เชื่อมต่อ Timing Controller เข้ากับระบบ DRM */
+&video_v_tc_0 {
+    compatible = "xlnx,bridge-v-tc-6.1";
+    xlnx,pixels-per-clock = &lt;1&gt;;
+};</code></pre>
+
+                <div class="callout-box callout-tip">
+                    <div class="callout-title"><i class="bi bi-lightbulb-fill text-success me-2"></i>ข้อสังเกตเรื่องชื่อ Label</div>
+                    <div class="callout-content">
+                        <p>สังเกตชื่อ Label อย่าง <code>video_axi_vdma_0</code>, <code>video_axi_dynclk_0</code>, <code>video_v_tc_0</code> มันจะขึ้นต้นด้วย <code>video_</code> ตามชื่อ Hierarchy ที่เราตั้งไว้ใน Vivado เสมอครับ ถ้าใครตั้งชื่ออื่นไว้ อย่าลืมมาแก้ตรงนี้ให้ตรงกันด้วยนะ</p>
+                    </div>
+                </div>
+
+                <h2>4.4 ตั้งค่าคอนฟิกเคอร์เนล (<code>bsp.cfg</code>)</h2>
+                <p>เปิดไฟล์ <code>project-spec/meta-user/recipes-kernel/linux/linux-xlnx/bsp.cfg</code> แล้วเพิ่มบรรทัดเหล่านี้ลงไป เพื่อเปิดใช้งานระบบ DRM และ Framebuffer:</p>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 45%;">ตัวเลือกคอนฟิก</th>
+                                <th style="width: 55%;">ความสำคัญ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>CONFIG_COMMON_CLK_DGLNT_DYNCLK=y</code></td>
+                                <td>เปิดไดรเวอร์นาฬิกาของ Digilent</td>
+                            </tr>
+                            <tr>
+                                <td><code>CONFIG_DRM_XLNX_BRIDGE=y</code><br><code>CONFIG_DRM_XLNX_BRIDGE_VTC=y</code></td>
+                                <td>เปิดใช้งาน Xilinx DRM Bridge และ VTC</td>
+                            </tr>
+                            <tr>
+                                <td><code>CONFIG_DRM_XLNX_PL_DISP=y</code></td>
+                                <td>ไดรเวอร์หลักที่คุม Display ในฝั่ง PL (<code>xlnx_pl_disp</code>)</td>
+                            </tr>
+                            <tr>
+                                <td><code>CONFIG_DRM_DIGILENT_HDMI=y</code></td>
+                                <td>ไดรเวอร์ HDMI Encoder ของ Digilent</td>
+                            </tr>
+                            <tr>
+                                <td><code>CONFIG_DRM_FBDEV_EMULATION=y</code></td>
+                                <td>สั่งให้ระบบจำลอง <code>/dev/fb0</code> ขึ้นมาบน DRM</td>
+                            </tr>
+                            <tr>
+                                <td><code>CONFIG_DRM_FBDEV_OVERALLOC=100</code></td>
+                                <td>จองขนาดเฟรมบัฟเฟอร์เผื่อไว้เป็น 2 เท่าความสูงจริง ทำให้ทำ Double Buffering / สลับหน้าจอได้ลื่นๆ</td>
+                            </tr>
+                            <tr>
+                                <td><code>CONFIG_FB=y</code><br><code>CONFIG_FB_CFB_*=y</code><br><code>CONFIG_FB_SYS_*=y</code><br><code>CONFIG_FB_DEFERRED_IO=y</code></td>
+                                <td>ฟังก์ชันพื้นฐานของระบบ Framebuffer</td>
+                            </tr>
+                            <tr>
+                                <td><code>CONFIG_FRAMEBUFFER_CONSOLE=y</code><br><code>CONFIG_FONT_8x8=y</code><br><code>CONFIG_FONT_8x16=y</code></td>
+                                <td>แสดงผล Terminal Console และโลโก้เพนกวิน Tux ขึ้นจอได้ทันทีตอนบูต</td>
+                            </tr>
+                            <tr>
+                                <td><code>CONFIG_I2C_XILINX=y</code></td>
+                                <td>เปิดบัส I2C เพื่อใช้อ่านข้อมูล EDID จากจอ</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h2>4.5 เปิดแพ็กเกจทดสอบใน Rootfs</h2>
+                <p>เปิดเมนูคอนฟิก Rootfs:</p>
+
+                <pre><code>petalinux-config -c rootfs</code></pre>
+
+                <p>เข้าไปที่หมวด <strong>Filesystem Packages &rarr; x11 &rarr; base</strong> แล้วเลือกเปิดแพ็กเกจเหล่านี้:</p>
+                <ul>
+                    <li><code>libdrm</code></li>
+                    <li><code>libdrm-drivers</code></li>
+                    <li><code>libdrm-tests</code> (จะมีคำสั่งเด็ดๆ อย่าง <code>modetest</code> เอาไว้เช็กจอ)</li>
+                </ul>
+
+                <figure class="text-center my-4">
+                    <img src="pynq_z2_video_files/pynq_rootfs_libdrm.png" alt="การตั้งค่าแพ็กเกจ libdrm ใน PetaLinux Rootfs" class="img-fluid border shadow-sm">
+                    <figcaption class="figure-caption mt-2">การเลือกเปิดแพ็กเกจ libdrm ในเมนู rootfs configuration</figcaption>
+                </figure>
+
+                <p>สั่งประมวลผลคอนฟิกแล้วลองเช็กความถูกต้องดูครับ:</p>
+
+                <pre><code>petalinux-build -c rootfs -x configure
+
+# เช็กดูว่าติด =y ครบไหม
+grep -nE '^CONFIG_(libdrm|libdrm-drivers|libdrm-tests|clk-dglnt-dynclk|digilent-hdmi)=' project-spec/configs/rootfs_config</code></pre>
+
+                <p>ถ้าคอนฟิกถูกต้อง ทุกบรรทัดต้องขึ้นเป็น <code>=y</code> ครบถ้วนครับ:</p>
+
+                <pre><code>CONFIG_libdrm=y
+CONFIG_libdrm-drivers=y
+CONFIG_libdrm-tests=y
+CONFIG_clk-dglnt-dynclk=y
+CONFIG_digilent-hdmi=y</code></pre>
+
+                <h2>4.6 สั่ง Build และรวมไฟล์บูต</h2>
+                <p>สั่งคอมไพล์โปรเจกต์และรวมเป็นไฟล์ <code>BOOT.BIN</code>:</p>
+
+                <pre><code># คอมไพล์ระบบทั้งหมด
+petalinux-build
+
+# แพ็กรวม FSBL, Bitstream (.bit) และ U-Boot ให้เป็น BOOT.BIN ก้อนเดียว
+petalinux-package --boot --force \
+  --fsbl images/linux/zynq_fsbl.elf \
+  --fpga images/linux/*.bit \
+  --u-boot</code></pre>
+
+                <h2>4.7 ทำ SD Card บูตระบบ</h2>
+                <p>ใช้โปรแกรม <code>gparted</code> แบ่ง SD Card ออกเป็น 2 พาร์ติชันง่ายๆ ตามนี้ครับ:</p>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped text-center align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>พาร์ติชัน</th>
+                                <th>ขนาด</th>
+                                <th>ฟอร์แมต</th>
+                                <th>ชื่อ Label</th>
+                                <th>ไฟล์ที่ใส่</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>พาร์ติชัน 1</strong></td>
+                                <td>~128 MB</td>
+                                <td><span class="badge bg-secondary">FAT32</span></td>
+                                <td><code>BOOT</code></td>
+                                <td class="text-start"><code>BOOT.BIN</code>, <code>image.ub</code>, <code>boot.scr</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>พาร์ติชัน 2</strong></td>
+                                <td>พื้นที่ที่เหลือ</td>
+                                <td><span class="badge bg-info text-dark">ext4</span></td>
+                                <td><code>rootfs</code></td>
+                                <td class="text-start">แตกไฟล์ <code>rootfs.tar.gz</code> ลงไป</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <figure class="text-center my-4">
+                    <img src="pynq_z2_video_files/pynq_gparted_sd.png" alt="การแบ่งพาร์ติชัน SD Card ด้วย GParted" class="img-fluid border shadow-sm">
+                    <figcaption class="figure-caption mt-2">การแบ่งพาร์ติชัน SD Card ด้วยโปรแกรม GParted</figcaption>
+                </figure>
+
+                <p>จัดการเมานต์และก๊อปปี้ไฟล์ลงการ์ด:</p>
+
+                <pre><code># สร้างโฟลเดอร์สำหรับเมานต์
+sudo mkdir -p /mnt/sdb1 /mnt/sdb2
+
+# ก๊อปปี้ไฟล์บูตลงพาร์ติชันที่ 1
+sudo mount /dev/sdb1 /mnt/sdb1
+cd ~/pynq_z2/images/linux/
+sudo cp BOOT.BIN image.ub boot.scr /mnt/sdb1/
+sync
+sudo umount /mnt/sdb1
+
+# แตกไฟล์ Rootfs ลงพาร์ติชันที่ 2
+sudo mount /dev/sdb2 /mnt/sdb2
+sudo tar xzf rootfs.tar.gz -C /mnt/sdb2/
+sync
+sudo umount /mnt/sdb2</code></pre>
+
+                <hr>
+
+                <!-- 5 รันจริงบนบอร์ด PYNQ-Z2 -->
+                <h1>5 รันจริงบนบอร์ด PYNQ-Z2</h1>
+                <ol class="lh-lg">
+                    <li>เลื่อนสวิตช์จัมเปอร์บนบอร์ด (JP1) ไปที่ตำแหน่ง <strong>SD</strong> เพื่อให้บูตจากการ์ด</li>
+                    <li>เสียบสาย HDMI จากบอร์ดเข้าหน้าจอคอมพิวเตอร์</li>
+                    <li>เสียบสาย Micro-USB เข้าคอมพิวเตอร์เพื่อเปิดหน้าต่าง Serial Console (Baudrate 115200)</li>
+                    <li>เปิดสวิตช์ไฟ Power บนบอร์ด</li>
+                </ol>
+
+                <p>พอบูตเสร็จแล้ว ให้ล็อกอินด้วยผู้ใช้ <code>petalinux</code> (ในการเข้าสู่ระบบครั้งแรก ระบบจะบังคับให้เราตั้งรหัสผ่านใหม่):</p>
+
+                <pre><code>pynq_z2 login: petalinux
+You are required to change your password immediately (administrator enforced).
+New password:
+Retype new password:</code></pre>
+
+                <h2>5.1 เช็กดูว่าการ์ดจอ DRM ขึ้นไหม</h2>
+                <p>ลองพิมพ์คำสั่งตรวจดูว่าไดรเวอร์ DRM ทำงานเรียบร้อยไหม:</p>
+
+                <pre><code># ตรวจสอบ Device Node ของ DRM
+pynq_z2:~$ ls -l /dev/dri/
+drwxr-xr-x    2 root     root            60 Jan  1  1970 by-path
+crw-rw----    1 root     video     226,   0 Jan  1  1970 card0
+
+# ตรวจสอบว่า Kernel Module โหลดขึ้นมาครบไหม
+pynq_z2:~$ lsmod
+digilent_hdmi 16384 0 - Live 0x00000000 (O)
+clk_dglnt_dynclk 16384 1 - Live 0x00000000 (O)
+
+# ดูข้อความ Log ตอนเคอร์เนลตรวจจับฮาร์ดแวร์
+pynq_z2:~$ dmesg | grep -Ei 'drm|hdmi|v_dma|v_tc|dynclk'
+platform amba_pl:xlnx_pl_disp: Fixing up cyclic dependency with amba_pl:digilent_hdmi
+xlnx,bridge-vtc 43c10000.v_tc: vtc ppc = 1
+xlnx,bridge-vtc 43c10000.v_tc: Xilinx VTC IP version : 0x0602000c
+xlnx,bridge-vtc 43c10000.v_tc: Xilinx VTC DRM Bridge driver probed
+clk_dglnt_dynclk: loading out-of-tree module taints kernel.
+xlnx-drm xlnx-drm.0: bound amba_pl:xlnx_pl_disp (ops 0xc083df10)
+xlnx-drm xlnx-drm.0: bound amba_pl:digilent_hdmi (ops digilent_hdmi_component_ops [digilent_hdmi])
+xlnx-pl-disp amba_pl:xlnx_pl_disp: [drm] fb0: xlnxdrmfb frame buffer device
+[drm] Initialized xlnx 1.0.0 20130509 for amba_pl:xlnx_pl_disp on minor 0</code></pre>
+
+                <p>เห็นข้อความ <code>bound amba_pl:digilent_hdmi</code> กับ <code>fb0: xlnxdrmfb frame buffer device</code> แสดงว่าระบบ DRM เชื่อมต่อกับฮาร์ดแวร์และสร้างจอเสมือนขึ้นมาเรียบร้อยแล้ว</p>
+
+                <h2>5.2 เช็กข้อมูลของ Framebuffer (<code>/dev/fb0</code>)</h2>
+
+                <pre><code># ดูชื่อไดรเวอร์
+pynq_z2:~$ cat /sys/class/graphics/fb0/name
+xlnxdrmfb
+
+# ดูขนาดความละเอียดหน้าจอ (กว้าง, สูงเสมือน)
+pynq_z2:~$ cat /sys/class/graphics/fb0/virtual_size
+1680,2100
+
+# ดูจำนวนบิตต่อพิกเซล
+pynq_z2:~$ cat /sys/class/graphics/fb0/bits_per_pixel
+24
+
+# ดูขนาดของ 1 แถวพิกเซล (หน่วยเป็นไบต์)
+pynq_z2:~$ cat /sys/class/graphics/fb0/stride
+5040
+
+# ตรวจสอบ Device Node ของ fbdev
+pynq_z2:~$ ls -l /dev/fb0
+crw-rw----    1 root     video      29,   0 Jan  1  1970 /dev/fb0</code></pre>
+
+                <ul class="lh-lg">
+                    <li><strong><code>virtual_size = 1680,2100</code>:</strong> ความละเอียดจริงของจอภาพที่ใช้อยู่คือ 1680 &times; 1050 พิกเซล แต่สังเกตว่าความสูงมันขึ้นเป็น 2100 พิกเซล (เป็น 2 เท่า) เพราะเราใส่คอนฟิก <code>CONFIG_DRM_FBDEV_OVERALLOC=100</code> ไว้ ทำให้มีเนื้อที่เหลือเฟือสำหรับสลับหน้าจอ (Double Buffering)</li>
+                    <li><strong><code>bits_per_pixel = 24</code>:</strong> ตรงตามฟอร์แมต <code>RG24</code> / <code>DRM_FORMAT_RGB888</code> (ใช้ 3 ไบต์ต่อ 1 จุดสี)</li>
+                    <li><strong><code>stride = 5040</code>:</strong> คำนวณจาก 1680 พิกเซล &times; 3 ไบต์ = 5,040 ไบต์ต่อบรรทัดนั่นเองครับ</li>
+                </ul>
+
+                <hr>
+
+                <!-- 6 ทดสอบวาดหน้าจอ (วาดแถบสี) -->
+                <h1>6 ทดสอบวาดหน้าจอ (วาดแถบสี)</h1>
+
+                <h2>6.1 เตรียม SDK เพื่อใช้คอมไพล์โปรแกรม</h2>
+                <p>ก่อนจะเขียนโปรแกรมภาษา C เรามาติดตั้ง PetaLinux SDK ฝั่งเครื่องคอมฯ ของเราก่อนครับ:</p>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 35%;">รายการ</th>
+                                <th style="width: 65%;">ตัวอย่างตำแหน่งโฟลเดอร์</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>โปรเจกต์ PetaLinux</strong></td>
+                                <td><code>~/pynq_z2</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>ไฟล์ติดตั้ง SDK</strong></td>
+                                <td><code>~/pynq_z2/images/linux/sdk.sh</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>โฟลเดอร์ติดตั้ง SDK</strong></td>
+                                <td><code>~/Desktop/pynq_z2/sdk</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <pre><code>source ~/petalinux_2022_1/settings.sh
+cd ~/pynq_z2
+
+# สร้าง SDK
+petalinux-build --sdk
+
+# ติดตั้ง SDK ลงในโฟลเดอร์ที่เราต้องการ
+chmod +x images/linux/sdk.sh
+./images/linux/sdk.sh -d "$HOME/Desktop/pynq_z2/sdk"</code></pre>
+
+                <h2>6.2 เขียนโค้ดและคอมไพล์โปรแกรม</h2>
+                <p>จัดโครงสร้างไฟล์ในโปรเจกต์ง่ายๆ แบบนี้:</p>
+
+                <pre><code>~/Desktop/pynq_z2/
+├── sdk/
+│   └── environment-setup-cortexa9t2hf-neon-xilinx-linux-gnueabi
+└── hdmi_test/
+    └── colorbar/
+        ├── colorbar.c
+        └── Makefile</code></pre>
+
+                <h2>6.3 ซอร์สโค้ด <code>colorbar.c</code></h2>
+                <p>โปรแกรมนี้จะวาดแถบสี (Color Bar) ลงใน <code>/dev/fb0</code> โดยตรงเพื่อทดสอบการแสดงผลครับ:</p>
+
+                <pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdint.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/mman.h&gt;
+#include &lt;sys/ioctl.h&gt;
+#include &lt;linux/fb.h&gt;
+
+/* ฟังก์ชันช่วยคำนวณและหยอดค่าสี R, G, B ลงในพิกเซลตาม Bit Offset ของจอ */
+static void write_pixel(unsigned char *p,
+                        const struct fb_var_screeninfo *v,
+                        uint8_t r, uint8_t g, uint8_t b)
+{
+    uint32_t pixel = 0;
+
+    pixel |= ((uint32_t)(r &gt;&gt; (8 - v-&gt;red.length)))   &lt;&lt; v-&gt;red.offset;
+    pixel |= ((uint32_t)(g &gt;&gt; (8 - v-&gt;green.length))) &lt;&lt; v-&gt;green.offset;
+    pixel |= ((uint32_t)(b &gt;&gt; (8 - v-&gt;blue.length)))  &lt;&lt; v-&gt;blue.offset;
+
+    unsigned int bytes = v-&gt;bits_per_pixel / 8;
+
+    for (unsigned int i = 0; i &lt; bytes; ++i)
+        p[i] = (pixel &gt;&gt; (8 * i)) &amp; 0xFF;
+}
+
+int main(void)
+{
+    int fd = open("/dev/fb0", O_RDWR);
+    if (fd &lt; 0) {
+        perror("เปิด /dev/fb0 ไม่สำเร็จ");
+        return 1;
+    }
+
+    struct fb_var_screeninfo v;
+    struct fb_fix_screeninfo f;
+
+    /* ดึงข้อมูลความละเอียดและการตั้งค่าของ Framebuffer */
+    if (ioctl(fd, FBIOGET_VSCREENINFO, &amp;v) &lt; 0 ||
+        ioctl(fd, FBIOGET_FSCREENINFO, &amp;f) &lt; 0) {
+        perror("อ่านข้อมูล framebuffer ioctl ผิดพลาด");
+        close(fd);
+        return 1;
+    }
+
+    printf("ความละเอียดจอภาพ: %u x %u\n", v.xres, v.yres);
+    printf("BPP: %u, Stride: %u bytes, ขนาดหน่วยความจำ: %u bytes\n",
+           v.bits_per_pixel, f.line_length, f.smem_len);
+    printf("ตำแหน่งบิตสี RGB: R=%u, G=%u, B=%u\n",
+           v.red.offset, v.green.offset, v.blue.offset);
+
+    if (v.bits_per_pixel != 24 &amp;&amp; v.bits_per_pixel != 32) {
+        fprintf(stderr, "ไม่รองรับ bpp ขนาด: %u (รองรับเฉพาะ 24 หรือ 32 bpp)\n", v.bits_per_pixel);
+        close(fd);
+        return 1;
+    }
+
+    if (v.red.length == 0 || v.green.length == 0 || v.blue.length == 0 ||
+        v.red.length &gt; 8  || v.green.length &gt; 8  || v.blue.length &gt; 8 ||
+        v.red.offset   + v.red.length   &gt; v.bits_per_pixel ||
+        v.green.offset + v.green.length &gt; v.bits_per_pixel ||
+        v.blue.offset  + v.blue.length  &gt; v.bits_per_pixel) {
+        fprintf(stderr, "โครงสร้างการจัดเรียงบิตสี RGB ไม่ถูกต้อง\n");
+        close(fd);
+        return 1;
+    }
+
+    /* ทำ Memory Mapping แรมของจอภาพเข้ามาใช้งานในโปรแกรม */
+    unsigned char *fb = mmap(NULL, f.smem_len,
+                             PROT_READ | PROT_WRITE,
+                             MAP_SHARED, fd, 0);
+
+    if (fb == MAP_FAILED) {
+        perror("mmap ไม่สำเร็จ");
+        close(fd);
+        return 1;
+    }
+
+    /* ตารางค่าสีมาตรฐาน 8 แถบ */
+    static const uint8_t rgb[8][3] = {
+        {255, 255, 255}, /* ขาว */
+        {  0, 255, 255}, /* ฟ้า (Cyan) */
+        {255, 255,   0}, /* เหลือง */
+        {  0, 255,   0}, /* เขียว */
+        {255,   0, 255}, /* ม่วงแดง (Magenta) */
+        {255,   0,   0}, /* แดง */
+        {  0,   0, 255}, /* น้ำเงิน */
+        {  0,   0,   0}  /* ดำ */
+    };
+
+    unsigned int bytes_per_pixel = v.bits_per_pixel / 8;
+
+    /* วาดแถบสีทีละพิกเซลลงบนหน้าจอ */
+    for (unsigned int y = 0; y &lt; v.yres; ++y) {
+        for (unsigned int x = 0; x &lt; v.xres; ++x) {
+            unsigned int bar = (x * 8U) / v.xres;
+            size_t offset = (size_t)y * f.line_length
+                          + (size_t)x * bytes_per_pixel;
+
+            if (offset + bytes_per_pixel &gt; f.smem_len)
+                continue;
+
+            write_pixel(fb + offset, &amp;v,
+                        rgb[bar][0], rgb[bar][1], rgb[bar][2]);
+        }
+    }
+
+    printf("วาดแถบสี Color Bars สำเร็จเรียบร้อย!\n");
+
+    munmap(fb, f.smem_len);
+    close(fd);
+    return 0;
+}</code></pre>
+
+                <h2>6.4 ไฟล์ <code>Makefile</code></h2>
+
+                <pre><code>TARGET  := colorbar
+SRCS    := colorbar.c
+OBJS    := $(SRCS:.c=.o)
+
+CC      ?= $(CROSS_COMPILE)gcc
+CFLAGS  ?= -O2 -Wall -Wextra
+LDFLAGS ?=
+
+.PHONY: all clean
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) $(LDFLAGS) -o $@ $^
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $&lt;
+
+clean:
+	rm -f $(TARGET) $(OBJS)</code></pre>
+
+                <h2>6.5 สั่งคอมไพล์และทดสอบรัน:</h2>
+
+                <pre><code># โหลด Environment ของ SDK
+source ~/Desktop/pynq_z2/sdk/environment-setup-cortexa9t2hf-neon-xilinx-linux-gnueabi
+
+# คอมไพล์โปรแกรม
+cd ~/Desktop/pynq_z2/hdmi_test/colorbar
+make clean &amp;&amp; make
+
+# ส่งไฟล์ไปยังบอร์ด PYNQ-Z2
+scp colorbar petalinux@&lt;IP_ของบอร์ด&gt;:~
+
+# รันโปรแกรมบนบอร์ด
+pynq_z2:~$ sudo ./colorbar</code></pre>
+
+                <p>ผลลัพธ์หน้าจอออกมาสวยงามตามรูปเลยครับ:</p>
+
+                <figure class="text-center my-4">
+                    <img src="pynq_z2_video_files/image02.jpg" alt="ผลลัพธ์การวาดแถบสี Color Bar บนจอภาพ HDMI" class="img-fluid border shadow-sm" style="max-width: 631px;">
+                    <figcaption class="figure-caption mt-2">ผลลัพธ์การวาดแถบสี Color Bars สำเร็จออกจอภาพ HDMI จริง</figcaption>
+                </figure>
+
+                <hr>
+
+                <!-- 7 ทดสอบเปลี่ยนจาก RGB888 มาเป็น XRGB8888 -->
+                <h1>7 ทดสอบเปลี่ยนจาก RGB888 มาเป็น XRGB8888</h1>
+                <p>ตอนแรกผมเริ่มทำระบบด้วยฟอร์แมต <strong>RGB888 (24 bpp)</strong> ซึ่ง 1 จุดสีจะใช้ข้อมูล 24 บิต (3 ไบต์) พอดีกับสตรีมของ VDMA แต่พอเอาไปลองใช้กับซอฟต์แวร์ฝั่ง Linux โดยเฉพาะตัวจัดการหน้าต่างอย่าง <strong>X11 / Xorg Window Server</strong>, ไลบรารีกราฟิกอย่าง <strong>SDL</strong> หรือ <strong>LVGL</strong> กลับพบว่าโปรแกรมพวกนี้ทำงานกับ <strong>XRGB8888 (32 bpp)</strong> ได้เนียนดีกว่า (บางอันไม่ support RGB888) เลยลองมาทำแบบ XRGB8888</p>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 30%;">จุดที่แตกต่าง</th>
+                                <th style="width: 35%;">แบบเดิม: RGB888 (24 bpp)</th>
+                                <th style="width: 35%;">แบบใหม่: XRGB8888 (32 bpp)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong><code>xlnx,vformat</code> ใน Device Tree</strong></td>
+                                <td><code>"RG24"</code></td>
+                                <td><span class="badge bg-success">"XR24"</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>สตรีมข้อมูลจาก VDMA</strong></td>
+                                <td>24 บิต (3 ไบต์: R, G, B)</td>
+                                <td>32 บิต (4 ไบต์: X, R, G, B)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>หน้าที่ของ <code>axis_subset_converter</code></strong></td>
+                                <td>แค่จัดลำดับไบต์สี</td>
+                                <td>ตัดไบต์ที่ไม่ใช้ออก (ทิ้งไบต์ X ไป) เพื่อลดข้อมูลจาก 4 ไบต์เหลือ 3 ไบต์ (24 บิต) ก่อนส่งให้ตัวสร้างสัญญาณจอ</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ความเข้ากันได้กับแอปพลิเคชัน</strong></td>
+                                <td>เหมาะกับเฟรมบัฟเฟอร์ทั่วไปที่อยากประหยัดแรม</td>
+                                <td>เหมาะที่สุดสำหรับ <strong>X11 Desktop</strong>, GUI Toolkits และโปรแกรมกราฟิกทั่วไป</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>หน้าจอ Desktop ของ X11 รันออกจอได้สบายๆ:</p>
+
+                <figure class="text-center my-4">
+                    <img src="pynq_z2_video_files/image03.jpg" alt="หน้าจอ Desktop ของ X11 รันออกจอ HDMI ผ่าน PYNQ-Z2" class="img-fluid border shadow-sm" style="max-width: 623px;">
+                    <figcaption class="figure-caption mt-2">หน้าจอ Desktop ของ X11 สามารถรันออกจอ HDMI ได้อย่างราบรื่น</figcaption>
+                </figure>
+
+                <hr>
+
+                <!-- 8 สรุปภาพรวม -->
+                <h1>8 สรุปภาพรวม</h1>
+                <p>ถึงแม้ชิป Zynq-7000 บนบอร์ด PYNQ-Z2 จะไม่มีชิปการ์ดจอแยก (GPU) ติดมาให้ แต่ด้วยความยืดหยุ่นของวงจร FPGA เราก็สามารถสร้างการ์ดจอ (แบบ simple) HDMI ขึ้นมาใช้งานร่วมกับระบบ Linux DRM/KMS และ Framebuffer ได้</p>
+
+                <h2>8.1 ข้อสังเกต</h2>
+                <ul class="lh-lg">
+                    <li><strong>เรื่องความเร็วในการวาดภาพ:</strong> เนื่องจากการวาดภาพกราฟิกทั้งหมดเป็นแบบ Software Rendering โดยอาศัยซีพียู ARM Cortex-A9 สองคอร์ช่วยกันคิด ดังนั้นถ้าเอาไปเล่นเกม 3D หนักๆ คงไม่ไหวแน่ๆ แต่ถ้าเอามาทำหน้าจอ Dashboard แสดงผลข้อมูลเซนเซอร์, หน้าจอควบคุมอุตสาหกรรม (HMI), รัน GUI น้ำหนักเบา หรือใช้ร่วมกับไลบรารีอย่าง <strong>LVGL</strong> น่าจะพอไหวอยู่ (ยังไม่ได้ลอง)</li>
+                    <li><strong>แบนด์วิดท์ของแรม:</strong> เวลาต่อจอความละเอียดสูงๆ (เช่น 1080p) ตัว VDMA จะต้องวิ่งไปดึงข้อมูลจากแรม DDR3 อยู่ตลอดเวลาผ่าน AXI HP0 ดังนั้นการใช้งานจริงอาจจะต้องเผื่อแบนด์วิดท์ไว้สำหรับงานประมวลผลอื่นๆ ด้วย</li>
+                </ul>
+
+                <h2>8.2 ซอร์สโค้ดและเนื้อหาเพิ่มเติม</h2>
+                <div class="callout-box callout-tip">
+                    <div class="callout-title"><i class="bi bi-github me-2"></i>ดาวน์โหลดโปรเจกต์และซอร์สโค้ด</div>
+                    <div class="callout-content">
+                        <p>สามารถเข้าไปดาวน์โหลดไฟล์ Vivado Block Design และโค้ดทั้งหมดได้ที่ GitHub Repository:<br>
+                        <a href="https://github.com/wichayen/pynq_z2/tree/main/video" target="_blank" rel="noopener noreferrer"><strong>https://github.com/wichayen/pynq_z2/tree/main/video</strong></a></p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center p-4 mt-5" style="background-color: #f8f9fa; border-top: 1px solid #e2e8f0;">
+        <div class="container">
+            <p class="mb-1 text-secondary">ศูนย์รวมความรู้ คอร์สเรียนฟรี และงานออกแบบ FPGA ในไทย | FPGATHAILAND by Wichayen</p>
+            <p class="mb-0 small text-muted">
+                Contact: <a href="https://www.facebook.com/wichayen.hong" target="_blank" rel="noopener noreferrer">Facebook</a> | 
+                <a href="https://github.com/wichayen" target="_blank" rel="noopener noreferrer">GitHub</a> | 
+                <a href="https://www.linkedin.com/in/wichayen-luangsopapan-404133202/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose'
+        });
+    </script>
+</body>
+</html>
