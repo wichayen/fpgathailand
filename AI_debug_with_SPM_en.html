@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -351,15 +351,9 @@ sequenceDiagram
                 <p>Instead of relying on a human intermediary, the architecture shifts to an autonomous setup:<br>
                 We connect an AI Agent (in this experiment, <strong>Antigravity</strong>) to a <strong>Serial Port MCP</strong> server. The agent is granted tools to open, configure, send commands, and read output directly over port <code>COM3</code> connected to the PYNQ-Z2 board.</p>
 
-                <pre class="mermaid">
-graph LR
-    User["User (High-level Prompter)"] -- "Single Goal Prompt" --> Agent["AI Agent (Antigravity)"]
-    subgraph PC ["Host Computer"]
-        Agent -- "Send Command / Read Output" --> MCP["Serial Port MCP"]
-        MCP --> COM3["COM3 Port"]
-    end
-    COM3 <--> Board["PYNQ-Z2 Board"]
-                </pre>
+                <figure class="text-center my-4">
+    <img src="AI_debug_with_SPM_files/diagram_serial_port_mcp_en.svg" alt="Diagram: AI Agent connected via Serial Port MCP to PYNQ-Z2 board" class="img-fluid" style="max-width:760px;">
+</figure>
 
                 <p>Our workload is drastically reduced. We transition to a high-level supervisory role, providing a single concise goal prompt such as:</p>
 
@@ -391,17 +385,9 @@ graph LR
 
                 <p>The updated conceptual model looks like this: we interact with the AI agent as before, but SPM acts as an out-of-band wiretap sniffing the bidirectional traffic in real time:</p>
 
-                <pre class="mermaid">
-graph LR
-    User["User (High-level Prompter)"] -- "Single Goal Prompt" --> Agent["AI Agent (Antigravity)"]
-    subgraph PC ["Host Computer"]
-        Agent -- "Send Command / Read Output" --> MCP["Serial Port MCP"]
-        MCP --> COM3["COM3 Port"]
-        COM3 -. "Sniff Data Real-time" .-> SPM["Serial Port Monitor (SPM)"]
-    end
-    COM3 <--> Board["PYNQ-Z2 Board"]
-    SPM -. "Display Full Traffic Logs" .-> User
-                </pre>
+                <figure class="text-center my-4">
+    <img src="AI_debug_with_SPM_files/diagram_spm_en.svg" alt="Diagram: Serial Port Monitor (SPM) added to sniff real-time traffic" class="img-fluid" style="max-width:760px;">
+</figure>
 
                 <h2>3.2 Putting It to the Test: Real-World Experiments</h2>
                 <p>Let's look at actual test runs to see the power of combining an autonomous AI agent with real-time serial sniffing.</p>

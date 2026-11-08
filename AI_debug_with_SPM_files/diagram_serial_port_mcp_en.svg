@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 160" width="760" height="160" style="font-family: 'Segoe UI', Arial, sans-serif; font-size:13px;">
+  <defs>
+    <marker id="d2arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#475569"/></marker>
+    <marker id="d2arrowL" markerWidth="10" markerHeight="7" refX="1" refY="3.5" orient="auto"><polygon points="10 0, 0 3.5, 10 7" fill="#475569"/></marker>
+  </defs>
+  <rect x="10" y="52" width="140" height="56" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="80" y="76" text-anchor="middle" font-weight="600" fill="#1e3a5f">User</text>
+  <text x="80" y="94" text-anchor="middle" fill="#1e3a5f" font-size="11">(High-level Prompter)</text>
+  <line x1="150" y1="80" x2="203" y2="80" stroke="#475569" stroke-width="1.5" marker-end="url(#d2arrow)"/>
+  <text x="176" y="73" text-anchor="middle" fill="#475569" font-size="10">Single Goal Prompt</text>
+  <rect x="208" y="15" width="420" height="130" rx="10" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="418" y="34" text-anchor="middle" fill="#64748b" font-size="11" font-style="italic">Host Computer</text>
+  <rect x="220" y="52" width="150" height="56" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="295" y="76" text-anchor="middle" font-weight="600" fill="#3b0764">AI Agent</text>
+  <text x="295" y="94" text-anchor="middle" fill="#3b0764" font-size="11">(Antigravity)</text>
+  <line x1="370" y1="80" x2="420" y2="80" stroke="#475569" stroke-width="1.5" marker-end="url(#d2arrow)"/>
+  <text x="395" y="68" text-anchor="middle" fill="#475569" font-size="10">Send Command /</text>
+  <text x="395" y="79" text-anchor="middle" fill="#475569" font-size="10">Read Output</text>
+  <rect x="425" y="52" width="130" height="56" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="490" y="76" text-anchor="middle" font-weight="600" fill="#14532d">Serial Port MCP</text>
+  <text x="490" y="94" text-anchor="middle" fill="#14532d" font-size="11">(pyserial-mcp)</text>
+  <line x1="555" y1="80" x2="600" y2="80" stroke="#475569" stroke-width="1.5" marker-end="url(#d2arrow)"/>
+  <rect x="600" y="58" width="30" height="44" rx="4" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5"/>
+  <text x="615" y="80" text-anchor="middle" font-weight="700" fill="#713f12" font-size="10">COM</text>
+  <text x="615" y="93" text-anchor="middle" font-weight="700" fill="#713f12" font-size="10">3</text>
+  <line x1="630" y1="80" x2="690" y2="80" stroke="#475569" stroke-width="1.5" marker-start="url(#d2arrowL)" marker-end="url(#d2arrow)"/>
+  <rect x="695" y="48" width="55" height="64" rx="8" fill="#fce7f3" stroke="#db2777" stroke-width="1.5"/>
+  <text x="722" y="72" text-anchor="middle" font-weight="600" fill="#831843" font-size="11">PYNQ-Z2</text>
+  <text x="722" y="87" text-anchor="middle" fill="#831843" font-size="10">Board</text>
+</svg>

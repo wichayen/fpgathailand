@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
@@ -353,15 +353,9 @@ sequenceDiagram
                 <p>จากลูปเดิมที่คนต้องคอยเป็นคนกลางรับส่งข้อความ โครงสร้างใหม่ก็เลยเปลี่ยนมาเป็นแบบนี้ครับ:<br>
                 เราใช้ AI Agent (รอบนี้ผมใช้ <strong>Antigravity</strong>) เชื่อมต่อเข้ากับ <strong>Serial Port MCP</strong> ให้มันเปิดพอร์ตและสั่งการตรงเข้าพอร์ต <code>COM3</code> ของบอร์ด PYNQ-Z2 ได้เองโดยอัตโนมัติ</p>
 
-                <pre class="mermaid">
-graph LR
-    User["เรา (สั่งงานภาพรวม)"] -- "สั่งงานทีเดียวจบ" --> Agent["AI Agent (Antigravity)"]
-    subgraph PC ["คอมพิวเตอร์"]
-        Agent -- "ส่งคำสั่ง / อ่านผล" --> MCP["Serial Port MCP"]
-        MCP --> COM3["พอร์ต COM3"]
-    end
-    COM3 <--> Board["บอร์ด PYNQ-Z2"]
-                </pre>
+                <figure class="text-center my-4">
+    <img src="AI_debug_with_SPM_files/diagram_serial_port_mcp.svg" alt="Diagram: AI Agent เชื่อมต่อผ่าน Serial Port MCP เข้าบอร์ด PYNQ-Z2" class="img-fluid" style="max-width:760px;">
+</figure>
 
                 <p>คราวนี้หน้าที่ของเราจะสบายขึ้นเยอะครับ เราเปลี่ยนบทบาทมาเป็น <strong>"ผู้สั่งการระดับภาพรวม"</strong> เพียงอย่างเดียว เช่น ป้อน Prompt สั้นๆ บอกเป้าหมายไปว่า:</p>
 
@@ -393,17 +387,9 @@ graph LR
 
                 <p>คอนเซปต์ก็จะกลายเป็นแบบนี้ครับ เราสั่งงาน AI เหมือนเดิมทุกประการ เพียงแต่เพิ่ม SPM เข้ามาช่วยดักดูทราฟฟิกข้อมูลแบบ Real-time:</p>
 
-                <pre class="mermaid">
-graph LR
-    User["เรา (สั่งงานภาพรวม)"] -- "สั่งงานทีเดียวจบ" --> Agent["AI Agent (Antigravity)"]
-    subgraph PC ["คอมพิวเตอร์"]
-        Agent -- "ส่งคำสั่ง / อ่านผล" --> MCP["Serial Port MCP"]
-        MCP --> COM3["พอร์ต COM3"]
-        COM3 -. "ดักจับข้อมูล Real-time" .-> SPM["Serial Port Monitor (SPM)"]
-    end
-    COM3 <--> Board["บอร์ด PYNQ-Z2"]
-    SPM -. "แสดงผล Log ทุกคำสั่ง" .-> User
-                </pre>
+                <figure class="text-center my-4">
+    <img src="AI_debug_with_SPM_files/diagram_spm.svg" alt="Diagram: เพิ่ม Serial Port Monitor (SPM) ดักจับข้อมูล Real-time" class="img-fluid" style="max-width:760px;">
+</figure>
 
                 <h2>3.2 มาลองของจริงกัน</h2>
                 <p>เพื่อให้เห็นภาพชัดๆ ว่าพอเอามาทำงานร่วมกันแล้วเจ๋งแค่ไหน มาดูการทดลองจริงกันเลยครับ</p>
