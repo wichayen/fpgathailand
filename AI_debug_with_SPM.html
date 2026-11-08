@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Debug with SPM: ลองใช้ AI Agent ดีบักฮาร์ดแวร์ PYNQ-Z2 ผ่าน Serial Port MCP + Serial Port Monitor | FPGATHAILAND</title>
+    <meta name="title" content="AI Debug with SPM: ลองใช้ AI Agent ดีบักฮาร์ดแวร์ PYNQ-Z2 ผ่าน Serial Port MCP + Serial Port Monitor | FPGATHAILAND">
+    <meta name="description" content="เปลี่ยนวิธีดีบักฮาร์ดแวร์แบบเดิมๆ ให้ AI Agent (Antigravity) เชื่อมต่อตรงเข้า Serial Console บอร์ด PYNQ-Z2 ผ่าน Serial Port MCP พร้อมใช้ Serial Port Monitor (SPM) ดักส่องเบื้องหลังทุกคำสั่ง Linux แบบ Real-time">
+    <meta name="keywords" content="AI Debug, Serial Port Monitor, SPM, Serial Port MCP, Model Context Protocol, Antigravity, PYNQ-Z2, Zynq-7000, Framebuffer, VDMA, HDMI Video, Linux Driver, Embedded AI, FPGA Thailand">
+    <meta name="author" content="Wichayen">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://wichayen.github.io/fpgathailand/AI_debug_with_SPM.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://wichayen.github.io/fpgathailand/AI_debug_with_SPM.html">
+    <meta property="og:title" content="AI Debug with SPM: ลองใช้ AI Agent ดีบักฮาร์ดแวร์ PYNQ-Z2 ผ่าน Serial Port MCP + Serial Port Monitor">
+    <meta property="og:description" content="เปลี่ยนวิธีดีบักฮาร์ดแวร์แบบเดิมๆ ให้ AI Agent คุยตรงเข้าบอร์ดผ่าน Serial Port MCP และใช้ Serial Port Monitor แอบส่องดูการแก้ปัญหาแบบสดๆ">
+    <meta property="og:image" content="https://wichayen.github.io/fpgathailand/AI_debug_with_SPM_files/image04.jpg">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://wichayen.github.io/fpgathailand/AI_debug_with_SPM.html">
+    <meta name="twitter:title" content="AI Debug with SPM: ลองใช้ AI Agent ดีบักฮาร์ดแวร์ PYNQ-Z2 ผ่าน Serial Port MCP + Serial Port Monitor">
+    <meta name="twitter:description" content="เปลี่ยนวิธีดีบักฮาร์ดแวร์แบบเดิมๆ ให้ AI Agent คุยตรงเข้าบอร์ดผ่าน Serial Port MCP และใช้ Serial Port Monitor แอบส่องดูการแก้ปัญหาแบบสดๆ">
+    <meta name="twitter:image" content="https://wichayen.github.io/fpgathailand/AI_debug_with_SPM_files/image04.jpg">
+
+    <!-- Bootstrap 5 CSS & Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { padding-top: 72px; }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 0.5rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        .figure-caption {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
+        pre {
+            background-color: #0f172a;
+            color: #f8fafc;
+            padding: 16px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.92rem;
+            line-height: 1.55;
+        }
+        pre code {
+            color: inherit;
+            background: none;
+            padding: 0;
+            font-size: inherit;
+        }
+        pre.mermaid {
+            background-color: #ffffff;
+            color: inherit;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            display: flex;
+            justify-content: center;
+        }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        .callout-box {
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            margin: 1.75rem 0;
+            border-left: 4px solid;
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+        .callout-info {
+            border-left-color: #0284c7;
+            background: #f0f9ff;
+        }
+        .callout-tip {
+            border-left-color: #10b981;
+            background: #f0fdf4;
+        }
+        .callout-warning {
+            border-left-color: #f59e0b;
+            background: #fffbeb;
+        }
+        .callout-quote {
+            border-left-color: #8b5cf6;
+            background: #faf5ff;
+            font-size: 1.05rem;
+            font-style: italic;
+        }
+        .callout-title {
+            font-weight: 700;
+            color: #0f172a;
+            font-size: 1.05rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+        .callout-content {
+            color: #334155;
+            font-size: 0.98rem;
+            line-height: 1.75;
+        }
+        .callout-content p:last-child,
+        .callout-content ul:last-child {
+            margin-bottom: 0;
+        }
+        .prompt-box {
+            background-color: #1e293b;
+            color: #38bdf8;
+            border-left: 4px solid #38bdf8;
+            padding: 14px 18px;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.95rem;
+            margin: 1rem 0;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+        }
+        .article-content h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-top: 2.75rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+        .article-content h2 {
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+        }
+        .article-content h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #334155;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .article-post-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.25rem;
+            color: #64748b;
+            font-size: 0.92rem;
+            margin-bottom: 1.5rem;
+        }
+        .key-takeaway-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 1.5rem;
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            margin-bottom: 1.25rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar navbar-expand-lg fixed-top site-nav">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <span class="navbar-brand-icon"><i class="bi bi-cpu"></i></span>
+                <span>FPGATHAILAND</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+                    <li class="nav-item"><a class="nav-link" href="index.html#course"><i class="bi bi-mortarboard me-1"></i>คอร์สเรียน</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#work">ผลงานเด่น</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#articles">บทความและแล็บ</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownBoards" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            แล็บบอร์ด
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownBoards">
+                            <li><h6 class="dropdown-header text-info">คอร์สเรียนพื้นฐาน (Course)</h6></li>
+                            <li><a class="dropdown-item" href="coursecontent/chapter1-introduction-to-fpga.html"><i class="bi bi-book me-2"></i>คอร์สเรียน FPGA พื้นฐาน</a></li>
+                            <li><a class="dropdown-item" href="coursecontent/chapter-sp1.html"><i class="bi bi-stars me-2"></i>Special: Debounce & CDC (SP1)</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">PYNQ-Z2</h6></li>
+                            <li><a class="dropdown-item" href="pynq-z2-vivado_th.html"><i class="bi bi-cpu me-2"></i>Vivado Setup</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-hls_th.html"><i class="bi bi-lightning-charge me-2"></i>HLS Acceleration</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-ai_th.html"><i class="bi bi-robot me-2"></i>AI (DPU IP)</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-modelsim_th.html"><i class="bi bi-activity me-2"></i>Modelsim</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1.html"><i class="bi bi-display me-2"></i>LVGL ตอนที่ 1</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2.html"><i class="bi bi-display me-2"></i>LVGL ตอนที่ 2</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvlg_special_ep.html"><i class="bi bi-stars me-2"></i>Special: AI Agent</a></li>
+                            <li><a class="dropdown-item" href="Pynq_z2_FM_Radio.html"><i class="bi bi-broadcast-pin me-2"></i>FM Radio (RTL-SDR)</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_video.html"><i class="bi bi-display me-2"></i>HDMI Video Out (Linux DRM)</a></li>
+                            <li><a class="dropdown-item active" href="AI_debug_with_SPM.html"><i class="bi bi-robot me-2"></i>AI Debug with SPM</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">ARIES PCI Board</h6></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep1.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 1: ออกแบบโปรเจค</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep2.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 2: Version A.1</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep3.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 3: ออกแบบ FPGA</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep4.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 4: Linux PCI Driver</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep5.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 5: Windows PCI Driver</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">บอร์ดและเครื่องมืออื่นๆ</h6></li>
+                            <li><a class="dropdown-item" href="mini2440_th.html"><i class="bi bi-cpu me-2"></i>mini2440 + FPGA</a></li>
+                            <li><a class="dropdown-item" href="EZUSB_FPGA.html"><i class="bi bi-usb-symbol me-2"></i>EZUSB + FPGA</a></li>
+                            <li><a class="dropdown-item" href="GeminiBoard_Beaglebone_Frambuffer.html"><i class="bi bi-display me-2"></i>GeminiBoard Framebuffer</a></li>
+                            <li><a class="dropdown-item" href="Sigasi.html"><i class="bi bi-code-square me-2"></i>Sigasi for VS Code</a></li>
+                            <li><a class="dropdown-item" href="UVVM.html"><i class="bi bi-check2-circle me-2"></i>UVVM Verification</a></li>
+                            <li><a class="dropdown-item" href="AI_hardware.html"><i class="bi bi-robot me-2"></i>AI Hardware Control with MCP</a></li>
+                            <li><a class="dropdown-item" href="vhdl_code_coverage.html"><i class="bi bi-bar-chart-steps me-2"></i>VHDL Code Coverage</a></li>
+                            <li><a class="dropdown-item" href="fir_filter_by_fpga.html"><i class="bi bi-soundwave me-2"></i>FIR Filter on FPGA</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-info" href="index.html#articles"><i class="bi bi-grid-3x3-gap me-2"></i>ดูบทความทั้งหมด (23 บทความ)</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#contact">ติดต่อ</a></li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="lang-switch-btn" href="AI_debug_with_SPM_en.html" title="Switch to English">
+                            <i class="bi bi-translate"></i> EN
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4 mb-5">
+        <div class="row">
+            <div class="col-lg-9 mx-auto article-content">
+                <!-- Breadcrumbs -->
+                <nav aria-label="breadcrumb" class="mb-3">
+                    <ol class="breadcrumb small">
+                        <li class="breadcrumb-item"><a href="index.html"><i class="bi bi-house-door me-1"></i>หน้าแรก</a></li>
+                        <li class="breadcrumb-item"><a href="index.html#articles">บทความ</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">AI Debug with SPM</li>
+                    </ol>
+                </nav>
+
+                <h1 class="mb-3 border-0 pb-0">AI Debug with SPM: ลองใช้ AI Agent ดีบักฮาร์ดแวร์ PYNQ-Z2 ผ่าน Serial Port MCP + Serial Port Monitor</h1>
+                <div class="article-post-meta">
+                    <span><i class="bi bi-calendar3 me-1"></i> เผยแพร่เมื่อ: 8 พฤศจิกายน 2026</span>
+                    <span><i class="bi bi-person me-1"></i> โดย Wichayen</span>
+                    <span><i class="bi bi-tag me-1"></i> PYNQ-Z2 / AI Agent / Serial Port MCP / Hardware Debugging</span>
+                </div>
+                <hr>
+
+                <!-- 1 Overview -->
+                <h1>1 Overview</h1>
+                <p>ในยุคนี้เราหลายคนเริ่มใช้ AI เข้ามาเป็น Coding Assistant คอยช่วยคิดโค้ดหรือแก้ปัญหาการทำงาน ยิ่งเวลาพัฒนาฮาร์ดแวร์แล้วเจอบั๊ก รันไม่ผ่าน หรือไม่รู้จะไปต่อยังไง สิ่งแรกที่นักพัฒนาสาย Embedded มักจะทำก็คือ: <strong>ถาม AI &rarr; ได้คำตอบมา &rarr; ก๊อบปี้คำสั่งไปลองรันบนบอร์ด</strong> ซึ่งเป็นวงจรที่ทุกคนน่าจะคุ้นเคยกันดี (The Manual Copy-Paste Loop)</p>
+
+                <p>ขั้นตอนการทำงานโดยทั่วไปก็จะเป็นประมาณนี้ครับ:</p>
+                <ol class="lh-lg">
+                    <li>พอเจอบั๊กบนบอร์ด รันไม่ผ่าน ก็เปิดเบราว์เซอร์ไปถาม AI (ChatGPT, Claude หรือ Gemini)</li>
+                    <li>พอ AI ตอบคำสั่งหรือสคริปต์มา เราก็กด Copy</li>
+                    <li>สลับหน้าจอมาที่โปรแกรม Terminal (Tera Term หรือ PuTTY) แล้ว Paste คำสั่งลงไป</li>
+                    <li>พอบอร์ดรันแล้วพ่น Log ออกมา หรือติด Error สีแดงยาวเหยียด เราก็ลากคลุมแล้ว Copy ผลลัพธ์นั้น</li>
+                    <li>สลับกลับไปหน้าจอ AI เพื่อ Paste ถามต่อ... AI ก็จะบอกว่า <em>"อ๋อ ลองรันคำสั่งนี้ดูสิ"</em> หรือ <em>"ลองแก้ไฟล์นี้ดู"</em></li>
+                    <li>แล้วเราก็ก๊อบ วาง รัน ก๊อบ วาง รัน... วนลูปไปเรื่อยๆ</li>
+                </ol>
+
+                <p>ภาพรวมการเชื่อมต่อจึงมีลักษณะเป็นแบบนี้ครับ:</p>
+
+                <pre class="mermaid">
+graph LR
+    AI["AI Chat (ChatGPT / Claude / Gemini)"]
+    User["เรา (คนคอยก๊อบแปะ)"]
+    subgraph PC ["คอมพิวเตอร์ของเรา"]
+        TeraTerm["Tera Term"]
+        COM3["พอร์ต COM3"]
+    end
+    Board["บอร์ด PYNQ-Z2"]
+
+    User <--> |ถาม-ตอบคำสั่ง| AI
+    User <--> |Copy & Paste| TeraTerm
+    TeraTerm <--> COM3
+    COM3 <--> Board
+                </pre>
+
+                <p>ถ้าคำสั่งที่ AI แนะนำมาแก้ปัญหาได้จบทันทีในรอบเดียวก็คงไม่มีอะไร... แต่ในความเป็นจริงของงานฮาร์ดแวร์ พอลองแล้วติด Error ใหม่ หรือแก้จุดนี้แล้วไปกระทบจุดนู้น มันก็จะเกิด <strong>ลูปของการก๊อบแปะ (The Copy-Paste Loop)</strong> วนซ้ำไปซ้ำมาหลายรอบ:</p>
+
+                <pre class="mermaid">
+sequenceDiagram
+    actor User as เรา (Human Router)
+    participant AI as AI Chat
+    participant Terminal as Tera Term (COM3)
+    participant Board as บอร์ด PYNQ-Z2
+
+    loop วนลูปซ้ำๆ ไปเรื่อยๆ (The Copy-Paste Loop)
+        User->>AI: 1. ส่งคำถาม / บั๊กที่เจอ
+        AI-->>User: 2. แนะนำคำสั่ง Linux ให้ลองรัน
+        User->>Terminal: 3. สลับหน้าจอ Copy คำสั่งไป Paste & รัน
+        Terminal->>Board: 4. ยิงคำสั่งเข้าบอร์ดผ่าน Serial
+        Board-->>Terminal: 5. บอร์ดพ่น Log / Error ออกมา
+        Terminal-->>User: 6. หน้าจอแสดงผล Log ยาวเหยียด
+        User->>AI: 7. ลากคลุม Log ก๊อบกลับไปถาม AI ใหม่อีกรอบ
+    end
+                </pre>
+
+                <p>จะเห็นได้ชัดว่า ในกระบวนการนี้สิ่งที่เราทำเป็นหลักไม่ใช่การลงมือดีบัก แต่คือการทำตัวเป็น <strong>"Human Router"</strong> คอยก๊อบปี้ข้อความไปๆ มาๆ ข้ามหน้าจอ แล้วปล่อยให้ AI คิดวิเคราะห์ให้ ผมเลยคิดว่า:</p>
+
+                <div class="callout-box callout-quote text-center">
+                    <span class="fs-5 fw-bold text-primary">"อย่ากระนั้นเลย... ทำไมเราไม่เปิดทางให้ AI เข้าไปจัดการคุยกับบอร์ดตรงๆ ไปแก้ปัญหาให้เราเองเลยล่ะ?"</span>
+                </div>
+
+                <hr>
+
+                <!-- 2 Serial Port MCP -->
+                <h1>2 Serial Port MCP</h1>
+                <p>พอดีช่วงนี้ผมเห็นว่าเริ่มมีคนพัฒนา <strong>Model Context Protocol (MCP)</strong> สำหรับสื่อสารผ่าน Serial Port ออกมาแล้ว ก็เลยเกิดไอเดียขึ้นมาทันทีว่า:</p>
+
+                <div class="callout-box callout-info">
+                    <div class="callout-title"><i class="bi bi-lightbulb me-2"></i>ไอเดียจุดประกาย</div>
+                    <div class="callout-content">
+                        <p><em>"แล้วเราจะมานั่งเมื่อยก๊อบแปะทำไม ในเมื่อเราสามารถมอบเครื่องมือ (Tools) ให้ AI ต่อสายคุยตรงเข้า Serial Console ของบอร์ดได้เองเลย?"</em></p>
+                    </div>
+                </div>
+
+                <p>จากลูปเดิมที่คนต้องคอยเป็นคนกลางรับส่งข้อความ โครงสร้างใหม่ก็เลยเปลี่ยนมาเป็นแบบนี้ครับ:<br>
+                เราใช้ AI Agent (รอบนี้ผมใช้ <strong>Antigravity</strong>) เชื่อมต่อเข้ากับ <strong>Serial Port MCP</strong> ให้มันเปิดพอร์ตและสั่งการตรงเข้าพอร์ต <code>COM3</code> ของบอร์ด PYNQ-Z2 ได้เองโดยอัตโนมัติ</p>
+
+                <pre class="mermaid">
+graph LR
+    User["เรา (สั่งงานภาพรวม)"] -- "สั่งงานทีเดียวจบ" --> Agent["AI Agent (Antigravity)"]
+    subgraph PC ["คอมพิวเตอร์"]
+        Agent -- "ส่งคำสั่ง / อ่านผล" --> MCP["Serial Port MCP"]
+        MCP --> COM3["พอร์ต COM3"]
+    end
+    COM3 <--> Board["บอร์ด PYNQ-Z2"]
+                </pre>
+
+                <p>คราวนี้หน้าที่ของเราจะสบายขึ้นเยอะครับ เราเปลี่ยนบทบาทมาเป็น <strong>"ผู้สั่งการระดับภาพรวม"</strong> เพียงอย่างเดียว เช่น ป้อน Prompt สั้นๆ บอกเป้าหมายไปว่า:</p>
+
+                <div class="prompt-box">
+                    <i class="bi bi-terminal me-2"></i><strong>Prompt:</strong><br>
+                    I have connected the PYNQ-Z2 board to the COM3 serial port. Please provide information about the board.
+                </div>
+
+                <p>ผลลัพธ์คือ AI มันจัดการเปิด COM Port ส่งคำสั่งเข้าไปสำรวจเครื่อง อ่านผลลัพธ์ แล้วสรุปข้อมูลระบบทั้งหมดของ PYNQ-Z2 กลับมาให้เราแบบสวยงามในหน้าแชตแบบนี้เลยครับ:</p>
+
+                <figure class="text-center my-4">
+                    <img src="AI_debug_with_SPM_files/image01.png" alt="AI Agent ตรวจสอบระบบและสรุปข้อมูลสเปก PYNQ-Z2" class="img-fluid border shadow-sm">
+                    <figcaption class="figure-caption mt-2">AI Agent (Antigravity) จัดการอ่านค่าระบบผ่าน Serial Port MCP แล้วสรุปสเปกของ PYNQ-Z2 กลับมาให้อย่างสวยงาม</figcaption>
+                </figure>
+
+                <hr>
+
+                <!-- 3 Serial Port Monitor -->
+                <h1>3 Serial Port Monitor</h1>
+                <p>แต่เดี๋ยวก่อน... พอมันสรุปข้อมูลออกมาอย่างสวยงาม คำถามสำคัญที่คนทำฮาร์ดแวร์ต้องเอะใจทันทีก็คือ:</p>
+                <h4 class="text-danger fw-bold my-3"><i class="bi bi-question-circle me-2"></i>"AI มันไปทำอะไรมาบ้าง ถึงได้ข้อมูลพวกนั้นออกมา?"</h4>
+
+                <p>ในหน้าแชต AI มักจะหยิบเฉพาะผลลัพธ์สุดท้ายมาจัดรูปแบบให้อ่านง่าย แต่เราไม่เห็นเลยว่าเบื้องหลังมันพิมพ์คำสั่ง Linux อะไรลงไปบ้าง รันสคริปต์อะไร หรือแอบไปยุ่งกับไฟล์ไหนในระบบ (จริงอยู่ว่าเราอาจสั่งให้ AI ช่วยสรุปคำสั่งที่มันใช้มาให้ดูได้ แต่มันก็ไม่ได้เห็น Message ดิบๆ ที่โต้ตอบกันจริงแบบ Real-time อยู่ดี)</p>
+
+                <p>เพราะฉะนั้น เราจึงต้องการเครื่องมือเข้ามาช่วย <strong>"แอบส่องดู (Monitor/Sniff)"</strong> ว่า AI กำลังคุยอะไรกับบอร์ดอยู่แบบตัวอักษรต่อตัวอักษรครับ</p>
+
+                <h2>3.1 Serial Port Monitor (SPM)</h2>
+                <p>ซอฟต์แวร์ประเภท Serial Port Monitor บน Windows มีให้เลือกอยู่หลายตัวครับ แต่จากการทดลองใช้มาหลายตัว ตัวที่ติดตั้งง่ายและจบปัญหานี้ได้ดีที่สุดคือ <strong>Serial Port Monitor (SPM)</strong> (ใครสนใจไปลองโหลดดูได้ที่: <a href="https://www.com-port-monitoring.com/" target="_blank" rel="noopener noreferrer">https://www.com-port-monitoring.com/</a>)</p>
+
+                <p>คอนเซปต์ก็จะกลายเป็นแบบนี้ครับ เราสั่งงาน AI เหมือนเดิมทุกประการ เพียงแต่เพิ่ม SPM เข้ามาช่วยดักดูทราฟฟิกข้อมูลแบบ Real-time:</p>
+
+                <pre class="mermaid">
+graph LR
+    User["เรา (สั่งงานภาพรวม)"] -- "สั่งงานทีเดียวจบ" --> Agent["AI Agent (Antigravity)"]
+    subgraph PC ["คอมพิวเตอร์"]
+        Agent -- "ส่งคำสั่ง / อ่านผล" --> MCP["Serial Port MCP"]
+        MCP --> COM3["พอร์ต COM3"]
+        COM3 -. "ดักจับข้อมูล Real-time" .-> SPM["Serial Port Monitor (SPM)"]
+    end
+    COM3 <--> Board["บอร์ด PYNQ-Z2"]
+    SPM -. "แสดงผล Log ทุกคำสั่ง" .-> User
+                </pre>
+
+                <h2>3.2 มาลองของจริงกัน</h2>
+                <p>เพื่อให้เห็นภาพชัดๆ ว่าพอเอามาทำงานร่วมกันแล้วเจ๋งแค่ไหน มาดูการทดลองจริงกันเลยครับ</p>
+
+                <h3>3.2.1 ลองรอบที่ 1: สั่งให้ AI สำรวจข้อมูลบอร์ด (System Discovery)</h3>
+                <p>ตอนที่ผมส่ง Prompt ไปบอกให้มันหาข้อมูลบอร์ด:</p>
+
+                <div class="prompt-box">
+                    <i class="bi bi-terminal me-2"></i><strong>Prompt:</strong><br>
+                    I have connected the PYNQ-Z2 board to the COM3 serial port. Please provide information about the board.
+                </div>
+
+                <p>พอเหลือบไปมองหน้าต่าง <strong>Serial Port Monitor</strong> ขณะที่ AI กำลังหมุนติ้วๆ คิดอยู่ เราจะเห็นทุกคำสั่งที่มันยิงเข้าบอร์ดแบบสดๆ เลยครับ:</p>
+
+                <figure class="text-center my-4">
+                    <img src="AI_debug_with_SPM_files/image02.png" alt="หน้าต่าง Serial Port Monitor แสดงคำสั่งและผลตอบกลับแบบ Real-time" class="img-fluid border shadow-sm">
+                    <figcaption class="figure-caption mt-2">หน้าต่าง Serial Port Monitor (SPM) ดักจับทราฟฟิกข้อมูล Real-time</figcaption>
+                </figure>
+
+                <div class="callout-box callout-info">
+                    <div class="callout-title"><i class="bi bi-info-circle me-2"></i>ข้อสังเกตใน SPM</div>
+                    <div class="callout-content">
+                        <p>ตัวอักษร<strong>สีแดง</strong>คือข้อความ/คำสั่งที่ AI ส่งไป ส่วน<strong>สีน้ำเงิน</strong>คือข้อความตอบกลับจากบอร์ด PYNQ-Z2</p>
+                    </div>
+                </div>
+
+                <p>จะเห็นได้ชัดเลยว่า AI ทำงานอย่างเป็นสเต็ปอย่างเป็นระเบียบมาก:</p>
+                <ul>
+                    <li>เริ่มจากลองเช็กก่อนเลยว่ามีไลบรารี PYNQ ติดตั้งอยู่ไหม: <code>python3 -c "import pynq..."</code></li>
+                    <li>เช็กเวอร์ชัน Python และดูโครงสร้างไดเรกทอรี: <code>which python3; python3 --version; ls -la /home /opt</code></li>
+                    <li>เช็กสิทธิ์ผู้ใช้และสถานะ SD Card: <code>whoami; uptime; ls -l /run/media/mmcblk0p1</code></li>
+                    <li>วิ่งไปแอบดูข้อมูลชิป Zynq ใน sysfs: <code>cat /sys/devices/soc0/* 2>/dev/null</code></li>
+                </ul>
+
+                <p>พอมันกวาดข้อมูลจนครบทุกอย่างแล้ว มันค่อยนำผลลัพธ์มาจัดเป็นตารางสวยๆ ส่งกลับมาในหน้าต่างแชตของ Antigravity ให้เราดู</p>
+
+                <h3>3.2.2 ลองรอบที่ 2: ของจริงเริ่มตรงนี้! สั่งดีบัก hardware ของเรา</h3>
+                <p>คราวนี้ผมลองให้โจทย์ที่ยากขึ้นมาหน่อย โดยอ้างอิงจากบทความที่เคยเขียนเรื่องการทำระบบวิดีโอบน PYNQ-Z2:<br>
+                (<a href="https://wichayen.github.io/fpgathailand/pynq_z2_video.html" target="_blank">https://wichayen.github.io/fpgathailand/pynq_z2_video.html</a>)</p>
+
+                <p>ผมโยน Prompt ไปสั่งให้ AI ช่วยตรวจสอบและดีบักระบบ Framebuffer ของหน้าจอ HDMI ให้หน่อย:</p>
+
+                <div class="prompt-box">
+                    <i class="bi bi-terminal me-2"></i><strong>Prompt:</strong><br>
+                    I have built my PYNQ-Z2 following this guide:<br>
+                    https://wichayen.github.io/fpgathailand/pynq_z2_video.html<br><br>
+                    The board should have a framebuffer for controlling the HDMI output.<br><br>
+                    Could you please try to inspect and debug the framebuffer functionality?
+                </div>
+
+                <p>AI ก็จะเข้าไปจัดการทดสอบตามโจทย์ที่เราสั่ง แต่ความเจ๋งคือเราสามารถเปิด SPM ดูได้ตลอดเวลาว่ามันกำลังทำอะไรอยู่เบื้องหลัง:</p>
+
+                <figure class="text-center my-4">
+                    <img src="AI_debug_with_SPM_files/image03.png" alt="คำสั่งที่ AI ใช้ในการดีบัก Framebuffer บนหน้าต่าง Serial Port Monitor" class="img-fluid border shadow-sm">
+                    <figcaption class="figure-caption mt-2">SPM เผยให้เห็นทุกคำสั่งที่ AI สั่งรันบนบอร์ด PYNQ-Z2 เพื่อตรวจสอบและทดสอบ Framebuffer</figcaption>
+                </figure>
+
+                <p>และนี่คือผลลัพธ์บนจอมอนิเตอร์จริง มีแถบสี Colorbar แสดงขึ้นมาเลยครับ:</p>
+
+                <div class="row g-3 my-3">
+                    <div class="col-md-6">
+                        <figure class="text-center mb-0">
+                            <img src="AI_debug_with_SPM_files/image04.jpg" alt="แถบสี Colorbar แสดงบนจอ HDMI ผ่าน PYNQ-Z2" class="img-fluid border shadow-sm">
+                            <figcaption class="figure-caption mt-2">ทดสอบ Framebuffer ด้วยภาพแถบสี Colorbar บนจอ HDMI</figcaption>
+                        </figure>
+                    </div>
+                    <div class="col-md-6">
+                        <figure class="text-center mb-0">
+                            <img src="AI_debug_with_SPM_files/image05.jpg" alt="ผลลัพธ์ Colorbar บนจอ HDMI และบอร์ด PYNQ-Z2" class="img-fluid border shadow-sm">
+                            <figcaption class="figure-caption mt-2">บอร์ด PYNQ-Z2 กำลังขับภาพ Colorbar ออกจอมอนิเตอร์จริง</figcaption>
+                        </figure>
+                    </div>
+                </div>
+
+                <p>คราวนี้พอลองท้าทายให้ AI สร้างโปรแกรมตัวอย่าง (Example) เพิ่มเติม เพื่อทดสอบการเรนเดอร์ภาพเคลื่อนไหวบนหน้าจอ HDMI มันก็จัดชุดใหญ่ไฟกระพริบให้ตามนี้เลยครับ:</p>
+
+                <div class="row g-3 my-3">
+                    <div class="col-md-6">
+                        <figure class="text-center mb-0">
+                            <img src="AI_debug_with_SPM_files/image06.jpg" alt="แอนิเมชัน 3D Starfield Warp ขับผ่าน Framebuffer" class="img-fluid border shadow-sm">
+                            <figcaption class="figure-caption mt-2">Starfield Warp: จำลองการบินผ่านอวกาศ 3D Perspective</figcaption>
+                        </figure>
+                    </div>
+                    <div class="col-md-6">
+                        <figure class="text-center mb-0">
+                            <img src="AI_debug_with_SPM_files/image07.jpg" alt="Starfield Warp แสดงผลบนจอ HDMI" class="img-fluid border shadow-sm">
+                            <figcaption class="figure-caption mt-2">ภาพเคลื่อนไหว Starfield Warp ออกจอ HDMI แบบ Fullscreen</figcaption>
+                        </figure>
+                    </div>
+                    <div class="col-md-6">
+                        <figure class="text-center mb-0">
+                            <img src="AI_debug_with_SPM_files/image08.jpg" alt="แอนิเมชัน The Matrix Digital Rain" class="img-fluid border shadow-sm">
+                            <figcaption class="figure-caption mt-2">Matrix Digital Rain: ตัวอักษรดิจิทัลไหลสไตล์ The Matrix</figcaption>
+                        </figure>
+                    </div>
+                    <div class="col-md-6">
+                        <figure class="text-center mb-0">
+                            <img src="AI_debug_with_SPM_files/image09.jpg" alt="The Matrix Rain บนจอมอนิเตอร์จริง" class="img-fluid border shadow-sm">
+                            <figcaption class="figure-caption mt-2">Matrix Rain เรนเดอร์บนจอมอนิเตอร์จริงได้เนียนกริบ</figcaption>
+                        </figure>
+                    </div>
+                </div>
+
+                <h4 class="mt-4 mb-2"><i class="bi bi-play-circle text-danger me-2"></i>วิดีโอสาธิตการทำงานจริงบนจอ HDMI:</h4>
+                <div class="row g-4 my-2">
+                    <div class="col-md-6">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/lPcxX8f1Kyw?si=eBypIPQXawn7ewzK" title="YouTube video player: Starfield Warp" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <p class="text-center small text-secondary">Starfield Warp 3D Perspective (รันด้วยภาษา C + GCC บน PYNQ-Z2)</p>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/fAd3yCTkqE0?si=VucXxhBeVYb3bNVJ" title="YouTube video player: Matrix Digital Rain" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <p class="text-center small text-secondary">Matrix Digital Rain 60 FPS (สร้าง Bitmap Font 8x8 เขียนตรงลง Framebuffer)</p>
+                    </div>
+                </div>
+
+                <p class="mt-4">และที่สำคัญที่สุดคือ <strong>พอเรามี SPM เราก็จะรู้ได้อย่างแม่นยำว่า AI ไปสร้างไฟล์อะไรไว้ที่โฟลเดอร์ไหนบ้าง</strong><br>
+                พอมันทำงานเสร็จ คำถามยอดฮิตคือ <em>"แล้วไฟล์โค้ดพวกนี้มันไปแอบสร้างไว้ตรงไหนล่ะ?"</em><br>
+                ถ้าไม่มี SPM เราคงต้องมานั่งไล่ถาม AI อีกรอบ แต่เพราะเราเปิด SPM ส่องไว้อยู่ตลอด เราจึงเห็นชัดเจนว่าไฟล์ทั้งหมดถูกเก็บไว้ที่ <code>/home/petalinux/</code></p>
+
+                <p>พอ AI ปล่อยพอร์ต Serial เสร็จ เราก็แค่เปิด <strong>Tera Term</strong> กลับเข้าไปดูไฟล์ต้นฉบับ ลองรันเล่นเอง หรือจะหยิบเอาโค้ดภาษา C ที่ AI เขียนไว้มาต่อยอดได้ทันทีครับ</p>
+
+                <figure class="text-center my-4">
+                    <img src="AI_debug_with_SPM_files/image10.png" alt="เปิด Tera Term ดูไฟล์ต้นฉบับที่ AI สร้างไว้ใน /home/petalinux/" class="img-fluid border shadow-sm">
+                    <figcaption class="figure-caption mt-2">เปิดดูซอร์สโค้ดภาษา C และไบนารีที่ AI สร้างไว้ใน <code>/home/petalinux/</code> ผ่าน Tera Term</figcaption>
+                </figure>
+
+                <div class="callout-box callout-info">
+                    <div class="callout-title"><i class="bi bi-chat-left-dots me-2"></i>ข้อสังเกต</div>
+                    <div class="callout-content">
+                        <p>จริงๆ ถ้าเราถาม AI ในแชต มันก็น่าจะพอสรุปมาให้ได้ว่าสร้างไฟล์อะไรไว้ที่ไหนบ้าง แต่การเห็นคำสั่ง compile และ path ตัวจริงผ่าน SPM แบบสดๆ ได้อารมณ์มากกว่าและมั่นใจได้ 100% ว่าไม่มีอะไรแอบแฝง</p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <!-- 4 สรุปส่งท้าย -->
+                <h1>4 สรุปส่งท้าย</h1>
+                <p>การจับ AI มาต่อเข้ากับ <strong>Serial Port MCP</strong> ถือเป็นของเล่นใหม่ที่ช่วยชีวิตผมได้มากจริงๆ :</p>
+
+                <div class="key-takeaway-card">
+                    <h5 class="fw-bold text-primary mb-2"><i class="bi bi-speedometer2 me-2"></i>1. ช่วยทุ่นแรงเรื่องที่เราไม่ถนัด</h5>
+                    <p class="mb-0 text-secondary">วิศวกรฮาร์ดแวร์หรือ FPGA หลายคนไม่ได้คล่องคำสั่ง Linux ฝั่ง Software มากนัก บางทีจำไม่ได้ว่าคำสั่งแกะ driver หรือดู sysfs ต้องพิมพ์อะไร การมี AI มาช่วยคลำและเขียนสคริปต์ทดสอบให้ ทำให้งานเดินไวขึ้นแบบก้าวกระโดด</p>
+                </div>
+
+                <div class="key-takeaway-card">
+                    <h5 class="fw-bold text-success mb-2"><i class="bi bi-mortarboard me-2"></i>2. ข้อคิดสำคัญที่สุด: "ดู AI แก้ปัญหา แล้วเก็บวิชามาเป็นของเรา"</h5>
+                    <p class="text-secondary">ในยุคนี้ การสั่งให้ AI แก้ปัญหาให้เราไม่ใช่เรื่องยากอีกต่อไปแล้วครับ แต่ประเด็นคือ <strong>ถ้าเราปล่อยให้มันแก้ให้จนเสร็จโดยที่เราไม่สนใจเลยว่ามันทำได้ยังไง ตัวเราเองจะไม่เก่งขึ้นเลย</strong></p>
+                    <p class="mb-0 text-secondary">การเปิดจอ SPM ดักดูว่า AI เริ่มค้นหาปัญหาจากตรงไหน รันคำสั่งอะไรเพื่อแกะรอยระบบ มันเหมือนเรากำลังนั่งดู Senior Engineer คอยไล่แก้ระบบให้ดูสดๆ ข้างหน้า... งานก็เสร็จไว แถมเราก็ได้ความรู้ใหม่ๆ เก็บเข้ากระเป๋าตัวเองไปด้วย วิน-วินทั้งคู่ครับ!</p>
+                </div>
+
+                <hr>
+
+                <!-- 5 เพิ่มเติม -->
+                <h1>5 เพิ่มเติม</h1>
+                <p>ผมลองส่ง Log ดิบที่แคปเจอร์ได้จาก Serial Port Monitor ไปให้ AI ช่วยประเมินดูว่า ในบรรดา Message และ Command ทั้งหมดที่ AI คุยกับบอร์ด มีจังหวะไหนที่น่าสนใจบ้าง แล้วให้สรุปออกมา 3 ข้อ ปรากฏว่าเค้าวิเคราะห์ออกมาได้น่าสนใจตามนี้ครับ:</p>
+
+                <h2>5.1 เช็กฮาร์ดแวร์ลึกถึงระดับ Interrupt: มั่นใจว่า VDMA ส่งภาพจริง ไม่ได้ดูแค่ Device File</h2>
+                <p>แทนที่ AI จะดูแค่ว่ามี <code>/dev/fb0</code> โผล่มาแล้วจบ มันแอบรันคำสั่งนี้ครับ:</p>
+
+                <pre><code class="language-bash">grep xilinx-dma /proc/interrupts; sleep 1; grep xilinx-dma /proc/interrupts</code></pre>
+
+                <p>มันสั่งอ่าน Interrupt หมายเลข 57 ของ <code>xilinx-dma-controller</code> (ตัว VDMA ใน FPGA ที่ทำหน้าที่ยิงพิกเซลออกจอ HDMI) โดยเทียบห่างกัน 1 วินาที!<br>
+                พอเห็นตัวเลข Interrupt ขยับจาก <code>17583</code> ไปเป็น <code>17644</code> (เพิ่มขึ้นราวๆ 60 ครั้งใน 1 วินาที) มันจึงมั่นใจทันทีว่า <strong>ฮาร์ดแวร์ VDMA กำลังสตรีมภาพออกจอที่ 60 Hz จริงๆ ไม่ได้ค้าง</strong> นี่คือวิธีเช็กแบบวิศวกร Embedded ตัวจริงเลยครับ</p>
+
+                <h2>5.2 พลาดแล้วแก้ทันที (Self-Correction): ไม่ต้องรอให้คนมาช่วย</h2>
+                <p>ตอนแรก AI กะจะเขียน Python ด้วย <code>numpy.memmap</code> เพื่อยิงแถบสีเข้า Framebuffer ปรากฏว่าเจอบอร์ดด่ากลับมาว่า:</p>
+
+                <pre><code class="language-text">ModuleNotFoundError: No module named 'numpy'</code></pre>
+
+                <p>ถ้าเป็นคนทั่วไปอาจจะหยุดแล้วมานั่งลง NumPy หรือถามต่อ แต่มันไม่ยอมแพ้ครับ มันเปลี่ยนแผนทันทีในคำสั่งถัดไป โดยหันมาเขียน Python ด้วย Standard Library ดิบๆ อย่าง <code>os</code> และ <code>mmap</code> สร้าง byte array ของแถบสี 8 สี (White, Yellow, Cyan, Green, Magenta, Red, Blue, Black) แล้วยัดลง <code>/dev/fb0</code> ตรงๆ จนภาพแถบสีขึ้นจอสำเร็จได้เองในพริบตา!</p>
+
+                <h2>5.3 รู้ขีดจำกัดตัวเอง: สลับจาก Python ไปเขียน C + GCC เพื่อดันเฟรมเรตไปแตะ 60 FPS</h2>
+                <p>พอลองท้าทายให้มันทำแอนิเมชันเคลื่อนไหว AI เริ่มเขียนด้วย Python ก่อน (<code>fb_animation.py</code>) ซึ่งพอลองทำแอนิเมชันคลื่นสีแบบเต็มจอ 1680x1050 ปรากฏว่าได้เฟรมเรตราวๆ ~19 FPS<br>
+                พอเห็นว่า Python ช้าไป มันเลยพิมพ์เช็ก <code>gcc --version</code> พอรู้ว่าบนบอร์ดมี GCC 11.2.0 อยู่ มันเลยเปลี่ยนแนวทางทันที โดยลงมือเขียนโค้ดภาษา C ขึ้นมา 2 ตัว:</p>
+
+                <ul>
+                    <li><strong><code>starfield_warp.c</code></strong>: จำลองการวาร์ปในอวกาศแบบ 3D Perspective Projection คำนวณดาว 1,200 ดวง</li>
+                    <li><strong><code>matrix_rain.c</code></strong>: เอฟเฟกต์ตัวอักษรดิจิทัลไหลสไตล์ The Matrix พร้อมสร้างฟอนต์ 8x8 bitmap เองในโค้ด</li>
+                </ul>
+
+                <p>จากนั้นมันสั่งคอมไพล์ด้วยคำสั่ง:</p>
+
+                <pre><code class="language-bash">gcc -O3 -o /home/petalinux/matrix_rain /home/petalinux/matrix_rain.c</code></pre>
+
+                <p>ผลลัพธ์คือโปรแกรม C รันภาพเคลื่อนไหวบนจอ HDMI ได้นิ่งสนิทที่ <strong>60.0 FPS</strong> แบบลื่นไหลสุดๆ!<br>
+                <em>(แถมตอนที่มันเจอปัญหาภาพกระพริบ มันยังฉลาดพอที่จะตรวจเจอว่ามี Xorg รันอยู่ เลยแอบยิงคำสั่ง <code>echo 0000 | sudo -S /etc/init.d/xserver-nodm stop</code> เพื่อสั่งปิด Xserver ชั่วคราว จะได้ไม่มาแย่งพอร์ต Framebuffer กับมันอีกด้วย)</em></p>
+
+                <div class="callout-box callout-tip mt-5">
+                    <div class="callout-title"><i class="bi bi-link-45deg me-2"></i>บทความที่เกี่ยวข้อง</div>
+                    <div class="callout-content">
+                        <ul class="mb-0">
+                            <li><a href="pynq_z2_video.html"><strong>PYNQ-Z2 Video Out:</strong> ต่อภาพออกจอ HDMI ด้วย Linux DRM/KMS + Framebuffer บน PetaLinux 2022.1</a></li>
+                            <li><a href="pynq_z2_lvlg_special_ep.html"><strong>Special Episode:</strong> พัฒนา UI บอร์ด PYNQ-Z2 ด้วย LVGL 9.1 + Python ร่วมกับ AI Agent</a></li>
+                            <li><a href="AI_hardware.html"><strong>AI Hardware Control with MCP:</strong> เชื่อมต่อ AI ควบคุมอุปกรณ์ฮาร์ดแวร์แล็บผ่าน Model Context Protocol</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center p-4 mt-5" style="background-color: #f8f9fa; border-top: 1px solid #e2e8f0;">
+        <div class="container">
+            <p class="mb-1 text-secondary">ศูนย์รวมความรู้ คอร์สเรียนฟรี และงานออกแบบ FPGA ในไทย | FPGATHAILAND by Wichayen</p>
+            <p class="mb-0 small text-muted">
+                Contact: <a href="https://www.facebook.com/wichayen.hong" target="_blank" rel="noopener noreferrer">Facebook</a> | 
+                <a href="https://github.com/wichayen" target="_blank" rel="noopener noreferrer">GitHub</a> | 
+                <a href="https://www.linkedin.com/in/wichayen-luangsopapan-404133202/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose'
+        });
+    </script>
+</body>
+</html>
