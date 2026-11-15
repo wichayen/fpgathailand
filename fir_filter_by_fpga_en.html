@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study: Evaluating Real-Time FIR Filter Implementation on FPGA | FPGATHAILAND</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { padding-top: 56px; }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 0.5rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        .figure-caption {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
+        pre { background-color: #f8f9fa; padding: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
+        blockquote {
+            border-left: 4px solid #ccc;
+            padding-left: 1rem;
+            color: #666;
+        }
+        .callout-box {
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            margin: 1.75rem 0;
+            border-left: 4px solid;
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+        .callout-question {
+            border-left-color: #8b5cf6;
+            background: #faf5ff;
+        }
+        .callout-info {
+            border-left-color: #0284c7;
+            background: #f0f9ff;
+        }
+        .callout-tip {
+            border-left-color: #10b981;
+            background: #f0fdf4;
+        }
+        .callout-warning {
+            border-left-color: #f59e0b;
+            background: #fffbeb;
+        }
+        .callout-title {
+            font-weight: 700;
+            color: #0f172a;
+            font-size: 1.05rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+        .callout-content {
+            color: #334155;
+            font-size: 0.98rem;
+            line-height: 1.75;
+        }
+        .callout-content p:last-child,
+        .callout-content ul:last-child {
+            margin-bottom: 0;
+        }
+        .table-responsive {
+            margin: 1.75rem 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar navbar-expand-lg fixed-top site-nav">
+        <div class="container">
+            <a class="navbar-brand" href="index_en.html">
+                <span class="navbar-brand-icon"><i class="bi bi-cpu"></i></span>
+                <span>FPGATHAILAND</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+                    <li class="nav-item"><a class="nav-link" href="index_en.html#work">Featured Work</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index_en.html#articles">Articles & Labs</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBoards" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Lab Boards
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownBoards">
+                            <li><a class="dropdown-item" href="coursecontent/chapter1-introduction-to-fpga.html"><i class="bi bi-book me-2"></i>FPGA Fundamentals</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">PYNQ-Z2</h6></li>
+                            <li><a class="dropdown-item" href="pynq-z2-vivado_th.html"><i class="bi bi-cpu me-2"></i>Vivado Setup</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-hls_th.html"><i class="bi bi-lightning-charge me-2"></i>HLS Acceleration</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-ai_th.html"><i class="bi bi-robot me-2"></i>AI (DPU IP)</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-modelsim_th.html"><i class="bi bi-activity me-2"></i>Modelsim</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1.html"><i class="bi bi-display me-2"></i>LVGL Part 1</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2.html"><i class="bi bi-display me-2"></i>LVGL Part 2</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvlg_special_ep.html"><i class="bi bi-stars me-2"></i>Special: AI Agent</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">ARIES PCI Board</h6></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep1.html"><i class="bi bi-motherboard me-2"></i>Part 1: Architecture</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep2.html"><i class="bi bi-motherboard me-2"></i>Part 2: Version A.1</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep3.html"><i class="bi bi-motherboard me-2"></i>Part 3: FPGA Logic</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep4.html"><i class="bi bi-motherboard me-2"></i>Part 4: Linux PCI Driver</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep5.html"><i class="bi bi-motherboard me-2"></i>Part 5: Windows PCI Driver</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">Other Boards & Tools</h6></li>
+                            <li><a class="dropdown-item" href="EZUSB_FPGA.html"><i class="bi bi-usb-symbol me-2"></i>EZUSB + FPGA</a></li>
+                            <li><a class="dropdown-item" href="GeminiBoard_Beaglebone_Frambuffer.html"><i class="bi bi-display me-2"></i>GeminiBoard Framebuffer</a></li>
+                            <li><a class="dropdown-item" href="Sigasi.html"><i class="bi bi-code-square me-2"></i>Sigasi for VS Code</a></li>
+                            <li><a class="dropdown-item" href="UVVM.html"><i class="bi bi-check2-circle me-2"></i>UVVM Verification</a></li>
+                            <li><a class="dropdown-item" href="AI_hardware.html"><i class="bi bi-robot me-2"></i>AI Hardware Control with MCP</a></li>
+                            <li><a class="dropdown-item" href="vhdl_code_coverage.html"><i class="bi bi-bar-chart-steps me-2"></i>VHDL Code Coverage</a></li>
+                            <li><a class="dropdown-item active" href="fir_filter_by_fpga.html"><i class="bi bi-soundwave me-2"></i>FIR Filter on FPGA</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-info" href="index_en.html#articles"><i class="bi bi-grid-3x3-gap me-2"></i>View All Articles</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="index_en.html#contact">Contact</a></li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="lang-switch-btn" href="fir_filter_by_fpga.html" title="Switch to Thai">
+                            <i class="bi bi-translate"></i> TH
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto article-content">
+                <h1 class="mb-3">Case Study: Evaluating Real-Time FIR Filter Implementation on FPGA</h1>
+                <div class="article-post-meta">
+                    <span><i class="bi bi-calendar3 me-1"></i> Published: September 18, 2026</span>
+                    <span><i class="bi bi-person me-1"></i> By Wichayen</span>
+                </div>
+                <hr>
+
+                <p>When someone asks, "How do you compute math on an FPGA?", or when explaining digital circuit design concepts to software engineers, verbal explanations alone often fall short.</p>
+
+                <p>This article uses a concrete case study to step through the architectural design of a Finite Impulse Response (FIR) digital filter on an FPGA—from formal requirement derivation and block partitioning down to real-time timing budget verification on paper—before writing a single line of RTL code.</p>
+
+                <hr>
+
+                <h1>1 Introduction</h1>
+
+                <p>Suppose we are tasked with building a real-time audio FIR filter: capturing live audio from an analog input, streaming it through a digital filter, and immediately feeding filtered output to speakers.</p>
+
+                <figure class="my-4 text-center">
+                    <img src="fir_filter_by_fpga_files/image001.png" alt="ภาพรวมระบบ FIR filter บน FPGA" class="img-fluid">
+                    <figcaption class="figure-caption">Figure 1-1 — High-Level Signal Flow: WM8731 (ADC) → FPGA (FIR) → WM8731 (DAC)</figcaption>
+                </figure>
+
+                <p>There are two fundamental approaches to this problem:</p>
+                <ol>
+                    <li><strong>Software Approach:</strong> Ingest audio samples into a PC or MCU, process sequentially in software, and output.</li>
+                    <li><strong>FPGA Hardware Approach:</strong> Synthesize dedicated pipelined hardware datapaths to process samples in parallel.</li>
+                </ol>
+
+                <div class="callout-box callout-info">
+                    <div class="callout-title"><i class="bi bi-info-circle-fill text-primary me-2"></i>Note: Alternative Processing Platforms</div>
+                    <div class="callout-content">
+                        <p>In practice, dedicated DSP microprocessors or custom ASICs are viable options. This article focuses strictly on comparing general-purpose sequential execution vs FPGA hardware architectures.</p>
+                    </div>
+                </div>
+
+                <p>Under hard real-time constraints, the latency requirement is identical regardless of platform: computation for each audio sample must finish before the next sample arrives. At a standard 44.1 kHz sampling rate, the available time budget per sample is <code>1 / 44,100 ≈ 22.68 µs</code>. If processing falls behind, buffer overflows and sample dropping occur. On a desktop PC, 22.68 µs is trivial, but on small microcontrollers or multi-tasking systems, latency jitter is hazardous. In our FPGA design, the architectural target specifications are:</p>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 30%;">รายการ</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Audio codec</td>
+                                <td>Wolfson WM8731 Audio Codec</td>
+                            </tr>
+                            <tr>
+                                <td>Filter</td>
+                                <td>FIR, 128 Taps</td>
+                            </tr>
+                            <tr>
+                                <td>Numeric format</td>
+                                <td>IEEE 754 Single-Precision Floating Point (float32)</td>
+                            </tr>
+                            <tr>
+                                <td>Sample rate</td>
+                                <td>44.1 kHz</td>
+                            </tr>
+                            <tr>
+                                <td>Channels</td>
+                                <td>Stereo (Left / Right)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <hr>
+
+                <h1>2 Design Requirements</h1>
+
+                <p>The system implements a stereo digital audio filter where the FPGA interfaces with a Wolfson WM8731 CODEC over I2S/DSP serial audio streams. FIR filtering is computed independently for Left and Right channels using a <code>fixed-point → float32 → FIR → fixed-point</code> pipeline (chosen here to demonstrate hardware floating-point architecture, though fixed-point is commonly utilized in commercial audio DSP).</p>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Category</th>
+                                <th>Parameter</th>
+                                <th>Specification / Requirement</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td rowspan="4" class="align-middle">Digital audio I/O</td>
+                                <td>Resolution</td>
+                                <td>24-bit</td>
+                            </tr>
+                            <tr>
+                                <td>Channels</td>
+                                <td>2 Channels (Left / Right)</td>
+                            </tr>
+                            <tr>
+                                <td>Sample rate</td>
+                                <td>44.1 kHz</td>
+                            </tr>
+                            <tr>
+                                <td>Audio Format</td>
+                                <td>Stereo</td>
+                            </tr>
+                            <tr>
+                                <td>WM8731 clock</td>
+                                <td>MCLK</td>
+                                <td>11.2896 MHz (= 256 × Fs)</td>
+                            </tr>
+                            <tr>
+                                <td>WM8731 control</td>
+                                <td>Control interface</td>
+                                <td>I²C</td>
+                            </tr>
+                            <tr>
+                                <td>WM8731 audio</td>
+                                <td>Digital audio interface</td>
+                                <td>DSP / PCM Mode</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="3" class="align-middle">FIR</td>
+                                <td>Structure</td>
+                                <td>Direct-Form Convolution</td>
+                            </tr>
+                            <tr>
+                                <td>Tap Count</td>
+                                <td>128</td>
+                            </tr>
+                            <tr>
+                                <td>Numeric format</td>
+                                <td>IEEE 754 single-precision floating point, 32-bit</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <figure class="my-4 text-center">
+                    <img src="fir_filter_by_fpga_files/image002.png" alt="โครงสร้างตัวกรอง FIR ที่อ้างอิงในตารางข้อกำหนด" class="img-fluid">
+                    <figcaption class="figure-caption">Figure 2-1 — Direct-Form FIR Filter Architecture</figcaption>
+                </figure>
+
+                <hr>
+
+                <h1>3 System Architecture & Design</h1>
+
+                <h2>3.1 Architecture Overview</h2>
+
+                <p>From the specifications above, the system partitions into 3 primary submodules:</p>
+
+                <figure class="my-4 text-center">
+                    <img src="fir_filter_by_fpga_files/image003.png" alt="บล็อกไดอะแกรมรวมของระบบ" class="img-fluid">
+                    <figcaption class="figure-caption">Figure 3.1-1 — Top-Level System Block Diagram</figcaption>
+                </figure>
+
+                <ol>
+                    <li><strong>CODEC Interface:</strong> Handles I²C register initialization during startup and manages continuous serial audio reception/transmission (I2S/DSP).</li>
+                    <li><strong>Format Conversion (Fixed ⇔ Float):</strong> Converts 24-bit integer samples to IEEE 754 float32 before filtering, and converts float32 outputs back to 24-bit fixed-point for the DAC.</li>
+                    <li><strong>FIR Engine:</strong> Executes 128-tap convolution with parallel, independent datapaths for Left and Right channels.</li>
+                </ol>
+
+                <h2>3.2 Clock Domains</h2>
+
+                <p>The FPGA operates on a 50 MHz primary system clock, with an internal PLL synthesizing the required audio master clock (MCLK):</p>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Clock Domain</th>
+                                <th class="text-end">ความถี่</th>
+                                <th>Destination</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>System clock</td>
+                                <td class="text-end">50 MHz</td>
+                                <td>Conversion modules & FIR Engine</td>
+                            </tr>
+                            <tr>
+                                <td>CODEC MCLK</td>
+                                <td class="text-end">11.2896 MHz</td>
+                                <td>WM8731 Master Audio Clock (MCLK)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <figure class="my-4 text-center">
+                    <img src="fir_filter_by_fpga_files/image004.png" alt="แผนภาพสัญญาณนาฬิกาของ FPGA" class="img-fluid">
+                    <figcaption class="figure-caption">Figure 3.2-1 — Clock Distribution from PLL to Functional Submodules</figcaption>
+                </figure>
+
+                <pre><code>11.2896 MHz / 256 = 44.1 kHz</code></pre>
+
+                <p>The 256 × Fs ratio is a standard master clock configuration supported by the WM8731 for 44.1 kHz sampling.</p>
+
+                <h2>3.3 Audio CODEC Interface (WM8731)</h2>
+
+                <p>In this system, the Wolfson WM8731 serves as both ADC and DAC:</p>
+                <ul>
+                    <li><strong>ADC Section:</strong> Digitizes incoming analog signals from <code>LLINEIN</code>/<code>RLINEIN</code> into digital PCM samples.</li>
+                    <li><strong>DAC Section:</strong> Converts processed digital samples from the FPGA back into analog line output at <code>LOUT</code>/<code>ROUT</code>.</li>
+                </ul>
+
+                <p>The CODEC exposes two physical interfaces to the FPGA:</p>
+                <ul>
+                    <li><strong>I²C Control Bus:</strong> Programs configuration registers at power-on (audio format, word length, sample rate mode, volume control, and master/slave mode).</li>
+                    <li><strong>Digital Audio Serial Bus:</strong> Continuously streams serial audio data using <code>BCLK</code> (bit clock), <code>ADCLRC</code>/<code>DACLRC</code> (frame sync / left-right clock), and <code>ADCDAT</code>/<code>DACDAT</code> (serial data lines).</li>
+                </ul>
+
+                <figure class="my-4 text-center">
+                    <img src="fir_filter_by_fpga_files/image005.png" alt="Control Interface ของ WM8731" class="img-fluid">
+                    <figcaption class="figure-caption">Figure 3.3-1 — Control Interface (I²C) for WM8731 Configuration</figcaption>
+                </figure>
+
+                <figure class="my-4 text-center">
+                    <img src="fir_filter_by_fpga_files/image006.png" alt="Digital Audio Interface timing ของ WM8731" class="img-fluid">
+                    <figcaption class="figure-caption">Figure 3.3-2 — Digital Audio Serial Bus Timing</figcaption>
+                </figure>
+
+                <h2>3.4 Fixed-Point ⇔ Floating-Point Conversion</h2>
+
+                <p>The WM8731 streams 24-bit signed two's-complement fixed-point data, while our FIR calculation engine utilizes IEEE 754 float32. We must convert incoming 24-bit fixed-point into floating-point before convolution, and convert float32 results back to 24-bit fixed-point before transmitting to the DAC.<br>
+                The hardware pipeline converts <code>24-bit fixed-point → Q32.32 (64-bit) → IEEE 754 float32</code>.</p>
+
+                <figure class="my-4 text-center">
+                    <img src="fir_filter_by_fpga_files/image007.png" alt="แผนภาพการแปลง Fixed เป็น Floating point" class="img-fluid">
+                    <figcaption class="figure-caption">Figure 3.4-1 — Fixed-to-Float Pipeline Before FIR Engine</figcaption>
+                </figure>
+
+                <figure class="my-4 text-center">
+                    <img src="fir_filter_by_fpga_files/image008.png" alt="แผนภาพการแปลง Floating point เป็น Fixed" class="img-fluid">
+                    <figcaption class="figure-caption">Figure 3.4-2 — Float-to-Fixed Pipeline After FIR Engine</figcaption>
+                </figure>
+
+                <h2>3.5 Pipelined FIR Computation Architecture</h2>
+
+                <p>An N-tap FIR filter executes convolution according to the difference equation:</p>
+
+                <pre><code>y[n] = Σ(k=0..127) a[k] × s[n-k]</code></pre>
+
+                <p>where <code>a[k]</code> represents filter tap coefficients and <code>s[n-k]</code> represents the current and historical sample history.</p>
+
+                <p>We decompose computation into two decoupled phases: <strong>Fully pipeline the multiplications first, then accumulate products in parallel</strong>. Because each tap multiplication <code>a[k] × s[n-k]</code> is completely independent, products can be pushed through a single deeply pipelined multiplier at full throughput without pipeline stalls.</p>
+
+                <p>If we naively executed multiply-accumulate (MAC) serially in sequence, the accumulator would stall waiting for the recursive feedback sum from the previous tap on every step. Decoupling multiplication and accumulation eliminates feedback stalls.</p>
+
+                <pre><code>a0*s0            = result1
+result1 + a1*s1  = result2   ← Must wait for result1 (feedback dependency stall)</code></pre>
+
+                <figure class="my-4 text-center">
+                    <img src="fir_filter_by_fpga_files/image009.png" alt="โครงสร้างการคำนวณ FIR" class="img-fluid">
+                    <figcaption class="figure-caption">Figure 3.5-1 — Mathematical Dataflow: Multiplications Followed by Accumulation</figcaption>
+                </figure>
+
+                <p>In hardware RTL, the core partitions into Delay Line, Multiplier, and Dual Accumulator blocks, utilizing FPGA on-chip Block RAM (BRAM) for sample delay lines, coefficient storage, and intermediate product FIFO buffers.</p>
+
+                <p>ทั้ง Left และ Right ใช้โครงสร้างเดียวกัน โดยมีส่วนหลักดังนี้:</p>
+                <ul>
+                    <li><strong>Delay Line (<code>SAMP_RAM</code>):</strong> Circular buffer storing the 128 latest sample vectors <code>s[n]</code> through <code>s[n-127]</code>.</li>
+                    <li><strong>Coefficient Storage:</strong> Dedicated ROM/BRAM holding tap weights <code>a[0]</code> through <code>a[127]</code>.</li>
+                    <li><strong>Pipelined Multiplier:</strong> Single high-frequency floating-point multiplier time-multiplexed across all 128 taps at 1 product per cycle.</li>
+                    <li><strong>Dual Accumulator:</strong> Splits 128 products into two 64-sample banks summed in parallel to yield final convolution output <code>y[n]</code>.</li>
+                </ul>
+
+                <p>ผลคูณที่ได้จะถูกเก็บแยกเป็น 2 กลุ่ม กลุ่มละ 64 ค่า จากนั้นใช้ accumulator สองสายคำนวณผลรวมของแต่ละกลุ่มแบบขนาน แล้วนำผลรวมทั้งสองมาบวกกันเป็น output สุดท้าย วิธีนี้ช่วยลดจำนวน multiplier และ DSP block เมื่อเทียบกับการสร้าง multiplier ครบ 128 ชุด ขณะเดียวกันก็ยังแบ่งงาน accumulation ให้ทำงานขนานกันได้</p>
+
+                <figure class="my-4 text-center">
+                    <img src="fir_filter_by_fpga_files/image010.png" alt="บล็อกไดอะแกรมแกนคำนวณ FIR" class="img-fluid">
+                    <figcaption class="figure-caption">Figure 3.5-2 — Internal Datapath: SAMP_RAM, Coefficient ROM, Pipelined Multiplier, and Dual Accumulators</figcaption>
+                </figure>
+
+                <h2>3.6 Real-Time Latency & Timing Budget Evaluation</h2>
+
+                <p>With a 50 MHz system clock, the hard real-time sample arrival period of <code>1 / 44,100 ≈ 22.68 µs</code> translates into a discrete clock cycle budget of:</p>
+
+                <pre><code>50,000,000 / 44,100 ≈ 1,133.8 cycles</code></pre>
+
+                <p>Hence, our architectural deadline is strict: processing for each sample must complete in under <strong>1,133 clock cycles</strong>. We tabulate the paper latency breakdown below:</p>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Processing Stage</th>
+                                <th class="text-end">Latency โดยประมาณ</th>
+                                <th>Notes / Derivation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Multiplier 128 taps</td>
+                                <td class="text-end">133 cycles</td>
+                                <td>128 cycles continuous stream feed + 5 cycles pipeline flush latency</td>
+                            </tr>
+                            <tr>
+                                <td>Adder</td>
+                                <td class="text-end">576 cycles</td>
+                                <td>64 products × 9 cycles latency utilizing 2 parallel accumulators</td>
+                            </tr>
+                            <tr>
+                                <td>Final add + control overhead</td>
+                                <td class="text-end">20 cycles</td>
+                                <td>State machine transitions and handshaking margin</td>
+                            </tr>
+                            <tr class="table-info font-weight-bold">
+                                <td><strong>Total Required Latency</strong></td>
+                                <td class="text-end"><strong>729 cycles</strong></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>Based on our paper analysis, the entire datapath executes in approximately <strong>729 clock cycles</strong>, well within our budget of <strong>1,133 cycles per sample</strong> (leaving a comfortable 35% timing margin). We mathematically prove the architecture guarantees real-time throughput.</p>
+
+                <figure class="my-4 text-center">
+                    <img src="fir_filter_by_fpga_files/image011.png" alt="ภาพรวม Timing ของการคำนวณ FIR" class="img-fluid">
+                    <figcaption class="figure-caption">Figure 3.6-1 — Temporal Dataflow Overview</figcaption>
+                </figure>
+
+                <figure class="my-4 text-center">
+                    <img src="fir_filter_by_fpga_files/image012.png" alt="Timing แบบละเอียดของการคำนวณ FIR" class="img-fluid">
+                    <figcaption class="figure-caption">Figure 3.6-2 — Cycle-Accurate Stage Timing Diagram</figcaption>
+                </figure>
+
+                <div class="callout-box callout-warning">
+                    <div class="callout-title"><i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>Floating-Point IP Latency Characteristics</div>
+                    <div class="callout-content">
+                        <p>The 5-cycle multiplier and 9-cycle adder latencies are realistic representative parameters for demonstration. In physical synthesis, exact latency and initiation interval depend on vendor IP configurations (Xilinx Floating-Point Operator), target clock frequency, and FPGA silicon grade.</p>
+                    </div>
+                </div>
+
+                <h2>3.7 Summary of Results</h2>
+
+                <p>Architectural evaluation confirms that a 128-tap FIR filter at 44.1 kHz is entirely feasible on FPGA at 50 MHz, requiring ~729 cycles out of 1,133 available cycles. Once the mathematical timing proof passes, development safely advances to RTL implementation and post-place-and-route resource audits.</p>
+
+                <p>During physical FPGA implementation, verify the following checklist:</p>
+                <ul>
+                    <li>Exact latency and initiation interval of synthesized floating-point IP cores</li>
+                    <li>DSP slice, BRAM, and logic slice utilization budgets</li>
+                    <li>Static Timing Analysis (STA) timing closure at target frequency</li>
+                    <li>Circular buffer address wrapping and memory read latency alignment</li>
+                    <li>Clock Domain Crossing (CDC) synchronization between system clock and CODEC audio clock</li>
+                    <li>Rounding, saturation, and overflow clipping logic when converting float back to 24-bit fixed-point</li>
+                </ul>
+
+                <h2>3.8 Technical Design Notes</h2>
+
+                <p><strong>Why Floating-Point?</strong><br>
+                Float32 was chosen to allow direct bit-level verification against Python/MATLAB scientific simulation models without quantization scaling artifacts. However, floating-point consumes significantly more DSP slices, logic cells, and pipeline stages than fixed-point. In resource-constrained applications, integer fixed-point DSP remains the industry benchmark.</p>
+
+                <p><strong>Further Optimization via Adder Trees:</strong><br>
+                While dual serial accumulation was selected for control simplicity, throughput can be exponentially accelerated using an <strong>Adder Tree</strong> (binary parallel reduction tree). By adding product pairs in parallel (O(log2 N) depth instead of O(N)), accumulation latency drops from 576 cycles to under 20 cycles at the expense of additional adder logic.</p>
+
+                <hr>
+
+                <h1>4 Perspective: When is an FPGA Truly Necessary?</h1>
+
+                <p>Before selecting an FPGA for mathematical computation, engineers must thoroughly evaluate workload, deadlines, power, and development cost to answer both <em>"Can it be done?"</em> and <em>"Should it be done on FPGA?"</em>:</p>
+
+                <ul>
+                    <li><strong>Offline / Batch Workloads:</strong> Batch file transcoding or non-deadline analytics do not warrant FPGA complexity; modern CPUs and GPUs excel at throughput.</li>
+                    <li><strong>Hard Real-Time Determinism:</strong> Zero-jitter sample deadlines (radar, audio DSP, motor control, high-frequency trading) represent the ideal FPGA domain because hardware execution timing is cycle-deterministic.</li>
+                    <li><strong>Massive Pipelined Parallelism:</strong> High-bandwidth multichannel data processing where customized hardware pipelines achieve orders-of-magnitude lower latency than sequential CPU interrupts.</li>
+                    <li><strong>Specialized Physical I/O:</strong> Tight integration with high-speed ADCs/DACs, custom serial protocols, or multi-gigabit transceivers directly into the processing fabric.</li>
+                </ul>
+
+                <div class="callout-box callout-info">
+                    <div class="callout-title"><i class="bi bi-lightbulb-fill text-info me-2"></i>Engineering Takeaway: Hardware vs. Software Mindset</div>
+                    <div class="callout-content">
+                        <p>Designing algorithms in hardware requires an entirely different mental model than writing sequential software. One must account for nanosecond clock margins, silicon placement, routing delays, and spatial memory routing. Hardware computation is not just writing equations—it is orchestrating <em>when</em> each gate fires, <em>what</em> physical silicon it consumes, and <em>how</em> data streams across parallel pipelines.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center p-4 mt-5" style="background-color: #f8f9fa;">
+        <div class="container">
+            <p class="mb-0">Contact: <a href="https://www.facebook.com/wichayen.hong" target="_blank">Wichayen Hong on Facebook</a> | <a href="https://github.com/wichayen" target="_blank">GitHub</a> | <a href="https://www.linkedin.com/in/wichayen-luangsopapan-404133202/" target="_blank">LinkedIn</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

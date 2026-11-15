@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PYNQ-Z2 Video Out: Driving HDMI Displays with Linux DRM/KMS + Framebuffer on PetaLinux 2022.1 | FPGATHAILAND</title>
+    <meta name="title" content="PYNQ-Z2 Video Out: Driving HDMI Displays with Linux DRM/KMS + Framebuffer on PetaLinux 2022.1 | FPGATHAILAND">
+    <meta name="description" content="Complete guide to building a custom FPGA Video Pipeline to output HDMI on the PYNQ-Z2 board (Zynq-7000) using PetaLinux 2022.1, standard Linux DRM/KMS (/dev/dri/card0), and Framebuffer (/dev/fb0) emulation.">
+    <meta name="keywords" content="PYNQ-Z2, HDMI, Video Pipeline, AXI VDMA, DRM, KMS, Framebuffer, fbdev, PetaLinux 2022.1, Digilent HDMI, axi_dynclk, rgb2dvi, Zynq-7000, Xilinx, FPGA Thailand">
+    <meta name="author" content="Wichayen">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://wichayen.github.io/fpgathailand/pynq_z2_video_en.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://wichayen.github.io/fpgathailand/pynq_z2_video_en.html">
+    <meta property="og:title" content="PYNQ-Z2 Video Out: Driving HDMI Displays with Linux DRM/KMS + Framebuffer on PetaLinux 2022.1">
+    <meta property="og:description" content="How to build a custom Display Controller Pipeline on FPGA, linking AXI VDMA with PetaLinux 2022.1 to drive HDMI monitors on PYNQ-Z2.">
+    <meta property="og:image" content="https://wichayen.github.io/fpgathailand/pynq_z2_video_files/image02.jpg">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://wichayen.github.io/fpgathailand/pynq_z2_video_en.html">
+    <meta name="twitter:title" content="PYNQ-Z2 Video Out: Driving HDMI Displays with Linux DRM/KMS + Framebuffer on PetaLinux 2022.1">
+    <meta name="twitter:description" content="How to build a custom Display Controller Pipeline on FPGA, linking AXI VDMA with PetaLinux 2022.1 to drive HDMI monitors on PYNQ-Z2.">
+    <meta name="twitter:image" content="https://wichayen.github.io/fpgathailand/pynq_z2_video_files/image02.jpg">
+
+    <!-- Bootstrap 5 CSS & Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { padding-top: 56px; }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 0.5rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        .figure-caption {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
+        pre {
+            background-color: #0f172a;
+            color: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+        pre code {
+            color: inherit;
+            background: none;
+            padding: 0;
+            font-size: inherit;
+        }
+        pre.mermaid {
+            background-color: #ffffff;
+            color: inherit;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            display: flex;
+            justify-content: center;
+        }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        .callout-box {
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            margin: 1.75rem 0;
+            border-left: 4px solid;
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+        .callout-info {
+            border-left-color: #0284c7;
+            background: #f0f9ff;
+        }
+        .callout-tip {
+            border-left-color: #10b981;
+            background: #f0fdf4;
+        }
+        .callout-warning {
+            border-left-color: #f59e0b;
+            background: #fffbeb;
+        }
+        .callout-title {
+            font-weight: 700;
+            color: #0f172a;
+            font-size: 1.05rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+        .callout-content {
+            color: #334155;
+            font-size: 0.98rem;
+            line-height: 1.75;
+        }
+        .callout-content p:last-child,
+        .callout-content ul:last-child {
+            margin-bottom: 0;
+        }
+        .table-responsive {
+            margin: 1.75rem 0;
+        }
+        .article-content h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+        .article-content h2 {
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-top: 1.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .article-content h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #334155;
+            margin-top: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+        .article-post-meta {
+            display: flex;
+            gap: 1.5rem;
+            color: #64748b;
+            font-size: 0.92rem;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar navbar-expand-lg fixed-top site-nav">
+        <div class="container">
+            <a class="navbar-brand" href="index_en.html">
+                <span class="navbar-brand-icon"><i class="bi bi-cpu"></i></span>
+                <span>FPGATHAILAND</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+                    <li class="nav-item"><a class="nav-link" href="index_en.html#course"><i class="bi bi-mortarboard me-1"></i>Courses</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index_en.html#work">Featured Work</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index_en.html#articles">Articles & Labs</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownBoards" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Lab Boards
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownBoards">
+                            <li><h6 class="dropdown-header text-info">Fundamentals (Course)</h6></li>
+                            <li><a class="dropdown-item" href="coursecontent/chapter1-introduction-to-fpga.html"><i class="bi bi-book me-2"></i>FPGA Fundamentals</a></li>
+                            <li><a class="dropdown-item" href="coursecontent/chapter-sp1.html"><i class="bi bi-stars me-2"></i>Special: Debounce & CDC (SP1)</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">PYNQ-Z2</h6></li>
+                            <li><a class="dropdown-item" href="pynq-z2-vivado_en.html"><i class="bi bi-cpu me-2"></i>Vivado Setup</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-hls_en.html"><i class="bi bi-lightning-charge me-2"></i>HLS Acceleration</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-ai_en.html"><i class="bi bi-robot me-2"></i>AI (DPU IP)</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-modelsim_en.html"><i class="bi bi-activity me-2"></i>Modelsim</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1_en.html"><i class="bi bi-display me-2"></i>LVGL Part 1</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2_en.html"><i class="bi bi-display me-2"></i>LVGL Part 2</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvlg_special_ep_en.html"><i class="bi bi-stars me-2"></i>Special: AI Agent</a></li>
+                            <li><a class="dropdown-item" href="Pynq_z2_FM_Radio_en.html"><i class="bi bi-broadcast-pin me-2"></i>FM Radio (RTL-SDR)</a></li>
+                            <li><a class="dropdown-item active" href="pynq_z2_video_en.html"><i class="bi bi-display me-2"></i>HDMI Video Out (Linux DRM)</a></li>
+                            <li><a class="dropdown-item" href="AI_debug_with_SPM_en.html"><i class="bi bi-robot me-2"></i>AI Debug with SPM</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">ARIES PCI Board</h6></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep1_en.html"><i class="bi bi-motherboard me-2"></i>Part 1: Architecture</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep2_en.html"><i class="bi bi-motherboard me-2"></i>Part 2: Revision A.1</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep3_en.html"><i class="bi bi-motherboard me-2"></i>Part 3: FPGA Logic</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep4_en.html"><i class="bi bi-motherboard me-2"></i>Part 4: Linux PCI Driver</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep5_en.html"><i class="bi bi-motherboard me-2"></i>Part 5: Windows PCI Driver</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">Other Boards & Tools</h6></li>
+                            <li><a class="dropdown-item" href="EZUSB_FPGA_en.html"><i class="bi bi-usb-symbol me-2"></i>EZUSB + FPGA</a></li>
+                            <li><a class="dropdown-item" href="GeminiBoard_Beaglebone_Frambuffer_en.html"><i class="bi bi-display me-2"></i>GeminiBoard Framebuffer</a></li>
+                            <li><a class="dropdown-item" href="Sigasi_en.html"><i class="bi bi-code-square me-2"></i>Sigasi for VS Code</a></li>
+                            <li><a class="dropdown-item" href="UVVM_en.html"><i class="bi bi-check2-circle me-2"></i>UVVM Verification</a></li>
+                            <li><a class="dropdown-item" href="AI_hardware_en.html"><i class="bi bi-robot me-2"></i>AI Hardware Control with MCP</a></li>
+                            <li><a class="dropdown-item" href="vhdl_code_coverage_en.html"><i class="bi bi-bar-chart-steps me-2"></i>VHDL Code Coverage</a></li>
+                            <li><a class="dropdown-item" href="fir_filter_by_fpga_en.html"><i class="bi bi-soundwave me-2"></i>FIR Filter on FPGA</a></li>
+                            <li><a class="dropdown-item" href="mini2440_en.html"><i class="bi bi-cpu me-2"></i>mini2440 + FPGA</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-info" href="index_en.html#articles"><i class="bi bi-grid-3x3-gap me-2"></i>View All Articles</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="index_en.html#contact">Contact</a></li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="lang-switch-btn" href="pynq_z2_video.html" title="Switch to Thai">
+                            <i class="bi bi-translate"></i> TH
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4 mb-5">
+        <div class="row">
+            <div class="col-lg-9 mx-auto article-content">
+                <!-- Breadcrumbs -->
+                <nav aria-label="breadcrumb" class="mb-3">
+                    <ol class="breadcrumb small">
+                        <li class="breadcrumb-item"><a href="index_en.html"><i class="bi bi-house-door me-1"></i>Home</a></li>
+                        <li class="breadcrumb-item"><a href="index_en.html#articles">Articles</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">PYNQ-Z2 Video Out (Linux DRM)</li>
+                    </ol>
+                </nav>
+
+                <h1 class="mb-3 border-0 pb-0">PYNQ-Z2 Video Out: Driving HDMI Displays with Linux DRM/KMS + Framebuffer on PetaLinux 2022.1</h1>
+                <div class="article-post-meta">
+                    <span><i class="bi bi-calendar3 me-1"></i> Published: November 4, 2026</span>
+                    <span><i class="bi bi-person me-1"></i> By Wichayen</span>
+                    <span><i class="bi bi-tag me-1"></i> PYNQ-Z2 / Linux Display Driver</span>
+                </div>
+                <hr>
+
+                <!-- 1 Introduction -->
+                <h1>1 Introduction</h1>
+                <p>This article shares how to enable <strong>Linux (PetaLinux 2022.1)</strong> on the <strong>PYNQ-Z2</strong> board (Xilinx Zynq-7000 / XC7Z020) to output video directly to an <strong>HDMI</strong> monitor just like a personal computer. The system exposes both standard graphics device nodes: <code>/dev/dri/card0</code> (DRM/KMS) and an emulated <code>/dev/fb0</code> (Framebuffer) ready for immediate use.</p>
+
+                <p>Those familiar with Zynq-7000 know that the chip lacks a dedicated hardware GPU. So how do we get video output? The answer lies in the programmable logic (<strong>PL / FPGA</strong>): we construct a custom <strong>Display Controller Pipeline</strong> on the FPGA fabric, allowing the AXI VDMA controller to fetch pixel data from DDR3 memory and stream it out directly as HDMI signals.</p>
+
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/i8UG72to5fA?si=HGTL9cOPfDav7tYM" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+
+                <hr>
+
+                <!-- 2 Hardware and System Overview -->
+                <h1>2 Hardware and System Overview</h1>
+
+                <h2>2.1 Specifications & Tools</h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 25%;">Component</th>
+                                <th style="width: 35%;">Specification / Version</th>
+                                <th style="width: 40%;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Target Board</strong></td>
+                                <td><span class="badge bg-primary">PYNQ-Z2</span></td>
+                                <td>Xilinx Zynq-7020 SoC (XC7Z020-1CLG400C)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Vivado</strong></td>
+                                <td>2022.1</td>
+                                <td>Block Design assembly & FPGA bitstream synthesis</td>
+                            </tr>
+                            <tr>
+                                <td><strong>PetaLinux</strong></td>
+                                <td>2022.1</td>
+                                <td>Embedded Linux BSP and Rootfs builder</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Host OS</strong></td>
+                                <td>Ubuntu 22.04 LTS</td>
+                                <td>Host development environment for PetaLinux 2022.1</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Linux Kernel</strong></td>
+                                <td>5.15 LTS (Digilent Rebase)</td>
+                                <td>Branch <code>digilent_rebase_v5.15_LTS_2022.1</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Pixel Format</strong></td>
+                                <td><code>RG24</code> = <code>DRM_FORMAT_RGB888</code></td>
+                                <td>24 bpp (3 bytes per pixel: Red, Green, Blue)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h2>2.2 Data Transfer Flow (From Application to HDMI Display)</h2>
+                <p>When running a graphical application under Linux, pixel buffers travel through the hardware in the following sequence:</p>
+
+                <ol class="lh-lg">
+                    <li><strong>Application &rarr; DDR3 RAM (Framebuffer):</strong><br>
+                    Userspace applications or kernel drivers write RGB pixel data into a pre-allocated contiguous memory region in DDR3 RAM (CMA).</li>
+                    <li><strong>DDR3 RAM &rarr; AXI VDMA (via AXI HP Port):</strong><br>
+                    The <code>AXI VDMA</code> IP core on the FPGA autonomously fetches pixel buffers from DDR3 memory via the high-bandwidth <strong>AXI HP0 (High Performance)</strong> memory-mapped interface.</li>
+                    <li><strong>AXI VDMA &rarr; Stream Converter (via AXI4-Stream):</strong><br>
+                    VDMA converts memory-mapped buffers into a continuous raster stream (<strong>AXI4-Stream: MM2S</strong>), forwarding pixels to <code>axis_subset_converter</code> and <code>v_axi4s_vid_out</code>.</li>
+                    <li><strong>Video Out Block &rarr; Video Timing & TMDS Encoder:</strong><br>
+                    The <code>v_axi4s_vid_out</code> block synchronizes pixel streams with timing signals (HSync, VSync, Data Enable) generated by <code>v_tc</code> (Video Timing Controller) driven by the Pixel Clock from <code>axi_dynclk</code>, generating a parallel <strong>Parallel RGB + Sync</strong> bus.</li>
+                    <li><strong>TMDS Encoder &rarr; HDMI Port &rarr; Monitor:</strong><br>
+                    The <code>rgb2dvi</code> block accepts parallel RGB data along with the pixel clock and 5x serial clock, encoding them into differential <strong>TMDS</strong> high-speed serial channels routed to the PYNQ-Z2 HDMI TX connector.</li>
+                </ol>
+
+                <pre class="mermaid">
+graph TD
+    subgraph US["1. Linux Userspace"]
+        APP["Applications / GUI<br/>(fbdev / DRM apps)"]
+    end
+
+    subgraph KS["2. Linux Kernel"]
+        DRM["DRM Subsystem & fbdev Emulation<br/>(xlnx-drm + Digilent Drivers)"]
+    end
+
+    DDR[("DDR3 RAM<br/>(CMA Framebuffer)")]
+
+    subgraph PL["3. PL Video Pipeline (FPGA)"]
+        VDMA["AXI VDMA<br/>(Fetches frames from DDR3)"]
+        CONV["Format Converter<br/>(axis_subset_converter)"]
+        VOUT["Video Out Bridge<br/>(v_axi4s_vid_out)"]
+        DVI["rgb2dvi<br/>(TMDS Encoder)"]
+        
+        CTRL["Timing & Clock Blocks<br/>(v_tc + axi_dynclk)"]
+    end
+
+    HDMI["4. HDMI Monitor"]
+
+    %% Data Flow
+    APP ==>|"1. Write frame to buffer"| DDR
+    DDR ==>|"2. VDMA fetches via AXI HP0"| VDMA
+    VDMA ==>|"3. Forward AXI4-Stream"| CONV
+    CONV ==>|"RGB Stream"| VOUT
+    VOUT ==>|"4. Parallel RGB + Sync"| DVI
+    DVI ==>|"5. TMDS Signals"| HDMI
+
+    %% Control Flow
+    APP -.->|"mmap / ioctl"| DRM
+    DRM -.->|"Control VDMA via AXI-Lite"| VDMA
+    DRM -.->|"Configure Clock & Timing"| CTRL
+    CTRL -.->|"Pixel Clock & H/V Sync"| VOUT
+    CTRL -.->|"Serial Clock (5x)"| DVI
+
+    classDef mainData stroke:#e8590c,stroke-width:3px;
+    classDef ctrlFlow stroke:#888,stroke-dasharray: 3 3;
+                </pre>
+
+                <hr>
+
+                <!-- 3 FPGA Hardware Design (Vivado) -->
+                <h1>3 FPGA Hardware Design (Vivado)</h1>
+                <p>On the FPGA (PL) side, IP cores are interconnected as illustrated in the block diagram below:</p>
+
+                <pre class="mermaid">
+graph LR
+    subgraph PS["1. Processing System (PS)"]
+        DDR[("DDR3 RAM<br/>(Framebuffer)")]
+        I2C["I2C0<br/>(Reads EDID via DDC)"]
+    end
+
+    subgraph PL["2. FPGA Logic (PL - Hierarchy: video)"]
+        VDMA["AXI VDMA<br/>(axi_vdma_0)"]
+        CONV["Format Converter<br/>(axis_subset_converter)"]
+        VOUT["Video Out Bridge<br/>(v_axi4s_vid_out_0)"]
+        DVI["TMDS Encoder<br/>(rgb2dvi_0)"]
+        
+        VTC["Timing Controller<br/>(v_tc_0)"]
+        DYN["Dynamic Clock<br/>(axi_dynclk)"]
+    end
+
+    HDMI["3. Display<br/>(HDMI TX Port)"]
+
+    %% Data Flow
+    DDR ==>|"1. Read Frame Data (AXI HP)"| VDMA
+    VDMA ==>|"2. AXI4-Stream"| CONV
+    CONV ==>|"3. Format RGB Bus"| VOUT
+    VOUT ==>|"4. Parallel RGB"| DVI
+    DVI ==>|"5. TMDS Signals"| HDMI
+
+    %% Control & Timing
+    I2C -.->|"Read EDID (DDC)"| HDMI
+    DYN -.->|"Pixel Clock"| VTC
+    DYN -.->|"Pixel & 5x Serial Clock"| DVI
+    VTC -.->|"H/V Sync Signals"| VOUT
+
+    classDef mainFlow stroke:#e8590c,stroke-width:3px;
+    classDef ctrlFlow stroke:#888,stroke-dasharray: 3 3;
+                </pre>
+
+                <p>Complete project Vivado Block Design:</p>
+                <figure class="text-center my-4">
+                    <a href="pynq_z2_video_files/base_fit.pdf" target="_blank" title="Click to view high-resolution PDF">
+                        <img src="pynq_z2_video_files/base_fit.png" alt="Vivado Block Design Overview for Video Framebuffer" class="img-fluid border shadow-sm">
+                    </a>
+                    <figcaption class="figure-caption mt-2">
+                        <i class="bi bi-file-earmark-pdf me-1"></i>Vivado Block Design Overview (<a href="pynq_z2_video_files/base_fit.pdf" target="_blank">Click to open high-resolution PDF</a>)
+                    </figcaption>
+                </figure>
+
+                <div class="callout-box callout-info">
+                    <div class="callout-title"><i class="bi bi-info-circle-fill text-primary me-2"></i>Block Design Best Practice</div>
+                    <div class="callout-content">
+                        <p>It is strongly recommended to encapsulate all video pipeline IP cores inside a <strong>Hierarchy named <code>video</code></strong>. When PetaLinux auto-generates the Device Tree, it automatically prefixes labels accordingly (e.g., <code>video_axi_vdma_0</code>, <code>video_axi_dynclk_0</code>, <code>video_v_tc_0</code>), making device tree customization in later steps seamless.</p>
+                    </div>
+                </div>
+
+                <p class="fw-semibold">Role of Each Component in the Pipeline:</p>
+                <ul class="lh-lg">
+                    <li><strong>DDR3 RAM (Framebuffer):</strong> Primary system memory storing pixel values written by userspace applications or the OS.</li>
+                    <li><strong>AXI VDMA (<code>axi_vdma_0</code>):</strong> High-performance Direct Memory Access engine in MM2S mode converting raster buffers into AXI4-Stream data.</li>
+                    <li><strong>Format Converter (<code>axis_subset_converter</code>):</strong> Rearranges color channel bit positions (R, G, B) or truncates unused padding bytes (e.g. converting 32-bit to 24-bit).</li>
+                    <li><strong>Timing Controller (<code>v_tc_0</code>):</strong> Generates industry-standard video raster synchronization pulses (HSync, VSync, Data Enable).</li>
+                    <li><strong>Dynamic Clock Generator (<code>axi_dynclk</code> - Digilent IP):</strong> Dynamically synthesizes the required Pixel Clock and 5x Serial Clock frequencies via DRP.</li>
+                    <li><strong>Video Out Bridge (<code>v_axi4s_vid_out_0</code>):</strong> Bridges AXI4-Stream to parallel RGB while locking pixels to clock-exact HSync/VSync pulses.</li>
+                    <li><strong>TMDS Encoder (<code>rgb2dvi_0</code> - Digilent IP):</strong> Encodes parallel RGB and clock signals into differential TMDS serial pairs driving the physical HDMI connector.</li>
+                </ul>
+
+                <hr>
+
+                <!-- 4 Building Embedded Linux with PetaLinux 2022.1 -->
+                <h1>4 Building Embedded Linux with PetaLinux 2022.1</h1>
+
+                <h2>4.1 Initializing the PetaLinux Project</h2>
+                <p>Initialize the PetaLinux toolchain and import the hardware description (<code>.xsa</code>) exported from Vivado:</p>
+
+                <pre><code>source ~/petalinux_2022_1/settings.sh
+cd ~/
+
+# Create Zynq project
+petalinux-create --type project --template zynq --name pynq_z2
+cd pynq_z2/
+
+# Point to folder containing the exported .xsa
+petalinux-config --get-hw-description=/home/hong/Desktop/pynq_z2/</code></pre>
+
+                <p>When the ncurses configuration menu opens, configure these three critical items:</p>
+                <ol class="lh-lg">
+                    <li><strong>DTG Settings &rarr; Kernel Bootargs</strong>
+                        <ul>
+                            <li>Uncheck <em>generate boot args automatically</em>.</li>
+                            <li>Select <em>user set kernel bootargs</em> and specify:
+                                <pre class="mt-2"><code>console=ttyPS0,115200 root=/dev/mmcblk0p2 rw earlyprintk quiet rootfstype=ext4 rootwait cma=256M</code></pre>
+                            </li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <div class="callout-box callout-warning">
+                    <div class="callout-title"><i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>Critical Setting: Why <code>cma=256M</code>?</div>
+                    <div class="callout-content">
+                        <p>Contiguous Memory Allocator (CMA) pool size is crucial. When allocating multi-buffered high-definition display dumb buffers via DRM, insufficient CMA memory will trigger immediate allocation failures. High resolutions require large physically contiguous buffers so VDMA can stream without stutter.</p>
+                    </div>
+                </div>
+
+                <ol start="2" class="lh-lg">
+                    <li><strong>Image Packaging Configuration &rarr; Root filesystem type:</strong><br>
+                    Select <strong>EXT4 (SD/eMMC/SATA/USB)</strong>.</li>
+                    <li>Disable <em>Copy final images to tftpboot</em> since we are booting directly from an SD card.</li>
+                </ol>
+
+                <h2>4.2 Adding Digilent HDMI Kernel Modules</h2>
+                <p>Incorporate the Digilent display drivers (<code>linux-digilent</code> branch <code>digilent_rebase_v5.15_LTS_2022.1</code>) to control the clock synthesizer and HDMI transmitter:</p>
+
+                <pre><code># Create module skeletons
+petalinux-create -t modules --name clk-dglnt-dynclk --enable
+petalinux-create -t modules --name digilent-hdmi --enable
+
+# Copy driver source files
+cp ~/Desktop/pynq_z2/clk-dglnt-dynclk.c ~/pynq_z2/project-spec/meta-user/recipes-modules/clk-dglnt-dynclk/files/clk-dglnt-dynclk.c
+cp ~/Desktop/pynq_z2/digilent-hdmi.c    ~/pynq_z2/project-spec/meta-user/recipes-modules/digilent-hdmi/files/digilent-hdmi.c</code></pre>
+
+                <div class="callout-box callout-info">
+                    <div class="callout-title"><i class="bi bi-info-circle-fill text-primary me-2"></i>Upstream Driver References</div>
+                    <div class="callout-content">
+                        <p>Original source files can be retrieved directly from the Digilent Linux repository:</p>
+                        <ul>
+                            <li><a href="https://github.com/Digilent/linux-digilent/blob/digilent_rebase_v5.15_LTS_2022.1/drivers/clk/clk-dglnt-dynclk.c" target="_blank" rel="noopener noreferrer"><code>clk-dglnt-dynclk.c</code></a></li>
+                            <li><a href="https://github.com/Digilent/linux-digilent/blob/digilent_rebase_v5.15_LTS_2022.1/drivers/gpu/drm/xlnx/digilent_hdmi.c" target="_blank" rel="noopener noreferrer"><code>digilent-hdmi.c</code></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 30%;">Module Name</th>
+                                <th style="width: 70%;">Functional Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>clk-dglnt-dynclk</code></td>
+                                <td>Common Clock Framework driver communicating with <code>axi_dynclk</code> over DRP to synthesize target pixel clock frequencies dynamically.</td>
+                            </tr>
+                            <tr>
+                                <td><code>digilent-hdmi</code></td>
+                                <td>DRM Encoder/Connector driver for HDMI that queries EDID data over I2C0, determines display capabilities, and automatically programs the clock.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h2>4.3 Device Tree Configuration (<code>system-user.dtsi</code>)</h2>
+                <p>Edit <code>project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi</code> to bind the PL hardware with Linux DRM:</p>
+
+                <pre><code>/include/ "system-conf.dtsi"
+
+#include &lt;dt-bindings/gpio/gpio.h&gt;
+
+/* Enable I2C0 bus for DDC EDID readout */
+&i2c0 {
+    clock-frequency = &lt;100000&gt;;
+    status = "okay";
+};
+
+&amba_pl {
+    /* HDMI DRM Encoder endpoint */
+    digilent_hdmi {
+        compatible = "digilent,hdmi";
+
+        clocks = &lt;&video_axi_dynclk_0&gt;;
+        clock-names = "clk";
+
+        digilent,edid-i2c = &lt;&i2c0&gt;;
+        digilent,fmax = &lt;142000&gt;;
+
+        port@0 {
+            hdmi_ep: endpoint {
+                remote-endpoint = &lt;&pl_disp_ep&gt;;
+            };
+        };
+    };
+
+    /* PL Display Controller (Xilinx DRM Controller) */
+    xlnx_pl_disp {
+        compatible = "xlnx,pl-disp";
+
+        dmas = &lt;&video_axi_vdma_0 0&gt;;
+        dma-names = "dma0";
+
+        xlnx,vformat = "RG24"; /* Use "XR24" if targeting XRGB8888 32 bpp */
+        xlnx,bridge = &lt;&video_v_tc_0&gt;;
+
+        port@0 {
+            pl_disp_ep: endpoint {
+                remote-endpoint = &lt;&hdmi_ep&gt;;
+            };
+        };
+    };
+};
+
+/* VDMA DMA Addressing range */
+&video_axi_vdma_0 {
+    dma-ranges = &lt;0x00000000 0x00000000 0x40000000&gt;;
+};
+
+/* Dynamic Clock Synthesizer */
+&video_axi_dynclk_0 {
+    compatible = "dglnt,axi-dynclk";
+
+    #clock-cells = &lt;0&gt;;
+    clocks = &lt;&clkc 15&gt;;
+};
+
+/* VTC DRM Bridge */
+&video_v_tc_0 {
+    compatible = "xlnx,bridge-v-tc-6.1";
+    xlnx,pixels-per-clock = &lt;1&gt;;
+};</code></pre>
+
+                <h2>4.4 Kernel Configuration (<code>bsp.cfg</code>)</h2>
+                <p>Append the following configuration flags to <code>project-spec/meta-user/recipes-kernel/linux/linux-xlnx/bsp.cfg</code> to activate DRM, fbdev emulation, and console support:</p>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 45%;">Configuration Symbol</th>
+                                <th style="width: 55%;">Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>CONFIG_COMMON_CLK_DGLNT_DYNCLK=y</code></td>
+                                <td>Enables Digilent Dynamic Clock driver.</td>
+                            </tr>
+                            <tr>
+                                <td><code>CONFIG_DRM_XLNX_BRIDGE=y</code><br><code>CONFIG_DRM_XLNX_BRIDGE_VTC=y</code></td>
+                                <td>Enables Xilinx DRM Bridge and Video Timing Controller bridge.</td>
+                            </tr>
+                            <tr>
+                                <td><code>CONFIG_DRM_XLNX_PL_DISP=y</code></td>
+                                <td>Primary display controller driver for FPGA logic (<code>xlnx_pl_disp</code>).</td>
+                            </tr>
+                            <tr>
+                                <td><code>CONFIG_DRM_DIGILENT_HDMI=y</code></td>
+                                <td>Digilent HDMI Transmitter DRM encoder driver.</td>
+                            </tr>
+                            <tr>
+                                <td><code>CONFIG_DRM_FBDEV_EMULATION=y</code></td>
+                                <td>Enables legacy <code>/dev/fb0</code> framebuffer emulation on DRM.</td>
+                            </tr>
+                            <tr>
+                                <td><code>CONFIG_DRM_FBDEV_OVERALLOC=100</code></td>
+                                <td>Allocates double the virtual screen height for smooth double buffering.</td>
+                            </tr>
+                            <tr>
+                                <td><code>CONFIG_FB=y</code><br><code>CONFIG_FB_CFB_*=y</code><br><code>CONFIG_FB_SYS_*=y</code><br><code>CONFIG_FB_DEFERRED_IO=y</code></td>
+                                <td>Core Framebuffer subsystem primitives.</td>
+                            </tr>
+                            <tr>
+                                <td><code>CONFIG_FRAMEBUFFER_CONSOLE=y</code><br><code>CONFIG_FONT_8x8=y</code><br><code>CONFIG_FONT_8x16=y</code></td>
+                                <td>Renders Linux terminal console and Tux penguin boot logo on the monitor.</td>
+                            </tr>
+                            <tr>
+                                <td><code>CONFIG_I2C_XILINX=y</code></td>
+                                <td>I2C controller driver for reading EDID data.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h2>4.5 Enabling Testing Utilities in Rootfs</h2>
+                <p>Open rootfs configuration:</p>
+
+                <pre><code>petalinux-config -c rootfs</code></pre>
+
+                <p>Navigate to <strong>Filesystem Packages &rarr; x11 &rarr; base</strong> and enable:</p>
+                <ul>
+                    <li><code>libdrm</code></li>
+                    <li><code>libdrm-drivers</code></li>
+                    <li><code>libdrm-tests</code> (provides diagnostic tools like <code>modetest</code>)</li>
+                </ul>
+
+                <figure class="text-center my-4">
+                    <img src="pynq_z2_video_files/pynq_rootfs_libdrm.png" alt="Enabling libdrm in PetaLinux Rootfs" class="img-fluid border shadow-sm">
+                    <figcaption class="figure-caption mt-2">Selecting libdrm packages in the rootfs configuration menu</figcaption>
+                </figure>
+
+                <h2>4.6 Compilation and Packaging</h2>
+                <pre><code># Build the entire OS
+petalinux-build
+
+# Package FSBL, Bitstream (.bit), and U-Boot into BOOT.BIN
+petalinux-package --boot --force \
+  --fsbl images/linux/zynq_fsbl.elf \
+  --fpga images/linux/*.bit \
+  --u-boot</code></pre>
+
+                <h2>4.7 Preparing the SD Card</h2>
+                <p>Partition the micro SD card into two partitions using <code>gparted</code>:</p>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped text-center align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Partition</th>
+                                <th>Size</th>
+                                <th>Format</th>
+                                <th>Label</th>
+                                <th>Contents</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Partition 1</strong></td>
+                                <td>~128 MB</td>
+                                <td><span class="badge bg-secondary">FAT32</span></td>
+                                <td><code>BOOT</code></td>
+                                <td class="text-start"><code>BOOT.BIN</code>, <code>image.ub</code>, <code>boot.scr</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Partition 2</strong></td>
+                                <td>Remaining space</td>
+                                <td><span class="badge bg-info text-dark">ext4</span></td>
+                                <td><code>rootfs</code></td>
+                                <td class="text-start">Extracted <code>rootfs.tar.gz</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <figure class="text-center my-4">
+                    <img src="pynq_z2_video_files/pynq_gparted_sd.png" alt="Partitioning SD Card with GParted" class="img-fluid border shadow-sm">
+                    <figcaption class="figure-caption mt-2">SD Card partition structure in GParted</figcaption>
+                </figure>
+
+                <pre><code># Mount directories
+sudo mkdir -p /mnt/sdb1 /mnt/sdb2
+
+# Copy bootloader files to Partition 1
+sudo mount /dev/sdb1 /mnt/sdb1
+cd ~/pynq_z2/images/linux/
+sudo cp BOOT.BIN image.ub boot.scr /mnt/sdb1/
+sync
+sudo umount /mnt/sdb1
+
+# Extract root filesystem to Partition 2
+sudo mount /dev/sdb2 /mnt/sdb2
+sudo tar xzf rootfs.tar.gz -C /mnt/sdb2/
+sync
+sudo umount /mnt/sdb2</code></pre>
+
+                <hr>
+
+                <!-- 5 Real Hardware Testing on PYNQ-Z2 -->
+                <h1>5 Real Hardware Testing on PYNQ-Z2</h1>
+                <ol class="lh-lg">
+                    <li>Set the board jumper (JP1) to <strong>SD</strong>.</li>
+                    <li>Connect the HDMI cable from the PYNQ-Z2 HDMI TX port to your monitor.</li>
+                    <li>Connect the Micro-USB cable to your PC for serial console access (115200 baud).</li>
+                    <li>Switch on the board power.</li>
+                </ol>
+
+                <p>Log in using username <code>petalinux</code> (the system prompts for a new password on first login):</p>
+
+                <pre><code>pynq_z2 login: petalinux
+You are required to change your password immediately (administrator enforced).
+New password:
+Retype new password:</code></pre>
+
+                <h2>5.1 Validating DRM Graphics Subsystem</h2>
+                <pre><code># Check DRM device nodes
+pynq_z2:~$ ls -l /dev/dri/
+drwxr-xr-x    2 root     root            60 Jan  1  1970 by-path
+crw-rw----    1 root     video     226,   0 Jan  1  1970 card0
+
+# Check active kernel modules
+pynq_z2:~$ lsmod
+digilent_hdmi 16384 0 - Live 0x00000000 (O)
+clk_dglnt_dynclk 16384 1 - Live 0x00000000 (O)
+
+# Inspect dmesg kernel boot logs
+pynq_z2:~$ dmesg | grep -Ei 'drm|hdmi|v_dma|v_tc|dynclk'
+platform amba_pl:xlnx_pl_disp: Fixing up cyclic dependency with amba_pl:digilent_hdmi
+xlnx,bridge-vtc 43c10000.v_tc: vtc ppc = 1
+xlnx,bridge-vtc 43c10000.v_tc: Xilinx VTC IP version : 0x0602000c
+xlnx,bridge-vtc 43c10000.v_tc: Xilinx VTC DRM Bridge driver probed
+clk_dglnt_dynclk: loading out-of-tree module taints kernel.
+xlnx-drm xlnx-drm.0: bound amba_pl:xlnx_pl_disp (ops 0xc083df10)
+xlnx-drm xlnx-drm.0: bound amba_pl:digilent_hdmi (ops digilent_hdmi_component_ops [digilent_hdmi])
+xlnx-pl-disp amba_pl:xlnx_pl_disp: [drm] fb0: xlnxdrmfb frame buffer device
+[drm] Initialized xlnx 1.0.0 20130509 for amba_pl:xlnx_pl_disp on minor 0</code></pre>
+
+                <h2>5.2 Inspecting Framebuffer Node (<code>/dev/fb0</code>)</h2>
+                <pre><code># Query driver identifier
+pynq_z2:~$ cat /sys/class/graphics/fb0/name
+xlnxdrmfb
+
+# Query virtual viewport size (width, virtual height)
+pynq_z2:~$ cat /sys/class/graphics/fb0/virtual_size
+1680,2100
+
+# Query bits per pixel
+pynq_z2:~$ cat /sys/class/graphics/fb0/bits_per_pixel
+24
+
+# Query row stride in bytes
+pynq_z2:~$ cat /sys/class/graphics/fb0/stride
+5040</code></pre>
+
+                <hr>
+
+                <!-- 6 Screen Rendering Test (Color Bars) -->
+                <h1>6 Screen Rendering Test (Color Bars)</h1>
+
+                <h2>6.1 Installing the Cross-Compilation SDK</h2>
+                <pre><code>source ~/petalinux_2022_1/settings.sh
+cd ~/pynq_z2
+
+# Generate SDK
+petalinux-build --sdk
+
+# Install SDK to local directory
+chmod +x images/linux/sdk.sh
+./images/linux/sdk.sh -d "$HOME/Desktop/pynq_z2/sdk"</code></pre>
+
+                <h2>6.2 Source Code: <code>colorbar.c</code></h2>
+                <pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdint.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/mman.h&gt;
+#include &lt;sys/ioctl.h&gt;
+#include &lt;linux/fb.h&gt;
+
+static void write_pixel(unsigned char *p,
+                        const struct fb_var_screeninfo *v,
+                        uint8_t r, uint8_t g, uint8_t b)
+{
+    uint32_t pixel = 0;
+
+    pixel |= ((uint32_t)(r &gt;&gt; (8 - v-&gt;red.length)))   &lt;&lt; v-&gt;red.offset;
+    pixel |= ((uint32_t)(g &gt;&gt; (8 - v-&gt;green.length))) &lt;&lt; v-&gt;green.offset;
+    pixel |= ((uint32_t)(b &gt;&gt; (8 - v-&gt;blue.length)))  &lt;&lt; v-&gt;blue.offset;
+
+    unsigned int bytes = v-&gt;bits_per_pixel / 8;
+
+    for (unsigned int i = 0; i &lt; bytes; ++i)
+        p[i] = (pixel &gt;&gt; (8 * i)) &amp; 0xFF;
+}
+
+int main(void)
+{
+    int fd = open("/dev/fb0", O_RDWR);
+    if (fd &lt; 0) {
+        perror("Failed to open /dev/fb0");
+        return 1;
+    }
+
+    struct fb_var_screeninfo v;
+    struct fb_fix_screeninfo f;
+
+    if (ioctl(fd, FBIOGET_VSCREENINFO, &amp;v) &lt; 0 ||
+        ioctl(fd, FBIOGET_FSCREENINFO, &amp;f) &lt; 0) {
+        perror("Framebuffer ioctl error");
+        close(fd);
+        return 1;
+    }
+
+    printf("Resolution: %u x %u\n", v.xres, v.yres);
+    printf("BPP: %u, Stride: %u bytes, Memory Size: %u bytes\n",
+           v.bits_per_pixel, f.line_length, f.smem_len);
+
+    unsigned char *fb = mmap(NULL, f.smem_len,
+                             PROT_READ | PROT_WRITE,
+                             MAP_SHARED, fd, 0);
+
+    if (fb == MAP_FAILED) {
+        perror("mmap failed");
+        close(fd);
+        return 1;
+    }
+
+    /* Standard 8-color test bar */
+    static const uint8_t rgb[8][3] = {
+        {255, 255, 255}, /* White */
+        {  0, 255, 255}, /* Cyan */
+        {255, 255,   0}, /* Yellow */
+        {  0, 255,   0}, /* Green */
+        {255,   0, 255}, /* Magenta */
+        {255,   0,   0}, /* Red */
+        {  0,   0, 255}, /* Blue */
+        {  0,   0,   0}  /* Black */
+    };
+
+    unsigned int bytes_per_pixel = v.bits_per_pixel / 8;
+
+    for (unsigned int y = 0; y &lt; v.yres; ++y) {
+        for (unsigned int x = 0; x &lt; v.xres; ++x) {
+            unsigned int bar = (x * 8U) / v.xres;
+            size_t offset = (size_t)y * f.line_length
+                          + (size_t)x * bytes_per_pixel;
+
+            if (offset + bytes_per_pixel &gt; f.smem_len)
+                continue;
+
+            write_pixel(fb + offset, &amp;v,
+                        rgb[bar][0], rgb[bar][1], rgb[bar][2]);
+        }
+    }
+
+    printf("Color Bars rendered successfully!\n");
+
+    munmap(fb, f.smem_len);
+    close(fd);
+    return 0;
+}</code></pre>
+
+                <h2>6.3 Cross-Compiling and Executing</h2>
+                <pre><code># Source SDK environment
+source ~/Desktop/pynq_z2/sdk/environment-setup-cortexa9t2hf-neon-xilinx-linux-gnueabi
+
+# Compile colorbar test binary
+cd ~/Desktop/pynq_z2/hdmi_test/colorbar
+make clean &amp;&amp; make
+
+# Transfer to target board
+scp colorbar petalinux@&lt;BOARD_IP&gt;:~
+
+# Execute on PYNQ-Z2
+pynq_z2:~$ sudo ./colorbar</code></pre>
+
+                <figure class="text-center my-4">
+                    <img src="pynq_z2_video_files/image02.jpg" alt="Colorbar pattern rendered on physical HDMI monitor" class="img-fluid border shadow-sm" style="max-width: 631px;">
+                    <figcaption class="figure-caption mt-2">Successful 8-color test bar rendering on physical HDMI monitor</figcaption>
+                </figure>
+
+                <hr>
+
+                <!-- 7 Upgrading from RGB888 to XRGB8888 -->
+                <h1>7 Upgrading from RGB888 to XRGB8888</h1>
+                <p>Initial implementations targeted <strong>RGB888 (24 bpp)</strong>, matching the 24-bit VDMA bus. However, when deploying higher-level Linux software—such as the <strong>X11 / Xorg Window Server</strong>, <strong>SDL</strong>, or <strong>LVGL</strong>—most libraries perform far more efficiently when configured for 32-bit aligned <strong>XRGB8888</strong> formats.</p>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 30%;">Feature Comparison</th>
+                                <th style="width: 35%;">Standard: RGB888 (24 bpp)</th>
+                                <th style="width: 35%;">Optimized: XRGB8888 (32 bpp)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong><code>xlnx,vformat</code> in Device Tree</strong></td>
+                                <td><code>"RG24"</code></td>
+                                <td><span class="badge bg-success">"XR24"</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>VDMA Stream Bus</strong></td>
+                                <td>24-bit (3 bytes: R, G, B)</td>
+                                <td>32-bit (4 bytes: X, R, G, B)</td>
+                            </tr>
+                            <tr>
+                                <td><strong><code>axis_subset_converter</code> Role</strong></td>
+                                <td>Color component reordering</td>
+                                <td>Strips padding byte X to reduce 4-byte stream to 3-byte TMDS input</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Application Compatibility</strong></td>
+                                <td>Memory-conserving barebones framebuffers</td>
+                                <td>Optimal for <strong>X11 Desktops</strong>, Qt, and modern UI toolkits</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>Running full X11 Desktop output on the HDMI monitor:</p>
+
+                <figure class="text-center my-4">
+                    <img src="pynq_z2_video_files/image03.jpg" alt="X11 Desktop running on HDMI display via PYNQ-Z2" class="img-fluid border shadow-sm" style="max-width: 623px;">
+                    <figcaption class="figure-caption mt-2">Smooth X11 desktop display driving physical HDMI monitor via PYNQ-Z2</figcaption>
+                </figure>
+
+                <hr>
+
+                <!-- 8 Summary -->
+                <h1>8 Summary</h1>
+                <p>Although the Zynq-7000 SoC does not feature an integrated GPU, the flexibility of the FPGA fabric allows us to assemble a custom hardware Display Controller Pipeline, delivering full Linux DRM/KMS and Framebuffer capabilities.</p>
+
+                <h2>8.1 Engineering Considerations</h2>
+                <ul class="lh-lg">
+                    <li><strong>Rendering Throughput:</strong> Rendering is executed via software rendering across dual ARM Cortex-A9 cores. Heavy 3D graphics will be constrained by CPU load, but 2D sensor dashboards, industrial HMIs, and lightweight GUI toolkits like <strong>LVGL</strong> perform reliably.</li>
+                    <li><strong>Memory Bandwidth:</strong> High resolutions (e.g., 1080p) require continuous AXI HP0 DMA transactions to fetch frames from DDR3. Real-world systems should budget DDR3 memory bandwidth accordingly.</li>
+                </ul>
+
+                <h2>8.2 Project Source Code</h2>
+                <div class="callout-box callout-tip">
+                    <div class="callout-title"><i class="bi bi-github me-2"></i>Download Vivado & Software Sources</div>
+                    <div class="callout-content">
+                        <p>Access the complete Vivado block designs, device tree files, and test code on GitHub:<br>
+                        <a href="https://github.com/wichayen/pynq_z2/tree/main/video" target="_blank" rel="noopener noreferrer"><strong>https://github.com/wichayen/pynq_z2/tree/main/video</strong></a></p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center p-4 mt-5" style="background-color: #f8f9fa; border-top: 1px solid #e2e8f0;">
+        <div class="container">
+            <p class="mb-1 text-secondary">FPGA Tutorials, Open-Source Labs, and Design Articles | FPGATHAILAND by Wichayen</p>
+            <p class="mb-0 small text-muted">
+                Contact: <a href="https://www.facebook.com/wichayen.hong" target="_blank" rel="noopener noreferrer">Facebook</a> | 
+                <a href="https://github.com/wichayen" target="_blank" rel="noopener noreferrer">GitHub</a> | 
+                <a href="https://www.linkedin.com/in/wichayen-luangsopapan-404133202/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose'
+        });
+    </script>
+</body>
+</html>
