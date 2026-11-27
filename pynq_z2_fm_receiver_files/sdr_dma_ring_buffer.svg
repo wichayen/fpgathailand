@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 580" width="100%" style="background:#0f172a; border: 1px solid #334155; border-radius: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <!-- Arrowhead markers -->
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#10b981"/>
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#3b82f6"/>
+    </marker>
+    <marker id="arrow-amber" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#f59e0b"/>
+    </marker>
+    <marker id="arrow-slate" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#94a3b8"/>
+    </marker>
+
+    <!-- Gradients -->
+    <linearGradient id="bg-card-green" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#064e3b" stop-opacity="0.08"/>
+    </linearGradient>
+    <linearGradient id="bg-card-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#1e3a8a" stop-opacity="0.08"/>
+    </linearGradient>
+    <linearGradient id="bg-card-amber" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#78350f" stop-opacity="0.08"/>
+    </linearGradient>
+    <linearGradient id="bg-card-slate" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#64748b" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#1e293b" stop-opacity="0.08"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Title & Subtitle -->
+  <text x="480" y="38" text-anchor="middle" fill="#f8fafc" font-size="18" font-weight="bold" letter-spacing="0.5">Multi-Buffer Ring &amp; In-Flight Queueing Architecture (4 CMA Buffers)</text>
+  <text x="480" y="58" text-anchor="middle" fill="#94a3b8" font-size="12">1.92 MSPS IQ Stream (3.84 MB/s) • 0.8s Duration per Buffer • Zero Polling CPU Overhead</text>
+
+  <!-- Circular Motion Guide Track -->
+  <circle cx="480" cy="310" r="175" fill="none" stroke="#334155" stroke-width="2" stroke-dasharray="6 6"/>
+
+  <!-- Clockwise Transition Curved Arrows on the Track -->
+  <!-- Top to Right (0 -> 1) -->
+  <path d="M 580 190 A 175 175 0 0 1 655 310" fill="none" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#arrow-blue)"/>
+  <text x="640" y="235" fill="#60a5fa" font-size="11" font-weight="600">Advance (0.8s)</text>
+
+  <!-- Right to Bottom (1 -> 2) -->
+  <path d="M 655 310 A 175 175 0 0 1 480 485" fill="none" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arrow-slate)"/>
+
+  <!-- Bottom to Left (2 -> 3) -->
+  <path d="M 480 485 A 175 175 0 0 1 305 310" fill="none" stroke="#f59e0b" stroke-width="2.5" marker-end="url(#arrow-amber)"/>
+  <text x="325" y="425" fill="#fbbf24" font-size="11" font-weight="600">CPU Refill</text>
+
+  <!-- Left to Top (3 -> 0) -->
+  <path d="M 305 310 A 175 175 0 0 1 480 135" fill="none" stroke="#10b981" stroke-width="2.5" marker-end="url(#arrow-green)"/>
+  <text x="345" y="195" fill="#34d399" font-size="11" font-weight="600">Queue to DMA</text>
+
+  <!-- Center Hub: CMA Pool Info -->
+  <circle cx="480" cy="310" r="78" fill="#1e293b" stroke="#475569" stroke-width="2"/>
+  <circle cx="480" cy="310" r="72" fill="#0f172a"/>
+  <text x="480" y="285" text-anchor="middle" fill="#38bdf8" font-size="15" font-weight="bold">DDR3 CMA Pool</text>
+  <text x="480" y="305" text-anchor="middle" fill="#f8fafc" font-size="12" font-weight="600">4 Buffers × 0.8s</text>
+  <text x="480" y="324" text-anchor="middle" fill="#10b981" font-size="11">Total Depth: 3.2s</text>
+  <text x="480" y="342" text-anchor="middle" fill="#a855f7" font-size="10">Zero-Copy /dev/sdr_dma</text>
+
+  <!-- ==================== BUFFER 0: TOP (Active MM2S) ==================== -->
+  <g transform="translate(350, 75)">
+    <rect width="260" height="92" rx="10" fill="url(#bg-card-green)" stroke="#10b981" stroke-width="2"/>
+    <rect x="10" y="8" width="86" height="20" rx="4" fill="#064e3b"/>
+    <text x="53" y="22" text-anchor="middle" fill="#34d399" font-size="10" font-weight="bold">BUFFER 0</text>
+    <text x="105" y="23" fill="#10b981" font-size="11" font-weight="bold">[ IN-FLIGHT #1 ]</text>
+    <text x="10" y="47" fill="#f8fafc" font-size="13" font-weight="bold">ACTIVE: DMA MM2S Stream</text>
+    <text x="10" y="65" fill="#cbd5e1" font-size="11">Data: 1,536,000 IQ (3.072 MB) • 0.8s</text>
+    <text x="10" y="81" fill="#34d399" font-size="11" font-weight="600">Consumer: AXI DMA → PL Demod</text>
+  </g>
+
+  <!-- Output Arrow to FPGA -->
+  <path d="M 480 75 L 480 20" fill="none" stroke="#10b981" stroke-width="2.5" marker-end="url(#arrow-green)"/>
+  <rect x="350" y="0" width="260" height="22" rx="4" fill="#064e3b" stroke="#10b981"/>
+  <text x="480" y="15" text-anchor="middle" fill="#a7f3d0" font-size="11" font-weight="bold">▲ TO FPGA PL (FIR Decimation &amp; Demod)</text>
+
+  <!-- ==================== BUFFER 1: RIGHT (In-Flight Queued) ==================== -->
+  <g transform="translate(680, 264)">
+    <rect width="250" height="92" rx="10" fill="url(#bg-card-blue)" stroke="#3b82f6" stroke-width="2"/>
+    <rect x="10" y="8" width="86" height="20" rx="4" fill="#1e3a8a"/>
+    <text x="53" y="22" text-anchor="middle" fill="#60a5fa" font-size="10" font-weight="bold">BUFFER 1</text>
+    <text x="105" y="23" fill="#3b82f6" font-size="11" font-weight="bold">[ IN-FLIGHT #2 ]</text>
+    <text x="10" y="47" fill="#f8fafc" font-size="13" font-weight="bold">QUEUED: Armed in Kernel</text>
+    <text x="10" y="65" fill="#cbd5e1" font-size="11">Data: Pre-filled IQ block • 0.8s</text>
+    <text x="10" y="81" fill="#60a5fa" font-size="11" font-weight="600">Zero-gap takeover when Buf 0 ends</text>
+  </g>
+
+  <!-- ==================== BUFFER 2: BOTTOM (Free / Standby) ==================== -->
+  <g transform="translate(350, 445)">
+    <rect width="260" height="88" rx="10" fill="url(#bg-card-slate)" stroke="#64748b" stroke-width="1.5"/>
+    <rect x="10" y="8" width="86" height="20" rx="4" fill="#1e293b"/>
+    <text x="53" y="22" text-anchor="middle" fill="#94a3b8" font-size="10" font-weight="bold">BUFFER 2</text>
+    <text x="105" y="23" fill="#94a3b8" font-size="11" font-weight="bold">[ STANDBY ]</text>
+    <text x="10" y="47" fill="#f8fafc" font-size="13" font-weight="bold">FREE: Awaiting Next Cycle</text>
+    <text x="10" y="65" fill="#94a3b8" font-size="11">Transfer complete • Released by DMA</text>
+    <text x="10" y="80" fill="#cbd5e1" font-size="10">Acts as jitter buffer against CPU delays</text>
+  </g>
+
+  <!-- ==================== BUFFER 3: LEFT (CPU Ingestion / Writing) ==================== -->
+  <g transform="translate(30, 264)">
+    <rect width="250" height="92" rx="10" fill="url(#bg-card-amber)" stroke="#f59e0b" stroke-width="2"/>
+    <rect x="10" y="8" width="86" height="20" rx="4" fill="#78350f"/>
+    <text x="53" y="22" text-anchor="middle" fill="#fbbf24" font-size="10" font-weight="bold">BUFFER 3</text>
+    <text x="105" y="23" fill="#f59e0b" font-size="11" font-weight="bold">[ PRODUCER ]</text>
+    <text x="10" y="47" fill="#f8fafc" font-size="13" font-weight="bold">WRITING: USB IQ Ingestion</text>
+    <text x="10" y="65" fill="#cbd5e1" font-size="11">XOR 0x80 conversion (uint8 → int8)</text>
+    <text x="10" y="81" fill="#fbbf24" font-size="11" font-weight="600">Producer: librtlsdr USB Thread</text>
+  </g>
+
+  <!-- Input Arrow from USB RTL-SDR -->
+  <path d="M 0 310 L 25 310" fill="none" stroke="#f59e0b" stroke-width="2.5" marker-end="url(#arrow-amber)"/>
+  <rect x="2" y="225" width="165" height="22" rx="4" fill="#78350f" stroke="#f59e0b"/>
+  <text x="84" y="240" text-anchor="middle" fill="#fde68a" font-size="10" font-weight="bold">▼ FROM RTL-SDR (USB 2.0)</text>
+
+  <!-- Legend & Status Footer Bar -->
+  <g transform="translate(140, 542)">
+    <rect x="0" y="0" width="12" height="12" rx="3" fill="#10b981"/>
+    <text x="18" y="10" fill="#94a3b8" font-size="11">Active DMA Playing</text>
+
+    <rect x="160" y="0" width="12" height="12" rx="3" fill="#3b82f6"/>
+    <text x="178" y="10" fill="#94a3b8" font-size="11">Kernel Queued (In-Flight)</text>
+
+    <rect x="350" y="0" width="12" height="12" rx="3" fill="#f59e0b"/>
+    <text x="368" y="10" fill="#94a3b8" font-size="11">CPU Writing / Formatting</text>
+
+    <rect x="540" y="0" width="12" height="12" rx="3" fill="#64748b"/>
+    <text x="558" y="10" fill="#94a3b8" font-size="11">Free / Standby Slot</text>
+  </g>
+</svg>

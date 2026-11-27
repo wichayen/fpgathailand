@@ -1,0 +1,626 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1130" width="100%" style="background:#0b1120; border: 1px solid #334155; border-radius: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">  <defs>
+    <!-- Arrowhead markers -->
+    <marker id="arr-blue" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arr-green" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#34d399"/>
+    </marker>
+    <marker id="arr-copy" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#34d399"/>
+    </marker>
+    <marker id="arr-amber" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#fbbf24"/>
+    </marker>
+  </defs>
+  <!-- Main Title Banner -->
+  <g transform="translate(600, 24)">
+    <text text-anchor="middle" fill="#f8fafc" font-size="17" font-weight="bold" letter-spacing="0.5">Memory Evolution Diagram: Multi-Buffer Ring &amp; In-Flight Pipeline</text>
+    <text y="20" text-anchor="middle" fill="#94a3b8" font-size="11.5">สถานะหน่วยความจำข้าม Time Slots 0.8s (T0 - T8): RAW Ring (6 บล็อก), TX CMA (4 บล็อก) และ RX CMA (4 บล็อก)</text>
+  </g>  <!-- ==================== Panel T0 ==================== -->
+  <g id="panel-T0" transform="translate(0, 0)">
+    <rect x="14" y="58" width="380" height="344" rx="9" fill="#111827" stroke="#334155" stroke-width="1.2"/>
+    <text x="26" y="80" fill="#f8fafc" font-size="13" font-weight="bold">T0 <tspan fill="#94a3b8" font-size="11" font-weight="normal">(0.0 - 0.8s)</tspan></text>
+    <rect x="242" y="66" width="142" height="18" rx="9" fill="#0369a1" fill-opacity="0.35" stroke="#0284c7" stroke-width="1"/>
+    <text x="313.0" y="78.5" text-anchor="middle" fill="#38bdf8" font-size="9" font-weight="bold" letter-spacing="0.3">PRE-BUFFERING (1/2)</text>
+    <rect x="24" y="92" width="132" height="42" rx="6" fill="#0f172a" stroke="#0284c7" stroke-width="1"/>
+    <text x="32" y="109" fill="#38bdf8" font-size="10" font-weight="bold">1. RTL-SDR (USB)</text>
+    <text x="32" y="124" fill="#94a3b8" font-size="9">Rx: B0 (0.8s)</text>
+    <rect x="24" y="142" width="132" height="42" rx="6" fill="#0f172a" stroke="#475569" stroke-width="1"/>
+    <text x="32" y="159" fill="#cbd5e1" font-size="10" font-weight="bold">2. CPU (DMA Thread)</text>
+    <text x="32" y="174" fill="#94a3b8" font-size="8.5">Sleep (cnt: 0 → 1 &lt; 2)</text>
+    <rect x="24" y="192" width="132" height="68" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1.2"/>
+    <text x="32" y="209" fill="#64748b" font-size="10" font-weight="bold">3. FPGA PL Demod</text>
+    <text x="32" y="224" fill="#94a3b8" font-size="8.5">FIR → Demod → LPF</text>
+    <rect x="30" y="232" width="120" height="20" rx="4" fill="#1e293b" stroke="#475569" stroke-width="0.8"/>
+    <text x="90.0" y="245.5" text-anchor="middle" fill="#64748b" font-size="8.5" font-weight="bold">IDLE / Muted</text>
+    <rect x="24" y="268" width="132" height="38" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+    <text x="32" y="284" fill="#64748b" font-size="9.5" font-weight="bold">4. Audio Out (3.5mm)</text>
+    <text x="32" y="298" fill="#64748b" font-size="8.5">Silence (Pre-buffering)</text>
+    <!-- DDR Pool Background -->
+    <rect x="204" y="92" width="146" height="274" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+    <text x="277.0" y="106" text-anchor="middle" fill="#f8fafc" font-size="10" font-weight="bold">DDR3 Memory Pools</text>
+    <text x="212" y="122" fill="#38bdf8" font-size="8.5" font-weight="bold">RAW Ring Buffer (Heap, 6 Slots)</text>
+    <rect x="211" y="128.0" width="132" height="13.5" rx="2" fill="#0369a1" fill-opacity="0.45" stroke="#38bdf8" stroke-width="0.8"/>
+    <text x="217" y="138.0" fill="#e0f2fe" font-size="8" font-weight="bold">RAW0: B0</text>
+    <rect x="211" y="143.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="217" y="153.0" fill="#475569" font-size="8" >RAW1: -</text>
+    <rect x="211" y="158.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="217" y="168.0" fill="#475569" font-size="8" >RAW2: -</text>
+    <rect x="211" y="173.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="217" y="183.0" fill="#475569" font-size="8" >RAW3: -</text>
+    <rect x="211" y="188.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="217" y="198.0" fill="#475569" font-size="8" >RAW4: -</text>
+    <rect x="211" y="203.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="217" y="213.0" fill="#475569" font-size="8" >RAW5: -</text>
+    <text x="212" y="225" fill="#34d399" font-size="8.5" font-weight="bold">TX CMA Ring (MM2S, 4 Slots)</text>
+    <rect x="211" y="230.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="217" y="240.0" fill="#475569" font-size="8" >TX0: - [Free]</text>
+    <rect x="211" y="245.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="217" y="255.0" fill="#475569" font-size="8" >TX1: - [Free]</text>
+    <rect x="211" y="260.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="217" y="270.0" fill="#475569" font-size="8" >TX2: - [Free]</text>
+    <rect x="211" y="275.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="217" y="285.0" fill="#475569" font-size="8" >TX3: - [Free]</text>
+    <text x="212" y="296" fill="#fbbf24" font-size="8.5" font-weight="bold">RX CMA Ring (S2MM, 4 Slots)</text>
+    <rect x="211" y="301.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="217" y="311.0" fill="#475569" font-size="8" >RX0: - [Free]</text>
+    <rect x="211" y="316.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="217" y="326.0" fill="#475569" font-size="8" >RX1: - [Free]</text>
+    <rect x="211" y="331.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="217" y="341.0" fill="#475569" font-size="8" >RX2: - [Free]</text>
+    <rect x="211" y="346.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="217" y="356.0" fill="#475569" font-size="8" >RX3: - [Free]</text>
+    <!-- USB -> RAW Arrow -->
+    <path d="M 156 113 C 182 113, 178 134.75, 204 134.75" fill="none" stroke="#38bdf8" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+    <!-- Footer Summary Banner -->
+    <rect x="22" y="372" width="364" height="22" rx="4" fill="#0f172a" stroke="#334155" stroke-width="0.8"/>
+    <text x="204.0" y="386.5" text-anchor="middle" fill="#cbd5e1" font-size="8.8" font-weight="500">T0 (0.0-0.8s): RTL-SDR รับบล็อก B0 ลง RAW0 | DMA และ PL ยังหลับพัก</text>
+  </g>
+  <!-- ==================== Panel T1 ==================== -->
+  <g id="panel-T1" transform="translate(0, 0)">
+    <rect x="410" y="58" width="380" height="344" rx="9" fill="#111827" stroke="#334155" stroke-width="1.2"/>
+    <text x="422" y="80" fill="#f8fafc" font-size="13" font-weight="bold">T1 <tspan fill="#94a3b8" font-size="11" font-weight="normal">(0.8 - 1.6s)</tspan></text>
+    <rect x="638" y="66" width="142" height="18" rx="9" fill="#0284c7" fill-opacity="0.35" stroke="#38bdf8" stroke-width="1"/>
+    <text x="709.0" y="78.5" text-anchor="middle" fill="#e0f2fe" font-size="9" font-weight="bold" letter-spacing="0.3">PREBUF FULL (2/2)</text>
+    <rect x="420" y="92" width="132" height="42" rx="6" fill="#0f172a" stroke="#0284c7" stroke-width="1"/>
+    <text x="428" y="109" fill="#38bdf8" font-size="10" font-weight="bold">1. RTL-SDR (USB)</text>
+    <text x="428" y="124" fill="#94a3b8" font-size="9">Rx: B1 (0.8s)</text>
+    <rect x="420" y="142" width="132" height="42" rx="6" fill="#0f172a" stroke="#475569" stroke-width="1"/>
+    <text x="428" y="159" fill="#cbd5e1" font-size="10" font-weight="bold">2. CPU (DMA Thread)</text>
+    <text x="428" y="174" fill="#94a3b8" font-size="8.5">Wake @1.6s: Arm TX0</text>
+    <rect x="420" y="192" width="132" height="68" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1.2"/>
+    <text x="428" y="209" fill="#64748b" font-size="10" font-weight="bold">3. FPGA PL Demod</text>
+    <text x="428" y="224" fill="#94a3b8" font-size="8.5">FIR → Demod → LPF</text>
+    <rect x="426" y="232" width="120" height="20" rx="4" fill="#1e293b" stroke="#475569" stroke-width="0.8"/>
+    <text x="486.0" y="245.5" text-anchor="middle" fill="#64748b" font-size="8.5" font-weight="bold">Armed (Ready)</text>
+    <rect x="420" y="268" width="132" height="38" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+    <text x="428" y="284" fill="#64748b" font-size="9.5" font-weight="bold">4. Audio Out (3.5mm)</text>
+    <text x="428" y="298" fill="#64748b" font-size="8.5">Silence (Arming)</text>
+    <!-- DDR Pool Background -->
+    <rect x="600" y="92" width="146" height="274" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+    <text x="673.0" y="106" text-anchor="middle" fill="#f8fafc" font-size="10" font-weight="bold">DDR3 Memory Pools</text>
+    <text x="608" y="122" fill="#38bdf8" font-size="8.5" font-weight="bold">RAW Ring Buffer (Heap, 6 Slots)</text>
+    <rect x="607" y="128.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="613" y="138.0" fill="#cbd5e1" font-size="8" >RAW0: B0</text>
+    <rect x="607" y="143.0" width="132" height="13.5" rx="2" fill="#0369a1" fill-opacity="0.45" stroke="#38bdf8" stroke-width="0.8"/>
+    <text x="613" y="153.0" fill="#e0f2fe" font-size="8" font-weight="bold">RAW1: B1</text>
+    <rect x="607" y="158.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="613" y="168.0" fill="#475569" font-size="8" >RAW2: -</text>
+    <rect x="607" y="173.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="613" y="183.0" fill="#475569" font-size="8" >RAW3: -</text>
+    <rect x="607" y="188.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="613" y="198.0" fill="#475569" font-size="8" >RAW4: -</text>
+    <rect x="607" y="203.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="613" y="213.0" fill="#475569" font-size="8" >RAW5: -</text>
+    <text x="608" y="225" fill="#34d399" font-size="8.5" font-weight="bold">TX CMA Ring (MM2S, 4 Slots)</text>
+    <rect x="607" y="230.0" width="132" height="13.5" rx="2" fill="#1e3a8a" fill-opacity="0.5" stroke="#3b82f6" stroke-width="0.8"/>
+    <text x="613" y="240.0" fill="#bfdbfe" font-size="8" font-weight="bold">TX0: B0 [Armed]</text>
+    <rect x="607" y="245.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="613" y="255.0" fill="#475569" font-size="8" >TX1: - [Free]</text>
+    <rect x="607" y="260.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="613" y="270.0" fill="#475569" font-size="8" >TX2: - [Free]</text>
+    <rect x="607" y="275.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="613" y="285.0" fill="#475569" font-size="8" >TX3: - [Free]</text>
+    <text x="608" y="296" fill="#fbbf24" font-size="8.5" font-weight="bold">RX CMA Ring (S2MM, 4 Slots)</text>
+    <rect x="607" y="301.0" width="132" height="13.5" rx="2" fill="#1e3a8a" fill-opacity="0.5" stroke="#3b82f6" stroke-width="0.8"/>
+    <text x="613" y="311.0" fill="#bfdbfe" font-size="8" font-weight="bold">RX0: A0 [Armed]</text>
+    <rect x="607" y="316.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="613" y="326.0" fill="#475569" font-size="8" >RX1: - [Free]</text>
+    <rect x="607" y="331.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="613" y="341.0" fill="#475569" font-size="8" >RX2: - [Free]</text>
+    <rect x="607" y="346.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="613" y="356.0" fill="#475569" font-size="8" >RX3: - [Free]</text>
+    <!-- USB -> RAW Arrow -->
+    <path d="M 552 113 C 578 113, 574 149.75, 600 149.75" fill="none" stroke="#38bdf8" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+    <!-- RAW -> TX CMA Copy Arrows -->
+    <path d="M 746 134.75 C 770 134.75, 770 236.75, 746 236.75" fill="none" stroke="#34d399" stroke-width="1.4" marker-end="url(#arr-copy)"/>
+    <text x="757" y="188.25" fill="#34d399" font-size="7" font-weight="bold">Copy</text>
+    <!-- Footer Summary Banner -->
+    <rect x="418" y="372" width="364" height="22" rx="4" fill="#0f172a" stroke="#334155" stroke-width="0.8"/>
+    <text x="600.0" y="386.5" text-anchor="middle" fill="#cbd5e1" font-size="8.8" font-weight="500">T1 (0.8-1.6s): B1 ครบ 2 บล็อก (PREBUF_DEF=2) | Copy RAW0 เข้า TX0 (Armed)</text>
+  </g>
+  <!-- ==================== Panel T2 ==================== -->
+  <g id="panel-T2" transform="translate(0, 0)">
+    <rect x="806" y="58" width="380" height="344" rx="9" fill="#111827" stroke="#334155" stroke-width="1.2"/>
+    <text x="818" y="80" fill="#f8fafc" font-size="13" font-weight="bold">T2 <tspan fill="#94a3b8" font-size="11" font-weight="normal">(1.6 - 2.4s)</tspan></text>
+    <rect x="1034" y="66" width="142" height="18" rx="9" fill="#064e3b" fill-opacity="0.35" stroke="#10b981" stroke-width="1"/>
+    <text x="1105.0" y="78.5" text-anchor="middle" fill="#34d399" font-size="9" font-weight="bold" letter-spacing="0.3">STREAMING ACTIVE</text>
+    <rect x="816" y="92" width="132" height="42" rx="6" fill="#0f172a" stroke="#0284c7" stroke-width="1"/>
+    <text x="824" y="109" fill="#38bdf8" font-size="10" font-weight="bold">1. RTL-SDR (USB)</text>
+    <text x="824" y="124" fill="#94a3b8" font-size="9">Rx: B2 (0.8s)</text>
+    <rect x="816" y="142" width="132" height="42" rx="6" fill="#0f172a" stroke="#475569" stroke-width="1"/>
+    <text x="824" y="159" fill="#cbd5e1" font-size="10" font-weight="bold">2. CPU (DMA Thread)</text>
+    <text x="824" y="174" fill="#94a3b8" font-size="8.5">Sleep (wait_for_comp)</text>
+    <rect x="816" y="192" width="132" height="68" rx="6" fill="#0f172a" stroke="#10b981" stroke-width="1.2"/>
+    <text x="824" y="209" fill="#34d399" font-size="10" font-weight="bold">3. FPGA PL Demod</text>
+    <text x="824" y="224" fill="#94a3b8" font-size="8.5">FIR → Demod → LPF</text>
+    <rect x="822" y="232" width="120" height="20" rx="4" fill="#064e3b" stroke="#10b981" stroke-width="0.8"/>
+    <text x="882.0" y="245.5" text-anchor="middle" fill="#a7f3d0" font-size="8.5" font-weight="bold">Demod B0 → Audio A0</text>
+    <rect x="816" y="268" width="132" height="38" rx="6" fill="#0f172a" stroke="#f59e0b" stroke-width="1"/>
+    <text x="824" y="284" fill="#fbbf24" font-size="9.5" font-weight="bold">4. Audio Out (3.5mm)</text>
+    <text x="824" y="298" fill="#34d399" font-size="8.5">48 kHz FM Audio Out ♫</text>
+    <!-- DDR Pool Background -->
+    <rect x="996" y="92" width="146" height="274" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+    <text x="1069.0" y="106" text-anchor="middle" fill="#f8fafc" font-size="10" font-weight="bold">DDR3 Memory Pools</text>
+    <text x="1004" y="122" fill="#38bdf8" font-size="8.5" font-weight="bold">RAW Ring Buffer (Heap, 6 Slots)</text>
+    <rect x="1003" y="128.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="1009" y="138.0" fill="#cbd5e1" font-size="8" >RAW0: B0</text>
+    <rect x="1003" y="143.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="1009" y="153.0" fill="#cbd5e1" font-size="8" >RAW1: B1</text>
+    <rect x="1003" y="158.0" width="132" height="13.5" rx="2" fill="#0369a1" fill-opacity="0.45" stroke="#38bdf8" stroke-width="0.8"/>
+    <text x="1009" y="168.0" fill="#e0f2fe" font-size="8" font-weight="bold">RAW2: B2</text>
+    <rect x="1003" y="173.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="1009" y="183.0" fill="#475569" font-size="8" >RAW3: -</text>
+    <rect x="1003" y="188.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="1009" y="198.0" fill="#475569" font-size="8" >RAW4: -</text>
+    <rect x="1003" y="203.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="1009" y="213.0" fill="#475569" font-size="8" >RAW5: -</text>
+    <text x="1004" y="225" fill="#34d399" font-size="8.5" font-weight="bold">TX CMA Ring (MM2S, 4 Slots)</text>
+    <rect x="1003" y="230.0" width="132" height="13.5" rx="2" fill="#064e3b" fill-opacity="0.75" stroke="#10b981" stroke-width="0.8"/>
+    <text x="1009" y="240.0" fill="#a7f3d0" font-size="8" font-weight="bold">TX0: B0 [Streaming]</text>
+    <rect x="1003" y="245.0" width="132" height="13.5" rx="2" fill="#4c1d95" fill-opacity="0.5" stroke="#a855f7" stroke-width="0.8"/>
+    <text x="1009" y="255.0" fill="#e9d5ff" font-size="8" font-weight="bold">TX1: B1 [In-Flight]</text>
+    <rect x="1003" y="260.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="1009" y="270.0" fill="#475569" font-size="8" >TX2: - [Free]</text>
+    <rect x="1003" y="275.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="1009" y="285.0" fill="#475569" font-size="8" >TX3: - [Free]</text>
+    <text x="1004" y="296" fill="#fbbf24" font-size="8.5" font-weight="bold">RX CMA Ring (S2MM, 4 Slots)</text>
+    <rect x="1003" y="301.0" width="132" height="13.5" rx="2" fill="#78350f" fill-opacity="0.75" stroke="#f59e0b" stroke-width="0.8"/>
+    <text x="1009" y="311.0" fill="#fde68a" font-size="8" font-weight="bold">RX0: A0 [Recv PCM]</text>
+    <rect x="1003" y="316.0" width="132" height="13.5" rx="2" fill="#4c1d95" fill-opacity="0.5" stroke="#a855f7" stroke-width="0.8"/>
+    <text x="1009" y="326.0" fill="#e9d5ff" font-size="8" font-weight="bold">RX1: A1 [In-Flight]</text>
+    <rect x="1003" y="331.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="1009" y="341.0" fill="#475569" font-size="8" >RX2: - [Free]</text>
+    <rect x="1003" y="346.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="1009" y="356.0" fill="#475569" font-size="8" >RX3: - [Free]</text>
+    <!-- USB -> RAW Arrow -->
+    <path d="M 948 113 C 974 113, 970 164.75, 996 164.75" fill="none" stroke="#38bdf8" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+    <!-- RAW -> TX CMA Copy Arrows -->
+    <path d="M 1142 149.75 C 1166 149.75, 1166 251.75, 1142 251.75" fill="none" stroke="#34d399" stroke-width="1.4" marker-end="url(#arr-copy)"/>
+    <text x="1153" y="203.25" fill="#34d399" font-size="7" font-weight="bold">Copy</text>
+    <!-- TX -> PL MM2S Arrow -->
+    <path d="M 996 236.75 C 968 236.75, 976 216, 948 216" fill="none" stroke="#34d399" stroke-width="1.6" marker-end="url(#arr-green)"/>
+    <text x="974" y="223.375" text-anchor="middle" fill="#34d399" font-size="7.5" font-weight="bold">MM2S</text>
+    <!-- PL -> RX S2MM Arrow -->
+    <path d="M 948 240 C 976 240, 968 307.75, 996 307.75" fill="none" stroke="#f59e0b" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+    <text x="974" y="281.875" text-anchor="middle" fill="#fbbf24" font-size="7.5" font-weight="bold">S2MM</text>
+    <!-- Footer Summary Banner -->
+    <rect x="814" y="372" width="364" height="22" rx="4" fill="#0f172a" stroke="#334155" stroke-width="0.8"/>
+    <text x="996.0" y="386.5" text-anchor="middle" fill="#cbd5e1" font-size="8.8" font-weight="500">T2 (1.6-2.4s): FPGA เล่น TX0 (B0) ออกหูฟัง ADAU1761 | Copy RAW1 เข้า TX1 (In-Flight)</text>
+  </g>
+  <!-- ==================== Panel T3 ==================== -->
+  <g id="panel-T3" transform="translate(0, 0)">
+    <rect x="14" y="412" width="380" height="344" rx="9" fill="#111827" stroke="#334155" stroke-width="1.2"/>
+    <text x="26" y="434" fill="#f8fafc" font-size="13" font-weight="bold">T3 <tspan fill="#94a3b8" font-size="11" font-weight="normal">(2.4 - 3.2s)</tspan></text>
+    <rect x="242" y="420" width="142" height="18" rx="9" fill="#78350f" fill-opacity="0.35" stroke="#f59e0b" stroke-width="1"/>
+    <text x="313.0" y="432.5" text-anchor="middle" fill="#fbbf24" font-size="9" font-weight="bold" letter-spacing="0.3">ZERO-GAP HANDOFF</text>
+    <rect x="24" y="446" width="132" height="42" rx="6" fill="#0f172a" stroke="#0284c7" stroke-width="1"/>
+    <text x="32" y="463" fill="#38bdf8" font-size="10" font-weight="bold">1. RTL-SDR (USB)</text>
+    <text x="32" y="478" fill="#94a3b8" font-size="9">Rx: B3 (0.8s)</text>
+    <rect x="24" y="496" width="132" height="42" rx="6" fill="#0f172a" stroke="#475569" stroke-width="1"/>
+    <text x="32" y="513" fill="#cbd5e1" font-size="10" font-weight="bold">2. CPU (DMA Thread)</text>
+    <text x="32" y="528" fill="#94a3b8" font-size="8.5">Wake &lt;1ms: Queue TX2</text>
+    <rect x="24" y="546" width="132" height="68" rx="6" fill="#0f172a" stroke="#10b981" stroke-width="1.2"/>
+    <text x="32" y="563" fill="#34d399" font-size="10" font-weight="bold">3. FPGA PL Demod</text>
+    <text x="32" y="578" fill="#94a3b8" font-size="8.5">FIR → Demod → LPF</text>
+    <rect x="30" y="586" width="120" height="20" rx="4" fill="#064e3b" stroke="#10b981" stroke-width="0.8"/>
+    <text x="90.0" y="599.5" text-anchor="middle" fill="#a7f3d0" font-size="8.5" font-weight="bold">Demod B1 → Audio A1</text>
+    <rect x="24" y="622" width="132" height="38" rx="6" fill="#0f172a" stroke="#f59e0b" stroke-width="1"/>
+    <text x="32" y="638" fill="#fbbf24" font-size="9.5" font-weight="bold">4. Audio Out (3.5mm)</text>
+    <text x="32" y="652" fill="#34d399" font-size="8.5">48 kHz FM Audio Out ♫</text>
+    <!-- DDR Pool Background -->
+    <rect x="204" y="446" width="146" height="274" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+    <text x="277.0" y="460" text-anchor="middle" fill="#f8fafc" font-size="10" font-weight="bold">DDR3 Memory Pools</text>
+    <text x="212" y="476" fill="#38bdf8" font-size="8.5" font-weight="bold">RAW Ring Buffer (Heap, 6 Slots)</text>
+    <rect x="211" y="482.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="217" y="492.0" fill="#cbd5e1" font-size="8" >RAW0: B0</text>
+    <rect x="211" y="497.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="217" y="507.0" fill="#cbd5e1" font-size="8" >RAW1: B1</text>
+    <rect x="211" y="512.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="217" y="522.0" fill="#cbd5e1" font-size="8" >RAW2: B2</text>
+    <rect x="211" y="527.0" width="132" height="13.5" rx="2" fill="#0369a1" fill-opacity="0.45" stroke="#38bdf8" stroke-width="0.8"/>
+    <text x="217" y="537.0" fill="#e0f2fe" font-size="8" font-weight="bold">RAW3: B3</text>
+    <rect x="211" y="542.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="217" y="552.0" fill="#475569" font-size="8" >RAW4: -</text>
+    <rect x="211" y="557.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="217" y="567.0" fill="#475569" font-size="8" >RAW5: -</text>
+    <text x="212" y="579" fill="#34d399" font-size="8.5" font-weight="bold">TX CMA Ring (MM2S, 4 Slots)</text>
+    <rect x="211" y="584.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.5" stroke="#475569" stroke-width="0.8"/>
+    <text x="217" y="594.0" fill="#64748b" font-size="8" >TX0: B0 [Done]</text>
+    <rect x="211" y="599.0" width="132" height="13.5" rx="2" fill="#064e3b" fill-opacity="0.75" stroke="#10b981" stroke-width="0.8"/>
+    <text x="217" y="609.0" fill="#a7f3d0" font-size="8" font-weight="bold">TX1: B1 [Streaming]</text>
+    <rect x="211" y="614.0" width="132" height="13.5" rx="2" fill="#4c1d95" fill-opacity="0.5" stroke="#a855f7" stroke-width="0.8"/>
+    <text x="217" y="624.0" fill="#e9d5ff" font-size="8" font-weight="bold">TX2: B2 [In-Flight]</text>
+    <rect x="211" y="629.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="217" y="639.0" fill="#475569" font-size="8" >TX3: - [Free]</text>
+    <text x="212" y="650" fill="#fbbf24" font-size="8.5" font-weight="bold">RX CMA Ring (S2MM, 4 Slots)</text>
+    <rect x="211" y="655.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.5" stroke="#475569" stroke-width="0.8"/>
+    <text x="217" y="665.0" fill="#64748b" font-size="8" >RX0: A0 [Done]</text>
+    <rect x="211" y="670.0" width="132" height="13.5" rx="2" fill="#78350f" fill-opacity="0.75" stroke="#f59e0b" stroke-width="0.8"/>
+    <text x="217" y="680.0" fill="#fde68a" font-size="8" font-weight="bold">RX1: A1 [Recv PCM]</text>
+    <rect x="211" y="685.0" width="132" height="13.5" rx="2" fill="#4c1d95" fill-opacity="0.5" stroke="#a855f7" stroke-width="0.8"/>
+    <text x="217" y="695.0" fill="#e9d5ff" font-size="8" font-weight="bold">RX2: A2 [In-Flight]</text>
+    <rect x="211" y="700.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="217" y="710.0" fill="#475569" font-size="8" >RX3: - [Free]</text>
+    <!-- USB -> RAW Arrow -->
+    <path d="M 156 467 C 182 467, 178 533.75, 204 533.75" fill="none" stroke="#38bdf8" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+    <!-- RAW -> TX CMA Copy Arrows -->
+    <path d="M 350 518.75 C 374 518.75, 374 620.75, 350 620.75" fill="none" stroke="#34d399" stroke-width="1.4" marker-end="url(#arr-copy)"/>
+    <text x="361" y="572.25" fill="#34d399" font-size="7" font-weight="bold">Copy</text>
+    <!-- TX -> PL MM2S Arrow -->
+    <path d="M 204 605.75 C 176 605.75, 184 570, 156 570" fill="none" stroke="#34d399" stroke-width="1.6" marker-end="url(#arr-green)"/>
+    <text x="182" y="584.875" text-anchor="middle" fill="#34d399" font-size="7.5" font-weight="bold">MM2S</text>
+    <!-- PL -> RX S2MM Arrow -->
+    <path d="M 156 594 C 184 594, 176 676.75, 204 676.75" fill="none" stroke="#f59e0b" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+    <text x="182" y="643.375" text-anchor="middle" fill="#fbbf24" font-size="7.5" font-weight="bold">S2MM</text>
+    <!-- Footer Summary Banner -->
+    <rect x="22" y="726" width="364" height="22" rx="4" fill="#0f172a" stroke="#334155" stroke-width="0.8"/>
+    <text x="204.0" y="740.5" text-anchor="middle" fill="#cbd5e1" font-size="8.8" font-weight="500">T3 (2.4-3.2s): รอยต่อ 0ms สลับเล่น TX1 (B1) ทันที | Copy RAW2 เข้าคิว TX2</text>
+  </g>
+  <!-- ==================== Panel T4 ==================== -->
+  <g id="panel-T4" transform="translate(0, 0)">
+    <rect x="410" y="412" width="380" height="344" rx="9" fill="#111827" stroke="#334155" stroke-width="1.2"/>
+    <text x="422" y="434" fill="#f8fafc" font-size="13" font-weight="bold">T4 <tspan fill="#94a3b8" font-size="11" font-weight="normal">(3.2 - 4.0s)</tspan></text>
+    <rect x="638" y="420" width="142" height="18" rx="9" fill="#064e3b" fill-opacity="0.35" stroke="#10b981" stroke-width="1"/>
+    <text x="709.0" y="432.5" text-anchor="middle" fill="#34d399" font-size="9" font-weight="bold" letter-spacing="0.3">ZERO-GAP HANDOFF</text>
+    <rect x="420" y="446" width="132" height="42" rx="6" fill="#0f172a" stroke="#0284c7" stroke-width="1"/>
+    <text x="428" y="463" fill="#38bdf8" font-size="10" font-weight="bold">1. RTL-SDR (USB)</text>
+    <text x="428" y="478" fill="#94a3b8" font-size="9">Rx: B4 (0.8s)</text>
+    <rect x="420" y="496" width="132" height="42" rx="6" fill="#0f172a" stroke="#475569" stroke-width="1"/>
+    <text x="428" y="513" fill="#cbd5e1" font-size="10" font-weight="bold">2. CPU (DMA Thread)</text>
+    <text x="428" y="528" fill="#94a3b8" font-size="8.5">Wake &lt;1ms: Queue TX3</text>
+    <rect x="420" y="546" width="132" height="68" rx="6" fill="#0f172a" stroke="#10b981" stroke-width="1.2"/>
+    <text x="428" y="563" fill="#34d399" font-size="10" font-weight="bold">3. FPGA PL Demod</text>
+    <text x="428" y="578" fill="#94a3b8" font-size="8.5">FIR → Demod → LPF</text>
+    <rect x="426" y="586" width="120" height="20" rx="4" fill="#064e3b" stroke="#10b981" stroke-width="0.8"/>
+    <text x="486.0" y="599.5" text-anchor="middle" fill="#a7f3d0" font-size="8.5" font-weight="bold">Demod B2 → Audio A2</text>
+    <rect x="420" y="622" width="132" height="38" rx="6" fill="#0f172a" stroke="#f59e0b" stroke-width="1"/>
+    <text x="428" y="638" fill="#fbbf24" font-size="9.5" font-weight="bold">4. Audio Out (3.5mm)</text>
+    <text x="428" y="652" fill="#34d399" font-size="8.5">48 kHz FM Audio Out ♫</text>
+    <!-- DDR Pool Background -->
+    <rect x="600" y="446" width="146" height="274" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+    <text x="673.0" y="460" text-anchor="middle" fill="#f8fafc" font-size="10" font-weight="bold">DDR3 Memory Pools</text>
+    <text x="608" y="476" fill="#38bdf8" font-size="8.5" font-weight="bold">RAW Ring Buffer (Heap, 6 Slots)</text>
+    <rect x="607" y="482.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="613" y="492.0" fill="#cbd5e1" font-size="8" >RAW0: B0</text>
+    <rect x="607" y="497.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="613" y="507.0" fill="#cbd5e1" font-size="8" >RAW1: B1</text>
+    <rect x="607" y="512.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="613" y="522.0" fill="#cbd5e1" font-size="8" >RAW2: B2</text>
+    <rect x="607" y="527.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="613" y="537.0" fill="#cbd5e1" font-size="8" >RAW3: B3</text>
+    <rect x="607" y="542.0" width="132" height="13.5" rx="2" fill="#0369a1" fill-opacity="0.45" stroke="#38bdf8" stroke-width="0.8"/>
+    <text x="613" y="552.0" fill="#e0f2fe" font-size="8" font-weight="bold">RAW4: B4</text>
+    <rect x="607" y="557.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="613" y="567.0" fill="#475569" font-size="8" >RAW5: -</text>
+    <text x="608" y="579" fill="#34d399" font-size="8.5" font-weight="bold">TX CMA Ring (MM2S, 4 Slots)</text>
+    <rect x="607" y="584.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="613" y="594.0" fill="#475569" font-size="8" >TX0: - [Free]</text>
+    <rect x="607" y="599.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.5" stroke="#475569" stroke-width="0.8"/>
+    <text x="613" y="609.0" fill="#64748b" font-size="8" >TX1: B1 [Done]</text>
+    <rect x="607" y="614.0" width="132" height="13.5" rx="2" fill="#064e3b" fill-opacity="0.75" stroke="#10b981" stroke-width="0.8"/>
+    <text x="613" y="624.0" fill="#a7f3d0" font-size="8" font-weight="bold">TX2: B2 [Streaming]</text>
+    <rect x="607" y="629.0" width="132" height="13.5" rx="2" fill="#4c1d95" fill-opacity="0.5" stroke="#a855f7" stroke-width="0.8"/>
+    <text x="613" y="639.0" fill="#e9d5ff" font-size="8" font-weight="bold">TX3: B3 [In-Flight]</text>
+    <text x="608" y="650" fill="#fbbf24" font-size="8.5" font-weight="bold">RX CMA Ring (S2MM, 4 Slots)</text>
+    <rect x="607" y="655.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="613" y="665.0" fill="#475569" font-size="8" >RX0: - [Free]</text>
+    <rect x="607" y="670.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.5" stroke="#475569" stroke-width="0.8"/>
+    <text x="613" y="680.0" fill="#64748b" font-size="8" >RX1: A1 [Done]</text>
+    <rect x="607" y="685.0" width="132" height="13.5" rx="2" fill="#78350f" fill-opacity="0.75" stroke="#f59e0b" stroke-width="0.8"/>
+    <text x="613" y="695.0" fill="#fde68a" font-size="8" font-weight="bold">RX2: A2 [Recv PCM]</text>
+    <rect x="607" y="700.0" width="132" height="13.5" rx="2" fill="#4c1d95" fill-opacity="0.5" stroke="#a855f7" stroke-width="0.8"/>
+    <text x="613" y="710.0" fill="#e9d5ff" font-size="8" font-weight="bold">RX3: A3 [In-Flight]</text>
+    <!-- USB -> RAW Arrow -->
+    <path d="M 552 467 C 578 467, 574 548.75, 600 548.75" fill="none" stroke="#38bdf8" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+    <!-- RAW -> TX CMA Copy Arrows -->
+    <path d="M 746 533.75 C 770 533.75, 770 635.75, 746 635.75" fill="none" stroke="#34d399" stroke-width="1.4" marker-end="url(#arr-copy)"/>
+    <text x="757" y="587.25" fill="#34d399" font-size="7" font-weight="bold">Copy</text>
+    <!-- TX -> PL MM2S Arrow -->
+    <path d="M 600 620.75 C 572 620.75, 580 570, 552 570" fill="none" stroke="#34d399" stroke-width="1.6" marker-end="url(#arr-green)"/>
+    <text x="578" y="592.375" text-anchor="middle" fill="#34d399" font-size="7.5" font-weight="bold">MM2S</text>
+    <!-- PL -> RX S2MM Arrow -->
+    <path d="M 552 594 C 580 594, 572 691.75, 600 691.75" fill="none" stroke="#f59e0b" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+    <text x="578" y="650.875" text-anchor="middle" fill="#fbbf24" font-size="7.5" font-weight="bold">S2MM</text>
+    <!-- Footer Summary Banner -->
+    <rect x="418" y="726" width="364" height="22" rx="4" fill="#0f172a" stroke="#334155" stroke-width="0.8"/>
+    <text x="600.0" y="740.5" text-anchor="middle" fill="#cbd5e1" font-size="8.8" font-weight="500">T4 (3.2-4.0s): FPGA เล่น TX2 (B2) เสียงต่อเนื่อง | Copy RAW3 เข้าคิว TX3</text>
+  </g>
+  <!-- ==================== Panel T5 ==================== -->
+  <g id="panel-T5" transform="translate(0, 0)">
+    <rect x="806" y="412" width="380" height="344" rx="9" fill="#111827" stroke="#334155" stroke-width="1.2"/>
+    <text x="818" y="434" fill="#f8fafc" font-size="13" font-weight="bold">T5 <tspan fill="#94a3b8" font-size="11" font-weight="normal">(4.0 - 4.8s)</tspan></text>
+    <rect x="1034" y="420" width="142" height="18" rx="9" fill="#581c87" fill-opacity="0.35" stroke="#a855f7" stroke-width="1"/>
+    <text x="1105.0" y="432.5" text-anchor="middle" fill="#d8b4fe" font-size="9" font-weight="bold" letter-spacing="0.3">TX RING WRAP</text>
+    <rect x="816" y="446" width="132" height="42" rx="6" fill="#0f172a" stroke="#0284c7" stroke-width="1"/>
+    <text x="824" y="463" fill="#38bdf8" font-size="10" font-weight="bold">1. RTL-SDR (USB)</text>
+    <text x="824" y="478" fill="#94a3b8" font-size="9">Rx: B5 (0.8s, Full)</text>
+    <rect x="816" y="496" width="132" height="42" rx="6" fill="#0f172a" stroke="#475569" stroke-width="1"/>
+    <text x="824" y="513" fill="#cbd5e1" font-size="10" font-weight="bold">2. CPU (DMA Thread)</text>
+    <text x="824" y="528" fill="#94a3b8" font-size="8.5">Wake &lt;1ms: Wrap TX0</text>
+    <rect x="816" y="546" width="132" height="68" rx="6" fill="#0f172a" stroke="#10b981" stroke-width="1.2"/>
+    <text x="824" y="563" fill="#34d399" font-size="10" font-weight="bold">3. FPGA PL Demod</text>
+    <text x="824" y="578" fill="#94a3b8" font-size="8.5">FIR → Demod → LPF</text>
+    <rect x="822" y="586" width="120" height="20" rx="4" fill="#064e3b" stroke="#10b981" stroke-width="0.8"/>
+    <text x="882.0" y="599.5" text-anchor="middle" fill="#a7f3d0" font-size="8.5" font-weight="bold">Demod B3 → Audio A3</text>
+    <rect x="816" y="622" width="132" height="38" rx="6" fill="#0f172a" stroke="#f59e0b" stroke-width="1"/>
+    <text x="824" y="638" fill="#fbbf24" font-size="9.5" font-weight="bold">4. Audio Out (3.5mm)</text>
+    <text x="824" y="652" fill="#34d399" font-size="8.5">48 kHz FM Audio Out ♫</text>
+    <!-- DDR Pool Background -->
+    <rect x="996" y="446" width="146" height="274" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+    <text x="1069.0" y="460" text-anchor="middle" fill="#f8fafc" font-size="10" font-weight="bold">DDR3 Memory Pools</text>
+    <text x="1004" y="476" fill="#38bdf8" font-size="8.5" font-weight="bold">RAW Ring Buffer (Heap, 6 Slots)</text>
+    <rect x="1003" y="482.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="1009" y="492.0" fill="#cbd5e1" font-size="8" >RAW0: B0</text>
+    <rect x="1003" y="497.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="1009" y="507.0" fill="#cbd5e1" font-size="8" >RAW1: B1</text>
+    <rect x="1003" y="512.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="1009" y="522.0" fill="#cbd5e1" font-size="8" >RAW2: B2</text>
+    <rect x="1003" y="527.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="1009" y="537.0" fill="#cbd5e1" font-size="8" >RAW3: B3</text>
+    <rect x="1003" y="542.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="1009" y="552.0" fill="#cbd5e1" font-size="8" >RAW4: B4</text>
+    <rect x="1003" y="557.0" width="132" height="13.5" rx="2" fill="#0369a1" fill-opacity="0.45" stroke="#38bdf8" stroke-width="0.8"/>
+    <text x="1009" y="567.0" fill="#e0f2fe" font-size="8" font-weight="bold">RAW5: B5</text>
+    <text x="1004" y="579" fill="#34d399" font-size="8.5" font-weight="bold">TX CMA Ring (MM2S, 4 Slots)</text>
+    <rect x="1003" y="584.0" width="132" height="13.5" rx="2" fill="#4c1d95" fill-opacity="0.5" stroke="#a855f7" stroke-width="0.8"/>
+    <text x="1009" y="594.0" fill="#e9d5ff" font-size="8" font-weight="bold">TX0: B4 [In-Flight]</text>
+    <rect x="1003" y="599.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="1009" y="609.0" fill="#475569" font-size="8" >TX1: - [Free]</text>
+    <rect x="1003" y="614.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.5" stroke="#475569" stroke-width="0.8"/>
+    <text x="1009" y="624.0" fill="#64748b" font-size="8" >TX2: B2 [Done]</text>
+    <rect x="1003" y="629.0" width="132" height="13.5" rx="2" fill="#064e3b" fill-opacity="0.75" stroke="#10b981" stroke-width="0.8"/>
+    <text x="1009" y="639.0" fill="#a7f3d0" font-size="8" font-weight="bold">TX3: B3 [Streaming]</text>
+    <text x="1004" y="650" fill="#fbbf24" font-size="8.5" font-weight="bold">RX CMA Ring (S2MM, 4 Slots)</text>
+    <rect x="1003" y="655.0" width="132" height="13.5" rx="2" fill="#4c1d95" fill-opacity="0.5" stroke="#a855f7" stroke-width="0.8"/>
+    <text x="1009" y="665.0" fill="#e9d5ff" font-size="8" font-weight="bold">RX0: A4 [In-Flight]</text>
+    <rect x="1003" y="670.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="1009" y="680.0" fill="#475569" font-size="8" >RX1: - [Free]</text>
+    <rect x="1003" y="685.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.5" stroke="#475569" stroke-width="0.8"/>
+    <text x="1009" y="695.0" fill="#64748b" font-size="8" >RX2: A2 [Done]</text>
+    <rect x="1003" y="700.0" width="132" height="13.5" rx="2" fill="#78350f" fill-opacity="0.75" stroke="#f59e0b" stroke-width="0.8"/>
+    <text x="1009" y="710.0" fill="#fde68a" font-size="8" font-weight="bold">RX3: A3 [Recv PCM]</text>
+    <!-- USB -> RAW Arrow -->
+    <path d="M 948 467 C 974 467, 970 563.75, 996 563.75" fill="none" stroke="#38bdf8" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+    <!-- RAW -> TX CMA Copy Arrows -->
+    <path d="M 1142 548.75 C 1166 548.75, 1166 590.75, 1142 590.75" fill="none" stroke="#34d399" stroke-width="1.4" marker-end="url(#arr-copy)"/>
+    <text x="1153" y="572.25" fill="#34d399" font-size="7" font-weight="bold">Copy</text>
+    <!-- TX -> PL MM2S Arrow -->
+    <path d="M 996 635.75 C 968 635.75, 976 570, 948 570" fill="none" stroke="#34d399" stroke-width="1.6" marker-end="url(#arr-green)"/>
+    <text x="974" y="599.875" text-anchor="middle" fill="#34d399" font-size="7.5" font-weight="bold">MM2S</text>
+    <!-- PL -> RX S2MM Arrow -->
+    <path d="M 948 594 C 976 594, 968 706.75, 996 706.75" fill="none" stroke="#f59e0b" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+    <text x="974" y="658.375" text-anchor="middle" fill="#fbbf24" font-size="7.5" font-weight="bold">S2MM</text>
+    <!-- Footer Summary Banner -->
+    <rect x="814" y="726" width="364" height="22" rx="4" fill="#0f172a" stroke="#334155" stroke-width="0.8"/>
+    <text x="996.0" y="740.5" text-anchor="middle" fill="#cbd5e1" font-size="8.8" font-weight="500">T5 (4.0-4.8s): TX ครบ 4 บัฟเฟอร์ วนกลับมา Copy RAW4 ลง TX0 | RAW เต็ม 6 ช่อง</text>
+  </g>
+  <!-- ==================== Panel T6 ==================== -->
+  <g id="panel-T6" transform="translate(0, 0)">
+    <rect x="14" y="766" width="380" height="344" rx="9" fill="#111827" stroke="#334155" stroke-width="1.2"/>
+    <text x="26" y="788" fill="#f8fafc" font-size="13" font-weight="bold">T6 <tspan fill="#94a3b8" font-size="11" font-weight="normal">(4.8 - 5.6s)</tspan></text>
+    <rect x="242" y="774" width="142" height="18" rx="9" fill="#0369a1" fill-opacity="0.35" stroke="#0284c7" stroke-width="1"/>
+    <text x="313.0" y="786.5" text-anchor="middle" fill="#7dd3fc" font-size="9" font-weight="bold" letter-spacing="0.3">RAW RING WRAP</text>
+    <rect x="24" y="800" width="132" height="42" rx="6" fill="#0f172a" stroke="#0284c7" stroke-width="1"/>
+    <text x="32" y="817" fill="#38bdf8" font-size="10" font-weight="bold">1. RTL-SDR (USB)</text>
+    <text x="32" y="832" fill="#94a3b8" font-size="9">Rx: B6 (Wrap RAW0)</text>
+    <rect x="24" y="850" width="132" height="42" rx="6" fill="#0f172a" stroke="#475569" stroke-width="1"/>
+    <text x="32" y="867" fill="#cbd5e1" font-size="10" font-weight="bold">2. CPU (DMA Thread)</text>
+    <text x="32" y="882" fill="#94a3b8" font-size="8.5">Wake &lt;1ms: Queue TX1</text>
+    <rect x="24" y="900" width="132" height="68" rx="6" fill="#0f172a" stroke="#10b981" stroke-width="1.2"/>
+    <text x="32" y="917" fill="#34d399" font-size="10" font-weight="bold">3. FPGA PL Demod</text>
+    <text x="32" y="932" fill="#94a3b8" font-size="8.5">FIR → Demod → LPF</text>
+    <rect x="30" y="940" width="120" height="20" rx="4" fill="#064e3b" stroke="#10b981" stroke-width="0.8"/>
+    <text x="90.0" y="953.5" text-anchor="middle" fill="#a7f3d0" font-size="8.5" font-weight="bold">Demod B4 → Audio A4</text>
+    <rect x="24" y="976" width="132" height="38" rx="6" fill="#0f172a" stroke="#f59e0b" stroke-width="1"/>
+    <text x="32" y="992" fill="#fbbf24" font-size="9.5" font-weight="bold">4. Audio Out (3.5mm)</text>
+    <text x="32" y="1006" fill="#34d399" font-size="8.5">48 kHz FM Audio Out ♫</text>
+    <!-- DDR Pool Background -->
+    <rect x="204" y="800" width="146" height="274" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+    <text x="277.0" y="814" text-anchor="middle" fill="#f8fafc" font-size="10" font-weight="bold">DDR3 Memory Pools</text>
+    <text x="212" y="830" fill="#38bdf8" font-size="8.5" font-weight="bold">RAW Ring Buffer (Heap, 6 Slots)</text>
+    <rect x="211" y="836.0" width="132" height="13.5" rx="2" fill="#0369a1" fill-opacity="0.45" stroke="#38bdf8" stroke-width="0.8"/>
+    <text x="217" y="846.0" fill="#e0f2fe" font-size="8" font-weight="bold">RAW0: B6</text>
+    <rect x="211" y="851.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="217" y="861.0" fill="#cbd5e1" font-size="8" >RAW1: B1</text>
+    <rect x="211" y="866.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="217" y="876.0" fill="#cbd5e1" font-size="8" >RAW2: B2</text>
+    <rect x="211" y="881.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="217" y="891.0" fill="#cbd5e1" font-size="8" >RAW3: B3</text>
+    <rect x="211" y="896.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="217" y="906.0" fill="#cbd5e1" font-size="8" >RAW4: B4</text>
+    <rect x="211" y="911.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="217" y="921.0" fill="#cbd5e1" font-size="8" >RAW5: B5</text>
+    <text x="212" y="933" fill="#34d399" font-size="8.5" font-weight="bold">TX CMA Ring (MM2S, 4 Slots)</text>
+    <rect x="211" y="938.0" width="132" height="13.5" rx="2" fill="#064e3b" fill-opacity="0.75" stroke="#10b981" stroke-width="0.8"/>
+    <text x="217" y="948.0" fill="#a7f3d0" font-size="8" font-weight="bold">TX0: B4 [Streaming]</text>
+    <rect x="211" y="953.0" width="132" height="13.5" rx="2" fill="#4c1d95" fill-opacity="0.5" stroke="#a855f7" stroke-width="0.8"/>
+    <text x="217" y="963.0" fill="#e9d5ff" font-size="8" font-weight="bold">TX1: B5 [In-Flight]</text>
+    <rect x="211" y="968.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="217" y="978.0" fill="#475569" font-size="8" >TX2: - [Free]</text>
+    <rect x="211" y="983.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.5" stroke="#475569" stroke-width="0.8"/>
+    <text x="217" y="993.0" fill="#64748b" font-size="8" >TX3: B3 [Done]</text>
+    <text x="212" y="1004" fill="#fbbf24" font-size="8.5" font-weight="bold">RX CMA Ring (S2MM, 4 Slots)</text>
+    <rect x="211" y="1009.0" width="132" height="13.5" rx="2" fill="#78350f" fill-opacity="0.75" stroke="#f59e0b" stroke-width="0.8"/>
+    <text x="217" y="1019.0" fill="#fde68a" font-size="8" font-weight="bold">RX0: A4 [Recv PCM]</text>
+    <rect x="211" y="1024.0" width="132" height="13.5" rx="2" fill="#4c1d95" fill-opacity="0.5" stroke="#a855f7" stroke-width="0.8"/>
+    <text x="217" y="1034.0" fill="#e9d5ff" font-size="8" font-weight="bold">RX1: A5 [In-Flight]</text>
+    <rect x="211" y="1039.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="217" y="1049.0" fill="#475569" font-size="8" >RX2: - [Free]</text>
+    <rect x="211" y="1054.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.5" stroke="#475569" stroke-width="0.8"/>
+    <text x="217" y="1064.0" fill="#64748b" font-size="8" >RX3: A3 [Done]</text>
+    <!-- USB -> RAW Arrow -->
+    <path d="M 156 821 C 182 821, 178 842.75, 204 842.75" fill="none" stroke="#38bdf8" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+    <!-- RAW -> TX CMA Copy Arrows -->
+    <path d="M 350 917.75 C 374 917.75, 374 959.75, 350 959.75" fill="none" stroke="#34d399" stroke-width="1.4" marker-end="url(#arr-copy)"/>
+    <text x="361" y="941.25" fill="#34d399" font-size="7" font-weight="bold">Copy</text>
+    <!-- TX -> PL MM2S Arrow -->
+    <path d="M 204 944.75 C 176 944.75, 184 924, 156 924" fill="none" stroke="#34d399" stroke-width="1.6" marker-end="url(#arr-green)"/>
+    <text x="182" y="931.375" text-anchor="middle" fill="#34d399" font-size="7.5" font-weight="bold">MM2S</text>
+    <!-- PL -> RX S2MM Arrow -->
+    <path d="M 156 948 C 184 948, 176 1015.75, 204 1015.75" fill="none" stroke="#f59e0b" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+    <text x="182" y="989.875" text-anchor="middle" fill="#fbbf24" font-size="7.5" font-weight="bold">S2MM</text>
+    <!-- Footer Summary Banner -->
+    <rect x="22" y="1080" width="364" height="22" rx="4" fill="#0f172a" stroke="#334155" stroke-width="0.8"/>
+    <text x="204.0" y="1094.5" text-anchor="middle" fill="#cbd5e1" font-size="8.8" font-weight="500">T6 (4.8-5.6s): RAW Ring วนรอบ! B6 เขียนทับ RAW0 | Copy RAW5 เข้าคิว TX1</text>
+  </g>
+  <!-- ==================== Panel T7 ==================== -->
+  <g id="panel-T7" transform="translate(0, 0)">
+    <rect x="410" y="766" width="380" height="344" rx="9" fill="#111827" stroke="#334155" stroke-width="1.2"/>
+    <text x="422" y="788" fill="#f8fafc" font-size="13" font-weight="bold">T7 <tspan fill="#94a3b8" font-size="11" font-weight="normal">(5.6 - 6.4s)</tspan></text>
+    <rect x="638" y="774" width="142" height="18" rx="9" fill="#064e3b" fill-opacity="0.35" stroke="#10b981" stroke-width="1"/>
+    <text x="709.0" y="786.5" text-anchor="middle" fill="#34d399" font-size="9" font-weight="bold" letter-spacing="0.3">STEADY PIPELINE</text>
+    <rect x="420" y="800" width="132" height="42" rx="6" fill="#0f172a" stroke="#0284c7" stroke-width="1"/>
+    <text x="428" y="817" fill="#38bdf8" font-size="10" font-weight="bold">1. RTL-SDR (USB)</text>
+    <text x="428" y="832" fill="#94a3b8" font-size="9">Rx: B7 (Wrap RAW1)</text>
+    <rect x="420" y="850" width="132" height="42" rx="6" fill="#0f172a" stroke="#475569" stroke-width="1"/>
+    <text x="428" y="867" fill="#cbd5e1" font-size="10" font-weight="bold">2. CPU (DMA Thread)</text>
+    <text x="428" y="882" fill="#94a3b8" font-size="8.5">Wake &lt;1ms: Queue TX2</text>
+    <rect x="420" y="900" width="132" height="68" rx="6" fill="#0f172a" stroke="#10b981" stroke-width="1.2"/>
+    <text x="428" y="917" fill="#34d399" font-size="10" font-weight="bold">3. FPGA PL Demod</text>
+    <text x="428" y="932" fill="#94a3b8" font-size="8.5">FIR → Demod → LPF</text>
+    <rect x="426" y="940" width="120" height="20" rx="4" fill="#064e3b" stroke="#10b981" stroke-width="0.8"/>
+    <text x="486.0" y="953.5" text-anchor="middle" fill="#a7f3d0" font-size="8.5" font-weight="bold">Demod B5 → Audio A5</text>
+    <rect x="420" y="976" width="132" height="38" rx="6" fill="#0f172a" stroke="#f59e0b" stroke-width="1"/>
+    <text x="428" y="992" fill="#fbbf24" font-size="9.5" font-weight="bold">4. Audio Out (3.5mm)</text>
+    <text x="428" y="1006" fill="#34d399" font-size="8.5">48 kHz FM Audio Out ♫</text>
+    <!-- DDR Pool Background -->
+    <rect x="600" y="800" width="146" height="274" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+    <text x="673.0" y="814" text-anchor="middle" fill="#f8fafc" font-size="10" font-weight="bold">DDR3 Memory Pools</text>
+    <text x="608" y="830" fill="#38bdf8" font-size="8.5" font-weight="bold">RAW Ring Buffer (Heap, 6 Slots)</text>
+    <rect x="607" y="836.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="613" y="846.0" fill="#cbd5e1" font-size="8" >RAW0: B6</text>
+    <rect x="607" y="851.0" width="132" height="13.5" rx="2" fill="#0369a1" fill-opacity="0.45" stroke="#38bdf8" stroke-width="0.8"/>
+    <text x="613" y="861.0" fill="#e0f2fe" font-size="8" font-weight="bold">RAW1: B7</text>
+    <rect x="607" y="866.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="613" y="876.0" fill="#cbd5e1" font-size="8" >RAW2: B2</text>
+    <rect x="607" y="881.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="613" y="891.0" fill="#cbd5e1" font-size="8" >RAW3: B3</text>
+    <rect x="607" y="896.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="613" y="906.0" fill="#cbd5e1" font-size="8" >RAW4: B4</text>
+    <rect x="607" y="911.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="613" y="921.0" fill="#cbd5e1" font-size="8" >RAW5: B5</text>
+    <text x="608" y="933" fill="#34d399" font-size="8.5" font-weight="bold">TX CMA Ring (MM2S, 4 Slots)</text>
+    <rect x="607" y="938.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.5" stroke="#475569" stroke-width="0.8"/>
+    <text x="613" y="948.0" fill="#64748b" font-size="8" >TX0: B4 [Done]</text>
+    <rect x="607" y="953.0" width="132" height="13.5" rx="2" fill="#064e3b" fill-opacity="0.75" stroke="#10b981" stroke-width="0.8"/>
+    <text x="613" y="963.0" fill="#a7f3d0" font-size="8" font-weight="bold">TX1: B5 [Streaming]</text>
+    <rect x="607" y="968.0" width="132" height="13.5" rx="2" fill="#4c1d95" fill-opacity="0.5" stroke="#a855f7" stroke-width="0.8"/>
+    <text x="613" y="978.0" fill="#e9d5ff" font-size="8" font-weight="bold">TX2: B6 [In-Flight]</text>
+    <rect x="607" y="983.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="613" y="993.0" fill="#475569" font-size="8" >TX3: - [Free]</text>
+    <text x="608" y="1004" fill="#fbbf24" font-size="8.5" font-weight="bold">RX CMA Ring (S2MM, 4 Slots)</text>
+    <rect x="607" y="1009.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.5" stroke="#475569" stroke-width="0.8"/>
+    <text x="613" y="1019.0" fill="#64748b" font-size="8" >RX0: A4 [Done]</text>
+    <rect x="607" y="1024.0" width="132" height="13.5" rx="2" fill="#78350f" fill-opacity="0.75" stroke="#f59e0b" stroke-width="0.8"/>
+    <text x="613" y="1034.0" fill="#fde68a" font-size="8" font-weight="bold">RX1: A5 [Recv PCM]</text>
+    <rect x="607" y="1039.0" width="132" height="13.5" rx="2" fill="#4c1d95" fill-opacity="0.5" stroke="#a855f7" stroke-width="0.8"/>
+    <text x="613" y="1049.0" fill="#e9d5ff" font-size="8" font-weight="bold">RX2: A6 [In-Flight]</text>
+    <rect x="607" y="1054.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="613" y="1064.0" fill="#475569" font-size="8" >RX3: - [Free]</text>
+    <!-- USB -> RAW Arrow -->
+    <path d="M 552 821 C 578 821, 574 857.75, 600 857.75" fill="none" stroke="#38bdf8" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+    <!-- RAW -> TX CMA Copy Arrows -->
+    <path d="M 746 842.75 C 770 842.75, 770 974.75, 746 974.75" fill="none" stroke="#34d399" stroke-width="1.4" marker-end="url(#arr-copy)"/>
+    <text x="757" y="911.25" fill="#34d399" font-size="7" font-weight="bold">Copy</text>
+    <!-- TX -> PL MM2S Arrow -->
+    <path d="M 600 959.75 C 572 959.75, 580 924, 552 924" fill="none" stroke="#34d399" stroke-width="1.6" marker-end="url(#arr-green)"/>
+    <text x="578" y="938.875" text-anchor="middle" fill="#34d399" font-size="7.5" font-weight="bold">MM2S</text>
+    <!-- PL -> RX S2MM Arrow -->
+    <path d="M 552 948 C 580 948, 572 1030.75, 600 1030.75" fill="none" stroke="#f59e0b" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+    <text x="578" y="997.375" text-anchor="middle" fill="#fbbf24" font-size="7.5" font-weight="bold">S2MM</text>
+    <!-- Footer Summary Banner -->
+    <rect x="418" y="1080" width="364" height="22" rx="4" fill="#0f172a" stroke="#334155" stroke-width="0.8"/>
+    <text x="600.0" y="1094.5" text-anchor="middle" fill="#cbd5e1" font-size="8.8" font-weight="500">T7 (5.6-6.4s): B7 ทับ RAW1 | PL เล่น TX1 (B5) | Copy RAW0 เข้าคิว TX2</text>
+  </g>
+  <!-- ==================== Panel T8 ==================== -->
+  <g id="panel-T8" transform="translate(0, 0)">
+    <rect x="806" y="766" width="380" height="344" rx="9" fill="#111827" stroke="#334155" stroke-width="1.2"/>
+    <text x="818" y="788" fill="#f8fafc" font-size="13" font-weight="bold">T8 <tspan fill="#94a3b8" font-size="11" font-weight="normal">(6.4 - 7.2s)</tspan></text>
+    <rect x="1034" y="774" width="142" height="18" rx="9" fill="#064e3b" fill-opacity="0.35" stroke="#10b981" stroke-width="1"/>
+    <text x="1105.0" y="786.5" text-anchor="middle" fill="#34d399" font-size="9" font-weight="bold" letter-spacing="0.3">STEADY PIPELINE</text>
+    <rect x="816" y="800" width="132" height="42" rx="6" fill="#0f172a" stroke="#0284c7" stroke-width="1"/>
+    <text x="824" y="817" fill="#38bdf8" font-size="10" font-weight="bold">1. RTL-SDR (USB)</text>
+    <text x="824" y="832" fill="#94a3b8" font-size="9">Rx: B8 (Wrap RAW2)</text>
+    <rect x="816" y="850" width="132" height="42" rx="6" fill="#0f172a" stroke="#475569" stroke-width="1"/>
+    <text x="824" y="867" fill="#cbd5e1" font-size="10" font-weight="bold">2. CPU (DMA Thread)</text>
+    <text x="824" y="882" fill="#94a3b8" font-size="8.5">Wake &lt;1ms: Queue TX3</text>
+    <rect x="816" y="900" width="132" height="68" rx="6" fill="#0f172a" stroke="#10b981" stroke-width="1.2"/>
+    <text x="824" y="917" fill="#34d399" font-size="10" font-weight="bold">3. FPGA PL Demod</text>
+    <text x="824" y="932" fill="#94a3b8" font-size="8.5">FIR → Demod → LPF</text>
+    <rect x="822" y="940" width="120" height="20" rx="4" fill="#064e3b" stroke="#10b981" stroke-width="0.8"/>
+    <text x="882.0" y="953.5" text-anchor="middle" fill="#a7f3d0" font-size="8.5" font-weight="bold">Demod B6 → Audio A6</text>
+    <rect x="816" y="976" width="132" height="38" rx="6" fill="#0f172a" stroke="#f59e0b" stroke-width="1"/>
+    <text x="824" y="992" fill="#fbbf24" font-size="9.5" font-weight="bold">4. Audio Out (3.5mm)</text>
+    <text x="824" y="1006" fill="#34d399" font-size="8.5">48 kHz FM Audio Out ♫</text>
+    <!-- DDR Pool Background -->
+    <rect x="996" y="800" width="146" height="274" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+    <text x="1069.0" y="814" text-anchor="middle" fill="#f8fafc" font-size="10" font-weight="bold">DDR3 Memory Pools</text>
+    <text x="1004" y="830" fill="#38bdf8" font-size="8.5" font-weight="bold">RAW Ring Buffer (Heap, 6 Slots)</text>
+    <rect x="1003" y="836.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="1009" y="846.0" fill="#cbd5e1" font-size="8" >RAW0: B6</text>
+    <rect x="1003" y="851.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="1009" y="861.0" fill="#cbd5e1" font-size="8" >RAW1: B7</text>
+    <rect x="1003" y="866.0" width="132" height="13.5" rx="2" fill="#0369a1" fill-opacity="0.45" stroke="#38bdf8" stroke-width="0.8"/>
+    <text x="1009" y="876.0" fill="#e0f2fe" font-size="8" font-weight="bold">RAW2: B8</text>
+    <rect x="1003" y="881.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="1009" y="891.0" fill="#cbd5e1" font-size="8" >RAW3: B3</text>
+    <rect x="1003" y="896.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="1009" y="906.0" fill="#cbd5e1" font-size="8" >RAW4: B4</text>
+    <rect x="1003" y="911.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.7" stroke="#475569" stroke-width="0.8"/>
+    <text x="1009" y="921.0" fill="#cbd5e1" font-size="8" >RAW5: B5</text>
+    <text x="1004" y="933" fill="#34d399" font-size="8.5" font-weight="bold">TX CMA Ring (MM2S, 4 Slots)</text>
+    <rect x="1003" y="938.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="1009" y="948.0" fill="#475569" font-size="8" >TX0: - [Free]</text>
+    <rect x="1003" y="953.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.5" stroke="#475569" stroke-width="0.8"/>
+    <text x="1009" y="963.0" fill="#64748b" font-size="8" >TX1: B5 [Done]</text>
+    <rect x="1003" y="968.0" width="132" height="13.5" rx="2" fill="#064e3b" fill-opacity="0.75" stroke="#10b981" stroke-width="0.8"/>
+    <text x="1009" y="978.0" fill="#a7f3d0" font-size="8" font-weight="bold">TX2: B6 [Streaming]</text>
+    <rect x="1003" y="983.0" width="132" height="13.5" rx="2" fill="#4c1d95" fill-opacity="0.5" stroke="#a855f7" stroke-width="0.8"/>
+    <text x="1009" y="993.0" fill="#e9d5ff" font-size="8" font-weight="bold">TX3: B7 [In-Flight]</text>
+    <text x="1004" y="1004" fill="#fbbf24" font-size="8.5" font-weight="bold">RX CMA Ring (S2MM, 4 Slots)</text>
+    <rect x="1003" y="1009.0" width="132" height="13.5" rx="2" fill="#0f172a" fill-opacity="0.5" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="1009" y="1019.0" fill="#475569" font-size="8" >RX0: - [Free]</text>
+    <rect x="1003" y="1024.0" width="132" height="13.5" rx="2" fill="#1e293b" fill-opacity="0.5" stroke="#475569" stroke-width="0.8"/>
+    <text x="1009" y="1034.0" fill="#64748b" font-size="8" >RX1: A5 [Done]</text>
+    <rect x="1003" y="1039.0" width="132" height="13.5" rx="2" fill="#78350f" fill-opacity="0.75" stroke="#f59e0b" stroke-width="0.8"/>
+    <text x="1009" y="1049.0" fill="#fde68a" font-size="8" font-weight="bold">RX2: A6 [Recv PCM]</text>
+    <rect x="1003" y="1054.0" width="132" height="13.5" rx="2" fill="#4c1d95" fill-opacity="0.5" stroke="#a855f7" stroke-width="0.8"/>
+    <text x="1009" y="1064.0" fill="#e9d5ff" font-size="8" font-weight="bold">RX3: A7 [In-Flight]</text>
+    <!-- USB -> RAW Arrow -->
+    <path d="M 948 821 C 974 821, 970 872.75, 996 872.75" fill="none" stroke="#38bdf8" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+    <!-- RAW -> TX CMA Copy Arrows -->
+    <path d="M 1142 857.75 C 1166 857.75, 1166 989.75, 1142 989.75" fill="none" stroke="#34d399" stroke-width="1.4" marker-end="url(#arr-copy)"/>
+    <text x="1153" y="926.25" fill="#34d399" font-size="7" font-weight="bold">Copy</text>
+    <!-- TX -> PL MM2S Arrow -->
+    <path d="M 996 974.75 C 968 974.75, 976 924, 948 924" fill="none" stroke="#34d399" stroke-width="1.6" marker-end="url(#arr-green)"/>
+    <text x="974" y="946.375" text-anchor="middle" fill="#34d399" font-size="7.5" font-weight="bold">MM2S</text>
+    <!-- PL -> RX S2MM Arrow -->
+    <path d="M 948 948 C 976 948, 968 1045.75, 996 1045.75" fill="none" stroke="#f59e0b" stroke-width="1.4" marker-end="url(#arr-amber)"/>
+    <text x="974" y="1004.875" text-anchor="middle" fill="#fbbf24" font-size="7.5" font-weight="bold">S2MM</text>
+    <!-- Footer Summary Banner -->
+    <rect x="814" y="1080" width="364" height="22" rx="4" fill="#0f172a" stroke="#334155" stroke-width="0.8"/>
+    <text x="996.0" y="1094.5" text-anchor="middle" fill="#cbd5e1" font-size="8.8" font-weight="500">T8 (6.4-7.2s): B8 ทับ RAW2 | PL เล่น TX2 (B6) | Copy RAW1 เข้าคิว TX3</text>
+  </g>
+</svg>

@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PYNQ-Z2 FM SDR Receiver: วิทยุ FM Real-time Audio ด้วย FPGA + RTL-SDR + Linux Framebuffer | FPGATHAILAND</title>
+    <meta name="title" content="PYNQ-Z2 FM SDR Receiver: วิทยุ FM Real-time Audio ด้วย FPGA + RTL-SDR + Linux Framebuffer | FPGATHAILAND">
+    <meta name="description" content="สร้างเครื่องรับวิทยุ FM SDR Receiver บนบอร์ด PYNQ-Z2 ประมวลผล FM Demodulation ด้วย FPGA (PL) ส่งเสียงออกพอร์ตหูฟัง 3.5mm Real-time ผ่าน Audio Codec ADAU1761 และแสดงผล Spectrum & Waterfall บนจอ HDMI ผ่าน Linux Framebuffer">
+    <meta name="keywords" content="PYNQ-Z2, FM Receiver, RTL-SDR, SDR, FM Demodulation, FPGA, ADAU1761, I2S, AXI DMA, Linux Driver, sdr_dma, Framebuffer, Spectrum Analyzer, Waterfall, Zynq-7000, Xilinx, FPGA Thailand">
+    <meta name="author" content="Wichayen">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://wichayen.github.io/fpgathailand/pynq_z2_fm_receiver.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://wichayen.github.io/fpgathailand/pynq_z2_fm_receiver.html">
+    <meta property="og:title" content="PYNQ-Z2 FM SDR Receiver: วิทยุ FM Real-time Audio ด้วย FPGA + RTL-SDR + Linux Framebuffer">
+    <meta property="og:description" content="เปลี่ยนบอร์ด PYNQ-Z2 ให้เป็น FM SDR Receiver: ประมวลผลคลื่นวิทยุใน FPGA ยิงเสียงออกหูฟัง 3.5mm ตรงๆ และวาด GUI Spectrum / Waterfall ออกจอ HDMI">
+    <meta property="og:image" content="https://wichayen.github.io/fpgathailand/pynq_z2_fm_receiver_files/sdr_dma_timing_diagram.svg">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://wichayen.github.io/fpgathailand/pynq_z2_fm_receiver.html">
+    <meta name="twitter:title" content="PYNQ-Z2 FM SDR Receiver: วิทยุ FM Real-time Audio ด้วย FPGA + RTL-SDR + Linux Framebuffer">
+    <meta property="twitter:description" content="เปลี่ยนบอร์ด PYNQ-Z2 ให้เป็น FM SDR Receiver: ประมวลผลคลื่นวิทยุใน FPGA ยิงเสียงออกหูฟัง 3.5mm ตรงๆ และวาด GUI Spectrum / Waterfall ออกจอ HDMI">
+    <meta name="twitter:image" content="https://wichayen.github.io/fpgathailand/pynq_z2_fm_receiver_files/sdr_dma_timing_diagram.svg">
+
+    <!-- Bootstrap 5 CSS & Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { padding-top: 72px; }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 0.5rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        .figure-caption {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
+        pre {
+            background-color: #0f172a;
+            color: #f8fafc;
+            padding: 16px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.92rem;
+            line-height: 1.55;
+        }
+        pre code {
+            color: inherit;
+            background: none;
+            padding: 0;
+            font-size: inherit;
+        }
+        pre.mermaid {
+            background-color: #ffffff;
+            color: inherit;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+        }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        .callout-box {
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            margin: 1.75rem 0;
+            border-left: 4px solid;
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+        .callout-info {
+            border-left-color: #0284c7;
+            background: #f0f9ff;
+        }
+        .callout-tip {
+            border-left-color: #10b981;
+            background: #f0fdf4;
+        }
+        .callout-warning {
+            border-left-color: #f59e0b;
+            background: #fffbeb;
+        }
+        .callout-title {
+            font-weight: 700;
+            color: #0f172a;
+            font-size: 1.05rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+        .callout-content {
+            color: #334155;
+            font-size: 0.98rem;
+            line-height: 1.75;
+        }
+        .callout-content p:last-child,
+        .callout-content ul:last-child {
+            margin-bottom: 0;
+        }
+        .table-responsive {
+            margin: 1.75rem 0;
+        }
+        .article-content h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+        .article-content h2 {
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-top: 1.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .article-content h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #334155;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .article-post-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.25rem;
+            color: #64748b;
+            font-size: 0.92rem;
+            margin-bottom: 1.5rem;
+        }
+        .lead-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #334155;
+        }
+        .nav-breadcrumb {
+            font-size: 0.88rem;
+            margin-bottom: 1rem;
+        }
+        .nav-breadcrumb a {
+            color: #0284c7;
+            text-decoration: none;
+        }
+        .nav-breadcrumb a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar navbar-expand-lg fixed-top site-nav">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <span class="navbar-brand-icon"><i class="bi bi-cpu"></i></span>
+                <span>FPGATHAILAND</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+                    <li class="nav-item"><a class="nav-link" href="index.html#course"><i class="bi bi-mortarboard me-1"></i>คอร์สเรียน</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#work">ผลงานเด่น</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#articles">บทความและแล็บ</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownBoards" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            แล็บบอร์ด
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownBoards">
+                            <li><h6 class="dropdown-header text-info">คอร์สเรียนพื้นฐาน (Course)</h6></li>
+                            <li><a class="dropdown-item" href="coursecontent/chapter1-introduction-to-fpga.html"><i class="bi bi-book me-2"></i>คอร์สเรียน FPGA พื้นฐาน</a></li>
+                            <li><a class="dropdown-item" href="coursecontent/chapter-sp1.html"><i class="bi bi-stars me-2"></i>Special: Debounce & CDC (SP1)</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">PYNQ-Z2</h6></li>
+                            <li><a class="dropdown-item" href="pynq-z2-vivado_th.html"><i class="bi bi-cpu me-2"></i>Vivado Setup</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-hls_th.html"><i class="bi bi-lightning-charge me-2"></i>HLS Acceleration</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-ai_th.html"><i class="bi bi-robot me-2"></i>AI (DPU IP)</a></li>
+                            <li><a class="dropdown-item" href="pynq-z2-modelsim_th.html"><i class="bi bi-activity me-2"></i>Modelsim</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep1.html"><i class="bi bi-display me-2"></i>LVGL ตอนที่ 1</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvgl_ep2.html"><i class="bi bi-display me-2"></i>LVGL ตอนที่ 2</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_lvlg_special_ep.html"><i class="bi bi-stars me-2"></i>Special: AI Agent</a></li>
+                            <li><a class="dropdown-item" href="Pynq_z2_FM_Radio.html"><i class="bi bi-broadcast-pin me-2"></i>FM Radio (RTL-SDR)</a></li>
+                            <li><a class="dropdown-item" href="pynq_z2_video.html"><i class="bi bi-display me-2"></i>HDMI Video Out (Linux DRM)</a></li>
+                            <li><a class="dropdown-item" href="AI_debug_with_SPM.html"><i class="bi bi-robot me-2"></i>AI Debug with SPM</a></li>
+                            <li><a class="dropdown-item active" href="pynq_z2_fm_receiver.html"><i class="bi bi-broadcast me-2"></i>FM Receiver (Realtime Audio)</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">ARIES PCI Board</h6></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep1.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 1: ออกแบบโปรเจค</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep2.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 2: Version A.1</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep3.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 3: ออกแบบ FPGA</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep4.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 4: Linux PCI Driver</a></li>
+                            <li><a class="dropdown-item" href="AriesBoard_ep5.html"><i class="bi bi-motherboard me-2"></i>ตอนที่ 5: Windows PCI Driver</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">บอร์ดและเครื่องมืออื่นๆ</h6></li>
+                            <li><a class="dropdown-item" href="mini2440_th.html"><i class="bi bi-cpu me-2"></i>mini2440 + FPGA</a></li>
+                            <li><a class="dropdown-item" href="EZUSB_FPGA.html"><i class="bi bi-usb-symbol me-2"></i>EZUSB + FPGA</a></li>
+                            <li><a class="dropdown-item" href="GeminiBoard_Beaglebone_Frambuffer.html"><i class="bi bi-display me-2"></i>GeminiBoard Framebuffer</a></li>
+                            <li><a class="dropdown-item" href="Sigasi.html"><i class="bi bi-code-square me-2"></i>Sigasi for VS Code</a></li>
+                            <li><a class="dropdown-item" href="UVVM.html"><i class="bi bi-check2-circle me-2"></i>UVVM Verification</a></li>
+                            <li><a class="dropdown-item" href="AI_hardware.html"><i class="bi bi-robot me-2"></i>AI Hardware Control with MCP</a></li>
+                            <li><a class="dropdown-item" href="vhdl_code_coverage.html"><i class="bi bi-bar-chart-steps me-2"></i>VHDL Code Coverage</a></li>
+                            <li><a class="dropdown-item" href="fir_filter_by_fpga.html"><i class="bi bi-soundwave me-2"></i>FIR Filter on FPGA</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-info" href="index.html#articles"><i class="bi bi-grid-3x3-gap me-2"></i>ดูบทความทั้งหมด (24 บทความ)</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-9 article-content">
+
+                <!-- Breadcrumb Navigation -->
+                <div class="nav-breadcrumb">
+                    <a href="index.html"><i class="bi bi-house-door me-1"></i>หน้าแรก</a>
+                    <span class="mx-2 text-muted">/</span>
+                    <a href="index.html#articles">บทความและบันทึกการทดลอง</a>
+                    <span class="mx-2 text-muted">/</span>
+                    <span class="text-secondary">PYNQ-Z2 FM SDR Receiver</span>
+                </div>
+
+                <!-- Article Header Title -->
+                <h1 class="border-0 mb-3" style="font-size: clamp(1.8rem, 3.5vw, 2.5rem); font-weight: 800; line-height: 1.3;">
+                    PYNQ-Z2 FM SDR Receiver: วิทยุ FM Real-time Audio ด้วย FPGA + RTL-SDR + Linux Framebuffer
+                </h1>
+
+                <!-- Article Post Meta -->
+                <div class="article-post-meta">
+                    <span><i class="bi bi-calendar3 me-1 text-primary"></i> 27 พฤศจิกายน 2026</span>
+                    <span><i class="bi bi-person me-1 text-primary"></i> โดย Wichayen</span>
+                    <span><i class="bi bi-cpu me-1 text-primary"></i> PYNQ-Z2 (Zynq-7000)</span>
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 align-self-center">Advanced</span>
+                </div>
+
+                <hr class="my-4">
+
+                <!-- 1 Overview -->
+                <h1>1 Overview</h1>
+                <p class="lead-text">
+                    สืบเนื่องจากบทความก่อนหน้านี้ที่ผมได้ทดลองใช้งานบอร์ด <strong>PYNQ-Z2</strong> ใน 2 ส่วน:
+                </p>
+                <ul class="lh-lg mb-4">
+                    <li><a href="Pynq_z2_FM_Radio.html" class="fw-semibold text-primary">FM Demodulation บน PYNQ-Z2</a> — การประมวลผลถอดรหัสสัญญาณวิทยุ FM บน FPGA</li>
+                    <li><a href="pynq_z2_video.html" class="fw-semibold text-primary">Linux Framebuffer / DRM Display บน PYNQ-Z2</a> — output ภาพกราฟิกออกพอร์ต HDMI ผ่าน Linux Framebuffer</li>
+                </ul>
+
+                <p class="lh-lg">
+                    จึงเกิดไอเดียขึ้นมาว่า: บนบอร์ด PYNQ-Z2 นั้นมีชิป Audio Codec (<strong>ADAU1761</strong>) พร้อมช่องต่อหูฟัง 3.5 mm ในตัวอยู่แล้ว หากเรานำสัญญาณ RF ดิบที่รับจาก <strong>USB RTL-SDR Dongle</strong> ส่งผ่าน DMA เข้าไปให้ FPGA (PL) ทำการ FM Demodulate แล้วยิงสตรีมเสียงออกพอร์ตหูฟังตรงๆ พร้อมทั้งให้ CPU วาดหน้าจอ GUI แสดง <strong>Spectrum Analyzer</strong> และ <strong>Waterfall Display</strong> ออกพอร์ต HDMI ก็จะกลายเป็นเครื่องรับวิทยุ <strong>FM SDR Receiver</strong> ได้เหมือนกัน ว่าแล้วก็ลองเลยละกัน
+                </p>
+
+                <h2>1.1 สถาปัตยกรรมโดยรวม (System Architecture)</h2>
+                <p class="lh-lg">
+                    โครงสร้างการทำงานในภาพรวม (Concept) สามารถแบ่งหน้าที่ระหว่างฝั่ง Processing System (PS/Linux) และ Programmable Logic (PL/FPGA) ได้ดังแผนภาพนี้:
+                </p>
+
+                <pre class="mermaid">
+flowchart TD
+
+    RTL["USB RTL-SDR"]
+    APP["Linux Userspace<br/>Native C SDR Application"]
+
+    subgraph PS["Processing System (PS)"]
+        CTRL["RTL-SDR Control<br/>Frequency / Gain / Sample Rate"]
+        GUI["SDR GUI<br/>Spectrum / Waterfall"]
+        REC["Recording Control<br/>WAV File"]
+    end
+
+    subgraph DDR["DDR3 Memory"]
+        IQ["I/Q Buffer (CMA)"]
+        AUDIO["Audio Buffer"]
+        FB["HDMI Framebuffer"]
+    end
+
+    subgraph PL["Programmable Logic (PL)"]
+        DMA_TX["AXI DMA MM2S"]
+        DSP["FM DSP Pipeline<br/>FIR Decimation<br/>FM Demodulation<br/>Audio LPF"]
+        SPLIT["AXI4-Stream Broadcaster"]
+
+        PLAY["Audio Playback<br/>FIFO → I2S → ADAU1761"]
+        DMA_RX["AXI DMA S2MM<br/>Audio Recording"]
+
+        DMA_TX --> DSP
+        DSP --> SPLIT
+        SPLIT --> PLAY
+        SPLIT --> DMA_RX
+    end
+
+    subgraph VIDEO["HDMI Display"]
+        VDMA["AXI VDMA"]
+        HDMI["HDMI Output"]
+        VDMA --> HDMI
+    end
+
+    RTL --> APP
+    APP --> CTRL
+    CTRL --> IQ
+    IQ --> DMA_TX
+
+    DMA_RX --> AUDIO
+    AUDIO --> REC
+
+    APP --> GUI
+    GUI --> FB
+    FB --> VDMA
+
+    APP -.->|"AXI-Lite Control"| PL
+                </pre>
+
+                <h2>1.2 รายละเอียดเส้นทางข้อมูลและการควบคุม (Data &amp; Control Flow)</h2>
+                <p class="lh-lg">
+                    ในโปรเจกต์เดิม <a href="Pynq_z2_FM_Radio.html">FM Demodulation บน PYNQ-Z2</a> สัญญาณเสียงที่ถอดรหัสเสร็จจะถูกส่งกลับเข้าหน่วยความจำ DDR ผ่าน DMA เพื่อให้ CPU อ่านไปเล่นเสียง (ผ่าน jupyter notebook) แต่ในโปรเจกต์นี้ผมได้ทำการเพิ่ม <strong>เส้นทางสัญญาณ (Tap ออกมา)</strong> ให้สตรีมเสียงส่งตรงเข้าสู่ Audio Codec Controller ในระดับฮาร์ดแวร์ทันที เพื่อให้ได้ยินเสียงแบบ Real-time เลย
+                </p>
+
+                <pre class="mermaid">
+flowchart TD
+
+    %% =================================
+    %% 1. RTL-SDR INPUT
+    %% =================================
+    subgraph USB["1. RTL-SDR Input"]
+        RTL["USB RTL-SDR Dongle"]
+        USBDRV["USB Driver / librtlsdr"]
+    end
+
+    %% =================================
+    %% 2. LINUX USERSPACE
+    %% =================================
+    subgraph PS["2. Linux Userspace - Native C Application"]
+        APP["PYNQ SDR Application (fm_sdr)"]
+        RTLCTRL["RTL-SDR Control<br/>Frequency / Gain / Sample Rate"]
+        GUI["SDR GUI<br/>Spectrum / Waterfall / Scan"]
+        RECCTRL["Recording Control<br/>Start / Stop / WAV"]
+
+        APP --> RTLCTRL
+        APP --> GUI
+        APP --> RECCTRL
+    end
+
+    %% =================================
+    %% 3. DDR MEMORY
+    %% =================================
+    subgraph MEM["3. DDR3 Memory"]
+        IQBUF[("TX CMA Ring Buffer<br/>4 Buffers (0.8s each)")]
+        REC_BUF[("RX CMA Buffer<br/>Audio Recording")]
+        FB[("HDMI Framebuffer<br/>/dev/fb0 (1024x540)")]
+    end
+
+    %% =================================
+    %% 4. FPGA PL
+    %% =================================
+    subgraph PL["4. FPGA Programmable Logic"]
+
+        %% FM DSP
+        subgraph DSP["FM DSP Pipeline"]
+            DMA_TX["AXI DMA MM2S"]
+            AXIS_IN["AXI4-Stream FIFO"]
+            FIR_I["FIR Decimation I"]
+            FIR_Q["FIR Decimation Q"]
+            DEMOD["Quadrature FM Demod"]
+            LPF1["Audio LPF 1"]
+            LPF2["Audio LPF 2<br/>48 kHz / 16-bit PCM"]
+
+            DMA_TX --> AXIS_IN
+            AXIS_IN --> FIR_I
+            AXIS_IN --> FIR_Q
+            FIR_I --> DEMOD
+            FIR_Q --> DEMOD
+            DEMOD --> LPF1
+            LPF1 --> LPF2
+        end
+
+        %% AXI4-Stream Broadcaster
+        BROADCAST["AXI4-Stream Broadcaster<br/>1 Input / 2 Outputs"]
+
+        %% Audio Playback
+        subgraph PLAY["Audio Playback - Modified PYNQ Base IP<br/>audio_codec_ctrl_v1.0"]
+            direction TB
+
+            AXIL["AXI4-Lite Slave<br/>Codec Control / Tone Select (0x20)"]
+            AXIS_AUDIO["AXI4-Stream Slave<br/>16-bit PCM Mono Input"]
+            AUDIO_FIFO[("Audio FIFO<br/>256 x 16-bit")]
+            I2S["I2S Transmitter<br/>48 kHz / 24-bit Dual-Mono"]
+            CODEC["ADAU1761 Codec"]
+            HP["Headphone Jack"]
+
+            AXIS_AUDIO --> AUDIO_FIFO
+            AUDIO_FIFO --> I2S
+            I2S --> CODEC
+            CODEC --> HP
+        end
+
+        %% Audio Recording
+        subgraph RECORD["Audio Recording (Optional)"]
+            REC_FIFO["Recording FIFO"]
+            DMA_RX["AXI DMA S2MM"]
+
+            REC_FIFO --> DMA_RX
+        end
+
+        %% Hardware Control
+        subgraph HWCTRL["Hardware Clock / Reset"]
+            AUDCLK["Audio Clock (12.288 MHz / 100 MHz)"]
+        end
+
+        %% DSP output split
+        LPF2 --> BROADCAST
+
+        BROADCAST -->|"M01_AXIS - Playback"| AXIS_AUDIO
+        BROADCAST -->|"M00_AXIS - Recording"| REC_FIFO
+
+        %% Audio IP control and clock
+        AUDCLK -.-> I2S
+    end
+
+    %% =================================
+    %% 5. HDMI VIDEO
+    %% =================================
+    subgraph VIDEO["5. HDMI Display Pipeline"]
+        VDMA["AXI VDMA"]
+        VOUT["Video Out / rgb2dvi"]
+        HDMI["HDMI Output"]
+
+        VDMA --> VOUT
+        VOUT --> HDMI
+    end
+
+    %% =================================
+    %% DATA FLOW
+    %% =================================
+    RTL --> USBDRV
+    USBDRV --> RTLCTRL
+    RTLCTRL -->|"Raw IQ (XOR 0x80)"| IQBUF
+    IQBUF -->|"DDR to PL (MM2S)"| DMA_TX
+
+    DMA_RX -->|"PL to DDR (S2MM)"| REC_BUF
+    REC_BUF -->|"Audio WAV"| RECCTRL
+
+    GUI -->|"Direct Blit"| FB
+    FB --> VDMA
+
+    %% =================================
+    %% CONTROL FLOW
+    %% =================================
+    APP -.->|"UIO (/dev/uioX)"| AXIL
+    APP -.->|"PS I2C (0x3B)"| CODEC
+
+    %% =================================
+    %% STYLES
+    %% =================================
+    classDef data stroke:#e8590c,stroke-width:2px;
+    classDef control stroke:#64748b,stroke-width:1px,stroke-dasharray:5 5;
+
+    class RTL,USBDRV,IQBUF,DMA_TX,AXIS_IN,FIR_I,FIR_Q,DEMOD,LPF1,LPF2,BROADCAST,AXIS_AUDIO,AUDIO_FIFO,I2S,CODEC,HP,REC_FIFO,DMA_RX,REC_BUF,FB,VDMA,VOUT,HDMI data;
+    class AXIL,AUDCLK control;
+                </pre>
+
+                <!-- 2 ดัดแปลง Hardware IP -->
+                <h1>2 ดัดแปลง Hardware IP (FPGA PL)</h1>
+
+                <h2>2.1 ปัญหาของ Audio Codec Controller IP เดิม</h2>
+                <p class="lh-lg">
+                    ในการส่งข้อมูลเสียงออกทางชิป ADAU1761 บอร์ด PYNQ ปกติจะมี IP สำเร็จรูปชื่อ <a href="https://github.com/Xilinx/PYNQ/tree/image_v3.0.1/boards/ip/audio_codec_ctrl_v1.0" target="_blank" rel="noopener noreferrer">audio_codec_ctrl_v1.0</a> มาให้ แต่เมื่อไปดูโครงสร้างของ IP ตัวนี้ พบว่า <strong>การส่งข้อมูลเสียงต้องทำผ่าน AXI4-Lite Register โดยให้ CPU เป็นผู้เขียนข้อมูลทีละ Sample (<code>0x08 DataTx_L</code>, <code>0x0C DataTx_R</code>)</strong> ซึ่งมีไม่ตอบโจทย์กับสิ่งที่กำลังจะทำเพราะ:
+                </p>
+                <ol class="lh-lg">
+                    <li><strong>กินพลังประมวลผลของ CPU (High CPU Overhead):</strong> การให้ ARM Cortex-A9 คอยเขียนข้อมูลเสียงที่อัตรา 48 kHz สม่ำเสมอ จะแย่งเวลา CPU ที่ต้องใช้ในการอ่านสตรีม USB จาก RTL-SDR, ทำ FFT คำนวณ Spectrum และวาด GUI หน้าจอ Framebuffer ที่ 60 fps</li>
+                    <li><strong>เกิดปัญหาเสียงสะดุด (Audio Underrun):</strong> หาก CPU ทำงานอื่นโหลดหนัก ข้อมูลเสียงจะป้อนไม่ทันจนเสียงขาดหาย</li>
+                </ol>
+
+                <p class="lh-lg">
+                    <strong>ทางออกที่ดีกว่า:</strong><br>
+                    เนื่องจากชุดประมวลผล FM Demodulator ใน FPGA สร้างสัญญาณเสียง 48 kHz ออกมาเป็น <strong>AXI4-Stream</strong> อยู่แล้ว ผมเลยดัดแปลง <code>audio_codec_ctrl_v1.0</code> ให้มีพอร์ต <strong>AXI4-Stream Slave (<code>S_AXIS</code>)</strong> เพื่อรับข้อมูลเสียงจาก Output ของ FM demodulator เข้า audio codec โดยตรงเลย (CPU ไม่ต้องมายุ่งอะไรกับ codec เลย)
+                </p>
+
+                <pre class="mermaid">
+flowchart TD
+    DEMOD["FM Demodulator Pipeline"]
+    BC["AXIS Broadcaster"]
+    CODEC["Modified audio_codec_ctrl<br/>(AXIS to I2S)"]
+    ADAU["ADAU1761 DAC"]
+    HP["Headphone Out (3.5 mm)"]
+    DMA_RX["AXI DMA S2MM"]
+    DDR["DDR Memory<br/>(สำหรับบันทึกเสียง WAV)"]
+
+    DEMOD -->|"AXI4-Stream 16-bit Mono @ 48 kHz"| BC
+    BC -->|"M01_AXIS"| CODEC
+    CODEC -->|"I2S"| ADAU
+    ADAU --> HP
+    BC -->|"M00_AXIS"| DMA_RX
+    DMA_RX --> DDR
+
+    style DEMOD fill:#fef3c7,stroke:#d97706,stroke-width:1.5px
+    style BC fill:#e0f2fe,stroke:#0284c7,stroke-width:1.5px
+    style CODEC fill:#dcfce7,stroke:#16a34a,stroke-width:1.5px
+    style ADAU fill:#ede9fe,stroke:#7c3aed,stroke-width:1.5px
+    style HP fill:#fce7f3,stroke:#db2777,stroke-width:1.5px
+    style DMA_RX fill:#f1f5f9,stroke:#64748b,stroke-width:1.5px
+    style DDR fill:#f1f5f9,stroke:#64748b,stroke-width:1.5px
+                </pre>
+
+                <h2>2.2 การดัดแปลง Modified <code>audio_codec_ctrl_v1.0</code></h2>
+                <p class="lh-lg">
+                    สิ่งที่แก้ไขเพิ่มเติมเข้าไปใน IP <code>audio_codec_ctrl_v1.0</code> (ไฟล์ <code>user_logic.vhd</code>):
+                </p>
+                <ol class="lh-lg">
+                    <li>
+                        <strong>เพิ่มพอร์ต AXI4-Stream Slave:</strong>
+                        <pre><code>S_AXIS_TDATA  : in  STD_LOGIC_VECTOR(15 downto 0);
+S_AXIS_TVALID : in  STD_LOGIC;
+S_AXIS_TREADY : out STD_LOGIC;</code></pre>
+                    </li>
+                    <li>
+                        <strong>ใส่ Audio FIFO:</strong><br>
+                        รองรับการเขียนข้อมูลแบบ Burst จาก AXI-Stream และถูกอ่านออกทีละ Sample ตามสัญญาณ Pulse 48 kHz ของ I2S
+                    </li>
+                    <li>
+                        <strong>การแปลงข้อมูล 16-bit ไปเป็น 24-bit (I2S Format):</strong><br>
+                        เนื่องจาก ADAU1761 ตั้งค่าให้รับสัญญาณ I2S แบบ 24-bit แต่ FM demodulator ออก 16 bit เราจึงนำ Sample เสียง 16-bit จาก FIFO มาต่อท้ายด้วย 0 จำนวน 8 บิต (Zero-padding LSB):
+                        <pre><code>-- Duplicate Mono เป็น Dual-Mono (L = R) พร้อมแปลง 16-bit เป็น 24-bit
+DataTx_L &lt;= x"00" &amp; rd_data &amp; x"00";
+DataTx_R &lt;= x"00" &amp; rd_data &amp; x"00";</code></pre>
+                    </li>
+                    <li>
+                        <strong>คง AXI4-Lite Slave ไว้สำหรับ Control &amp; Debug:</strong><br>
+                        ยังคง AXI-Lite เอาไว้เพื่อให้ CPU สั่งงานได้ และโดยผมได้เพิ่ม Register เพื่อทดสอบ output เสียงไปที่ address 0x20 โดย
+                        <ul>
+                            <li>เขียน <code>1</code>: ให้วงจรสลับไปขับสัญญาณคลื่นรูปไซน์ทดสอบ 440 Hz (Built-in Sine Tone Generator) สำหรับเทสระบบเสียง</li>
+                            <li>เขียน <code>0</code>: สลับกลับมารับเสียงจริงจาก AXI4-Stream ของ FM Demodulator</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <pre class="mermaid">
+flowchart TD
+
+    %% =================================
+    %% AXI INTERFACES
+    %% =================================
+    subgraph IFACE["Audio Playback IP - AXI Interfaces"]
+        AXIL["AXI4-Lite Slave<br/>Config / Tone Register (0x20)"]
+        AXIS["AXI4-Stream Slave<br/>TDATA[15:0] - Mono PCM @ 48 kHz"]
+    end
+
+    %% =================================
+    %% AUDIO DATA PATH
+    %% =================================
+    subgraph PLAYBACK["Audio Playback - Modified audio_codec_ctrl_v1.0"]
+
+        FIFO[("Audio FIFO<br/>256 x 16-bit Mono Samples")]
+
+        READ["FIFO Read Controller<br/>48 kHz Trigger"]
+
+        UNDERFLOW["Underflow Protection<br/>Output Zero / Mute เมื่อ FIFO ว่าง"]
+
+        DUP["Mono to Dual-Mono<br/>Left = Right"]
+
+        CONV["PCM Format Converter<br/>16-bit to 24-bit<br/>(Append 8'b0 to LSB)"]
+
+        PACK["I2S Serializer / Formatter<br/>BCLK = 3.125 MHz, LRCLK = 48.8 kHz"]
+
+        TONE_MUX{"MUX<br/>Reg 0x20"}
+        SINE["Hardware 440 Hz<br/>Sine Generator"]
+
+        AXIS --> FIFO
+        FIFO --> READ
+        READ --> DUP
+        DUP --> CONV
+        CONV --> TONE_MUX
+        SINE --> TONE_MUX
+        TONE_MUX --> PACK
+
+        FIFO -.-> UNDERFLOW
+        UNDERFLOW -.-> PACK
+        AXIL -.-> TONE_MUX
+    end
+
+    %% =================================
+    %% AUDIO CODEC
+    %% =================================
+    subgraph CODEC["PYNQ-Z2 Audio Codec"]
+        ADAU["ADAU1761<br/>24-bit Audio DAC"]
+        HP["Headphone Jack 3.5 mm"]
+
+        ADAU --> HP
+    end
+
+    %% =================================
+    %% PS CODEC CONFIGURATION
+    %% =================================
+    subgraph PSCTRL["Codec Configuration (PS I2C)"]
+        PS["Zynq Processing System"]
+        I2C["PS I2C0 Controller (/dev/i2c-0)"]
+        PS --> I2C
+    end
+
+    I2C -.->|"I2C Config (Address 0x3B)<br/>PLL, Audio Path, DAC Volume"| ADAU
+    PACK -->|"I2S Signals (BCLK, LRCLK, SDATA)"| ADAU
+                </pre>
+
+                <h2>2.3 สรุปภาพรวมเส้นทางการไหลของข้อมูล (End-to-End Dataflow)</h2>
+                <p class="lh-lg">
+                    เส้นทางการไหลของข้อมูล (Dataflow) จาก RTL-SDR ไปจนถึงเสียงออกพอร์ตหูฟังและบันทึกลงหน่วยความจำ สามารถสรุปเป็นขั้นตอนและแผนภาพได้ดังนี้:
+                </p>
+
+                <pre class="mermaid">
+flowchart TD
+    A["RTL-SDR USB Dongle<br/>I/Q Data"]
+    B["RTL-SDR Read<br/>(CPU / libusb)"]
+    C["Copy I/Q to DDR<br/>RAW Ring Buffer"]
+    D["DMA Driver<br/>Submit RX + TX"]
+    E["AXI DMA MM2S<br/>DDR → FPGA"]
+    F["FPGA FM Processing<br/>FIR → FM Demod → LPF"]
+    G["FPGA Audio Stream"]
+    H["Audio Codec<br/>ADAU1761"]
+    I["AXI DMA S2MM<br/>FPGA → DDR"]
+    J["DDR RX Buffer<br/>PCM Data"]
+
+    A --> B --> C --> D --> E --> F --> G
+    G --> H
+    G --> I --> J
+                </pre>
+
+                <p class="lh-lg">
+                    จากแผนภาพข้างต้น การทำงานจะแบ่งออกเป็น 4 ขั้นตอนหลัก:
+                </p>
+                <ol class="lh-lg">
+                    <li><strong>การรับข้อมูลคลื่นวิทยุ (RF Ingestion):</strong> RTL-SDR รับสัญญาณ RF แล้วแปลงเป็นข้อมูลดิบ I/Q ส่งผ่าน USB สู่ CPU โดยใช้ <code>libusb</code> เพื่อคัดลอกลงใน RAW Ring Buffer บน DDR</li>
+                    <li><strong>การส่งเข้าฮาร์ดแวร์ (DMA Transfer):</strong> ไดรเวอร์ <code>sdr_dma</code> ทำการส่งคิว DMA สั่งให้โมดูล AXI DMA MM2S ดึงข้อมูล I/Q จาก DDR โยนให้ไปที่ FPGA (PL)</li>
+                    <li><strong>การประมวลผลบนฮาร์ดแวร์ (FPGA DSP Pipeline):</strong> วงจรดิจิทัลใน FPGA ทำการลด Sampling Rate (FIR Decimation), ถอดรหัสคลื่นวิทยุ FM (Quadrature FM Demodulator) และกรองเสียง (Audio LPF) ได้ออกมาเป็นสตรีมเสียง 48 kHz 16-bit Mono</li>
+                    <li><strong>การส่งสัญญาณเสียงออก 2 ทาง (Dual Audio Output Paths):</strong>
+                        <ul>
+                            <li><strong>ออกหูฟังทันที (Real-time Playback):</strong> สตรีมเสียงถูกส่งตรงเข้า <code>audio_codec_ctrl</code> แปลงเป็นสัญญาณ I2S เข้าชิป ADAU1761 ออกพอร์ต 3.5 mm โดยตรง โดยไม่ใช้ CPU เลย</li>
+                            <li><strong>บันทึกเสียงลงหน่วยความจำ (Recording):</strong> ส่งผ่าน AXI DMA S2MM กลับเข้าสู่ DDR RX Buffer สำหรับนำไปบันทึกเป็นไฟล์เสียง WAV เมื่อต้องการ</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <!-- 3 Linux Kernel, Driver และ PetaLinux Build -->
+                <h1>3 Linux Kernel, Driver และ PetaLinux Build</h1>
+                <p class="lh-lg">
+                    ในส่วน driver ของ dma ที่เพิ่มเข้า ผมได้ให้ AI ช่วยสร้างขึ้นมาให้ โดยให้พัฒนาไดรเวอร์ต่อยอดจาก <strong>Xilinx DMA Engine</strong> อีกที
+                </p>
+
+                <h2>3.1 ไดรเวอร์ <code>sdr_dma</code></h2>
+                <p class="lh-lg">
+                    สัญญาณ I/Q จาก USB RTL-SDR สตรีมเข้ามาที่ Sample Rate <strong>1.92 MSPS</strong> (3.84 MB/s) การส่งข้อมูลเข้าสู่ FPGA จะใช้ DMA ควบคุมโดย Kernel Driver แบบ Platform Driver ชื่อ <strong><code>sdr_dma</code></strong> (<code>/dev/sdr_dma</code>) ซึ่งพัฒนาครอบ Xilinx DMA Engine ไว้อีกที โดยมีกลไกสำคัญดังนี้:
+                </p>
+
+                <ul class="lh-lg">
+                    <li><strong>CMA Allocation (<code>dma_alloc_coherent</code>):</strong> จองหน่วยความจำแบบต่อเนื่อง (Physically Contiguous) ใน DDR ไว้ล่วงหน้า</li>
+                    <li><strong>Multi-Buffer Ring (4 Buffers):</strong> กำหนดไว้ 4 บัฟเฟอร์ ขนาดบัฟเฟอร์ละ <code>3,072,000 bytes</code> (1,536,000 Complex IQ Samples × 2 bytes)
+                        <ul>
+                            <li>ที่ความถี่ 1.92 MSPS ข้อมูล 1 บล็อกมีขนาดความยาวเท่ากับ <strong>0.8 วินาที</strong> (ความจุรวมของ Ring Buffer ทั้งหมดคือ 4 × 0.8 = 3.2 วินาที)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Asynchronous Descriptor Queueing:</strong> ไดรเวอร์เปิดให้เรียก <code>ioctl(SDR_DMA_START)</code> เพื่อยื่นคิว DMA Descriptor (<code>dmaengine_submit</code>) เข้าสู่ Linux DMA Engine ไว้ล่วงหน้าได้พร้อมกันหลายบล็อก</li>
+                </ul>
+
+                <pre class="mermaid">
+sequenceDiagram
+    participant CPU as DMA Thread
+    participant RX as DMA S2MM
+    participant TX as DMA MM2S
+    participant FPGA
+
+    CPU->>RX: SDR_DMA_START(RX)
+    Note over RX: Submit RX Descriptor
+
+    CPU->>TX: SDR_DMA_START(TX)
+    Note over TX: Submit TX Descriptor
+
+    TX->>FPGA: I/Q Data
+    FPGA->>FPGA: FM Processing
+    FPGA->>RX: Audio Stream
+
+    par TX Completion
+        TX-->>CPU: DMA Complete
+    and RX Completion
+        RX-->>CPU: DMA Complete
+    end
+
+    Note over CPU: รอให้ TX และ RX Complete ครบทั้งคู่
+                </pre>
+
+                <div class="callout-box callout-info">
+                    <div class="callout-title"><i class="bi bi-info-circle me-2"></i>ข้อสังเกตทิศทางข้อมูล DMA</div>
+                    <div class="callout-content">
+                        <ul class="mb-0">
+                            <li><strong>DMA MM2S (Memory-Mapped to Stream / TX):</strong> ส่งข้อมูลดิบ I/Q จาก <strong>DDR Memory → FPGA (PL)</strong> เข้าสู่ส่วนประมวลผล FM Demodulation</li>
+                            <li><strong>DMA S2MM (Stream to Memory-Mapped / RX):</strong> รับสตรีมข้อมูลเสียงที่ถอดรหัสเสร็จแล้วจาก <strong>FPGA (PL) → DDR Memory</strong> เพื่อนำไปบันทึกเป็นไฟล์เสียง WAV</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="callout-box callout-info">
+                    <div class="callout-title"><i class="bi bi-diagram-3 me-2"></i>การแบ่งหน้าที่ระหว่าง Driver และ Software Application ในเรื่อง Queueing</div>
+                    <div class="callout-content">
+                        <ul class="mb-0">
+                            <li><strong>ฝั่ง Driver (<code>sdr_dma</code>):</strong> ทำหน้าที่เป็นกลไกพื้นฐาน (Mechanism) โดยจัดเตรียม Buffer Pool ไว้ 4 บล็อกใน CMA และอนุญาตให้แอปพลิเคชันส่ง <code>SDR_DMA_START</code> ซ้อนกันได้หลายบล็อก</li>
+                            <li><strong>ฝั่ง Software Application (<code>fm_sdr.c</code>):</strong> เป็นผู้กำหนดนโยบาย (Policy) โดยตรง ผ่านการกำหนดค่า <code>#define NINFLIGHT 2</code> และควบคุมในลูป <code>dma_thread()</code> ให้ยื่นคิวล่วงหน้า 2 บล็อกเสมอ เพื่อป้องกันเสียงกระตุก</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>3.1.1 Multi-Buffer Ring 4 ช่อง และ In-Flight Queueing</h3>
+                <p class="lh-lg">
+                    <strong>ทำไมระบบถึงเลือกใช้ 4 CMA Buffers แทนที่จะเป็นแบบ 2 บัฟเฟอร์ (Ping-Pong) ทั่วไป?</strong>
+                </p>
+                <ol class="lh-lg">
+                    <li><strong>ป้องกันปัญหาเสียงสะดุดจากความล่าช้าของ CPU (Absorb CPU Latency):</strong> หากใช้เพียง 2 บัฟเฟอร์ (A/B) ทันทีที่ DMA สตรีมบัฟเฟอร์ A เสร็จสิ้น และสลับไปเล่นบัฟเฟอร์ B หากจังหวะนั้น CPU กำลังติดโหลดงานอื่น (เช่น การประมวลผล FFT 1024 จุด หรือการวาดเรนเดอร์หน้าจอ GUI Framebuffer 60 fps) จนไม่สามารถเติมข้อมูลลงในบัฟเฟอร์ A ให้เสร็จทันเวลา 0.8 วินาที จะทำให้ฮาร์ดแวร์เสียงกระตุกได้</li>
+                    <li><strong>การส่งคิวล่วงหน้าแบบ In-Flight 2 บล็อก (<code>NINFLIGHT = 2</code>):</strong> แอพพลิเคชันจะส่งคำสั่ง <code>ioctl(SDR_DMA_START)</code> ให้เคอร์เนลเข้าคิวฮาร์ดแวร์ DMA ไว้ 2 บล็อกล่วงหน้าเสมอ เมื่อบล็อกแรก (<code>Buffer 0</code>) ถ่ายโอนเสร็จสิ้น วงจร DMA Engine จะดึงบล็อกที่สอง (<code>Buffer 1</code>) มาสตรีมต่อในทันทีแบบ <strong>0 ms Gap (Zero-gap handoff)</strong> โดยไม่ต้องรอซอฟต์แวร์ตื่นขึ้นมาสั่งงาน</li>
+                    <li><strong>รองรับความผันผวนของ USB Bus Jitter:</strong> RTL-SDR ส่งข้อมูลผ่าน USB Bulk Endpoint ซึ่งอาจมีความแปรปรวนของเวลาในการส่งข้อมูลเป็นช่วงๆ การมีบัฟเฟอร์หมุนเวียน 4 ช่อง (จุข้อมูลรวมได้ถึง 3.2 วินาที) ช่วยให้ระบบมีความยืดหยุ่นสูงมาก สัญญาณเสียงจึงราบรื่น</li>
+                </ol>
+
+                <h3>3.1.2 แผนภาพการทำงานของ Multi Ring Buffer และ Timing Pipeline</h3>
+                <p class="lh-lg">
+                    ภาพการทำงานโดยรวมระหว่าง USB Ingestion, เคอร์เนล และ FPGA ได้ชัดเจนยิ่งขึ้น แผนภาพด้านล่างแสดงทั้งจังหวะเวลา (Timing Slots ช่องละ 0.8 วินาที) และ memory evolution:
+                </p>
+
+                <figure class="text-center my-4">
+                    <img src="pynq_z2_fm_receiver_files/sdr_dma_timing_diagram.svg" alt="sdr_dma Timing Diagram" class="img-fluid rounded border shadow-sm">
+                    <figcaption class="figure-caption mt-2">แผนภาพแสดง Timing Pipeline ของ sdr_dma และการจัดคิว In-Flight</figcaption>
+                </figure>
+
+                <figure class="text-center my-4">
+                    <img src="pynq_z2_fm_receiver_files/Memory%20Evolution%20Diagram.svg" alt="Memory Evolution Diagram" class="img-fluid rounded border shadow-sm">
+                    <figcaption class="figure-caption mt-2">แผนภาพวิวัฒนาการและการจัดสรรหน่วยความจำ (Memory Evolution) ระหว่าง RAW Ring Buffer, CMA และ PL</figcaption>
+                </figure>
+
+                <p class="lh-lg">
+                    <strong>หลักการทำงานของ Multi-Buffer Ring และ In-Flight Pipeline สรุปได้ดังนี้:</strong>
+                </p>
+                <ol class="lh-lg">
+                    <li><strong>การประสานงานของ Memory Pools 3 ระดับ:</strong>
+                        <ul>
+                            <li><strong>RAW Ring Buffer (6 ช่องบน User Heap):</strong> ทำหน้าที่เป็น Buffer ด่านหน้า รับข้อมูลดิบ I/Q (Unsigned 8-bit) จาก RTL-SDR ผ่าน USB Callback เข้ามาพักไว้ก่อน</li>
+                            <li><strong>TX CMA Ring Buffer (4 ช่องบน Physical Kernel Memory):</strong> ทำหน้าที่พักข้อมูลที่ <strong>ดึงมาจาก RAW Ring Buffer</strong> (พร้อมแปลงเป็น Signed 8-bit) หลังจากนั้น AXI DMA จะดึงข้อมูลทีละบล็อก (0.8s) ส่งไปให้ FPGA ทำการคำนวณ FM Demodulate + Realtime Audio Output โดยหมุนวนบัฟเฟอร์ (Ring buffer) 0 → 1 → 2 → 3 → 0</li>
+                            <li><strong>RX CMA Ring Buffer (4 ช่องบน Physical Kernel Memory):</strong> รองรับสัญญาณเสียง PCM ที่ถอดรหัสแล้วจาก FPGA ผ่าน AXI DMA (S2MM) กลับเข้า DDR สำหรับบันทึกไฟล์ WAV</li>
+                        </ul>
+                    </li>
+                    <li><strong>Initial Pre-buffering (<code>PREBUF = 2</code>, ช่วง T0 – T1):</strong><br>
+                        ในช่วง 1.6 วินาทีแรก ระบบจะยังไม่ปล่อยเสียง (Muted) เพื่อรอสะสมข้อมูลจาก USB ให้เต็มบัฟเฟอร์ครบ 2 บล็อกแรก (<code>B0</code> และ <code>B1</code>) ก่อนเริ่มสตรีม เพื่อสร้างความมั่นใจว่าในคิวจะมีข้อมูลสำรองพร้อมเสมอ
+                    </li>
+                    <li><strong>In-Flight Queueing และ Zero-Gap Handoff (ตั้งแต่ T2 เป็นต้นไป):</strong><br>
+                        แอปพลิเคชันจะส่งคำสั่ง <code>ioctl(SDR_DMA_START)</code> จองคิวล่วงหน้า 2 บล็อกเสมอ (<code>NINFLIGHT = 2</code>) ในขณะที่บล็อกปัจจุบันกำลังถูกสตรีมเข้า FPGA บล็อกถัดไปจะเข้าคิวรออยู่ในระดับ Hardware Descriptor แล้ว เมื่อบล็อกแรกทำงานเสร็จ วงจร AXI DMA จะดึงบล็อกถัดไปมาประมวลผลต่อทันทีแบบ <strong>0 ms Gap</strong> โดยไม่ต้องรอ CPU ตื่นมาสั่งงาน
+                    </li>
+                    <li><strong>การหมุนเวียนบัฟเฟอร์แบบ Interrupt-Driven (Buffer Recycling):</strong><br>
+                        เมื่อฮาร์ดแวร์ DMA ทำงานเสร็จในแต่ละบล็อก (ครบ 0.8 วินาที) จะยิง Hardware Interrupt (<code>IOC_Irq</code>) ปลุก DMA Thread ที่หลับรออยู่ด้วย <code>wait_for_completion()</code> ขึ้นมาเพียงเสี้ยววินาที เพื่อคืนสถานะบัฟเฟอร์เดิมให้พร้อมนำไปเขียนข้อมูลชุดใหม่ แล้ววนลูปหมุนเวียนต่อเนื่อง ทำให้ประหยัดพลังงาน CPU สูงมาก (Zero Polling) และเสียงไม่กระตุกเลย
+                    </li>
+                </ol>
+
+                <div class="callout-box callout-info">
+                    <div class="callout-title"><i class="bi bi-cpu me-2"></i>แผนภาพ: Interrupt-Driven DMA Streaming Loop</div>
+                    <div class="callout-content">
+                        <p>แผนภาพด้านล่างแสดงกระบวนการทำงานของ <strong>DMA Worker Thread</strong> ใน <code>fm_sdr</code> App ที่สื่อสารกับ Kernel Driver <code>/dev/sdr_dma</code> เพื่อป้อนสตรีม IQ อย่างต่อเนื่องเข้า FPGA โดยใช้ <strong>Hardware Interrupt (IOC_Irq)</strong> แทนการ Busy-poll — ทำให้ CPU ว่างเกือบ 100% ระหว่างรอการถ่ายโอนแต่ละบล็อก</p>
+                    </div>
+                </div>
+
+                <pre class="mermaid">
+sequenceDiagram
+    autonumber
+    
+    box #e0f2fe 1. RTL-SDR Driver
+    participant Dongle as RTL-SDR Dongle (USB)
+    participant SDR_Th as librtlsdr (USB Callback)
+    end
+
+    box #fef3c7 2. fm_sdr App
+    participant Ring as Raw IQ Ring Buffer (6 Slots)
+    participant DMA_Th as DMA Worker Thread
+    end
+
+    box #dcfce7 3. Linux System
+    participant KMod as Driver (/dev/sdr_dma & CMA)
+    end
+
+    box #fce7f3 4. FPGA Logic
+    participant DMA_HW as AXI DMA MM2S
+    participant PL as FPGA FM Demod Pipeline
+    end
+
+    Dongle->>SDR_Th: Async USB Bulk Transfer (IQ Bytes)
+    SDR_Th->>Ring: Push Raw IQ (Unsigned 8-bit, 0..255)
+    
+    loop ทุกๆ บล็อก 0.8 วินาที (1,536,000 Samples)
+        DMA_Th->>Ring: ดึง IQ บล็อกใหม่ออกมา (0.8s)
+        DMA_Th->>KMod: แปลง Unsigned->Signed แล้วคัดลอกลง TX CMA[buf_idx]
+        DMA_Th->>KMod: ioctl(SDR_DMA_START, buf_idx)
+        KMod->>DMA_HW: สั่ง AXI DMA เริ่มสตรีมข้อมูล
+        DMA_HW->>PL: ส่งสตรีม I/Q เข้า FIR Decimation ใน PL
+        DMA_Th->>KMod: ioctl(SDR_DMA_FINISH, buf_idx)
+        Note over DMA_Th,KMod: Thread หลับรอ (Zero CPU Usage)
+        DMA_HW-->>KMod: ส่ง Hardware Interrupt เมื่องานเสร็จ
+        KMod-->>DMA_Th: ปลุก Thread ให้ทำงานต่อ
+    end
+                </pre>
+
+                <h2>3.2 การตั้งค่า Device Tree (<code>system-user.dtsi</code>)</h2>
+                <p class="lh-lg">
+                    ในไฟล์ Device Tree (<code>system-user.dtsi</code>) ทำหน้าที่ประกาศโหนดฮาร์ดแวร์เพื่อบอกให้ Linux Kernel ทราบว่ามี IP Core อะไรอยู่ใน FPGA PL บ้าง พร้อมทั้งผูกฮาร์ดแวร์เหล่านั้นเข้ากับไดรเวอร์ที่เราสร้างขึ้น:
+                </p>
+
+                <pre><code>/* The AXI DMA stays under the xilinx_dma (dmaengine) driver.
+ * The sdr_dma platform driver binds to this node via "compatible".
+ * It allocates CMA buffers and exposes /dev/sdr_dma (ioctl + mmap) to userspace. */
+&amp;amba_pl {
+    sdr_dma: sdr_dma {
+        compatible = "sdr,sdr-dma-1.0";
+        dmas = &lt;&amp;rtl_sdr_axi_dma_0 0 &amp;rtl_sdr_axi_dma_0 1&gt;;
+        dma-names = "tx", "rx";
+        sdr,tx-buffers = &lt;4&gt;;
+        sdr,tx-size = &lt;3072000&gt;;        /* 1,536,000 IQ samples x 2 bytes (0.8 s at 1.92 MSPS) */
+        sdr,rx-buffers = &lt;4&gt;;
+        sdr,rx-size = &lt;76800&gt;;          /* 38,400 audio samples x 2 bytes (0.8 s at 48 kHz mono) */
+    };
+};</code></pre>
+
+                <ol class="lh-lg">
+                    <li><strong><code>sdr,tx-buffers</code> และ <code>sdr,tx-size</code>:</strong><br>
+                        กำหนดให้ไดรเวอร์จองหน่วยความจำแบบต่อเนื่อง (CMA) จำนวน <strong>4 บัฟเฟอร์</strong> ขนาดบัฟเฟอร์ละ <strong><code>3,072,000 bytes</code></strong><br>
+                        <em>(คำนวณจาก 1,536,000 IQ Samples × 2 bytes (I+Q) = 0.8 วินาที เมื่อส่งที่ Sample Rate 1.92 MSPS)</em>
+                    </li>
+                    <li><strong><code>sdr,rx-buffers</code> และ <code>sdr,rx-size</code>:</strong><br>
+                        จอง CMA บัฟเฟอร์สำหรับรับเสียง PCM คืนกลับมาบันทึกจำนวน <strong>4 บัฟเฟอร์</strong> ขนาดบัฟเฟอร์ละ <strong><code>76,800 bytes</code></strong><br>
+                        <em>(คำนวณจาก 38,400 Audio Samples × 2 bytes (16-bit mono) = 0.8 วินาที ที่ Sample Rate เสียง 48 kHz)</em>
+                    </li>
+                </ol>
+
+                <h2>3.3 การคอนฟิกเคอร์เนลและ Rootfs (<code>bsp.cfg</code>)</h2>
+                <p class="lh-lg">
+                    เพื่อให้ระบบปฏิบัติการ Linux บน PetaLinux มีไดรเวอร์ ไลบรารี และคอนฟิกเคอร์เนลที่พร้อมสำหรับการทำงานแบบ Real-time SDR จำเป็นต้องตั้งค่า 2 ส่วนหลักดังนี้:
+                </p>
+
+                <h3>3.3.1 การติดตั้งแพ็กเกจลงใน Rootfs (<code>petalinux-image-minimal.bbappend</code>)</h3>
+                <p class="lh-lg">กำหนดแพ็กเกจเสริมที่จำเป็นต้องฝังลงใน Linux Rootfs Image:</p>
+
+                <pre><code>IMAGE_INSTALL:append = " \
+    libusb1 \
+    i2c-tools \
+    sdr-dma \
+"</code></pre>
+
+                <ul class="lh-lg">
+                    <li><strong><code>libusb1</code>:</strong> ไลบรารีพื้นฐานสำหรับแอปพลิเคชัน Userspace ในการสื่อสารผ่านพอร์ต USB กับดองเกิล RTL-SDR</li>
+                    <li><strong><code>i2c-tools</code>:</strong> ชุดเครื่องมือและยูทิลิตี้สำหรับทดสอบและสั่งงานบัส I2C (ใช้ควบคุมชิป ADAU1761)</li>
+                    <li><strong><code>sdr-dma</code>:</strong> แพ็กเกจโมดูลไดรเวอร์เคอร์เนลที่เราพัฒนาขึ้น เพื่อให้โหลดเข้าเคอร์เนลโดยอัตโนมัติ</li>
+                </ul>
+
+                <h3>3.3.2 การคอนฟิกเคอร์เนล Linux (<code>bsp.cfg</code>)</h3>
+                <p class="lh-lg">ไฟล์คอนฟิกเคอร์เนลเพื่อเปิดใช้งานโมดูลฮาร์ดแวร์และปรับแต่งพารามิเตอร์ให้รองรับการสตรีมความเร็วสูง:</p>
+
+                <pre><code>CONFIG_DMADEVICES=y
+CONFIG_XILINX_DMA=y
+CONFIG_UIO=y
+CONFIG_UIO_PDRV_GENIRQ=y
+CONFIG_I2C_CHARDEV=y
+CONFIG_I2C_CADENCE=y
+CONFIG_DEVMEM=y
+# CONFIG_STRICT_DEVMEM is not set
+
+# ปิดไดรเวอร์ DVB ดั้งเดิม เพื่อไม่ให้แย่งจับ RTL2832U Dongle
+# CONFIG_DVB_USB_RTL28XXU is not set
+
+# กำหนด Kernel Command Line:
+#   uio_pdrv_genirq.of_id=generic-uio -> Bind generic-uio สำหรับ audio_codec_ctrl
+#   usbcore.usbfs_memory_mb=0         -> ปลดล็อกขีดจำกัดบัฟเฟอร์ USB รองรับสตรีม 3.84 MB/s ต่อเนื่อง
+CONFIG_CMDLINE="uio_pdrv_genirq.of_id=generic-uio usbcore.usbfs_memory_mb=0"
+CONFIG_CMDLINE_EXTEND=y</code></pre>
+
+                <ul class="lh-lg">
+                    <li><strong><code>CONFIG_DMADEVICES=y</code> และ <code>CONFIG_XILINX_DMA=y</code>:</strong><br>
+                        เปิดการทำงานของ Linux DMA Engine Framework และไดรเวอร์ AXI DMA ของ Xilinx
+                    </li>
+                    <li><strong><code>CONFIG_UIO=y</code> และ <code>CONFIG_UIO_PDRV_GENIRQ=y</code>:</strong><br>
+                        เปิดระบบ Userspace I/O เพื่อให้แอปพลิเคชัน C สามารถเข้าถึงและควบคุม Register ของ IP <code>audio_codec_ctrl</code> (เช่น สั่งเปิด Test Sine Tone) ผ่านอุปกรณ์ <code>/dev/uioX</code> ได้โดยตรง
+                    </li>
+                    <li><strong><code>CONFIG_I2C_CHARDEV=y</code>:</strong><br>
+                        เปิดอุปกรณ์ <code>/dev/i2c-0</code> ให้แอปพลิเคชันสามารถส่งคำสั่ง I2C ไปตั้งค่า PLL, Route สัญญาณเสียง และปรับระดับเสียงของชิป ADAU1761 ได้จาก Userspace
+                    </li>
+                    <li><strong><code># CONFIG_DVB_USB_RTL28XXU is not set</code> (จุดสำคัญมาก):</strong><br>
+                        <strong>ต้องปิดไดรเวอร์นี้ไว้</strong> เพื่อไม่ให้ไดรเวอร์ DVB TV Tuner ดั้งเดิมของลินุกซ์แย่งครอบครองดองเกิล RTL2832U ไปใช้งาน มิฉะนั้นแอปพลิเคชัน SDR (<code>librtlsdr</code>) จะไม่สามารถเข้าถึงอุปกรณ์ USB ได้
+                    </li>
+                    <li><strong><code>usbcore.usbfs_memory_mb=0</code> (Kernel Command Line):</strong><br>
+                        ตามปกติลินุกซ์จะจำกัดบัฟเฟอร์ USB (<code>usbfs</code>) ไว้เพียง 16 MB ซึ่งเมื่อรับสตรีม I/Q ต่อเนื่องที่อัตรา 3.84 MB/s บัฟเฟอร์อาจล้นจนข้อมูลขาดหาย การตั้งค่าเป็น <code>0</code> จะปลดล็อกขีดจำกัดนี้ให้ขยายตามที่ร้องขอ ทำให้รับข้อมูลความเร็วสูงได้อย่างต่อเนื่องโดยไม่มีสะดุด
+                    </li>
+                </ul>
+
+                <!-- 4 ซอฟต์แวร์แอปพลิเคชัน -->
+                <h1>4 ซอฟต์แวร์แอปพลิเคชัน (Native C SDR Application)</h1>
+                <p class="lh-lg">
+                    ส่วนแอปพลิเคชัน ผมก็ให้ AI มาช่วยเขียนทั้งหมดเลย แอปพลิเคชันหลัก (<code>fm_sdr</code>) ใช้ภาษา C แบบ Multi-threaded โดยแบ่งหน้าที่ออกเป็น <strong>3 Threads หลัก</strong> ที่ทำงานคู่ขนานกัน:
+                </p>
+
+                <ol class="lh-lg">
+                    <li><strong>USB Ingestion Thread (<code>rtlsdr_read_async</code>):</strong> รับสตรีมข้อมูลดิบ I/Q (Unsigned 8-bit) ผ่าน USB Bulk Transfer จากดองเกิล RTL-SDR เข้ามาเก็บใน RAW Ring Buffer อย่างต่อเนื่อง</li>
+                    <li><strong>DMA Worker Thread (<code>dma_thread</code>):</strong> ดึงข้อมูลจาก RAW Ring Buffer แปลงค่า Unsigned → Signed (XOR 0x80) เขียนลงใน TX CMA Buffer แล้วควบคุมการยื่นคิว DMA สู่ FPGA ผ่านไดรเวอร์ <code>/dev/sdr_dma</code> โดยใช้นโยบาย In-Flight Queueing 2 บล็อก</li>
+                    <li><strong>GUI &amp; Display Thread (<code>main</code> / UI Loop @ 60 FPS):</strong> ดึง Sample สัญญาณมาคำนวณ FFT 1024 จุด วาดภาพกราฟิก Spectrum Analyzer และเลื่อน Waterfall Display ลงใน Linux Framebuffer (<code>/dev/fb0</code>) พร้อมทั้งรับคำสั่งจาก Keyboard (จูนความถี่, สแกนคลื่น, ปรับเสียง)</li>
+                </ol>
+
+                <p class="lh-lg">
+                    แผนภาพด้านล่างสรุปภาพรวมการทำงานของซอฟต์แวร์ ตั้งแต่ขั้นตอนเริ่มระบบ (Startup), วงรอบการสตรีมเสียง (Streaming Loop), การเรนเดอร์หน้าจอ (GUI Loop) ไปจนถึงการควบคุมของผู้ใช้งาน (User Control):
+                </p>
+
+                <pre class="mermaid">
+sequenceDiagram
+    autonumber
+
+    actor User as ผู้ใช้งาน (User)
+
+    box #e0f2fe 1. RTL-SDR Driver
+    participant RTL as RTL-SDR (Dongle + librtlsdr)
+    end
+
+    box #fef3c7 2. fm_sdr App
+    participant APP as fm_sdr App (3 C Threads)
+    end
+
+    box #dcfce7 3. Linux System
+    participant KERNEL as sdr_dma / UIO / I2C / FB
+    end
+
+    box #fce7f3 4. FPGA Logic
+    participant FPGA as DMA · FIR · FM Demod · Codec IP
+    end
+
+    %% --- Startup ---
+    APP->>KERNEL: ตั้งค่า ADAU1761 (I2C), เปิด /dev/sdr_dma, mmap CMA 4× Buffer
+    APP->>RTL: rtlsdr_open() → ตั้งความถี่ (95.5 MHz) + 1.92 MSPS
+
+    %% --- Streaming Loop ---
+    loop ทุกๆ บล็อก 0.8 วินาที
+        RTL->>APP: IQ Stream (USB Bulk, Unsigned 8-bit)
+        Note over APP: แปลง U→S8, คัดลอกลง CMA Buffer
+        APP->>KERNEL: ioctl(SDR_DMA_START) ส่งคิว 2 บล็อกล่วงหน้า
+        KERNEL->>FPGA: AXI DMA MM2S → FIR Decim → FM Demod → Audio LPF
+        Note over FPGA: Codec IP → I2S → หูฟัง 3.5 mm 🔊
+        FPGA-->>KERNEL: Hardware Interrupt (IOC_Irq)
+        KERNEL-->>APP: complete() ปลุก DMA Thread
+    end
+
+    %% --- GUI Loop ---
+    loop ทุก Frame (60 FPS)
+        Note over APP: FFT 1024 pt → วาด Spectrum + Waterfall
+        APP->>KERNEL: เขียนพิกเซลลง /dev/fb0
+        KERNEL->>FPGA: VDMA → rgb2dvi → HDMI 🖥️
+    end
+
+    %% --- User Control ---
+    opt เปลี่ยนคลื่น
+        User->>APP: กดลูกศร ← / → หรือ Scan (s)
+        APP->>RTL: rtlsdr_set_center_freq(ความถี่ใหม่)
+    end
+                </pre>
+
+                <h2>4.1 วิดีโอสาธิตการทำงาน (Demonstration)</h2>
+                <p class="lh-lg">
+                    เมื่อทดสอบแอปพลิเคชัน ก็สามารถทำการรับสัญญาณวิทยุ FM บนบอร์ด PYNQ-Z2 พร้อมการแสดงผล Real-time Spectrum และ Waterfall บนจอ HDMI ได้จากวิดีโอด้านล่างนี้ครับ:
+                </p>
+
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/IYX3k68fDfQ" title="Pynq-z2 FM Receiver Demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+
+                <!-- 5 แหล่งข้อมูลและซอร์สโค้ด -->
+                <h1>5 แหล่งข้อมูลและซอร์สโค้ด (Source Code)</h1>
+                <p class="lh-lg">
+                    ซอร์สโค้ดทั้งหมด ทั้ง Vivado Block Design, Modified Audio IP, PetaLinux Device Tree, Kernel Driver <code>sdr_dma</code> และ Userspace Application สามารถดาวน์โหลดและศึกษาเพิ่มเติมได้ที่:
+                </p>
+
+                <ul class="lh-lg">
+                    <li><strong>GitHub Repository:</strong> <a href="https://github.com/wichayen/pynq_z2/tree/main/RTL_SDR_FM_receiver" target="_blank" rel="noopener noreferrer">https://github.com/wichayen/pynq_z2/tree/main/RTL_SDR_FM_receiver</a></li>
+                    <li><strong>ไฟล์สำคัญใน Repository:</strong>
+                        <ul>
+                            <li><code>Vivado2022_1/audio/audio_codec_ctrl_v1.0/</code>: ซอร์สโค้ด IP เสียงที่ดัดแปลงเพิ่มพอร์ต AXI-Stream</li>
+                            <li><code>petalinux_2022_1/project-spec/meta-user/recipes-modules/sdr-dma/</code>: ไดรเวอร์เคอร์เนล AXI DMA</li>
+                            <li><code>petalinux_2022_1/app/fm_sdr_on_board_v2/</code>: แอปพลิเคชัน C (<code>fm_sdr.c</code>, <code>sdr_ui.c</code>)</li>
+                            <li><code>jupyter_notebook/</code>: โค้ดทดสอบเสียงและ bitstream บน Jupyter Notebook</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <div class="callout-box callout-warning">
+                    <div class="callout-title"><i class="bi bi-exclamation-triangle me-2"></i>หมายเหตุ (Disclaimer)</div>
+                    <div class="callout-content">
+                        <p class="mb-0">
+                            โปรเจกต์นี้จัดทำขึ้นเพื่อทดลองพิสูจน์แนวคิด (Proof of Concept) เท่านั้น โค้ดหลายส่วนทั้งฝั่งฮาร์ดแวร์และซอฟต์แวร์จึงถูกเขียนขึ้นสำหรับการทดลองเล่น และอาจยังไม่รัดกุมครบถ้วนเท่าที่ควร หากท่านนำไปใช้งานหรือต่อยอด แนะนำให้นำไปทดสอบ ปรับปรุง และตรวจสอบเพิ่มเติมด้วยตนเองก่อนนะครับ
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center p-4 mt-5" style="background-color: #f8f9fa; border-top: 1px solid #e2e8f0;">
+        <div class="container">
+            <p class="mb-1 text-secondary">ศูนย์รวมความรู้ คอร์สเรียนฟรี และงานออกแบบ FPGA ในไทย | FPGATHAILAND by Wichayen</p>
+            <p class="mb-0 small text-muted">
+                Contact: <a href="https://www.facebook.com/wichayen.hong" target="_blank" rel="noopener noreferrer">Facebook</a> | 
+                <a href="https://github.com/wichayen" target="_blank" rel="noopener noreferrer">GitHub</a> | 
+                <a href="https://www.linkedin.com/in/wichayen-luangsopapan-404133202/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose'
+        });
+    </script>
+</body>
+</html>
